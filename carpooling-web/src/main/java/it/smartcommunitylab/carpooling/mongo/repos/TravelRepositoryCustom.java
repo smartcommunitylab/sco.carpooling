@@ -23,4 +23,6 @@ import java.util.List;
 public interface TravelRepositoryCustom {
 
 	List<Travel> findTravelByPassengerId(String userId);
+
+	List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds);
 }

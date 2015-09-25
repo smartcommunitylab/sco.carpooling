@@ -22,6 +22,8 @@ import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,10 +57,20 @@ public class TestRepository {
 			System.out.println(community.getId());
 		}
 	}
-	
+
 	@Test
 	public void testTravelRepo() {
 		for (Travel travel : travelRepository.findTravelByPassengerId("54")) {
+			System.out.println(travel.getId());
+		}
+	}
+
+	@Test
+	public void testCommunityMatchInSearchTravel() {
+
+		List<String> communityIds = communityRepository.getCommunityIdsForUser("52");
+
+		for (Travel travel : travelRepository.getAllMatchedCommunityTravels(communityIds)) {
 			System.out.println(travel.getId());
 		}
 	}

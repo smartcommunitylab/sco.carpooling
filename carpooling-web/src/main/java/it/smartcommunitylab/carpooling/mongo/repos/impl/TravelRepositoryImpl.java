@@ -26,14 +26,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 	@Autowired
 	TravelRepository travelRepository;
 
-//	@Autowired
-//	MongoTemplate mongoTemplate;
+	@Autowired
+	MongoTemplate mongoTemplate;
 
 	@Override
 	public List<Travel> findTravelByPassengerId(String userId) {
@@ -56,6 +58,19 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		}
 
 		return travelsForPassenger;
+	}
+
+	@Override
+	public List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds) {
+		List<Travel> matchedTravels = new ArrayList<Travel>();
+
+		Query query = new Query();
+		Criteria criteria = new Criteria().where("communityIds").in(userCommunityIds);
+		query.addCriteria(criteria);
+
+		matchedTravels = mongoTemplate.find(query, Travel.class);
+
+		return matchedTravels;
 	}
 
 }

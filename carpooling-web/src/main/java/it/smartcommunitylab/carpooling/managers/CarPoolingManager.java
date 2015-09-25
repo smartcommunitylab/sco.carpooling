@@ -71,11 +71,15 @@ public class CarPoolingManager {
 
 	public List<Travel> searchTravels(TravelRequest travelRequest, String userId) {
 		List<Travel> searchTravels = new ArrayList<Travel>();
-		// community match.
+		/** community match. **/
+		List<String> commIdsForUser = communityRepository.getCommunityIdsForUser(userId);
+		searchTravels = travelRepository.getAllMatchedCommunityTravels(commIdsForUser);
 		
-		// time match.
+		/** zone match. **/
 		
-		// zone match.
+		/** time match.**/
+		
+		
 	
 		return searchTravels;
 	}
