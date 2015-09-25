@@ -1,0 +1,7 @@
+*.class
+*.war
+*.jar
+carpooling-web/.classpath
+carpooling-web/.project
+carpooling-web/.settings/*
+carpooling-web/target/*

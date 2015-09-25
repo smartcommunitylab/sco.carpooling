@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <title>Google OAuth with PhoneGap</title>
+    </head>
+    <body>
+        <div class="app">
+            <div id="login">
+                <a>Sign In With Google!</a>
+                <p></p>
+            </div>
+        </div>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.2.js"></script>
+        <script type="text/javascript" src="js/auth.js"></script>
+        <script type="text/javascript">
+        $(document).ready(function() {
+          var $loginButton = $('#login a');
+          var $loginStatus = $('#login p');
+
+          $loginButton.on('click', function() {
+              authapi.authorize('https://dev.smartcommunitylab.it').done(function(data) {
+                  $loginStatus.html('Access Token: ' + data);
+              }).fail(function(data) {
+                  $loginStatus.html(data.error);
+              });
+          });
+      });
+        </script>
+    </body>
+</html>

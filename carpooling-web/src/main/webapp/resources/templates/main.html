@@ -1,0 +1,18 @@
+<div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-2 main">
+			    <div class="row">
+			      <div class="col-md-12 alert alert-danger" role="alert" ng-if="errorText">{{errorText}}</div>
+		          <div class="col-md-8 alert alert-success alert-dismissible" role="alert" ng-if="!errorText && successText">
+		            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		            {{successText}}
+		          </div>
+			    </div> 
+					<div class="row">
+						<h1>{{profile.id}}</h1>
+					</div>
+				</div>	
+		</div>
+	</div>
+</div>

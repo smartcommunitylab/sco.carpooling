@@ -1,0 +1,220 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>it.smartcommunitylab</groupId>
+	<artifactId>carpooling-web</artifactId>
+	<version>1.0</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<spring.version>4.0.6.RELEASE</spring.version>
+		<spring-security-version>3.2.4.RELEASE</spring-security-version>
+		<spring-data-mongodb.version>1.5.2.RELEASE</spring-data-mongodb.version>
+		<maven-license-plugin.version>1.8.0</maven-license-plugin.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>profileservice.client</artifactId>
+			<version>2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>aac.client</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+
+		<!-- Servlet and lib -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.13</version>
+		</dependency>
+
+		<!-- Security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring-security-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-lgpl</artifactId>
+			<version>1.9.4</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!--Joda Date/Time -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<!--Spring Mongo -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${spring-data-mongodb.version}</version>
+		</dependency>
+
+		<!-- Mobility -->
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>mobilityservice.client</artifactId>
+			<version>1.1.3</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>it.sayservice.platform.smartplanner</groupId>
+			<artifactId>smartplanner-beans</artifactId>
+			<version>1.1.6</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<finalName>carpooling</finalName>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>SmartCommunity-releases</id>
+			<url>http://repository.smartcommunitylab.it/content/repositories/releases</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>license</id>
+			<activation>
+				<property>
+					<name>run-license</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<inherited>false</inherited>
+						<groupId>com.mycila.maven-license-plugin</groupId>
+						<artifactId>maven-license-plugin</artifactId>
+						<version>${maven-license-plugin.version}</version>
+						<configuration>
+							<header>${basedir}/license/license.txt</header>
+							<failIfMissing>true</failIfMissing>
+							<aggregate>true</aggregate>
+							<properties>
+								<organisation>Smart Community Lab</organisation>
+								<year>2015</year>
+								<!-- Author>Nawaz Khurshid- nawaz.khurshid@unitn.it</Author -->
+							</properties>
+							<includes>
+								<include>**/*.java</include>
+							</includes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
