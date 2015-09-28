@@ -17,6 +17,7 @@
 package it.smartcommunitylab.carpooling.mongo.repos;
 
 import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.TravelRequest;
 
 import java.util.List;
 
@@ -25,4 +26,7 @@ public interface TravelRepositoryCustom {
 	List<Travel> findTravelByPassengerId(String userId);
 
 	List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds);
+	
+	List<Travel> getAllMatchedZoneTravels(TravelRequest travelRequest);
+	
 }

@@ -15,6 +15,8 @@
  ******************************************************************************/
 package it.smartcommunitylab.carpooling.config;
 
+import it.smartcommunitylab.carpooling.model.Travel;
+
 import java.net.UnknownHostException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.GeospatialIndex;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -50,10 +53,14 @@ public class BaseConfig extends WebMvcConfigurerAdapter {
 
 	@Bean(name = "mongoTemplate")
 	public MongoTemplate getMongoTemplate() throws UnknownHostException, MongoException {
-		return new MongoTemplate(new MongoClient(
-				env.getProperty("smartcampus.vas.web.mongo.host"),
-				Integer.parseInt(env.getProperty("smartcampus.vas.web.mongo.port"))),
-				"carpooling");
+		MongoTemplate template = new MongoTemplate(new MongoClient(env.getProperty("smartcampus.vas.web.mongo.host"),
+				Integer.parseInt(env.getProperty("smartcampus.vas.web.mongo.port"))), "carpooling");
+
+		template.indexOps(Travel.class).ensureIndex(new GeospatialIndex("from.coordinates"));
+		template.indexOps(Travel.class).ensureIndex(new GeospatialIndex("to.coordinates"));
+
+		return template;
+
 	}
 
 	@Bean
@@ -66,18 +73,12 @@ public class BaseConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/resources/*").addResourceLocations(
-				"/resources/");
-		registry.addResourceHandler("/css/**").addResourceLocations(
-				"/resources/css/");
-		registry.addResourceHandler("/fonts/**").addResourceLocations(
-				"/resources/fonts/");
-		registry.addResourceHandler("/js/**").addResourceLocations(
-				"/resources/js/");
-		registry.addResourceHandler("/lib/**").addResourceLocations(
-				"/resources/lib/");
-		registry.addResourceHandler("/templates/**").addResourceLocations(
-				"/resources/templates/");
+		registry.addResourceHandler("/resources/*").addResourceLocations("/resources/");
+		registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
+		registry.addResourceHandler("/fonts/**").addResourceLocations("/resources/fonts/");
+		registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
+		registry.addResourceHandler("/lib/**").addResourceLocations("/resources/lib/");
+		registry.addResourceHandler("/templates/**").addResourceLocations("/resources/templates/");
 	}
 
 }

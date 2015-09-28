@@ -1,0 +1,91 @@
+{
+    "id" : "560263eed1f1f802c2a83efg",
+    "from" : {
+        "name" : "Piazza Venezia",
+        "address" : "Piazza Venezia",
+        "latitude" : 46.067918,
+        "longitude" : 11.12708,
+        "range" : 0,
+        "coordinates" : [ 
+            46.067918, 
+            11.12708
+        ]
+    },
+    "to" : {
+        "name" : "Ponte San Lorenzo",
+        "address" : "Ponte San Lorenzo",
+        "latitude" : 46.070144,
+        "longitude" : 11.115014,
+        "range" : 0,
+        "coordinates" : [ 
+            46.070144, 
+            11.115014
+        ]
+    },
+    "timestamp" : 1442959200000,
+    "route" : {
+        "from" : {
+            "name" : "road",
+            "stopId" : {
+                "id" : "",
+                "agencyId" : ""
+            },
+            "lon" : "11.12708",
+            "lat" : "46.067918"
+        },
+        "to" : {
+            "name" : "Ponte di San Lorenzo",
+            "stopId" : {
+                "id" : "",
+                "agencyId" : ""
+            },
+            "lon" : "11.115000659666784",
+            "lat" : "46.070119106960526"
+        },
+        "startime" : 1442959200000,
+        "endtime" : 1442959860000,
+        "duration" : 660000,
+        "walkingDuration" : 660,
+        "leg" : [ 
+            {
+                "legId" : "null_null",
+                "startime" : 1442959200000,
+                "endtime" : 1442959860000,
+                "duration" : 660,
+                "from" : {
+                    "name" : "road",
+                    "lon" : "11.12708",
+                    "lat" : "46.067918"
+                },
+                "to" : {
+                    "name" : "Ponte di San Lorenzo",
+                    "lon" : "11.115000659666784",
+                    "lat" : "46.070119106960526"
+                },
+                "transport" : {
+                    "type" : "CAR"
+                },
+                "legGeometery" : {
+                    "length" : 108,
+                    "points" : "{sdxGyf|bA`@PZPXLTHu@[kGwC??CVCJEJKHK?[KIAE?WPKBE?[EWAKBOLc@`@y@t@KF}@Xo@\\aB~@a@XKHKFILEJCJCNKrAAJADG^Mf@GVc@lBERCJI^EP]bBe@tBQx@ABENCLCL[pACL[pAAFQn@@NBRLLvBpADBFBFDRLTJT@XBx@d@LJhAz@H?bAGTAjAQLTNZNv@t@fDHd@Bb@C^]|AADAJCL@XFZHRHPLTHPBHJTB\\C@EFAFAP@DBD@B@@CXAFa@fC"
+                },
+                "alertStrikeList" : [],
+                "alertDelayList" : [],
+                "alertParkingList" : [],
+                "alertRoadList" : [],
+                "alertAccidentList" : [],
+                "length" : 1799.96
+            }
+        ],
+        "promoted" : false
+    },
+    "userId" : "52",
+    "places" : 4,
+    "intermediateStops" : false,
+    "bookings" : [],
+    "active" : true,
+    "communityIds" : [ 
+        "cPCommunity1", 
+        "cPCommunity2"
+    ]
+}

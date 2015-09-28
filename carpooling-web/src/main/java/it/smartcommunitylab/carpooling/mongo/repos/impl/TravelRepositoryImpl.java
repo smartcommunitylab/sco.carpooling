@@ -18,6 +18,7 @@ package it.smartcommunitylab.carpooling.mongo.repos.impl;
 
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.Travel.Booking;
+import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepositoryCustom;
 
@@ -25,7 +26,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Circle;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metrics;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.geo.Sphere;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -63,10 +69,43 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	@Override
 	public List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds) {
 		List<Travel> matchedTravels = new ArrayList<Travel>();
-
-		Query query = new Query();
+		// criteria.
 		Criteria criteria = new Criteria().where("communityIds").in(userCommunityIds);
+		// query.
+		Query query = new Query();
 		query.addCriteria(criteria);
+
+		matchedTravels = mongoTemplate.find(query, Travel.class);
+
+		return matchedTravels;
+	}
+
+	@Override
+	public List<Travel> getAllMatchedZoneTravels(TravelRequest travelRequest) {
+
+		Distance d = new Distance(1, Metrics.KILOMETERS);
+
+		double radius = 1;
+
+		List<Travel> matchedTravels = new ArrayList<Travel>();
+
+		Point pFrom = new Point(travelRequest.getFrom().getLatitude(), travelRequest.getFrom().getLongitude());
+		Circle circleFrom = new Circle(pFrom, radius / 6371);
+		Sphere sphereFrom = new Sphere(circleFrom);
+
+		Point pTo = new Point(travelRequest.getTo().getLatitude(), travelRequest.getTo().getLongitude());
+		Circle circleTo = new Circle(pTo, radius / 6371);
+		Sphere sphereTo = new Sphere(circleTo);
+
+		// criterias.
+		Criteria criteriaF = new Criteria().where("from.coordinates").within(sphereFrom);
+		Criteria criteriaT = new Criteria().where("to.coordinates").within(sphereTo);
+
+		// query.
+		Query query = new Query();
+		// add criterias.
+		query.addCriteria(criteriaF);
+		query.addCriteria(criteriaT);
 
 		matchedTravels = mongoTemplate.find(query, Travel.class);
 

@@ -18,13 +18,20 @@ package it.smartcommunitylab.carpooling.test.data;
 
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.TravelRequest;
+import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
-import org.junit.Before;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +43,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author nawazk
  *
  */
-@org.junit.Ignore
+//@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestRepository {
@@ -46,8 +53,13 @@ public class TestRepository {
 	@Autowired
 	private TravelRepository travelRepository;
 
-	@Before
+	private ObjectMapper mapper = new ObjectMapper();
+
+	private static Travel refTravel;
+
+	@After
 	public void init() {
+		travelRepository.delete(refTravel);
 
 	}
 
@@ -71,6 +83,42 @@ public class TestRepository {
 		List<String> communityIds = communityRepository.getCommunityIdsForUser("52");
 
 		for (Travel travel : travelRepository.getAllMatchedCommunityTravels(communityIds)) {
+			System.out.println(travel.getId());
+		}
+	}
+
+	@Test
+	public void testZoneMatchInSearchTravel() throws JsonProcessingException, IOException {
+
+		// // construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("travel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		refTravel = mapper.convertValue(rootNode, Travel.class);
+		// save.
+		travelRepository.save(refTravel);
+
+		TravelRequest travelRequest = new TravelRequest();
+		//valid 'From' points (witin 1km.)
+		//travelRequest.setFrom(new Zone("Castello Buon Consiglio", "Castello Buon Consiglio", 46.071386, 11.127772, 0));
+		//travelRequest.setFrom(new Zone("Via Archangelo Rezzi, Centro", "Via Archangelo Rezzi, Centro", 46.067250, 11.120252, 0));
+		travelRequest.setFrom(new Zone("Via Fiume", "Via Fiume", 46.065487, 11.131346, 0));
+
+//		invalid 'From' points(outside 1km.)
+//		travelRequest.setFrom(new Zone("Spalliera Cereria", "Spalliera Cereria",46.078088, 11.125556, 0));
+//		travelRequest.setFrom(new Zone("Parco di Gocciadoro", "Parco di Gocciadoro", 46.054712, 11.136401, 0));
+//		travelRequest.setFrom(new Zone("Via Solteri", "Via Solteri", 46.087617, 11.121586, 0));
+
+		//valid 'To' points within 1km.
+		//travelRequest.setTo(new Zone("Teatro Portland", "Teatro Portland", 46.070009, 11.112011, 0));
+		//travelRequest.setTo(new Zone("Ponte di San Giorgio", "Ponte di San Giorgio", 46.077552, 11.115269, 0)); 
+		travelRequest.setTo(new Zone("Muse", "Muse", 46.063266, 11.113062, 0));
+
+//		invalid 'To' points outside 1km.
+//		travelRequest.setTo(new Zone("Angolo dei 33", "Angolo dei 33", 46.07548,11.105595, 0));
+//		travelRequest.setTo(new Zone("Hotel Vela", "Hotel Vela", 46.082421, 11.102012, 0));
+//		travelRequest.setTo(new Zone("Hotel Sporting Trento", "Hotel Sporting Trento", 46.051344, 11.111677, 0));
+
+		for (Travel travel : travelRepository.getAllMatchedZoneTravels(travelRequest)) {
 			System.out.println(travel.getId());
 		}
 	}
