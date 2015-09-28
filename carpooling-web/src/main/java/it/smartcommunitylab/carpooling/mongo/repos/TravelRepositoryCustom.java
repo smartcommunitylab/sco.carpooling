@@ -26,7 +26,11 @@ public interface TravelRepositoryCustom {
 	List<Travel> findTravelByPassengerId(String userId);
 
 	List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds);
-	
+
 	List<Travel> getAllMatchedZoneTravels(TravelRequest travelRequest);
-	
+
+	List<Travel> getAllMatchedTimeTravels(TravelRequest travelRequest);
+
+	List<Travel> searchTravels(List<String> userCommunityIds, TravelRequest travelRequest);
+
 }

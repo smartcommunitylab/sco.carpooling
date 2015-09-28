@@ -16,8 +16,6 @@
 
 package it.smartcommunitylab.carpooling.test.managers;
 
-import java.util.Date;
-
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.Travel.Booking;
@@ -27,6 +25,8 @@ import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
+
+import java.util.Date;
 
 import org.junit.After;
 import org.junit.Test;
@@ -41,7 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author nawazk
  *
  */
-//@org.junit.Ignore
+@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestTravelManager {
@@ -67,7 +67,7 @@ public class TestTravelManager {
 		travelRequest.setFrom(new Zone("Trento Nord", "Trento Nord, 38121", 46.45, 11.11, 0));
 		travelRequest.setTo(new Zone("Trento Sud", "Trento Sud, 38123", 46.55, 11.12, 0));
 		travelRequest.setMonitored(false);
-		travelRequest.setTimestamp(System.currentTimeMillis());
+		travelRequest.setWhen(System.currentTimeMillis());
 
 		travelManager.saveTravelRequest(travelRequest);
 
@@ -80,20 +80,19 @@ public class TestTravelManager {
 		}
 
 	}
-	
+
 	@Test
 	public void testCreateBooking() {
-//		Zone from = new Zone("Trento Nord", "Trento Nord, 38121", 46.45, 11.11, 0);
-//		Zone to = new Zone("Trento Sud", "Trento Sud, 38123", 46.55, 11.12, 0);
+		//		Zone from = new Zone("Trento Nord", "Trento Nord, 38121", 46.45, 11.11, 0);
+		//		Zone to = new Zone("Trento Sud", "Trento Sud, 38123", 46.55, 11.12, 0);
 		Date[] confirmed = new Date[1];
 		confirmed[0] = new Date(System.currentTimeMillis());
 		Date date = new Date(System.currentTimeMillis());
-//		Travel travel = new Travel();
+		//		Travel travel = new Travel();
 		Traveller traveller = new Traveller("52", "Nawaz", "Khurshid", "nawaz1981@gmail.com");
-		
-		
-		for (Travel travel: travelRepository.findAll()) {
-			Booking booking = travel.new Booking(traveller, false, date, confirmed, 1); 
+
+		for (Travel travel : travelRepository.findAll()) {
+			Booking booking = travel.new Booking(traveller, false, date, confirmed, 1);
 			booking.setTraveller(traveller);
 			booking.setDate(new Date(System.currentTimeMillis()));
 			booking.setConfirmed(confirmed);
@@ -101,22 +100,16 @@ public class TestTravelManager {
 			travel.getBookings().add(booking);
 			travelRepository.save(travel);
 		}
-		
-		
-//		travel.setFrom(from);
-//		travel.setTo(to);
-//		travel.setUserId("52");
-		
-	//	Booking[] bookings = travel.getBookings();
+
+		//		travel.setFrom(from);
+		//		travel.setTo(to);
+		//		travel.setUserId("52");
+
+		//	Booking[] bookings = travel.getBookings();
 		//bookings[bookings.length] = booking;
-		
+
 		//travel.setBookings(bookings);
-		
-		
-		
-		
-		
-		
+
 	}
 
 }

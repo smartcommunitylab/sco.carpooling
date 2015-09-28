@@ -40,7 +40,7 @@ public class Travel {
 	/** To zone (reqd).**/
 	private Zone to;
 	/** date/time for the trip(either when or reccurrency sould be specified).**/
-	private long timestamp;
+	private long when;
 	/** itinerary.**/
 	private Itinerary route;
 	/** driver id (reqd).**/
@@ -63,12 +63,12 @@ public class Travel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Travel(Zone from, Zone to, long timestamp, Itinerary route, String userId, Recurrency recurrency,
-			int places, boolean intermediateStops, List<Booking> bookings, boolean active, List<String> communityIds) {
+	public Travel(Zone from, Zone to, long when, Itinerary route, String userId, Recurrency recurrency, int places,
+			boolean intermediateStops, List<Booking> bookings, boolean active, List<String> communityIds) {
 		super();
 		this.from = from;
 		this.to = to;
-		this.timestamp = timestamp;
+		this.when = when;
 		this.route = route;
 		this.userId = userId;
 		this.recurrency = recurrency;
@@ -103,12 +103,12 @@ public class Travel {
 		this.to = to;
 	}
 
-	public long getTimestamp() {
-		return timestamp;
+	public long getWhen() {
+		return when;
 	}
 
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public void setWhen(long when) {
+		this.when = when;
 	}
 
 	public Itinerary getRoute() {
@@ -188,7 +188,6 @@ public class Travel {
 		/** whether booking has been requested/accepted/rejected by driver.**/
 		private int accepted = 0;
 
-		
 		public Booking(Traveller traveller, boolean recurrent, Date date, Date[] confirmed, int accepted) {
 			super();
 			this.traveller = traveller;

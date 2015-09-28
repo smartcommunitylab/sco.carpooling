@@ -81,7 +81,7 @@ public class MobilityPlanner {
 		to.setLon(String.valueOf(travel.getTo().getLongitude()));
 		singleJourney.setTo(to);
 		
-		String dateTimeString = formatter.format(new java.util.Date(travel.getTimestamp()));
+		String dateTimeString = formatter.format(new java.util.Date(travel.getWhen()));
 		
 		String[] dateTime = dateTimeString.split("\\s");
 		

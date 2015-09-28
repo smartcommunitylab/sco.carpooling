@@ -32,8 +32,8 @@ public class TravelRequest {
 	private Zone from;
 	/** To zone (reqd).**/
 	private Zone to;
-	/** date/time of trip (if specified mean non-reccrent) - reqd.**/
-	private long timestamp;
+	/** requested date/time of trip - reqd.**/
+	private long when;
 	/** who (reqd).**/
 	private String userId;
 	/** whether to enable match notifications.**/
@@ -44,11 +44,12 @@ public class TravelRequest {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TravelRequest(Zone from, Zone to, long timestamp, String userId, boolean monitored) {
+	public TravelRequest(String id, Zone from, Zone to, long when, String userId, boolean monitored) {
 		super();
+		this.id = id;
 		this.from = from;
 		this.to = to;
-		this.timestamp = timestamp;
+		this.when = when;
 		this.userId = userId;
 		this.monitored = monitored;
 	}
@@ -77,12 +78,12 @@ public class TravelRequest {
 		this.to = to;
 	}
 
-	public long getTimestamp() {
-		return timestamp;
+	public long getWhen() {
+		return when;
 	}
 
-	public void setTimestamp(long timestamp) {
-		this.timestamp = timestamp;
+	public void setWhen(long when) {
+		this.when = when;
 	}
 
 	public String getUserId() {
@@ -103,7 +104,7 @@ public class TravelRequest {
 
 	@Override
 	public String toString() {
-		return "TravelRequest [id=" + id + ", from=" + from + ", to=" + to + ", timestamp=" + timestamp + ", userId="
+		return "TravelRequest [id=" + id + ", from=" + from + ", to=" + to + ", timestamp=" + when + ", userId="
 				+ userId + ", monitored=" + monitored + "]";
 	}
 

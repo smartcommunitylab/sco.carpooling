@@ -29,7 +29,17 @@ public class Recurrency {
 	/** travel times(mins of day)-reqd.**/
 	private int time;
 	/** days of week when route is due [0,1,2,3,4,5,6].**/
-	private int[] days = new int[] { 0, 1, 2, 3, 4, 5, 6 };
+	private List<Integer> days = new ArrayList<Integer>() {
+		{
+			add(0);
+			add(1);
+			add(2);
+			add(3);
+			add(4);
+			add(5);
+			add(6);
+		}
+	};
 	/** days of month when route is due.**/
 	private List<Integer> dates = new ArrayList<Integer>();
 
@@ -38,7 +48,7 @@ public class Recurrency {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Recurrency(int time, int[] days, List<Integer> dates) {
+	public Recurrency(int time, List<Integer> days, List<Integer> dates) {
 		super();
 		this.time = time;
 		this.days = days;
@@ -53,11 +63,11 @@ public class Recurrency {
 		this.time = time;
 	}
 
-	public int[] getDays() {
+	public List<Integer> getDays() {
 		return days;
 	}
 
-	public void setDays(int[] days) {
+	public void setDays(List<Integer> days) {
 		this.days = days;
 	}
 
