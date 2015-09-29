@@ -17,10 +17,10 @@
 package it.smartcommunitylab.carpooling.controllers;
 
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
+import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Response;
 import it.smartcommunitylab.carpooling.model.Travel;
-import it.smartcommunitylab.carpooling.model.Travel.Booking;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.UserCommunitiesSetup;

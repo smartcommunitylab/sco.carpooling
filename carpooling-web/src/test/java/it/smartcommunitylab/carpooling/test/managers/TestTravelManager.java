@@ -17,8 +17,8 @@
 package it.smartcommunitylab.carpooling.test.managers;
 
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
+import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Travel;
-import it.smartcommunitylab.carpooling.model.Travel.Booking;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.Traveller;
 import it.smartcommunitylab.carpooling.model.Zone;
@@ -26,9 +26,18 @@ import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ArrayNode;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +64,12 @@ public class TestTravelManager {
 	@Autowired
 	private Environment env;
 
+	private ObjectMapper mapper = new ObjectMapper();
+
 	@After
 	public void init() {
 		travelRequestRepository.deleteAll();
+		travelRepository.deleteAll();
 	}
 
 	@Test
@@ -92,7 +104,7 @@ public class TestTravelManager {
 		Traveller traveller = new Traveller("52", "Nawaz", "Khurshid", "nawaz1981@gmail.com");
 
 		for (Travel travel : travelRepository.findAll()) {
-			Booking booking = travel.new Booking(traveller, false, date, confirmed, 1);
+			Booking booking = new Booking(traveller, false, date, confirmed, 1);
 			booking.setTraveller(traveller);
 			booking.setDate(new Date(System.currentTimeMillis()));
 			booking.setConfirmed(confirmed);
@@ -109,6 +121,38 @@ public class TestTravelManager {
 		//bookings[bookings.length] = booking;
 
 		//travel.setBookings(bookings);
+
+	}
+
+	@Test
+	public void testSearchTravel() throws JsonProcessingException, IOException {
+
+		// construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("travel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+		for (JsonNode node : arrayNode) {
+			travelRepository.save(mapper.convertValue(node, Travel.class));
+		}
+
+		TravelRequest travelRequest = new TravelRequest();
+		travelRequest.setFrom(new Zone("Via Fiume", "Via Fiume", 46.065487, 11.131346, 0));
+		travelRequest.setTo(new Zone("Muse", "Muse", 46.063266, 11.113062, 0));
+		travelRequest.setWhen(1443425400000L); //09:30am (Sept 28)
+
+		List<String> commIdsForUser = new ArrayList<String>() {
+			{
+				add("cPCommunity1");
+				add("cPCommunity2");
+			}
+		};
+		List<Travel> travels = travelRepository.searchTravels(commIdsForUser, travelRequest);
+
+		Assert.assertFalse(travels.isEmpty());
+
+		for (Travel travel : travels) {
+			System.out.println(travel.getId());
+		}
 
 	}
 

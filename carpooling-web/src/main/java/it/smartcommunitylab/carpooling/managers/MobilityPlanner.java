@@ -46,8 +46,7 @@ public class MobilityPlanner {
 	// transport types.
 	private TType[] tTypes = new TType[] { TType.CAR };
 	// date formatter.
-	SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mmaa",
-			Locale.ITALY);
+	SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mmaa", Locale.ITALY);
 	Calendar calendar = Calendar.getInstance();
 	// time formatter.
 
@@ -80,11 +79,11 @@ public class MobilityPlanner {
 		to.setLat(String.valueOf(travel.getTo().getLatitude()));
 		to.setLon(String.valueOf(travel.getTo().getLongitude()));
 		singleJourney.setTo(to);
-		
+
 		String dateTimeString = formatter.format(new java.util.Date(travel.getWhen()));
-		
+
 		String[] dateTime = dateTimeString.split("\\s");
-		
+
 		singleJourney.setDepartureTime(dateTime[1]);
 		singleJourney.setDate(dateTime[0]);
 		singleJourney.setResultsNumber(1);

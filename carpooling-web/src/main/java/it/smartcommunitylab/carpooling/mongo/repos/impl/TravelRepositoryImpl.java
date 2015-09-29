@@ -16,8 +16,8 @@
 
 package it.smartcommunitylab.carpooling.mongo.repos.impl;
 
+import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Travel;
-import it.smartcommunitylab.carpooling.model.Travel.Booking;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepositoryCustom;

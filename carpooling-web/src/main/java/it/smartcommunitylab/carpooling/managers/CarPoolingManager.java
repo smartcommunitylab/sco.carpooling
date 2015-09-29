@@ -17,9 +17,9 @@
 package it.smartcommunitylab.carpooling.managers;
 
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
+import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Travel;
-import it.smartcommunitylab.carpooling.model.Travel.Booking;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;

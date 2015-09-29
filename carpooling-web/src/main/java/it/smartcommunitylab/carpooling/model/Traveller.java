@@ -34,8 +34,6 @@ public class Traveller {
 	private String email;
 
 	public Traveller() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Traveller(String userId, String name, String surname, String email) {
