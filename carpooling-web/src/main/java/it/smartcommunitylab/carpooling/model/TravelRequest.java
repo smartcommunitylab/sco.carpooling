@@ -38,20 +38,22 @@ public class TravelRequest {
 	private String userId;
 	/** whether to enable match notifications.**/
 	private boolean monitored;
+	/** no of post required. **/
+	private int nrOfPost;
 
 	public TravelRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public TravelRequest(String id, Zone from, Zone to, long when, String userId, boolean monitored) {
+	public TravelRequest(Zone from, Zone to, long when, String userId, boolean monitored, int nrOfPost) {
 		super();
-		this.id = id;
 		this.from = from;
 		this.to = to;
 		this.when = when;
 		this.userId = userId;
 		this.monitored = monitored;
+		this.nrOfPost = nrOfPost;
 	}
 
 	public String getId() {
@@ -100,6 +102,14 @@ public class TravelRequest {
 
 	public void setMonitored(boolean monitored) {
 		this.monitored = monitored;
+	}
+
+	public int getNrOfPost() {
+		return nrOfPost;
+	}
+
+	public void setNrOfPost(int nrOfPost) {
+		this.nrOfPost = nrOfPost;
 	}
 
 	@Override

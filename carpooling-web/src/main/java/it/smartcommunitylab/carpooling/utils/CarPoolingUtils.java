@@ -57,4 +57,14 @@ public class CarPoolingUtils {
 		return hour;
 	}
 
+	public static boolean isOnSameDay(long bookingTime, long requestedTime) {
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTimeInMillis(bookingTime);
+		cal2.setTimeInMillis(requestedTime);
+		boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+				&& cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+		return sameDay;
+	}
+
 }

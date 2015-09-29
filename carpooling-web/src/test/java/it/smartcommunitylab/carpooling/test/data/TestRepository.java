@@ -23,6 +23,7 @@ import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
+import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +172,11 @@ public class TestRepository {
 		for (Travel travel : travelRepository.getAllMatchedTimeTravels(travelRequest)) {
 			System.out.println(travel.getId());
 		}
+	}
+	
+	@Test
+	public void testSameDayUtilityMethod() {
+		Assert.assertTrue(CarPoolingUtils.isOnSameDay(1443425400000L, 1443472200000L));
 	}
 
 }

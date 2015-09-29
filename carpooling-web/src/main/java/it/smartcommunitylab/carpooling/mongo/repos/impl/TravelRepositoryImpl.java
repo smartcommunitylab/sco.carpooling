@@ -16,7 +16,6 @@
 
 package it.smartcommunitylab.carpooling.mongo.repos.impl;
 
-import it.smartcommunitylab.carpooling.model.Recurrency;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.Travel.Booking;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
@@ -30,8 +29,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.geo.Sphere;
@@ -45,7 +42,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
-	
+
 	@Override
 	public List<Travel> findTravelByPassengerId(String userId) {
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
@@ -127,8 +124,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		int recurrTimePlusOneHour = CarPoolingUtils.getHour(timePlusOneHour);
 		int recurrTimeMinusOneHour = CarPoolingUtils.getHour(timeMinusOneHour);
 
-		Criteria criteriaNonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
-				.lte(timePlusOneHour.getTime()).and("active").is(true);
+		Criteria nonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
+				.lte(timePlusOneHour.getTime());
 
 		/** recurrent travels. **/
 		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true)
@@ -136,44 +133,59 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
 		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
 
-		Criteria subReccurr = new Criteria().orOperator(criteriaReccurDOW, criteriaRecurrDOM);
-		Criteria criteraRecurr = new Criteria().andOperator(criteriaReccurGeneral, subReccurr);
-		Criteria criteria = new Criteria().orOperator(criteriaNonRecurr, criteraRecurr);
+		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
+		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
+
+
+		Criteria criteria = new Criteria().where("active").is(true).orOperator(nonRecurr, recurrDOW, recurrDOM);
 
 		/**
 		Query: {
-			"$or": [{
-				"when": {
-					"$gte": 1443421800000,
-					"$lte": 1443429000000
-				},
-				"active": true
+		
+		"active": true,
+		
+		"$or": [{
+		"when": {
+			"$gte": 1443421800000,
+			"$lte": 1443429000000
+		}
+		},
+		{
+		"$and": [{
+			"when": 0,
+			"recurrency": {
+				"$exists": true
 			},
-			{
-				"$and": [{
-					"when": 0,
-					"recurrency": {
-						"$exists": true
-					},
-					"active": true,
-					"recurrency.time": {
-						"$gte": 8,
-						"$lte": 10
-					}
-				},
-				{
-					"$or": [{
-						"recurrency.days": {
-							"$in": [2]
-						}
-					},
-					{
-						"recurrency.dates": {
-							"$in": [28]
-						}
-					}]
-				}]
-			}]
+			"active": true,
+			"recurrency.time": {
+				"$gte": 8,
+				"$lte": 10
+			}
+		},
+		{
+			"recurrency.days": {
+				"$in": [2]
+			}
+		}]
+		},
+		{
+		"$and": [{
+			"when": 0,
+			"recurrency": {
+				"$exists": true
+			},
+			"active": true,
+			"recurrency.time": {
+				"$gte": 8,
+				"$lte": 10
+			}
+		},
+		{
+			"recurrency.dates": {
+				"$in": [28]
+			}
+		}]
+		}]
 		}
 		**/
 
@@ -186,9 +198,10 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 	@Override
 	public List<Travel> searchTravels(List<String> userCommunityIds, TravelRequest travelRequest) {
-		
+
 		List<Travel> travels = new ArrayList<Travel>();
-		
+
+		Criteria commonCriteria = new Criteria().where("active").is(true);
 		/** community. **/
 		Criteria communityCriteria = new Criteria().where("communityIds").in(userCommunityIds);
 		/** zone. **/
@@ -210,26 +223,148 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		int reqDOM = CarPoolingUtils.getDayOfMonth(reqDate);
 		int recurrTimePlusOneHour = CarPoolingUtils.getHour(timePlusOneHour);
 		int recurrTimeMinusOneHour = CarPoolingUtils.getHour(timeMinusOneHour);
-		Criteria criteriaNonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
-				.lte(timePlusOneHour.getTime()).and("active").is(true);
+		// normal.
+		Criteria nonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
+				.lte(timePlusOneHour.getTime());
+		// recurr general.
 		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true)
-				.and("active").is(true).and("recurrency.time").gte(recurrTimeMinusOneHour).lte(recurrTimePlusOneHour);
+				.and("recurrency.time").gte(recurrTimeMinusOneHour).lte(recurrTimePlusOneHour);
+		// recurr dow.
 		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
+		// recurr dom.
 		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
-		Criteria subReccurr = new Criteria().orOperator(criteriaReccurDOW, criteriaRecurrDOM);
-		Criteria criteraRecurr = new Criteria().andOperator(criteriaReccurGeneral, subReccurr);
-		Criteria timeCriteria = new Criteria().orOperator(criteriaNonRecurr, criteraRecurr);
+		
+		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
+		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
+
+		Criteria timeCriteria = new Criteria().orOperator(nonRecurr, recurrDOW, recurrDOM);
 
 		Query query = new Query();
+		query.addCriteria(commonCriteria);
 		query.addCriteria(communityCriteria);
 		query.addCriteria(zoneCriteria);
 		query.addCriteria(timeCriteria);
+
+		/**
+		Query: {
 		
+		"active": true,
+		
+		"communityIds": {
+		"$in": ["cPCommunity1",
+		"cPCommunity2"]
+		},
+		
+		"from.coordinates": {
+		"$within": {
+			$java: org.springframework.data.mongodb.core.query.GeoCommand@23b35955
+		}
+		},
+		"to.coordinates": {
+		"$within": {
+			$java: org.springframework.data.mongodb.core.query.GeoCommand@53adedc2
+		}
+		},
+		
+		"$or": [{
+		"when": {
+			"$gte": 1443421800000,
+			"$lte": 1443429000000
+		}
+		},
+		{
+		"$and": [{
+			"when": 0,
+			"recurrency": {
+				"$exists": true
+			},
+			"recurrency.time": {
+				"$gte": 8,
+				"$lte": 10
+			}
+		},
+		{
+			"recurrency.days": {
+				"$in": [2]
+			}
+		}]
+		},
+		{
+		"$and": [{
+			"when": 0,
+			"recurrency": {
+				"$exists": true
+			},
+			"recurrency.time": {
+				"$gte": 8,
+				"$lte": 10
+			}
+		},
+		{
+			"recurrency.dates": {
+				"$in": [28]
+			}
+		}]
+		}]
+		}
+		*/
+
 		travels = mongoTemplate.find(query, Travel.class);
-		
+
 		/** filter by posts/booking state. **/
+		List<Travel> temp = new ArrayList<Travel>();
+		temp.addAll(travels);
+
+		for (Travel travel : temp) {
+
+			if (travel.getRecurrency() == null) {
+				if (getNonRecurrentAvailabiliy(travel) < 1) {//travelRequest.getNrOfPost()
+					travels.remove(travel);
+				}
+			} else {
+				if (!availableRecurrentTrip(travel, travelRequest)) {
+					travels.remove(travel);
+				}
+			}
+
+		}
 
 		return travels;
+	}
+
+	private boolean availableRecurrentTrip(Travel travel, TravelRequest travelRequest) {
+
+		int capacity = travel.getPlaces();
+
+		for (Booking booking : travel.getBookings()) {
+
+			if (booking.isRecurrent()) { // recurrent booking.
+				if (booking.getAccepted() != -1) {
+					capacity--;
+				}
+			} else { // non recurrent booking
+				if (booking.getAccepted() != -1
+						&& CarPoolingUtils.isOnSameDay(booking.getDate().getTime(), travelRequest.getWhen())) {
+					capacity--;
+				}
+			}
+
+		}
+
+		return (capacity > 0 ? true : false);
+	}
+
+	private int getNonRecurrentAvailabiliy(Travel travel) {
+
+		int availability = travel.getPlaces();
+
+		for (Booking booking : travel.getBookings()) { 
+			if (booking.getAccepted() != -1) { // if it is not rejected, occupied.
+				availability--;
+			}
+		}
+
+		return availability;
 	}
 
 }
