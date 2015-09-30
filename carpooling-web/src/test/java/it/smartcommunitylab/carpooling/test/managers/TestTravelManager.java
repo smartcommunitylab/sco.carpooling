@@ -25,9 +25,11 @@ import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
+import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -153,6 +155,78 @@ public class TestTravelManager {
 		for (Travel travel : travels) {
 			System.out.println(travel.getId());
 		}
+
+	}
+
+	@Test
+	public void testBookTravel() throws JsonProcessingException, IOException, ParseException {
+
+		// construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("travel-booked.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+
+		Booking reqBooking1 = new Booking();
+		Booking reqBooking2 = new Booking();
+
+		for (JsonNode node : arrayNode) {
+			Travel travel = mapper.convertValue(node, Travel.class);
+			travelRepository.save(travel);
+			reqBooking1.setAccepted(travel.getBookings().get(0).getAccepted());
+			reqBooking1.setDate(travel.getBookings().get(0).getDate());
+			reqBooking1.setTraveller(travel.getBookings().get(0).getTraveller());
+
+			reqBooking2.setAccepted(travel.getBookings().get(0).getAccepted());
+			reqBooking2.setDate(travel.getBookings().get(0).getDate());
+			reqBooking2.setTraveller(travel.getBookings().get(0).getTraveller());
+		}
+
+		reqBooking1.setRecurrent(false);
+		reqBooking1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
+
+		Travel travelStep1 = travelManager.bookTrip("560263eed1f1f802c2a83book", reqBooking1, "52");
+
+		reqBooking1.setRecurrent(false);
+		reqBooking1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-30"));
+
+		Travel travelStep2 = travelManager.bookTrip("560263eed1f1f802c2a83book", reqBooking1, "52");
+		// booking size incremented.
+//		Assert.assertNotEquals(travelStep1.getBookings().size(), travelStep2.getBookings().size());
+
+		reqBooking2.setRecurrent(true);
+
+		Travel travelStep3 = travelManager.bookTrip("560263eed1f1f802c2a83book", reqBooking2, "52");
+		// booking size incremented.
+		Assert.assertNotEquals(travelStep2.getBookings().size(), travelStep3.getBookings().size());
+
+		Travel travelStep4 = travelManager.bookTrip("560263eed1f1f802c2a83book", reqBooking2, "52");
+		// no change(same as step 3).
+		Assert.assertEquals(travelStep3.getBookings().size(), travelStep4.getBookings().size());
+
+		Travel travelStep5 = travelManager.bookTrip("560263eed1f1f802c2a83book", reqBooking1, "52");
+		// no change(same as step4).
+		Assert.assertEquals(travelStep4.getBookings().size(), travelStep5.getBookings().size());
+
+		Booking bookingToBeRejected = null;
+		for (Booking temp : travelStep2.getBookings()) {
+			if (!temp.isRecurrent()) {
+				bookingToBeRejected = temp;
+				break;
+			}
+		}
+
+		bookingToBeRejected.setAccepted(-1);
+		Travel acceptTravel = travelManager.acceptTrip("560263eed1f1f802c2a83book", bookingToBeRejected, "52");
+
+		int rejections = 0;
+		for (Booking book : acceptTravel.getBookings()) {
+			if (book.getAccepted() == -1) {
+				rejections++;
+			}
+		}
+
+		Assert.assertEquals(rejections, 1);
 
 	}
 

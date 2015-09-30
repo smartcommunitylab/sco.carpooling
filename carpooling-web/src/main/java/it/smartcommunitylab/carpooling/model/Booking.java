@@ -67,4 +67,40 @@ public class Booking {
 		this.accepted = accepted;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + (recurrent ? 1231 : 1237);
+		result = prime * result + ((traveller == null) ? 0 : traveller.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Booking other = (Booking) obj;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (recurrent != other.recurrent)
+			return false;
+		if (traveller == null) {
+			if (other.traveller != null)
+				return false;
+		} else if (!traveller.equals(other.traveller))
+			return false;
+		return true;
+	}
+	
+	
+
 }

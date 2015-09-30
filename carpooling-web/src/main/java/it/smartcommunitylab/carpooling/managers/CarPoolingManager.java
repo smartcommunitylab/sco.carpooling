@@ -24,6 +24,7 @@ import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
+import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,9 +105,45 @@ public class CarPoolingManager {
 		return travel;
 	}
 
-	public Travel bookTrip(String tripId, Booking booking, String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Travel bookTrip(String travelId, Booking reqBooking, String userId) {
+
+		Travel travel = travelRepository.findOne(travelId);
+
+		if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
+			if (travel.getRecurrency() != null) { // recurrent travel.
+				if (CarPoolingUtils.ifBookableRecurr(travel, reqBooking, userId)) {
+					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+					travelRepository.save(travel);
+				}
+
+			} else if (!reqBooking.isRecurrent()) { //non-recurrent travel + non-recurrent requested booking.
+				if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
+					// update traveller.
+					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+//					reqBooking.getTraveller().setUserId(userId);
+//					reqBooking.setAccepted(0);
+//					travel.getBookings().add(reqBooking);
+					travelRepository.save(travel);
+				}
+			}
+		}
+
+		return travel;
+	}
+
+	public Travel acceptTrip(String travelId, Booking booking, String userId) {
+
+		Travel travel = travelRepository.findOne(travelId);
+
+		for (Booking book : travel.getBookings()) {
+			if (book.equals(booking)) {
+				book.setAccepted(booking.getAccepted());
+			}
+		}
+		
+		travelRepository.save(travel);
+
+		return travel;
 	}
 
 }

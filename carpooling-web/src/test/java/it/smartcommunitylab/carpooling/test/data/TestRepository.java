@@ -74,11 +74,18 @@ public class TestRepository {
 	}
 
 	@Test
-	public void testTravelRepo() {
+	public void testTravelRepoByPassengerId() {
 		for (Travel travel : travelRepository.findTravelByPassengerId("54")) {
 			System.out.println(travel.getId());
 		}
 	}
+	
+	@Test
+	public void testTravelRepoById() {
+		Travel travel = travelRepository.findOne("560263eed1f1f802c2a83efg");
+		System.out.println(travel.getId());
+	}
+
 
 	@Test
 	public void testCommunityMatchInSearchTravel() {

@@ -110,6 +110,14 @@ public class ServiceController {
 
 		return new Response<Travel>(travel);
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/passenger/trips/{tripId}/accept")
+	public @ResponseBody
+	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
+		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());
+
+		return new Response<Travel>(travel);
+	}
 
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody

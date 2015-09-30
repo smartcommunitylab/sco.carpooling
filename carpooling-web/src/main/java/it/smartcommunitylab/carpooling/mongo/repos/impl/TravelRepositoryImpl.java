@@ -136,58 +136,55 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
 		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
 
-
 		Criteria criteria = new Criteria().where("active").is(true).orOperator(nonRecurr, recurrDOW, recurrDOM);
 
 		/**
-		Query: {
-		
-		"active": true,
-		
-		"$or": [{
-		"when": {
-			"$gte": 1443421800000,
-			"$lte": 1443429000000
-		}
-		},
+		Query:
 		{
-		"$and": [{
-			"when": 0,
-			"recurrency": {
-				"$exists": true
-			},
 			"active": true,
-			"recurrency.time": {
-				"$gte": 8,
-				"$lte": 10
-			}
-		},
-		{
-			"recurrency.days": {
-				"$in": [2]
-			}
-		}]
-		},
-		{
-		"$and": [{
-			"when": 0,
-			"recurrency": {
-				"$exists": true
+			"$or": [{
+				"when": {
+					"$gte": 1443421800000,
+					"$lte": 1443429000000
+				}
 			},
-			"active": true,
-			"recurrency.time": {
-				"$gte": 8,
-				"$lte": 10
-			}
-		},
-		{
-			"recurrency.dates": {
-				"$in": [28]
-			}
-		}]
-		}]
-		}
-		**/
+			{
+				"$and": [{
+					"when": 0,
+					"recurrency": {
+						"$exists": true
+					},
+					"active": true,
+					"recurrency.time": {
+						"$gte": 8,
+						"$lte": 10
+					}
+				},
+				{
+					"recurrency.days": {
+						"$in": [2]
+					}
+				}]
+			},
+			{
+				"$and": [{
+					"when": 0,
+					"recurrency": {
+						"$exists": true
+					},
+					"active": true,
+					"recurrency.time": {
+						"$gte": 8,
+						"$lte": 10
+					}
+				},
+				{
+					"recurrency.dates": {
+						"$in": [28]
+					}
+				}]
+			}]
+		}**/
 
 		Query query = new Query();
 		query.addCriteria(criteria);
@@ -233,7 +230,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
 		// recurr dom.
 		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
-		
+
 		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
 		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
 
@@ -244,70 +241,67 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		query.addCriteria(communityCriteria);
 		query.addCriteria(zoneCriteria);
 		query.addCriteria(timeCriteria);
-
+		
 		/**
-		Query: {
-		
-		"active": true,
-		
-		"communityIds": {
-		"$in": ["cPCommunity1",
-		"cPCommunity2"]
-		},
-		
-		"from.coordinates": {
-		"$within": {
-			$java: org.springframework.data.mongodb.core.query.GeoCommand@23b35955
-		}
-		},
-		"to.coordinates": {
-		"$within": {
-			$java: org.springframework.data.mongodb.core.query.GeoCommand@53adedc2
-		}
-		},
-		
-		"$or": [{
-		"when": {
-			"$gte": 1443421800000,
-			"$lte": 1443429000000
-		}
-		},
+		Query: 
 		{
-		"$and": [{
-			"when": 0,
-			"recurrency": {
-				"$exists": true
+			"active": true,
+			"communityIds": {
+				"$in": ["cPCommunity1",
+				"cPCommunity2"]
 			},
-			"recurrency.time": {
-				"$gte": 8,
-				"$lte": 10
-			}
-		},
-		{
-			"recurrency.days": {
-				"$in": [2]
-			}
-		}]
-		},
-		{
-		"$and": [{
-			"when": 0,
-			"recurrency": {
-				"$exists": true
+			"from.coordinates": {
+				"$within": {
+					
+				}
 			},
-			"recurrency.time": {
-				"$gte": 8,
-				"$lte": 10
-			}
-		},
-		{
-			"recurrency.dates": {
-				"$in": [28]
-			}
-		}]
-		}]
-		}
-		*/
+			"to.coordinates": {
+				"$within": {
+					
+				}
+			},
+			"$or": [{
+				"when": {
+					"$gte": 1443421800000,
+					"$lte": 1443429000000
+				}
+			},
+			{
+				"$and": [{
+					"when": 0,
+					"recurrency": {
+						"$exists": true
+					},
+					"recurrency.time": {
+						"$gte": 8,
+						"$lte": 10
+					}
+				},
+				{
+					"recurrency.days": {
+						"$in": [2]
+					}
+				}]
+			},
+			{
+				"$and": [{
+					"when": 0,
+					"recurrency": {
+						"$exists": true
+					},
+					"recurrency.time": {
+						"$gte": 8,
+						"$lte": 10
+					}
+				},
+				{
+					"recurrency.dates": {
+						"$in": [28]
+					}
+				}]
+			}]
+		} **/
+
 
 		travels = mongoTemplate.find(query, Travel.class);
 
@@ -318,11 +312,11 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		for (Travel travel : temp) {
 
 			if (travel.getRecurrency() == null) {
-				if (getNonRecurrentAvailabiliy(travel) < 1) {//travelRequest.getNrOfPost()
+				if (CarPoolingUtils.getNonRecurrentAvailabiliy(travel) < 1) {//travelRequest.getNrOfPost()
 					travels.remove(travel);
 				}
 			} else {
-				if (!availableRecurrentTrip(travel, travelRequest)) {
+				if (!CarPoolingUtils.availableRecurrentTrip(travel, travelRequest)) {
 					travels.remove(travel);
 				}
 			}
@@ -330,41 +324,6 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		}
 
 		return travels;
-	}
-
-	private boolean availableRecurrentTrip(Travel travel, TravelRequest travelRequest) {
-
-		int capacity = travel.getPlaces();
-
-		for (Booking booking : travel.getBookings()) {
-
-			if (booking.isRecurrent()) { // recurrent booking.
-				if (booking.getAccepted() != -1) {
-					capacity--;
-				}
-			} else { // non recurrent booking
-				if (booking.getAccepted() != -1
-						&& CarPoolingUtils.isOnSameDay(booking.getDate().getTime(), travelRequest.getWhen())) {
-					capacity--;
-				}
-			}
-
-		}
-
-		return (capacity > 0 ? true : false);
-	}
-
-	private int getNonRecurrentAvailabiliy(Travel travel) {
-
-		int availability = travel.getPlaces();
-
-		for (Booking booking : travel.getBookings()) { 
-			if (booking.getAccepted() != -1) { // if it is not rejected, occupied.
-				availability--;
-			}
-		}
-
-		return availability;
 	}
 
 }
