@@ -142,7 +142,7 @@ public class CarPoolingUtils {
 			Map<Long, Integer> dateNonReccBooked = new HashMap<Long, Integer>();
 			int nrOfRecurr = 0;
 			int max = 0;
-			
+
 			for (Booking booking : travel.getBookings()) {
 				int occupied = 0;
 				if (!booking.isRecurrent() && booking.getAccepted() != -1) {
@@ -237,6 +237,35 @@ public class CarPoolingUtils {
 		travel.getBookings().add(reqBooking);
 
 		return travel;
+	}
+
+	public static List<Booking> getAllReccBookingForUserTravels(List<Travel> userTravels, String userId) {
+		List<Booking> reccBookings = new ArrayList<Booking>();
+		for (Travel travel : userTravels) {
+			for (Booking booking : travel.getBookings()) {
+				if (booking.getTraveller().getUserId().equalsIgnoreCase(userId)) {
+					if (booking.isRecurrent()) {
+						reccBookings.add(booking);
+					}
+				}
+			}
+		}
+		return reccBookings;
+	}
+
+	public static List<Booking> getAllNonReccBookingForUserTravels(List<Travel> userTravels, String userId) {
+		List<Booking> nonReccBookings = new ArrayList<Booking>();
+		for (Travel travel : userTravels) {
+			for (Booking booking : travel.getBookings()) {
+				if (booking.getTraveller().getUserId().equalsIgnoreCase(userId)) {
+					if (!booking.isRecurrent()) {
+						nonReccBookings.add(booking);
+					}
+				}
+			}
+		}
+
+		return nonReccBookings;
 	}
 
 }

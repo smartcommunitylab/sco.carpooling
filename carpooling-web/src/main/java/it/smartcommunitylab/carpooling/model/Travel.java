@@ -19,7 +19,6 @@ package it.smartcommunitylab.carpooling.model;
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
