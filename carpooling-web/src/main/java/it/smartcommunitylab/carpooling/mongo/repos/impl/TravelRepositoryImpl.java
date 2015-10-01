@@ -312,7 +312,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		for (Travel travel : temp) {
 
 			if (travel.getRecurrency() == null) {
-				if (CarPoolingUtils.getNonRecurrentAvailabiliy(travel) < 1) {//travelRequest.getNrOfPost()
+				if (CarPoolingUtils.getNonRecurrentAvailabiliy(travel, travelRequest) < 1) {//travelRequest.getNrOfPost()
 					travels.remove(travel);
 				}
 			} else {

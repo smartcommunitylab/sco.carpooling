@@ -49,7 +49,7 @@ public class TravelProfile {
 		this.routes = routes;
 	}
 
-	class ReqRoute {
+	static class ReqRoute {
 
 		/** id of route(reqd). **/
 		@Id

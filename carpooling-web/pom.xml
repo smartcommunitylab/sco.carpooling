@@ -172,10 +172,33 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<xmlOutput>true</xmlOutput>
+					<!-- Optional directory to put findbugs xdoc xml report -->
+					<xmlOutputDirectory>target/site</xmlOutputDirectory>
+				</configuration>
+			</plugin>
 		</plugins>
 		<finalName>carpooling</finalName>
 	</build>
-
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.3</version>
+				<configuration>
+					<omitVisitors>DLS</omitVisitors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+	
 	<repositories>
 		<repository>
 			<id>SmartCommunity-releases</id>

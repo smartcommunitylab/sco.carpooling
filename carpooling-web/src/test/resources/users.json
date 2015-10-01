@@ -12,5 +12,20 @@
     "userId" : "54",
     "name" : "Driver",
     "surname" : "Driver"
+},
+{
+    "userId" : "60",
+    "name" : "Ex Community Driver",
+    "surname" : "Ex Community Driver"
+},
+{
+    "userId" : "65",
+    "name" : "Ex Community User",
+    "surname" : "Ex Community User"
+},
+{
+    "userId" : "70",
+    "name" : "Blocked User Reccurrent",
+    "surname" : "Blocked User Reccurrent"
 }
 ]

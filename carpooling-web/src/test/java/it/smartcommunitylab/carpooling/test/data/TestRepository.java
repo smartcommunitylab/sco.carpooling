@@ -46,7 +46,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author nawazk
  *
  */
-@org.junit.Ignore
+//@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestRepository {
@@ -62,7 +62,7 @@ public class TestRepository {
 
 	@After
 	public void after() {
-		travelRepository.delete(refTravel);
+		travelRepository.deleteAll();
 
 	}
 
@@ -80,7 +80,7 @@ public class TestRepository {
 		}
 	}
 	
-	@Test
+//	@Test
 	public void testTravelRepoById() {
 		Travel travel = travelRepository.findOne("560263eed1f1f802c2a83efg");
 		System.out.println(travel.getId());
@@ -100,7 +100,7 @@ public class TestRepository {
 	@Test
 	public void testZoneMatchInSearchTravel() throws JsonProcessingException, IOException {
 
-		// // construct ref Travel from json file.
+		//construct ref Travel from json file.
 		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("travel.json");
 		JsonNode rootNode = mapper.readTree(jsonlFile);
 		ArrayNode arrayNode = (ArrayNode) rootNode;

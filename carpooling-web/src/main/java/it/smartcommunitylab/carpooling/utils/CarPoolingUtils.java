@@ -89,7 +89,13 @@ public class CarPoolingUtils {
 				if (booking.getAccepted() != -1) {
 					capacity--;
 				}
-			} else { // non recurrent booking
+			} else { // non recurrent booking.
+				
+				// if booking has time before requested time - ignore.
+				if (CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), travelRequest.getWhen())) {
+					continue;
+				}
+				
 				if (booking.getAccepted() != -1
 						&& CarPoolingUtils.isOnSameDay(booking.getDate().getTime(), travelRequest.getWhen())) {
 					capacity--;
@@ -101,11 +107,35 @@ public class CarPoolingUtils {
 		return (capacity > 0 ? true : false);
 	}
 
-	public static int getNonRecurrentAvailabiliy(Travel travel) {
+	private static boolean isBeforeDate(long time1, long time2) {
+		
+		boolean before = false;
+		
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTimeInMillis(time1);
+		
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTimeInMillis(time2);
+		
+		before = cal1.get(Calendar.DAY_OF_YEAR) < cal2.get(Calendar.DAY_OF_YEAR);
+				
+		return before;
+	
+	}
+
+	public static int getNonRecurrentAvailabiliy(Travel travel, TravelRequest travelRequest) {
 
 		int availability = travel.getPlaces();
 
 		for (Booking booking : travel.getBookings()) {
+
+			// a non recurrent travel can never have recurrent booking, still checking.
+			// if booking has time before requested time - ignore.
+			if (!booking.isRecurrent()
+					&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), travelRequest.getWhen())) {
+				continue;
+			}
+
 			if (booking.getAccepted() != -1) { // if it is not rejected, occupied.
 				availability--;
 			}
@@ -120,6 +150,14 @@ public class CarPoolingUtils {
 		int availability = travel.getPlaces();
 
 		for (Booking booking : travel.getBookings()) {
+			
+			// a non recurrent travel can never have recurrent booking, still checking.
+			// if booking has time before requested booking time - ignore.
+			if (!booking.isRecurrent()
+					&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
+				continue;
+			}
+
 			if (booking.getAccepted() != -1) { // if it is not rejected, occupied.
 				availability--;
 			}
@@ -145,6 +183,13 @@ public class CarPoolingUtils {
 
 			for (Booking booking : travel.getBookings()) {
 				int occupied = 0;
+
+//				// if booking has time before requested booking time - ignore.
+//				if (!booking.isRecurrent()
+//						&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
+//					continue;
+//				}
+
 				if (!booking.isRecurrent() && booking.getAccepted() != -1) {
 					// increment occupied.
 					if (dateNonReccBooked.containsKey(booking.getDate().getTime())) {
@@ -154,6 +199,7 @@ public class CarPoolingUtils {
 					}
 					max = Math.max(max, occupied);
 					dateNonReccBooked.put(booking.getDate().getTime(), occupied); // booking.getAllocated();
+
 				} else if (booking.getAccepted() != -1) {
 					nrOfRecurr++;
 				}
@@ -163,12 +209,12 @@ public class CarPoolingUtils {
 				bookable = true;
 			}
 
-//			for (Long day : dateNonReccBooked.keySet()) {
-//				int maxNonRecurr = dateNonReccBooked.get(day);
-//				if (maxNonRecurr + nrOfRecurr > capacity) {
-//					bookable = false;
-//				}
-//			}
+			//			for (Long day : dateNonReccBooked.keySet()) {
+			//				int maxNonRecurr = dateNonReccBooked.get(day);
+			//				if (maxNonRecurr + nrOfRecurr > capacity) {
+			//					bookable = false;
+			//				}
+			//			}
 
 		} else { // requested booking is non-recurrent.
 
