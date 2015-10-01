@@ -79,6 +79,22 @@ public class CarPoolingUtils {
 		return sameDay;
 	}
 
+	private static boolean isBeforeDate(long time1, long time2) {
+
+		boolean before = false;
+
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTimeInMillis(time1);
+
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTimeInMillis(time2);
+
+		before = cal1.get(Calendar.DAY_OF_YEAR) < cal2.get(Calendar.DAY_OF_YEAR);
+
+		return before;
+
+	}
+	
 	public static boolean availableRecurrentTrip(Travel travel, TravelRequest travelRequest) {
 
 		int capacity = travel.getPlaces();
@@ -86,16 +102,19 @@ public class CarPoolingUtils {
 		for (Booking booking : travel.getBookings()) {
 
 			if (booking.isRecurrent()) { // recurrent booking.
+				
 				if (booking.getAccepted() != -1) {
 					capacity--;
 				}
-			} else { // non recurrent booking.
 				
-				// if booking has time before requested time - ignore.
+			} else { // non recurrent booking.
+
+				// if booking has time before requested booking time - ignore.(just for performance since we only decrease
+				// the counter if it is on same day as can be seen below.
 				if (CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), travelRequest.getWhen())) {
 					continue;
 				}
-				
+
 				if (booking.getAccepted() != -1
 						&& CarPoolingUtils.isOnSameDay(booking.getDate().getTime(), travelRequest.getWhen())) {
 					capacity--;
@@ -105,22 +124,6 @@ public class CarPoolingUtils {
 		}
 
 		return (capacity > 0 ? true : false);
-	}
-
-	private static boolean isBeforeDate(long time1, long time2) {
-		
-		boolean before = false;
-		
-		Calendar cal1 = Calendar.getInstance();
-		cal1.setTimeInMillis(time1);
-		
-		Calendar cal2 = Calendar.getInstance();
-		cal2.setTimeInMillis(time2);
-		
-		before = cal1.get(Calendar.DAY_OF_YEAR) < cal2.get(Calendar.DAY_OF_YEAR);
-				
-		return before;
-	
 	}
 
 	public static int getNonRecurrentAvailabiliy(Travel travel, TravelRequest travelRequest) {
@@ -135,8 +138,8 @@ public class CarPoolingUtils {
 					&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), travelRequest.getWhen())) {
 				continue;
 			}
-
-			if (booking.getAccepted() != -1) { // if it is not rejected, occupied.
+			// if it is not rejected, occupied.
+			if (!booking.isRecurrent() && booking.getAccepted() != -1) { 
 				availability--;
 			}
 		}
@@ -145,26 +148,32 @@ public class CarPoolingUtils {
 	}
 
 	public static boolean ifBookable(Travel travel, Booking reqBooking, String userId) {
+		
 		boolean bookable = false;
-
 		int availability = travel.getPlaces();
 
-		for (Booking booking : travel.getBookings()) {
+		if (travel.getBookings().isEmpty() && availability > 0) {
 			
-			// a non recurrent travel can never have recurrent booking, still checking.
-			// if booking has time before requested booking time - ignore.
-			if (!booking.isRecurrent()
-					&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
-				continue;
-			}
-
-			if (booking.getAccepted() != -1) { // if it is not rejected, occupied.
-				availability--;
-			}
-		}
-
-		if (availability > 0 && CarPoolingUtils.isOnSameDay(reqBooking.getDate().getTime(), travel.getWhen())) {
 			bookable = true;
+			
+		} else {
+			
+			for (Booking booking : travel.getBookings()) {
+				// if booking has time before requested booking time - ignore.(just for performance, since we only decrease
+				// the counter if it is on same day as can be seen below.
+				if (!booking.isRecurrent()
+						&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
+					continue;
+				}
+				// if it is not rejected, occupied.
+				if (!booking.isRecurrent() && booking.getAccepted() != -1) { 
+					availability--;
+				}
+			}
+
+			if (availability > 0 && CarPoolingUtils.isOnSameDay(reqBooking.getDate().getTime(), travel.getWhen())) {
+				bookable = true;
+			}
 		}
 
 		return bookable;
@@ -184,7 +193,7 @@ public class CarPoolingUtils {
 			for (Booking booking : travel.getBookings()) {
 				int occupied = 0;
 
-//				// if booking has time before requested booking time - ignore.
+//				// this is the body of 'recurrent booking request' which has not date therefore no need to check if requested booking is non-recurrent.
 //				if (!booking.isRecurrent()
 //						&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
 //					continue;
@@ -209,27 +218,36 @@ public class CarPoolingUtils {
 				bookable = true;
 			}
 
-			//			for (Long day : dateNonReccBooked.keySet()) {
-			//				int maxNonRecurr = dateNonReccBooked.get(day);
-			//				if (maxNonRecurr + nrOfRecurr > capacity) {
-			//					bookable = false;
-			//				}
-			//			}
+//			for (Long day : dateNonReccBooked.keySet()) {
+//				int maxNonRecurr = dateNonReccBooked.get(day);
+//				if (maxNonRecurr + nrOfRecurr > capacity) {
+//					bookable = false;
+//				}
+//			}
 
 		} else { // requested booking is non-recurrent.
 
 			int availableNonRecurrent = capacity;
 
 			for (Booking booking : travel.getBookings()) {
+
+				// if booking has time before requested booking time - ignore.(just for performance since we only decrease
+				// the counter if it is on same day as can be seen below.
+				if (!booking.isRecurrent()
+						&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
+					continue;
+				}
 				if (booking.isRecurrent() && booking.getAccepted() != -1) {
 					availableNonRecurrent--;
 				}
+
 				if (!booking.isRecurrent()
 						&& CarPoolingUtils.isOnSameDay(booking.getDate().getTime(), reqBooking.getDate().getTime())
 						&& booking.getAccepted() != -1) {
 					availableNonRecurrent--;
 				}
 			}
+
 			bookable = availableNonRecurrent > 0 ? true : false; // reqBooking.getRqdPosts()
 		}
 
