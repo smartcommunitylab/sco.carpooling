@@ -93,7 +93,6 @@ public class MobilityPlanner {
 			itns = mobilityPlannerService.planSingleJourney(singleJourney, null);
 
 		} catch (MobilityServiceException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

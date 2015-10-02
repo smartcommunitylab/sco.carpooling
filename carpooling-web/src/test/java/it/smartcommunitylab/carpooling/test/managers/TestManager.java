@@ -188,12 +188,12 @@ public class TestManager {
 	public void testRecurrentTravelBooking() throws JsonProcessingException, IOException, ParseException {
 
 		/**
-		 * travel with 4 places, has two recurrent bookings. (since one is rejected, see bookingTest.json)
+		 * travel with 4 places, has two recurrent bookings. (since one is rejected, see recurrentTravel.json)
 		 * user(53) request for non-recurrent booking and allowed. 
 		 * user(53) request for recurrnt booking on different date and allowed
 		 * user(52) request for reccruent booking and allowed.
 		 * user(70) request for reccurrent booking and disallowed.
-		 * driver rejects above bookings, 4 in total.
+		 * driver rejects above bookings.
 		 * user(70) request for reccurrent booking and allowed + accepted by driver.
 		 */
 

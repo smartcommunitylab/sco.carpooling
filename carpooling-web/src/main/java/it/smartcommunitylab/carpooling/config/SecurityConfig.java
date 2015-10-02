@@ -17,7 +17,6 @@ package it.smartcommunitylab.carpooling.config;
 
 import it.smartcommunitylab.carpooling.security.CarPoolingUserDetails;
 import it.smartcommunitylab.carpooling.security.OAuthFilter;
-//import it.smartcommunitylab.carpooling.security.ReportUserDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

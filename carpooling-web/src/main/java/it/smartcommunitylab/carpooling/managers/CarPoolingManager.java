@@ -120,9 +120,6 @@ public class CarPoolingManager {
 				if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
 					// update traveller.
 					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-//					reqBooking.getTraveller().setUserId(userId);
-//					reqBooking.setAccepted(0);
-//					travel.getBookings().add(reqBooking);
 					travelRepository.save(travel);
 				}
 			}
