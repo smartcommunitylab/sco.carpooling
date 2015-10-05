@@ -46,7 +46,7 @@ import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 /**
- * 
+ *
  * @author nawazk
  *
  */
@@ -79,14 +79,14 @@ public class UserAuthController {
 	}
 
 	/**
-	 * This is a callback for the external AAC OAuth2.0 authentication. 
+	 * This is a callback for the external AAC OAuth2.0 authentication.
 	 * Exchanges code for token, recover the profile and creates the user.
-	 * 
+	 *
 	 * @param request
 	 * @param response
-	 * @throws AACException 
-	 * @throws SecurityException 
-	 * @throws IOException 
+	 * @throws AACException
+	 * @throws SecurityException
+	 * @throws IOException
 	 */
 	@RequestMapping("/ext_callback")
 	public void callback(HttpServletRequest request, HttpServletResponse response) {

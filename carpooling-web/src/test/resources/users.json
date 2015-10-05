@@ -1,31 +1,43 @@
 [{
     "userId" : "52",
     "name" : "User Reccurrent",
-    "surname" : "User Reccurrent"
+    "surname" : "User Reccurrent",
+    "travelProfile" : {},
+    "gameProfile" : {}
 },
 {
     "userId" : "53",
     "name" : "User Non recurrent",
-    "surname" : "User Non Reccurrent"
+    "surname" : "User Non Reccurrent",
+    "travelProfile" : {},
+    "gameProfile" : {}
 },
 {
     "userId" : "54",
     "name" : "Driver",
-    "surname" : "Driver"
+    "surname" : "Driver",
+    "travelProfile" : {},
+    "gameProfile" : {}
 },
 {
     "userId" : "60",
     "name" : "Ex Community Driver",
-    "surname" : "Ex Community Driver"
+    "surname" : "Ex Community Driver",
+    "travelProfile" : {},
+    "gameProfile" : {}
 },
 {
     "userId" : "65",
     "name" : "Ex Community User",
-    "surname" : "Ex Community User"
+    "surname" : "Ex Community User",
+    "travelProfile" : {},
+    "gameProfile" : {}
 },
 {
     "userId" : "70",
     "name" : "Blocked User Reccurrent",
-    "surname" : "Blocked User Reccurrent"
+    "surname" : "Blocked User Reccurrent",
+    "travelProfile" : {},
+    "gameProfile" : {}
 }
 ]

@@ -256,5 +256,66 @@ public class TestUser {
 		} // available date.
 
 	}
+	
+	@Test
+	public void testSelfRatingForbidden() {
+		/**
+		 * user ("52"), rate driver("54") with rating 5.
+		 * driver("54"), try to selft rate, forbidden.
+		 * driver("54"), score remains 5.
+		 * 
+		 */
+		User driver = userRepository.findOne("54");
+		Assert.assertEquals(driver.getGameProfile().getDriverRating(), 0, 0);
+		travelManager.rateDriver("52", "54", 5);
+		Assert.assertEquals(driver.getGameProfile().getDriverRating(), 5, 5);
+		travelManager.rateDriver("54", "54", 5);
+		Assert.assertEquals(driver.getGameProfile().getDriverRating(), 5, 5);
+		
+	}
+	
+	@Test
+	public void testRatingDriver() {
+		/**
+		 * driver("54") rate user ("52") with rating 10.
+		 * driver("54") rate user("52") with rating 5.
+		 * previous rating overwritten.
+		 * user("52") try to self rate to 10, forbidden.
+		 * user("52") score remains 5.
+		 */
+		User passenger = userRepository.findOne("52");
+		Assert.assertEquals(passenger.getGameProfile().getDriverRating(), 0, 0);
+		travelManager.ratePassenger("54", "52", 10);
+		Assert.assertEquals(passenger.getGameProfile().getDriverRating(), 10, 10);
+		travelManager.ratePassenger("54", "52", 5);
+		Assert.assertEquals(passenger.getGameProfile().getDriverRating(), 5, 5);
+		travelManager.ratePassenger("52", "52", 10);
+		Assert.assertEquals(passenger.getGameProfile().getDriverRating(), 5, 5);
+		
+	}
+	
+	@Test
+	public void testRatingPassenger() {
+		/**
+		 * user("52") rate user("53") to 5.
+		 * user("53") rate user("52") to 5.
+		 * driver("54") rate both users("52","53") to 0.
+		 * both users rating drops to 2.5(50%).
+		 * 
+		 */
+		User passenger1 = userRepository.findOne("52");
+		User passenger2 = userRepository.findOne("53");
+		Assert.assertEquals(passenger1.getGameProfile().getDriverRating(), 0, 0);
+		Assert.assertEquals(passenger2.getGameProfile().getDriverRating(), 0, 0);
+		travelManager.ratePassenger("52", "53", 5);
+		travelManager.ratePassenger("53", "52", 5);
+		Assert.assertEquals(passenger1.getGameProfile().getDriverRating(), 5, 5);
+		Assert.assertEquals(passenger2.getGameProfile().getDriverRating(), 5, 5);
+		travelManager.ratePassenger("54", "53", 0);
+		travelManager.ratePassenger("54", "52", 0);
+		Assert.assertEquals(passenger1.getGameProfile().getDriverRating(), 2.5, 2.5);
+		Assert.assertEquals(passenger2.getGameProfile().getDriverRating(), 2.5, 2.5);
+		
+	}
 
 }

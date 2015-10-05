@@ -121,6 +121,8 @@ public class User {
 		user.setName(basicProfile.getName());
 		user.setSurname(basicProfile.getSurname());
 		user.setUserId(basicProfile.getUserId());
+		user.setTravelProfile(new TravelProfile());
+		user.setGameProfile(new GameProfile());
 		return user;
 	}
 

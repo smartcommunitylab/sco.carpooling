@@ -35,6 +35,9 @@ public class CarPoolingUtils {
 	public static final double radius = 1;
 	/** date format. **/
 	public static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	/** constants. **/
+	public static final String ERROR_CODE = "errorCode";
+	public static final String ERROR_MSG = "errorMsg";
 
 	public static Date getTimeByOffset(Date reqDate, int offset) {
 		Date result;

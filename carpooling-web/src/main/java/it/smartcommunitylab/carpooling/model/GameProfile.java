@@ -32,9 +32,9 @@ public class GameProfile {
 	/** gamification points(key-value pairs for diff point types).**/
 	private Map<String, Double> pointMap = new HashMap<String, Double>();
 	/** ratings of other drivers.**/
-	private Map<String, Integer> otherDriverRatings = new HashMap<String, Integer>();
+	private Map<String, Integer> driverRatings = new HashMap<String, Integer>();
 	/** ratings of other passengers.**/
-	private Map<String, Integer> otherPassengerRatings = new HashMap<String, Integer>();
+	private Map<String, Integer> passengerRatings = new HashMap<String, Integer>();
 
 	public GameProfile() {
 		super();
@@ -47,8 +47,8 @@ public class GameProfile {
 		this.driverRating = driverRating;
 		this.passengerRating = passengerRating;
 		this.pointMap = pointMap;
-		this.otherDriverRatings = otherDriverRatings;
-		this.otherPassengerRatings = otherPassengerRatings;
+		this.driverRatings = otherDriverRatings;
+		this.passengerRatings = otherPassengerRatings;
 	}
 
 	public double getDriverRating() {
@@ -75,20 +75,20 @@ public class GameProfile {
 		this.pointMap = pointMap;
 	}
 
-	public Map<String, Integer> getOtherDriverRatings() {
-		return otherDriverRatings;
+	public Map<String, Integer> getDriverRatings() {
+		return driverRatings;
 	}
 
-	public void setOtherDriverRatings(Map<String, Integer> otherDriverRatings) {
-		this.otherDriverRatings = otherDriverRatings;
+	public void setDriverRatings(Map<String, Integer> driverRatings) {
+		this.driverRatings = driverRatings;
 	}
 
-	public Map<String, Integer> getOtherPassengerRatings() {
-		return otherPassengerRatings;
+	public Map<String, Integer> getPassengerRatings() {
+		return passengerRatings;
 	}
 
-	public void setOtherPassengerRatings(Map<String, Integer> otherPassengerRatings) {
-		this.otherPassengerRatings = otherPassengerRatings;
+	public void setPassengerRatings(Map<String, Integer> passengerRatings) {
+		this.passengerRatings = passengerRatings;
 	}
 
 }

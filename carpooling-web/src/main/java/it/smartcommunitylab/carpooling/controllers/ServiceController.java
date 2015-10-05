@@ -25,9 +25,11 @@ import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.UserCommunitiesSetup;
+import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * 
+ *
  * @author nawazk
  *
  */
@@ -112,7 +114,7 @@ public class ServiceController {
 
 		return new Response<Travel>(travel);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/passenger/trips/{tripId}/accept")
 	public @ResponseBody
 	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
@@ -120,7 +122,7 @@ public class ServiceController {
 
 		return new Response<Travel>(travel);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/read/profile")
 	public @ResponseBody
 	Response<TravelProfile> readProfile() {
@@ -134,6 +136,43 @@ public class ServiceController {
 		}
 
 	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/rate/driver/{driverId}/{rating}")
+	public @ResponseBody
+	Response<String> rateDriver(@PathVariable String driverId, @PathVariable int rating) {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.rateDriver(getUserId(), driverId, rating);
+
+		if (errorMap.isEmpty()) {
+			response.setData("rating done successfully");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/rate/passenger/{passengerId}/{rating}")
+	public @ResponseBody
+	Response<String> ratePassenger(@PathVariable String passengerId, @PathVariable int rating) {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.ratePassenger(getUserId(), passengerId, rating);
+
+		if (errorMap.isEmpty()) {
+			response.setData("rating done successfully.");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+	}
+
 
 	@RequestMapping(method = RequestMethod.POST, value = "/save/profile")
 	public @ResponseBody

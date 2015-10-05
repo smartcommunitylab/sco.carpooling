@@ -19,6 +19,7 @@ package it.smartcommunitylab.carpooling.managers;
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.GameProfile;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
@@ -30,19 +31,22 @@ import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
- * 
+ *
  * @author nawazk
  *
  */
 @Component
 public class CarPoolingManager {
-
+	
 	@Autowired
 	private TravelRequestRepository travelRequestRepository;
 	@Autowired
@@ -88,7 +92,6 @@ public class CarPoolingManager {
 
 		return searchTravels;
 	}
-	
 
 	public Travel saveTravel(Travel travel, String userId) {
 
@@ -121,7 +124,8 @@ public class CarPoolingManager {
 					travelRepository.save(travel);
 				}
 
-			} else if (!reqBooking.isRecurrent()) { //non-recurrent travel + non-recurrent requested booking.
+			} else if (!reqBooking.isRecurrent()) {
+				//non-recurrent travel + non-recurrent requested booking.
 				if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
 					// update traveller.
 					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
@@ -142,7 +146,7 @@ public class CarPoolingManager {
 				book.setAccepted(booking.getAccepted());
 			}
 		}
-		
+
 		travelRepository.save(travel);
 
 		return travel;
@@ -160,13 +164,13 @@ public class CarPoolingManager {
 
 		User user = userRepository.findOne(userId);
 		TravelProfile saveProfile = null;
-		
+
 		if (user != null) {
 			user.setTravelProfile(travelProfile);
 			user = userRepository.save(user);
 			saveProfile = user.getTravelProfile();
 		}
-		
+
 		return saveProfile;
 
 	}
@@ -175,13 +179,121 @@ public class CarPoolingManager {
 
 		TravelProfile travelProfile = null;
 		User user = userRepository.findOne(userId);
-		
+
 		if (user != null) {
 			travelProfile = user.getTravelProfile();
 		}
-		
+
 		return travelProfile;
 
+	}
+
+	public Map<String, String> ratePassenger(String userId, String passengerId, int rating) {
+
+		Map<String, String> errorMap = new HashMap<String, String>();
+
+		if (userId.equalsIgnoreCase(passengerId)) {
+
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.FORBIDDEN.value()));
+			errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger cannot self rate.");
+
+			return errorMap;
+
+		}
+
+		User passenger = userRepository.findOne(passengerId);
+
+		if (passenger != null) {
+
+			GameProfile gameProfile = passenger.getGameProfile();
+
+			if (gameProfile != null) {
+				gameProfile.getPassengerRatings().put(userId, rating);
+				recalculateRatings(passenger);
+			} else {
+				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+				errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger has null game profile.");
+			}
+		} else {
+
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+			errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger does not exist.");
+
+		}
+
+		return errorMap;
+
+	}
+
+	public void recalculateRatings(User user) {
+
+		GameProfile gameProfile = user.getGameProfile();
+
+		double totalPRater = 0;
+		double totalPRating = 0;
+		
+		for (String key : gameProfile.getPassengerRatings().keySet()) {
+
+			totalPRating = totalPRating + gameProfile.getPassengerRatings().get(key);
+			totalPRater++;
+		}
+
+		gameProfile.setPassengerRating(totalPRating / totalPRater);
+
+		double totalDRater = 0;
+		double totalDRating = 0;
+
+		for (String key : gameProfile.getDriverRatings().keySet()) {
+
+			totalDRating = totalDRating + gameProfile.getDriverRatings().get(key);
+			totalDRater++;
+		}
+
+		gameProfile.setDriverRating(totalDRating / totalDRater);
+
+		user.setGameProfile(gameProfile);
+
+		userRepository.save(user);
+
+	}
+
+	public Map<String, String> rateDriver(String userId, String driverId, int rating) {
+
+		Map<String, String> errorMap = new HashMap<String, String>();
+
+		if (userId.equalsIgnoreCase(driverId)) {
+
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.FORBIDDEN.value()));
+			errorMap.put(CarPoolingUtils.ERROR_MSG, "driver cannot self rate.");
+
+			return errorMap;
+		}
+
+		User driver = userRepository.findOne(driverId);
+
+		if (driver != null) {
+			GameProfile gameProfile = driver.getGameProfile();
+
+			if (gameProfile != null) {
+
+				gameProfile.getDriverRatings().put(userId, rating);
+				recalculateRatings(driver);
+
+			} else {
+
+				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+				errorMap.put(CarPoolingUtils.ERROR_MSG, "driver has null game profile.");
+
+			}
+
+		} else {
+
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+			errorMap.put(CarPoolingUtils.ERROR_MSG, "driver does not exist.");
+
+		}
+
+		return errorMap;
 	}
 
 }
