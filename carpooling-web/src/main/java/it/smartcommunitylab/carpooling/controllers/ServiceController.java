@@ -21,6 +21,7 @@ import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Response;
 import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.UserCommunitiesSetup;
@@ -32,6 +33,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -117,6 +119,41 @@ public class ServiceController {
 		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());
 
 		return new Response<Travel>(travel);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/read/profile")
+	public @ResponseBody
+	Response<TravelProfile> readProfile() {
+
+		TravelProfile travelProfile = carPoolingManager.readTravelProfile(getUserId());
+
+		if (travelProfile != null) {
+			return new Response<TravelProfile>(travelProfile);
+		} else {
+			return new Response<TravelProfile>(HttpStatus.NO_CONTENT.value(), "travel profile is not found");
+		}
+
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/save/profile")
+	public @ResponseBody
+	Response<TravelProfile> saveProfile(@RequestBody TravelProfile profile) {
+
+		TravelProfile travelProfile = carPoolingManager.saveTravelProfile(profile, getUserId());
+
+		if (travelProfile != null) {
+			return new Response<TravelProfile>(travelProfile);
+		} else {
+			return new Response<TravelProfile>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel profile is not saved");
+		}
+
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/read/communities")
+	public @ResponseBody
+	Response<List<Community>> readCommunities() {
+		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
+
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -20,10 +20,13 @@ import it.sayservice.platform.smartplanner.data.message.Itinerary;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
+import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.util.ArrayList;
@@ -46,6 +49,8 @@ public class CarPoolingManager {
 	private TravelRepository travelRepository;
 	@Autowired
 	private CommunityRepository communityRepository;
+	@Autowired
+	private UserRepository userRepository;
 	@Autowired
 	private MobilityPlanner mobilityPlanner;
 
@@ -141,6 +146,42 @@ public class CarPoolingManager {
 		travelRepository.save(travel);
 
 		return travel;
+	}
+
+	public List<Community> readCommunities(String userId) {
+
+		List<Community> communities = new ArrayList<Community>();
+		communities = communityRepository.findByUserId(userId);
+
+		return communities;
+	}
+
+	public TravelProfile saveTravelProfile(TravelProfile travelProfile, String userId) {
+
+		User user = userRepository.findOne(userId);
+		TravelProfile saveProfile = null;
+		
+		if (user != null) {
+			user.setTravelProfile(travelProfile);
+			user = userRepository.save(user);
+			saveProfile = user.getTravelProfile();
+		}
+		
+		return saveProfile;
+
+	}
+
+	public TravelProfile readTravelProfile(String userId) {
+
+		TravelProfile travelProfile = null;
+		User user = userRepository.findOne(userId);
+		
+		if (user != null) {
+			travelProfile = user.getTravelProfile();
+		}
+		
+		return travelProfile;
+
 	}
 
 }

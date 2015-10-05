@@ -57,9 +57,9 @@ public class TravelProfile {
 		/** name of route(reqd). **/
 		private String name;
 		/** origin(reqd). **/
-		private Zone origin;
+		private Zone from;
 		/** destination(reqd). **/
-		private Zone destination;
+		private Zone to;
 		/** interval starttime (mins of day) -reqd. **/
 		private int timeFrom;
 		/** interval endtime (mins of day) - reqd). **/
@@ -67,7 +67,7 @@ public class TravelProfile {
 		/** whether route is active for monitoring. **/
 		private boolean enabled = true;
 		/** day of week when route is due. **/
-		private int[] recurrency = new int[] { 0, 1, 2, 3, 4, 5, 6 };
+		private int[] recurrency; 
 
 		public ReqRoute() {
 			super();
@@ -78,8 +78,8 @@ public class TravelProfile {
 				int[] recurrency) {
 			super();
 			this.name = name;
-			this.origin = origin;
-			this.destination = destination;
+			this.from = origin;
+			this.to = destination;
 			this.timeFrom = timeFrom;
 			this.timeTo = timeTo;
 			this.enabled = enabled;
@@ -102,20 +102,20 @@ public class TravelProfile {
 			this.name = name;
 		}
 
-		public Zone getOrigin() {
-			return origin;
+		public Zone getFrom() {
+			return from;
 		}
 
-		public void setOrigin(Zone origin) {
-			this.origin = origin;
+		public void setFrom(Zone from) {
+			this.from = from;
 		}
 
-		public Zone getDestination() {
-			return destination;
+		public Zone getTo() {
+			return to;
 		}
 
-		public void setDestination(Zone destination) {
-			this.destination = destination;
+		public void setTo(Zone to) {
+			this.to = to;
 		}
 
 		public int getTimeFrom() {
