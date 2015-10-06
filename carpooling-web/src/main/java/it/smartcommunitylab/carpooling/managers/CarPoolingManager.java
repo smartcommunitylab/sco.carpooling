@@ -19,12 +19,15 @@ package it.smartcommunitylab.carpooling.managers;
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.GameProfile;
+import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.DiscussionRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
@@ -55,6 +58,8 @@ public class CarPoolingManager {
 	private CommunityRepository communityRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private DiscussionRepository discussionRepository;
 	@Autowired
 	private MobilityPlanner mobilityPlanner;
 
@@ -211,12 +216,12 @@ public class CarPoolingManager {
 				gameProfile.getPassengerRatings().put(userId, rating);
 				recalculateRatings(passenger);
 			} else {
-				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NO_CONTENT.value()));
 				errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger has null game profile.");
 			}
 		} else {
 
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NO_CONTENT.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger does not exist.");
 
 		}
@@ -281,19 +286,67 @@ public class CarPoolingManager {
 
 			} else {
 
-				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NO_CONTENT.value()));
 				errorMap.put(CarPoolingUtils.ERROR_MSG, "driver has null game profile.");
 
 			}
 
 		} else {
 
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NO_CONTENT.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "driver does not exist.");
 
 		}
 
 		return errorMap;
+	}
+
+	public Map<String, String> sendMessage(String userId, String travelId, Message message) {
+
+		Map<String, String> status = new HashMap<String, String>();
+
+		try {
+			Discussion discussion = discussionRepository.findOne(travelId);
+
+			if (discussion == null) {
+				discussion = new Discussion();
+				discussion.setTravelId(travelId);
+			}
+
+			discussion.getMessages().add(message);
+			discussionRepository.save(discussion);
+
+		} catch (Exception e) {
+			status.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+			status.put(CarPoolingUtils.ERROR_MSG, e.getMessage());
+		}
+
+		return status;
+
+	}
+
+	public Discussion readDiscussion(String userId, String travelId, String targetUserId) {
+
+		Discussion response = null;
+
+		Discussion discussion = discussionRepository.findOne(travelId);
+
+		if (discussion != null) {
+
+			response = new Discussion();
+			response.setTravelId(travelId);
+
+			for (Message msg : discussion.getMessages()) {
+				if ((msg.getUserId().equalsIgnoreCase(userId) && (msg.getTargetUserId().equalsIgnoreCase(targetUserId)))
+						| (msg.getTargetUserId().equalsIgnoreCase(userId) && msg.getUserId().equalsIgnoreCase(
+								targetUserId))) { // targetUserId is userId.(for drivers) or they understand it from bookings
+					response.getMessages().add(msg);
+				}
+			}
+
+		}
+
+		return response;
 	}
 
 }

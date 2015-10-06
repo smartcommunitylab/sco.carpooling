@@ -31,17 +31,20 @@ public class Message {
 	private long timestamp;
 	/** message(reqd).**/
 	private String message;
+	/** target userId. **/
+	private String targetUserId;
 
 	public Message() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Message(String userId, long timestamp, String message) {
+	public Message(String userId, long timestamp, String message, String targetUserId) {
 		super();
 		this.userId = userId;
 		this.timestamp = timestamp;
 		this.message = message;
+		this.targetUserId = targetUserId;
 	}
 
 	public String getUserId() {
@@ -66,6 +69,14 @@ public class Message {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getTargetUserId() {
+		return targetUserId;
+	}
+
+	public void setTargetUserId(String targetUserId) {
+		this.targetUserId = targetUserId;
 	}
 
 }

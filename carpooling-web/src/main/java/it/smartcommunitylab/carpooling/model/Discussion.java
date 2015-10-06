@@ -28,18 +28,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 @Document
-public class Thread {
+public class Discussion {
 	@Id
 	private String travelId;
 	/** list of messages(reqd).**/
 	private List<Message> messages = new ArrayList<Message>();
 
-	public Thread() {
+	public Discussion() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Thread(String travelId, List<Message> messages) {
+	public Discussion(String travelId, List<Message> messages) {
 		super();
 		this.travelId = travelId;
 		this.messages = messages;

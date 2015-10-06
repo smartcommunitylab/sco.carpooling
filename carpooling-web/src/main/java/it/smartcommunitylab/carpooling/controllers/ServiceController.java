@@ -19,6 +19,8 @@ package it.smartcommunitylab.carpooling.controllers;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.Discussion;
+import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Response;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
@@ -121,6 +123,39 @@ public class ServiceController {
 		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());
 
 		return new Response<Travel>(travel);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "message/{travelId}/send")
+	public @ResponseBody
+	Response<String> sendMsg(@PathVariable String travelId, @RequestBody Message message) {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.sendMessage(getUserId(), travelId, message);
+
+		if (errorMap.isEmpty()) {
+			response.setData("message sent successfully.");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "read/{travelId}/{targetUserId}/discussion")
+	public @ResponseBody
+	Response<Discussion> readThread(@PathVariable String travelId, @PathVariable String targetUserId) {
+
+		Discussion discussion = carPoolingManager.readDiscussion(getUserId(), travelId, targetUserId);
+
+		if (discussion != null) {
+			return new Response<Discussion>(discussion);
+		} else {
+			return new Response<Discussion>(HttpStatus.NO_CONTENT.value(), "discussion not found");
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/read/profile")
