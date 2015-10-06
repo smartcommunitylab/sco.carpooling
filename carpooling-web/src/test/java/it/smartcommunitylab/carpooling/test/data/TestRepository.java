@@ -66,14 +66,14 @@ public class TestRepository {
 
 	}
 
-	@Test
+//	@Test
 	public void testCommunityRepo() {
 		for (Community community : communityRepository.findByUserId("52")) {
 			System.out.println(community.getId());
 		}
 	}
 
-	@Test
+//	@Test
 	public void testTravelRepoByPassengerId() {
 		for (Travel travel : travelRepository.findTravelByPassengerId("54")) {
 			System.out.println(travel.getId());
@@ -87,7 +87,7 @@ public class TestRepository {
 	}
 
 
-	@Test
+//	@Test
 	public void testCommunityMatchInSearchTravel() {
 
 		List<String> communityIds = communityRepository.getCommunityIdsForUser("52");
@@ -130,9 +130,11 @@ public class TestRepository {
 //		travelRequest.setTo(new Zone("Hotel Vela", "Hotel Vela", 46.082421, 11.102012, 0));
 //		travelRequest.setTo(new Zone("Hotel Sporting Trento", "Hotel Sporting Trento", 46.051344, 11.111677, 0));
 
-		for (Travel travel : travelRepository.getAllMatchedZoneTravels(travelRequest)) {
-			System.out.println(travel.getId());
-		}
+//		for (Travel travel : travelRepository.getAllMatchedZoneTravels(travelRequest)) {
+//			System.out.println(travel.getId());
+//		}
+		
+		Assert.assertFalse(travelRepository.getAllMatchedZoneTravels(travelRequest).isEmpty());
 	}
 	
 	
@@ -176,9 +178,11 @@ public class TestRepository {
 //		travelRequest.setTimestamp(1443427320000L); //10:02am (Sept 28)
 		travelRequest.setWhen(1443425400000L); //09:30am (Sept 28)
 		
-		for (Travel travel : travelRepository.getAllMatchedTimeTravels(travelRequest)) {
-			System.out.println(travel.getId());
-		}
+//		for (Travel travel : travelRepository.getAllMatchedTimeTravels(travelRequest)) {
+//			System.out.println(travel.getId());
+//		}
+		
+		Assert.assertFalse(travelRepository.getAllMatchedTimeTravels(travelRequest).isEmpty());
 	}
 	
 	@Test

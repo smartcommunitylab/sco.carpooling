@@ -45,7 +45,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -69,9 +68,6 @@ public class TestManager {
 	private UserRepository userRepository;
 	@Autowired
 	private CarPoolingManager travelManager;
-
-	@Autowired
-	private Environment env;
 
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -149,9 +145,9 @@ public class TestManager {
 
 		Assert.assertFalse(travels.isEmpty());
 
-		for (Travel travel : travels) {
-			System.out.println(travel.getId());
-		}
+//		for (Travel travel : travels) {
+//			System.out.println(travel.getId());
+//		}
 
 	}
 
