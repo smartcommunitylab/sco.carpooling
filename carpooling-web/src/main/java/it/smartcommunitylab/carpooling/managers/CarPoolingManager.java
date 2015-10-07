@@ -339,7 +339,7 @@ public class CarPoolingManager {
 			for (Message msg : discussion.getMessages()) {
 				if ((msg.getUserId().equalsIgnoreCase(userId) && (msg.getTargetUserId().equalsIgnoreCase(targetUserId)))
 						| (msg.getTargetUserId().equalsIgnoreCase(userId) && msg.getUserId().equalsIgnoreCase(
-								targetUserId))) { // targetUserId is userId.(for drivers) or they understand it from bookings
+								targetUserId))) { // targetUserId == userId.(for drivers) or they understand it from bookings
 					response.getMessages().add(msg);
 				}
 			}
