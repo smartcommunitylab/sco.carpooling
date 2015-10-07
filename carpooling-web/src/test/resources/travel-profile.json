@@ -1,0 +1,29 @@
+[
+{
+	"routes": [{
+		"id": "5601775ed1f199413d9f7706",
+		"name": "travel profile test",
+		"from": {
+			"name": "Via Fiume",
+			"address": "Via Fiume",
+			"latitude": 46.065487,
+			"longitude": 11.131346,
+			"range": 0,
+			"coordinates": [46.065487,
+			11.131346]
+		},
+		"to": {
+			"name": "Muse",
+			"address": "Muse",
+			"latitude": 46.063266,
+			"longitude": 11.113062,
+			"range": 0,
+			"coordinates": [46.063266,
+			11.113062]
+		},
+		"timeFrom": 500,
+		"timeTo": 1000,
+		"enabled": true
+	}]
+}
+]

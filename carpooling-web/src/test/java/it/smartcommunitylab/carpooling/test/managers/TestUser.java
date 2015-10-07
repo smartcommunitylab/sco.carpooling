@@ -20,6 +20,7 @@ import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.Traveller;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
@@ -77,6 +78,7 @@ public class TestUser {
 		InputStream userJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("users.json");
 		InputStream communityJson = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("community.json");
+		
 		try {
 			JsonNode travelRootNode = mapper.readTree(travelJson);
 			ArrayNode travelArrayNode = (ArrayNode) travelRootNode;
@@ -315,6 +317,46 @@ public class TestUser {
 		travelManager.ratePassenger("54", "52", 0);
 		Assert.assertEquals(passenger1.getGameProfile().getDriverRating(), 2.5, 2.5);
 		Assert.assertEquals(passenger2.getGameProfile().getDriverRating(), 2.5, 2.5);
+		
+	}
+	
+	@Test
+	public void testSaveReadProfile() throws JsonProcessingException, IOException {
+		/**
+		 * user("52") read profile, empty.
+		 * user("52") save a travel profile and read it back.
+		 */
+		InputStream travelProfileJson = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("travel-profile.json");
+		JsonNode travelProfileNode = mapper.readTree(travelProfileJson);
+		ArrayNode travelProfileArrayNode = (ArrayNode) travelProfileNode;
+		TravelProfile refTravelProfile = mapper.convertValue(travelProfileArrayNode.get(0), TravelProfile.class);
+
+		TravelProfile travelProfile = travelManager.readTravelProfile("52");
+
+		Assert.assertTrue(travelProfile.getRoutes().isEmpty());
+
+		travelManager.saveTravelProfile(refTravelProfile, "52");
+		
+		travelProfile = travelManager.readTravelProfile("52");
+
+		Assert.assertFalse(travelProfile.getRoutes().isEmpty());
+
+	}
+	
+	@Test
+	public void readCommunities() {
+		/**
+		 * reference user(52,53,54,70) is present in two communities.
+		 * reference user(60,65) is present in one community.
+		 */
+		Assert.assertEquals(travelManager.readCommunities("52").size(), 2);
+		Assert.assertEquals(travelManager.readCommunities("53").size(), 2);
+		Assert.assertEquals(travelManager.readCommunities("54").size(), 2);
+		Assert.assertEquals(travelManager.readCommunities("70").size(), 2);
+		
+		Assert.assertEquals(travelManager.readCommunities("60").size(), 1);
+		Assert.assertEquals(travelManager.readCommunities("65").size(), 1);
 		
 	}
 
