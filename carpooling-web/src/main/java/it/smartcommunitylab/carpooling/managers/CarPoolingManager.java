@@ -112,8 +112,9 @@ public class CarPoolingManager {
 					travel.getCommunityIds().add(community.getId());
 				}
 			}
+			travelRepository.save(travel);
 		}
-		travelRepository.save(travel);
+		
 
 		return travel;
 	}
@@ -122,19 +123,21 @@ public class CarPoolingManager {
 
 		Travel travel = travelRepository.findOne(travelId);
 
-		if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
-			if (travel.getRecurrency() != null) { // recurrent travel.
-				if (CarPoolingUtils.ifBookableRecurr(travel, reqBooking, userId)) {
-					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-					travelRepository.save(travel);
-				}
+		if (travel != null) {
+			if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
+				if (travel.getRecurrency() != null) { // recurrent travel.
+					if (CarPoolingUtils.ifBookableRecurr(travel, reqBooking, userId)) {
+						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+						travelRepository.save(travel);
+					}
 
-			} else if (!reqBooking.isRecurrent()) {
-				//non-recurrent travel + non-recurrent requested booking.
-				if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
-					// update traveller.
-					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-					travelRepository.save(travel);
+				} else if (!reqBooking.isRecurrent()) {
+					//non-recurrent travel + non-recurrent requested booking.
+					if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
+						// update traveller.
+						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+						travelRepository.save(travel);
+					}
 				}
 			}
 		}
@@ -144,16 +147,21 @@ public class CarPoolingManager {
 
 	public Travel acceptTrip(String travelId, Booking booking, String userId) {
 
-		Travel travel = travelRepository.findOne(travelId);
+		Travel travel = travelRepository.findTravelByIdAndDriverId(travelId, userId);
+		//travelRepository.findOne(travelId);
 
+		boolean accepted = false;
 		for (Booking book : travel.getBookings()) {
 			if (book.equals(booking)) {
 				book.setAccepted(booking.getAccepted());
+				accepted = true;
 			}
 		}
 
-		travelRepository.save(travel);
-
+		if (accepted) {
+			travelRepository.save(travel);	
+		}
+		
 		return travel;
 	}
 
@@ -336,6 +344,7 @@ public class CarPoolingManager {
 			response = new Discussion();
 			response.setTravelId(travelId);
 
+			// msgs are ordered by the insertion at server side, since it can be sent from diff timezones.
 			for (Message msg : discussion.getMessages()) {
 				if ((msg.getUserId().equalsIgnoreCase(userId) && (msg.getTargetUserId().equalsIgnoreCase(targetUserId)))
 						| (msg.getTargetUserId().equalsIgnoreCase(userId) && msg.getUserId().equalsIgnoreCase(

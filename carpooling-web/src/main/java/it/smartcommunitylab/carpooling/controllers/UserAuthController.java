@@ -97,6 +97,7 @@ public class UserAuthController {
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 					basicProfile.getUserId(), basicProfile.getUserId(), CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
 			token.setDetails(new WebAuthenticationDetails(request));
+			
 			Authentication authenticatedUser = authenticationManager.authenticate(token);
 			SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 

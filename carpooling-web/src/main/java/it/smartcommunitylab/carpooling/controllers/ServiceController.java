@@ -74,25 +74,25 @@ public class ServiceController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/passenger/trips")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
 	public @ResponseBody
 	Response<List<Travel>> readPassengerTrips() {
 		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId()));
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/passenger/monitored")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/monitored")
 	public @ResponseBody
 	Response<List<TravelRequest>> readPassengerMonitoredRequests() {
 		return new Response<List<TravelRequest>>(carPoolingManager.getMonitoredTravelRequest(getUserId()));
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/driver/trips")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")
 	public @ResponseBody
 	Response<List<Travel>> readDriverTrips() {
 		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId()));
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/passenger/trips")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips")
 	public @ResponseBody
 	Response<List<Travel>> searchTrips(@RequestBody TravelRequest travelRequest, HttpServletRequest req) {
 		List<Travel> foundTravels = new ArrayList<Travel>();
@@ -101,7 +101,7 @@ public class ServiceController {
 		return new Response<List<Travel>>(foundTravels);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/driver/trips")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips")
 	public @ResponseBody
 	Response<Travel> createTrips(@RequestBody Travel travel, HttpServletRequest req) {
 		Travel savedTravel = carPoolingManager.saveTravel(travel, getUserId());
@@ -109,7 +109,7 @@ public class ServiceController {
 		return new Response<Travel>(savedTravel);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/passenger/trips/{tripId}/book")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
 	public @ResponseBody
 	Response<Travel> bookTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
 		Travel travel = carPoolingManager.bookTrip(tripId, booking, getUserId());
@@ -117,7 +117,7 @@ public class ServiceController {
 		return new Response<Travel>(travel);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/passenger/trips/{tripId}/accept")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/accept")
 	public @ResponseBody
 	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
 		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());
@@ -125,7 +125,7 @@ public class ServiceController {
 		return new Response<Travel>(travel);
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "message/{travelId}/send")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/message/{travelId}/send")
 	public @ResponseBody
 	Response<String> sendMsg(@PathVariable String travelId, @RequestBody Message message) {
 
@@ -144,7 +144,7 @@ public class ServiceController {
 
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "read/{travelId}/{targetUserId}/discussion")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/{travelId}/{targetUserId}/discussion")
 	public @ResponseBody
 	Response<Discussion> readThread(@PathVariable String travelId, @PathVariable String targetUserId) {
 
@@ -158,7 +158,7 @@ public class ServiceController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/read/profile")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/profile")
 	public @ResponseBody
 	Response<TravelProfile> readProfile() {
 
@@ -172,7 +172,7 @@ public class ServiceController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/rate/driver/{driverId}/{rating}")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/rate/driver/{driverId}/{rating}")
 	public @ResponseBody
 	Response<String> rateDriver(@PathVariable String driverId, @PathVariable int rating) {
 
@@ -190,7 +190,7 @@ public class ServiceController {
 		return response;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/rate/passenger/{passengerId}/{rating}")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/rate/passenger/{passengerId}/{rating}")
 	public @ResponseBody
 	Response<String> ratePassenger(@PathVariable String passengerId, @PathVariable int rating) {
 
@@ -209,7 +209,7 @@ public class ServiceController {
 	}
 
 
-	@RequestMapping(method = RequestMethod.POST, value = "/save/profile")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/save/profile")
 	public @ResponseBody
 	Response<TravelProfile> saveProfile(@RequestBody TravelProfile profile) {
 
@@ -223,7 +223,7 @@ public class ServiceController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/read/communities")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities")
 	public @ResponseBody
 	Response<List<Community>> readCommunities() {
 		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));

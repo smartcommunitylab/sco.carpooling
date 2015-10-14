@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
@@ -72,15 +71,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	        
 	        http
 	        .authorizeRequests()
-	        	.antMatchers(HttpMethod.POST, "/**")
+	        	.antMatchers("/api/**")
 	        		.hasAnyAuthority(CarPoolingUserDetails.CARPOOLER).and()
 	        .addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
 	        .addFilterBefore(oauthAuthenticationFilter(), BasicAuthenticationFilter.class);
 
 	        http
             .authorizeRequests()
-            	.antMatchers("/","/console/**","/mgmt/**")
-            		.authenticated()
                 .anyRequest()
                 	.permitAll();
 	        http

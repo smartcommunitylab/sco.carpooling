@@ -71,17 +71,19 @@ public class OAuthFilter extends GenericFilterBean {
 			throws IOException, ServletException {
 		if (request instanceof HttpServletRequest && isAuthenticationRequired()) {
 			try {
-
 				String authToken = extractToken((HttpServletRequest) request);
-				BasicProfile basicProfile = profileService.getBasicProfile(authToken);
-				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-						basicProfile.getUserId(), basicProfile.getUserId(), CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
-				token.setDetails(new WebAuthenticationDetails((HttpServletRequest) request));
-				Authentication authenticatedUser = authenticationManager.authenticate(token);
-				SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-				User user = User.fromUserProfile(basicProfile);
-				userManager.saveUser(user);
-				SecurityContextHolder.getContext().setAuthentication(token);
+				if (authToken != null && !authToken.isEmpty()) {
+					BasicProfile basicProfile = profileService.getBasicProfile(authToken);
+					UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+							basicProfile.getUserId(), basicProfile.getUserId(),
+							CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
+					token.setDetails(new WebAuthenticationDetails((HttpServletRequest) request));
+					Authentication authenticatedUser = authenticationManager.authenticate(token);
+					SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+					User user = User.fromUserProfile(basicProfile);
+					userManager.saveUser(user);
+					SecurityContextHolder.getContext().setAuthentication(token);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

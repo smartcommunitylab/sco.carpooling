@@ -27,4 +27,8 @@ public interface TravelRepository extends MongoRepository<Travel, String>, Trave
 
 	@Query("{'userId':?0}")
 	List<Travel> findTravelByDriverId(String userId);
+
+	@Query("{'id':?0, 'userId':?1}")
+	Travel findTravelByIdAndDriverId(String id, String userId);
+	
 }
