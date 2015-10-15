@@ -151,15 +151,18 @@ public class CarPoolingManager {
 		//travelRepository.findOne(travelId);
 
 		boolean accepted = false;
-		for (Booking book : travel.getBookings()) {
-			if (book.equals(booking)) {
-				book.setAccepted(booking.getAccepted());
-				accepted = true;
+		
+		if (travel != null) {
+			for (Booking book : travel.getBookings()) {
+				if (book.equals(booking)) {
+					book.setAccepted(booking.getAccepted());
+					accepted = true;
+				}
 			}
-		}
 
-		if (accepted) {
-			travelRepository.save(travel);	
+			if (accepted) {
+				travelRepository.save(travel);	
+			}			
 		}
 		
 		return travel;
