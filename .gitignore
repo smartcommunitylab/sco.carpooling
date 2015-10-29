@@ -5,3 +5,9 @@ carpooling-web/.classpath
 carpooling-web/.project
 carpooling-web/.settings/*
 carpooling-web/target/*
+/carpooling-mobile/platforms/
+/carpooling-mobile/plugins/
+/carpooling-mobile/hooks/
+/carpooling-mobile/scss/
+/carpooling-mobile/bower.json
+/carpooling-mobile/gulpfile.js
