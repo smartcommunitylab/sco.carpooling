@@ -72,6 +72,15 @@ angular.module('starter', ['ionic', 'starter.controllers'])
       }
     })
 
+  .state('app.cerca', {
+      url: '/cerca',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/cerca.html'
+        }
+      }
+    })
+
   .state('app.notifiche', {
       url: '/notifiche',
       views: {

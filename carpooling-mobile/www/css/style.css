@@ -20,9 +20,10 @@
     background-color: #3366FF;
 }
 
- button.button.button-icon.button-clear:before{
+ a.button.button-icon.button-clear:before{
     padding-right: 10px;
     font-size: 1.5em;
+    width: 35px;
 }
 
 .custom-title{
