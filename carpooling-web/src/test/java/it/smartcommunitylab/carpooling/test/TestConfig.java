@@ -16,6 +16,8 @@
 
 package it.smartcommunitylab.carpooling.test;
 
+import it.smartcommunitylab.carpooling.model.Travel;
+
 import java.net.UnknownHostException;
 
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.GeospatialIndex;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.mongodb.MongoClient;
@@ -36,6 +39,12 @@ public class TestConfig {
 
 	@Bean(name = "mongoTemplate")
 	public MongoTemplate getMongoTemplate() throws UnknownHostException, MongoException {
-		return new MongoTemplate(new MongoClient(), "carpooling-test");
+
+		MongoTemplate template = new MongoTemplate(new MongoClient(), "carpooling-test");
+
+		template.indexOps(Travel.class).ensureIndex(new GeospatialIndex("from.coordinates"));
+		template.indexOps(Travel.class).ensureIndex(new GeospatialIndex("to.coordinates"));
+
+		return template;
 	}
 }
