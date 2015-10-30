@@ -35,11 +35,10 @@ public class Zone {
 	private double longitude;
 	/** zone radius(default value to understand).**/
 	private double range;
-	@GeoSpatialIndexed
+//	@GeoSpatialIndexed
 	private double[] coordinates;
 
-	public Zone() {
-		super();
+	public Zone() {	super();
 		// TODO Auto-generated constructor stub
 	}
 
