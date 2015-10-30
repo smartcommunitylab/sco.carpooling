@@ -4,7 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers'])
+angular.module('starter', [
+  'ionic',
+  'ngIOS9UIWebViewPatch',
+  'starter.controllers',
+  'pascalprecht.translate'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -107,4 +111,18 @@ angular.module('starter', ['ionic', 'starter.controllers'])
     });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');
+})
+
+.config(function($translateProvider) {
+  $translateProvider.translations('it',{
+    app_name:'CARpooling',
+    menu_home: 'Home',
+    menu_comm: 'Comunità',
+    menu_chat: 'Chat',
+    menu_notif: 'Notifiche',
+    menu_profile: 'Profilo',
+    lbl_search: 'Cerca viaggio'
+  });
+  $translateProvider.preferredLanguage('it');
+
 });
