@@ -85,6 +85,15 @@ angular.module('starter', [
       }
     })
 
+  .state('app.offri', {
+      url: '/offri',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/offri.html'
+        }
+      }
+    })
+
   .state('app.notifiche', {
       url: '/notifiche',
       views: {
@@ -101,7 +110,16 @@ angular.module('starter', [
         }
       }
     })
-    .state('app.chat', {
+ .state('app.login', {
+      url: '/login',
+      views: {
+        'menuContent': {
+            templateUrl: 'templates/login.html',
+            controller: 'LoginCtrl'
+        }
+      }
+    })
+  .state('app.chat', {
       url: '/chat',
       views: {
         'menuContent': {
@@ -110,7 +128,7 @@ angular.module('starter', [
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/app/login');
 })
 
 .config(function($translateProvider) {
@@ -121,7 +139,8 @@ angular.module('starter', [
     menu_chat: 'Chat',
     menu_notif: 'Notifiche',
     menu_profile: 'Profilo',
-    lbl_search: 'Cerca viaggio'
+    lbl_search: 'Cerca viaggio',
+    lbl_offer: 'Offri un viaggio'
   });
   $translateProvider.preferredLanguage('it');
 
