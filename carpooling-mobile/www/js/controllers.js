@@ -12,6 +12,22 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('LoginCtrl', ['$scope','$state', function($scope, $state) {
+
+    $scope.logged = true;
+    $scope.login = function() {
+        //alert($scope.logged);
+        if($scope.logged){
+            $state.go('app.home');
+        }
+    }
+
+}])
+
+.controller('CercaViaggioCtrl', function($scope) {
+
+})
+
 .controller('HomeCtrl', function($scope) {
 
 });
