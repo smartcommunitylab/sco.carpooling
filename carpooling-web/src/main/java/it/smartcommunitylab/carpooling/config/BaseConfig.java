@@ -42,7 +42,7 @@ import com.mongodb.MongoException;
 @Configuration
 @EnableWebMvc
 @ComponentScan("it.smartcommunitylab.carpooling")
-@PropertySource("classpath:/carpooling.properties")
+@PropertySource("classpath:carpooling.properties")
 @EnableMongoRepositories(basePackages = "it.smartcommunitylab.carpooling.mongo.repos")
 @EnableAsync
 @EnableScheduling
