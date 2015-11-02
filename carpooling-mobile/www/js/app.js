@@ -8,9 +8,10 @@ angular.module('starter', [
   'ionic',
   'ngIOS9UIWebViewPatch',
   'starter.controllers',
-  'pascalprecht.translate'])
+  'pascalprecht.translate',
+  'starter.services.login'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, Login) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -23,6 +24,8 @@ angular.module('starter', [
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    if(!localStorage.userId){Login.login();}
   });
 })
 
@@ -110,15 +113,7 @@ angular.module('starter', [
         }
       }
     })
- .state('app.login', {
-      url: '/login',
-      views: {
-        'menuContent': {
-            templateUrl: 'templates/login.html',
-            controller: 'LoginCtrl'
-        }
-      }
-    })
+
   .state('app.chat', {
       url: '/chat',
       views: {
@@ -128,7 +123,7 @@ angular.module('starter', [
       }
     });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  $urlRouterProvider.otherwise('/app/home');
 })
 
 .config(function($translateProvider) {
