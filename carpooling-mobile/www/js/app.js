@@ -11,7 +11,18 @@ angular.module('starter', [
   'pascalprecht.translate',
   'starter.services.login'])
 
-.run(function($ionicPlatform, Login) {
+.run(function($ionicPlatform, Login, $rootScope, $q) {
+
+    $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != "null");
+
+    $rootScope.getUserId = function () {
+        if ($rootScope.userIsLogged) {
+            return localStorage.userId;
+        }
+        return null;
+    };
+
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -24,9 +35,40 @@ angular.module('starter', [
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+    if(!Login.getUserId()){
+        Login.login();
+    }
 
-    if(!localStorage.userId){Login.login();}
   });
+
+    $rootScope.login = function () {
+        var deferred = $q.defer();
+        Login.login().then(function (data) {
+                deferred.resolve(data);
+            },
+            function (error) {
+
+                deferred.reject(error);
+
+
+            });
+        return deferred.promise;
+
+    }
+
+    $rootScope.logout = function () {
+        var deferred = $q.defer();
+        Login.logout().then(function (data) {
+                deferred.resolve(data);
+            },
+            function (error) {
+
+                deferred.reject(error);
+
+
+            });
+        return deferred.promise;
+    };
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

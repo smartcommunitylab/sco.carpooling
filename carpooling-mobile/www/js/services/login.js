@@ -22,7 +22,6 @@ angular.module('starter.services.login', [])
                         var url = e.url;
                         var success = /userloginsuccess\?profile=(.+)$/.exec(url);
                         var error = /userloginerror\?error=(.+)$/.exec(url);
-
                         if (success || error) {
                             //Always close the browser when match is found
                             authWindow.close();
@@ -31,7 +30,8 @@ angular.module('starter.services.login', [])
                         if (success) {
                             var str = success[1];
                             if (str.substring(str.length - 1) == '#') {
-                                str = str.substring(0, str.length - 1)
+                                str = str.substring(0, str.length - 1);
+
                             }
                             console.log('success:' + decodeURIComponent(str));
                             deferred.resolve(JSON.parse(decodeURIComponent(str)));
@@ -70,7 +70,7 @@ angular.module('starter.services.login', [])
 
             $http({
                 method: 'GET',
-                url: Config.URL() + '/' + Config.app() + '/logout',
+                url: 'https://dev.smartcommunitylab.it/carpooling/logout',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -79,7 +79,7 @@ angular.module('starter.services.login', [])
             }).
             success(function (data, status, headers, config) {
                 $rootScope.userIsLogged = false;
-                localStorage.userId = "null";
+                localStorage.userIdalert("loggato");
                 deferred.resolve(data);
             }).
             error(function (data, status, headers, config) {
