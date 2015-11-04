@@ -111,24 +111,24 @@ public class TestRepository {
 		}
 		TravelRequest travelRequest = new TravelRequest();
 		//valid 'From' points (witin 1km.)
-		//travelRequest.setFrom(new Zone("Castello Buon Consiglio", "Castello Buon Consiglio", 46.071386, 11.127772, 0));
-		//travelRequest.setFrom(new Zone("Via Archangelo Rezzi, Centro", "Via Archangelo Rezzi, Centro", 46.067250, 11.120252, 0));
-		travelRequest.setFrom(new Zone("Via Fiume", "Via Fiume", 46.065487, 11.131346, 0));
+//		travelRequest.setFrom(new Zone("Castello Buon Consiglio", "Castello Buon Consiglio", 46.071386, 11.127772, 0.4));
+//		travelRequest.setFrom(new Zone("Via Archangelo Rezzi, Centro", "Via Archangelo Rezzi, Centro", 46.067250, 11.120252, 0.8));
+		travelRequest.setFrom(new Zone("Via Fiume", "Via Fiume", 46.065487, 11.131346, 1));
 
 //		invalid 'From' points(outside 1km.)
-//		travelRequest.setFrom(new Zone("Spalliera Cereria", "Spalliera Cereria",46.078088, 11.125556, 0));
-//		travelRequest.setFrom(new Zone("Parco di Gocciadoro", "Parco di Gocciadoro", 46.054712, 11.136401, 0));
-//		travelRequest.setFrom(new Zone("Via Solteri", "Via Solteri", 46.087617, 11.121586, 0));
+//		travelRequest.setFrom(new Zone("Spalliera Cereria", "Spalliera Cereria",46.078088, 11.125556, 1)); //1.2km is reachable.
+//		travelRequest.setFrom(new Zone("Parco di Gocciadoro", "Parco di Gocciadoro", 46.054712, 11.136401, 1)); //1.8km is reachable.
+//		travelRequest.setFrom(new Zone("Via Solteri", "Via Solteri", 46.087617, 11.121586, 1)); //2.3km is reachable.
 
 		//valid 'To' points within 1km.
-		//travelRequest.setTo(new Zone("Teatro Portland", "Teatro Portland", 46.070009, 11.112011, 0));
-		//travelRequest.setTo(new Zone("Ponte di San Giorgio", "Ponte di San Giorgio", 46.077552, 11.115269, 0)); 
-		travelRequest.setTo(new Zone("Muse", "Muse", 46.063266, 11.113062, 0));
+//		travelRequest.setTo(new Zone("Teatro Portland", "Teatro Portland", 46.070009, 11.112011, 0.34));
+//		travelRequest.setTo(new Zone("Ponte di San Giorgio", "Ponte di San Giorgio", 46.077552, 11.115269, 0.81)); 
+		travelRequest.setTo(new Zone("Muse", "Muse", 46.063266, 11.113062, 1));
 
 //		invalid 'To' points outside 1km.
-//		travelRequest.setTo(new Zone("Angolo dei 33", "Angolo dei 33", 46.07548,11.105595, 0));
-//		travelRequest.setTo(new Zone("Hotel Vela", "Hotel Vela", 46.082421, 11.102012, 0));
-//		travelRequest.setTo(new Zone("Hotel Sporting Trento", "Hotel Sporting Trento", 46.051344, 11.111677, 0));
+//		travelRequest.setTo(new Zone("Angolo dei 33", "Angolo dei 33", 46.07548,11.105595, 1)); //1.2 is reachable.
+//		travelRequest.setTo(new Zone("Hotel Vela", "Hotel Vela", 46.082421, 11.102012, 1)); // 2km is reachable.
+//		travelRequest.setTo(new Zone("Hotel Sporting Trento", "Hotel Sporting Trento", 46.051344, 11.111677, 1)); //2.1km is reachable.
 
 //		for (Travel travel : travelRepository.getAllMatchedZoneTravels(travelRequest)) {
 //			System.out.println(travel.getId());
@@ -153,24 +153,24 @@ public class TestRepository {
 		
 		TravelRequest travelRequest = new TravelRequest();
 		//valid 'From' points (witin 1km.)
-		//travelRequest.setFrom(new Zone("Castello Buon Consiglio", "Castello Buon Consiglio", 46.071386, 11.127772, 0));
-		//travelRequest.setFrom(new Zone("Via Archangelo Rezzi, Centro", "Via Archangelo Rezzi, Centro", 46.067250, 11.120252, 0));
-		travelRequest.setFrom(new Zone("Via Fiume", "Via Fiume", 46.065487, 11.131346, 0));
+		//travelRequest.setFrom(new Zone("Castello Buon Consiglio", "Castello Buon Consiglio", 46.071386, 11.127772, 1));
+		//travelRequest.setFrom(new Zone("Via Archangelo Rezzi, Centro", "Via Archangelo Rezzi, Centro", 46.067250, 11.120252, 1));
+		travelRequest.setFrom(new Zone("Via Fiume", "Via Fiume", 46.065487, 11.131346, 1));
 
 //		invalid 'From' points(outside 1km.)
-//		travelRequest.setFrom(new Zone("Spalliera Cereria", "Spalliera Cereria",46.078088, 11.125556, 0));
-//		travelRequest.setFrom(new Zone("Parco di Gocciadoro", "Parco di Gocciadoro", 46.054712, 11.136401, 0));
-//		travelRequest.setFrom(new Zone("Via Solteri", "Via Solteri", 46.087617, 11.121586, 0));
+//		travelRequest.setFrom(new Zone("Spalliera Cereria", "Spalliera Cereria",46.078088, 11.125556, 1));
+//		travelRequest.setFrom(new Zone("Parco di Gocciadoro", "Parco di Gocciadoro", 46.054712, 11.136401, 1));
+//		travelRequest.setFrom(new Zone("Via Solteri", "Via Solteri", 46.087617, 11.121586, 1));
 
 		//valid 'To' points within 1km.
-		//travelRequest.setTo(new Zone("Teatro Portland", "Teatro Portland", 46.070009, 11.112011, 0));
-		//travelRequest.setTo(new Zone("Ponte di San Giorgio", "Ponte di San Giorgio", 46.077552, 11.115269, 0)); 
-		travelRequest.setTo(new Zone("Muse", "Muse", 46.063266, 11.113062, 0));
+		//travelRequest.setTo(new Zone("Teatro Portland", "Teatro Portland", 46.070009, 11.112011, 1));
+		//travelRequest.setTo(new Zone("Ponte di San Giorgio", "Ponte di San Giorgio", 46.077552, 11.115269, 1)); 
+		travelRequest.setTo(new Zone("Muse", "Muse", 46.063266, 11.113062, 1));
 
 //		invalid 'To' points outside 1km.
-//		travelRequest.setTo(new Zone("Angolo dei 33", "Angolo dei 33", 46.07548,11.105595, 0));
-//		travelRequest.setTo(new Zone("Hotel Vela", "Hotel Vela", 46.082421, 11.102012, 0));
-//		travelRequest.setTo(new Zone("Hotel Sporting Trento", "Hotel Sporting Trento", 46.051344, 11.111677, 0));
+//		travelRequest.setTo(new Zone("Angolo dei 33", "Angolo dei 33", 46.07548,11.105595, 1));
+//		travelRequest.setTo(new Zone("Hotel Vela", "Hotel Vela", 46.082421, 11.102012, 1));
+//		travelRequest.setTo(new Zone("Hotel Sporting Trento", "Hotel Sporting Trento", 46.051344, 11.111677, 1));
 		
 //		travelRequest.setTimestamp(1443427200000L); //10am (Sept 28)
 //		travelRequest.setTimestamp(1443412800000L); //6am (Sept 28)

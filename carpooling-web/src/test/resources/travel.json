@@ -5,7 +5,7 @@
 		"address": "Piazza Venezia",
 		"latitude": 46.067918,
 		"longitude": 11.12708,
-		"range": 0,
+		"range": 1,
 		"coordinates": [46.067918,
 		11.12708]
 	},
@@ -14,7 +14,7 @@
 		"address": "Ponte San Lorenzo",
 		"latitude": 46.070144,
 		"longitude": 11.115014,
-		"range": 0,
+		"range": 1,
 		"coordinates": [46.070144,
 		11.115014]
 	},
@@ -87,7 +87,7 @@
 		"address": "Piazza Venezia",
 		"latitude": 46.067918,
 		"longitude": 11.12708,
-		"range": 0,
+		"range": 1,
 		"coordinates": [46.067918,
 		11.12708]
 	},
@@ -96,7 +96,7 @@
 		"address": "Ponte San Lorenzo",
 		"latitude": 46.070144,
 		"longitude": 11.115014,
-		"range": 0,
+		"range": 1,
 		"coordinates": [46.070144,
 		11.115014]
 	},

@@ -86,11 +86,11 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		List<Travel> matchedTravels = new ArrayList<Travel>();
 
 		Point pFrom = new Point(travelRequest.getFrom().getLatitude(), travelRequest.getFrom().getLongitude());
-		Circle circleFrom = new Circle(pFrom, CarPoolingUtils.radius / 6371);
+		Circle circleFrom = new Circle(pFrom, travelRequest.getFrom().getRange() / 6371);
 		Sphere sphereFrom = new Sphere(circleFrom);
 
 		Point pTo = new Point(travelRequest.getTo().getLatitude(), travelRequest.getTo().getLongitude());
-		Circle circleTo = new Circle(pTo, CarPoolingUtils.radius / 6371);
+		Circle circleTo = new Circle(pTo, travelRequest.getTo().getRange() / 6371);
 		Sphere sphereTo = new Sphere(circleTo);
 
 		// criterias.
@@ -203,10 +203,10 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Criteria communityCriteria = new Criteria().where("communityIds").in(userCommunityIds);
 		/** zone. **/
 		Point pFrom = new Point(travelRequest.getFrom().getLatitude(), travelRequest.getFrom().getLongitude());
-		Circle circleFrom = new Circle(pFrom, CarPoolingUtils.radius / 6371);
+		Circle circleFrom = new Circle(pFrom, travelRequest.getFrom().getRange() / 6371);
 		Sphere sphereFrom = new Sphere(circleFrom);
 		Point pTo = new Point(travelRequest.getTo().getLatitude(), travelRequest.getTo().getLongitude());
-		Circle circleTo = new Circle(pTo, CarPoolingUtils.radius / 6371);
+		Circle circleTo = new Circle(pTo, travelRequest.getTo().getRange() / 6371);
 		Sphere sphereTo = new Sphere(circleTo);
 		Criteria zoneCriteria = new Criteria().where("from.coordinates").within(sphereFrom).and("to.coordinates")
 				.within(sphereTo);
