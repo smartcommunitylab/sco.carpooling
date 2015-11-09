@@ -1,37 +1,36 @@
-<ion-side-menus enable-menu-with-back-views="false"> <!-- ng-if="userIsLogged"-->
-  <ion-side-menu-content>
-    <ion-nav-bar class="bar-positive" align-title="left">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
+<ion-side-menus enable-menu-with-back-views="false">
+    <!-- ng-if="userIsLogged"-->
+    <ion-side-menu-content>
+        <ion-nav-bar class="bar" align-title="left">
+            <ion-nav-back-button>
+            </ion-nav-back-button>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+                </button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content>
 
-      <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
-      </ion-nav-buttons>
-    </ion-nav-bar>
-    <ion-nav-view name="menuContent"></ion-nav-view>
-  </ion-side-menu-content>
-
-  <ion-side-menu side="left">
-    <ion-content>
-      <ion-list class="custom-list">
-        <ion-item nav-clear menu-close href="#/app/home">
-          <i class="icon ion-home custom-icon">{{'menu_home'| translate}}</i>
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/comunita">
-          <i class="icon ion-ios-people custom-icon">{{'menu_comm'| translate}}</i>
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/chat">
-          <i class="icon ion-chatboxes custom-icon">{{'menu_chat'| translate}}</i>
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/notifiche">
-          <i class="icon ion-ios-bell custom-icon">{{'menu_notif'| translate}}</i>
-        </ion-item>
-        <ion-item nav-clear menu-close href="#/app/profilo">
-          <i class="icon ion-person custom-icon">{{'menu_profile'| translate}}</i>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-side-menu>
+    <ion-side-menu side="left">
+        <ion-content>
+            <ion-list>
+                <ion-item nav-clear menu-close href="#/app/home">
+                    <i class="icon ion-home">{{'menu_home'| translate}}</i>
+                </ion-item>
+                <ion-item nav-clear menu-close href="#/app/comunita">
+                    <i class="icon ion-ios-people">{{'menu_community'| translate}}</i>
+                </ion-item>
+                <ion-item nav-clear menu-close href="#/app/chat">
+                    <i class="icon ion-chatboxes">{{'menu_chat'| translate}}</i>
+                </ion-item>
+                <ion-item nav-clear menu-close href="#/app/notifiche">
+                    <i class="icon ion-ios-bell">{{'menu_notifications'| translate}}</i>
+                </ion-item>
+                <ion-item nav-clear menu-close href="#/app/profilo">
+                    <i class="icon ion-person">{{'menu_profile'| translate}}</i>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
 </ion-side-menus>
-

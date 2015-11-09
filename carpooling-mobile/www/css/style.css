@@ -1,58 +1,60 @@
-/* Empty. Add your own CSS if you like */
-.custom-icon:before{
-    margin-right: 15%;
-    margin-left: 10%;
+/* Carpooling style */
+
+
+/* Bar */
+
+.carpooling .bar {
+    background-color: #3448A5;
+    border-color: #3448A5;
+    color: #FFFFFF;
+}
+.carpooling .bar .button {
+    color: #FFFFFF;
+}
+
+/* Menu */
+
+.carpooling .menu,
+.carpooling .menu .item,
+.carpooling .menu .item .item-content {
+    background-color: #3448A5;
+}
+.carpooling .menu .item {
+    border-color: #3448A5;
+    color: #FFFFFF;
+}
+.carpooling .menu .item .item-content.activated {
+    color: #BCC0E7;
+}
+.carpooling .menu .item .item-content .icon:before {
+    padding-right: 1em;
     font-size: 2em;
-    position: relative;
-    top: 4px;
+    vertical-align: middle;
 }
 
-.custom-list .item{
-    border-width: 0px;
+/* Tabs */
+
+.carpooling .tabs {
+    background-color: #3448A5;
 }
-
-.item .item-content, .bar.bar-positive, .button-bar.bar-positive, .menu{
-    background-color: #3333FF;
-    color: white;
-}
-
-.item .item-content.activated{
-    background-color: #3366FF;
-}
-
- a.button.button-icon.button-clear:before{
-    padding-right: 10px;
-    font-size: 1.5em;
-    width: 35px;
-}
-
-.custom-title{
-    font-weight:bold;
-    position: relative;
-    top: 1px;
-}
-
-div.tab-nav.tabs
-{
-    background-color: #3333FF;
-}
-
-.tab-item{
-    color: white;
-
-    font-weight: bold;
+.carpooling .tabs .tab-item {
     max-width: none;
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 0.9em;
     opacity: 1;
+    text-transform: uppercase;
+}
+.carpooling .tabs .tab-item.tab-item-active,
+.carpooling .tabs .tab-item.active,
+.carpooling .tabs .tab-item.activated {
+    color: #4EB0E6;
+    border: 0 solid #4EB0E6;
+}
+.carpooling .tabs-top.tabs-striped .tabs .tab-item.tab-item-active,
+.carpooling .tabs-top.tabs-striped .tabs .tab-item.active,
+.carpooling .tabs-top.tabs-striped .rabs .tab-item.activated {
+    border-width: 0px 0px 3px 0px !important;
 }
 
-ion-tabs.tabs-color-active-positive .tab-item{
-    color: white;
-    font-size: 0.8em;
-    font-weight: 600;
-}
-
-ion-tabs.tabs-color-active-positive .tab-item.tab-item-active{
-    color: #0099CC;
-    border-bottom: 3px solid #0099CC;
-}
-
+/* Others */
