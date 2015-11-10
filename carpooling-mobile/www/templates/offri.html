@@ -1,5 +1,32 @@
 <ion-view title="{{'lbl_offer'| translate}}">
-    <ion-content>
-        <h1>{{'lbl_offer'| translate}}</h1>
+    <ion-content class="padding">
+        <div class="list">
+            <label class="item item-input">
+                <input type="text" placeholder="{{'lbl_from'| translate}}">
+                <a class="button button-icon icon ion-qr-scanner padding-left"></a>
+            </label>
+            <label class="item item-input">
+                <input type="text" placeholder="{{'lbl_to'| translate}}">
+                <a class="button button-icon icon ion-qr-scanner padding-left"></a>
+            </label>
+        </div>
+
+        <h4>{{'lbl_halfwaystops'| translate}}</h4>
+        <div class="list">
+            <ion-radio ng-model="hasHalfwayStops" ng-value="false">{{'lbl_halfwaystops_none'| translate}}</ion-radio>
+            <ion-radio ng-model="hasHalfwayStops" ng-value="true">{{'lbl_halfwaystops_agree'| translate}}</ion-radio>
+        </div>
+
+        <div class="list">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">{{'lbl_date'| translate}}</span>
+                <input type="text">
+            </label>
+            <ion-toggle ng-model="isRecurrentTrip" toggle-class="">{{'lbl_recurrenttrip'| translate}}</ion-toggle>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">{{'lbl_time'| translate}}</span>
+                <input type="text">
+            </label>
+        </div>
     </ion-content>
 </ion-view>

@@ -1,9 +1,3 @@
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
 angular.module('starter', [
   'ionic',
   'ngIOS9UIWebViewPatch',
@@ -27,52 +21,49 @@ angular.module('starter', [
         if (window.cordova && window.cordova.plugins.Keyboard) {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             cordova.plugins.Keyboard.disableScroll(true);
-
         }
+
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
         if (!Login.getUserId()) {
             Login.login();
         }
-
     });
 
     $rootScope.login = function () {
         var deferred = $q.defer();
-        Login.login().then(function (data) {
+        Login.login().then(
+            function (data) {
                 deferred.resolve(data);
             },
             function (error) {
-
                 deferred.reject(error);
+            }
+        );
 
-
-            });
         return deferred.promise;
-
     }
 
     $rootScope.logout = function () {
         var deferred = $q.defer();
-        Login.logout().then(function (data) {
+        Login.logout().then(
+            function (data) {
                 deferred.resolve(data);
             },
             function (error) {
-
                 deferred.reject(error);
+            }
+        );
 
-
-            });
         return deferred.promise;
     };
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
-    $stateProvider
-
-        .state('app', {
+    $stateProvider.state('app', {
         url: '/app',
         abstract: true,
         templateUrl: 'templates/menu.html',
@@ -178,6 +169,14 @@ angular.module('starter', [
         menu_profile: 'Profilo',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
+        lbl_from: 'Da',
+        lbl_to: 'A',
+        lbl_halfwaystops: 'Fermate intermedie',
+        lbl_halfwaystops_none: 'Nessuna',
+        lbl_halfwaystops_agree: 'Da concordare con il conducente',
+        lbl_date: 'Data',
+        lbl_time: 'Ora',
+        lbl_recurrenttrip: 'Viaggio ricorrente',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro'
     });
