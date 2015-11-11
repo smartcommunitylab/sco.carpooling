@@ -110,6 +110,15 @@ angular.module('starter', [
         }
     })
 
+    .state('app.cercacomunita', {
+        url: '/cercacomunita',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/cercacomunita.html'
+            }
+        }
+    })
+
     .state('app.cerca', {
         url: '/cerca',
         views: {
@@ -168,6 +177,9 @@ angular.module('starter', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        lbl_findcommunity: 'Cerca comunità',
+        lbl_name: 'Nome',
+        lbl_tripzone: 'Zona di viaggio',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',
