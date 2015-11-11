@@ -28,7 +28,7 @@ public class Recurrency {
 
 	/** travel times(mins of day)-reqd.**/
 	private int time;
-	/** days of week when route is due [0,1,2,3,4].**/
+	/** days of week when route is due [1,2,3,4,5,6,7]->[Do,Lu,Ma,Me,Gi,Ve,Sa].**/
 	private List<Integer> days = new ArrayList<Integer>();
 	/** days of month when route is due.**/
 	private List<Integer> dates = new ArrayList<Integer>();

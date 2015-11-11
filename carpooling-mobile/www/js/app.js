@@ -110,11 +110,21 @@ angular.module('starter', [
         }
     })
 
+    .state('app.cercacomunita', {
+        url: '/cercacomunita',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/cercacomunita.html'
+            }
+        }
+    })
+
     .state('app.cerca', {
         url: '/cerca',
         views: {
             'menuContent': {
-                templateUrl: 'templates/cerca.html'
+                templateUrl: 'templates/cerca.html',
+                controller: 'CercaViaggioCtrl'
             }
         }
     })
@@ -170,6 +180,9 @@ angular.module('starter', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        lbl_findcommunity: 'Cerca comunità',
+        lbl_name: 'Nome',
+        lbl_tripzone: 'Zona di viaggio',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',
@@ -180,6 +193,10 @@ angular.module('starter', [
         lbl_date: 'Data',
         lbl_time: 'Ora',
         lbl_recurrenttrip: 'Viaggio ricorrente',
+        lbl_cerca: 'Cerca',
+        lbl_mycommunity: 'Nelle mie community',
+        lbl_allcommunity: 'In tutte le community',
+        lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrence: 'Imposta ricorrenza',
