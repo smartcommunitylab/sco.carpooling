@@ -21,12 +21,21 @@
             </div>
             <h4>{{'lbl_cerca'| translate}}</h4>
             <div class="list">
-                <ion-radio ng-model="hasHalfwayStops" ng-value="false">{{'lbl_mycommunity'| translate}}</ion-radio>
-                <ion-radio ng-model="hasHalfwayStops" ng-value="true">{{'lbl_allcommunity'| translate}}</ion-radio>
+                <ion-radio ng-model="myCommunity" ng-value="false">{{'lbl_mycommunity'| translate}}</ion-radio>
+                <ion-radio ng-model="allCommunity" ng-value="true">{{'lbl_allcommunity'| translate}}</ion-radio>
             </div>
 
             <div class="list">
-                <ion-toggle ng-model="isRecurrentTrip" toggle-class="">{{'lbl_allsearchnotifications'| translate}}</ion-toggle>
+                <ion-toggle ng-model="allSearchNotifications" toggle-class="">
+                    <p>{{'lbl_allsearchnotifications'| translate}}</p>
+                </ion-toggle>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <button class="button button-positive">
+                        {{'lbl_cerca'| translate}}
+                    </button>
+                </div>
             </div>
 
         </form>

@@ -179,8 +179,6 @@ angular.module('starter', [
         lbl_time: 'Ora',
         lbl_recurrenttrip: 'Viaggio ricorrente',
         lbl_cerca: 'Cerca',
-        lbl_from: 'Da',
-        lbl_to: 'A',
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
