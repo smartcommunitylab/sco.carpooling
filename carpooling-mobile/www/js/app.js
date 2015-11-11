@@ -123,7 +123,8 @@ angular.module('starter', [
         url: '/offri',
         views: {
             'menuContent': {
-                templateUrl: 'templates/offri.html'
+                templateUrl: 'templates/offri.html',
+                controller: 'OffriCtrl'
             }
         }
     })
@@ -162,6 +163,8 @@ angular.module('starter', [
 .config(function ($translateProvider) {
     $translateProvider.translations('it', {
         app_name: 'CARpooling',
+        cancel: 'Annulla',
+        ok: 'OK',
         menu_home: 'Home',
         menu_community: 'Comunità',
         menu_chat: 'Chat',
@@ -178,7 +181,18 @@ angular.module('starter', [
         lbl_time: 'Ora',
         lbl_recurrenttrip: 'Viaggio ricorrente',
         tab_participate: 'Partecipo',
-        tab_offer: 'Offro'
+        tab_offer: 'Offro',
+        title_setrecurrence: 'Imposta ricorrenza',
+        radio_daily: 'Giornaliera',
+        radio_weekly: 'Settimanale',
+        radio_monthly: 'Mensile',
+        dow_monday: 'Lunedì',
+        dow_tuesday: 'Martedì',
+        dow_wednesday: 'Mercoledì',
+        dow_thursday: 'Giovedì',
+        dow_friday: 'Venerdì',
+        dow_saturday: 'Sabato',
+        dow_sunday: 'Domenica'
     });
 
     $translateProvider.preferredLanguage('it');

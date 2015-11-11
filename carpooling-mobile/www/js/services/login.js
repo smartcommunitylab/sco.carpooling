@@ -1,7 +1,7 @@
 angular.module('starter.services.login', [])
 
 .factory('Login', function ($q, $http, $rootScope) {
-    var UserID = null
+    var UserID = null;
 
     return {
         login: function () {
@@ -9,7 +9,6 @@ angular.module('starter.services.login', [])
 
             //log into the system and set UserID
             var authapi = {
-
                 authorize: function (url) {
                     var deferred = $q.defer();
 
@@ -46,8 +45,8 @@ angular.module('starter.services.login', [])
                     return deferred.promise;
                 }
             };
-            authapi.authorize().then(function (data) {
 
+            authapi.authorize().then(function (data) {
                 console.log("success:" + data.userId);
                 //prendi google id , metti in local storage e abilita menu
                 //log
@@ -76,23 +75,23 @@ angular.module('starter.services.login', [])
                     'Content-Type': 'application/json'
 
                 }
-            }).
-            success(function (data, status, headers, config) {
+            })
+
+            .success(function (data, status, headers, config) {
                 $rootScope.userIsLogged = false;
                 localStorage.userIdalert("loggato");
                 deferred.resolve(data);
-            }).
-            error(function (data, status, headers, config) {
+            })
+
+            .error(function (data, status, headers, config) {
                 deferred.reject(data);
             });
-            return deferred.promise;
 
+            return deferred.promise;
         },
         getUserId: function () {
             //return UserID
             return localStorage.userId;
         }
-
     };
-
-})
+});

@@ -73,7 +73,8 @@
 
 /* Others */
 
-.carpooling .list .item-input {
+.carpooling .list .item-input,
+.carpooling .list .item-toggle {
     padding-right: 0;
     padding-left: 0;
     border: 0;

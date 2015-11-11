@@ -1,12 +1,12 @@
-<ion-view title="{{'lbl_offer'| translate}}">
+<ion-view title="{{'lbl_offer' | translate}}">
     <ion-content class="padding">
         <div class="list">
             <label class="item item-input">
-                <input type="text" placeholder="{{'lbl_from'| translate}}">
+                <input type="text" placeholder="{{'lbl_from' | translate}}">
                 <a class="button button-icon icon ion-qr-scanner padding-left"></a>
             </label>
             <label class="item item-input">
-                <input type="text" placeholder="{{'lbl_to'| translate}}">
+                <input type="text" placeholder="{{'lbl_to' | translate}}">
                 <a class="button button-icon icon ion-qr-scanner padding-left"></a>
             </label>
         </div>
@@ -18,15 +18,21 @@
         </div>
 
         <div class="list">
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">{{'lbl_date'| translate}}</span>
-                <input type="text">
-            </label>
-            <ion-toggle ng-model="isRecurrentTrip" toggle-class="">{{'lbl_recurrenttrip'| translate}}</ion-toggle>
-            <label class="item item-input item-stacked-label">
-                <span class="input-label">{{'lbl_time'| translate}}</span>
-                <input type="text">
-            </label>
+            <div class="row">
+                <div class="col">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">{{'lbl_date'| translate}}</span>
+                        <input type="text">
+                    </label>
+                </div>
+                <div class="col">
+                    <label class="item item-input item-stacked-label">
+                        <span class="input-label">{{'lbl_time'| translate}}</span>
+                        <input type="text">
+                    </label>
+                </div>
+            </div>
+            <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip'| translate}}</ion-toggle>
         </div>
     </ion-content>
 </ion-view>
