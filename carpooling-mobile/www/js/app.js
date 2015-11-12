@@ -101,6 +101,33 @@ angular.module('starter', [
         }
     })
 
+    .state('app.comunitainfo.info', {
+        url: '/info',
+        views: {
+            'tab-info': {
+                templateUrl: 'templates/info.html'
+            }
+        }
+    })
+
+    .state('app.comunitainfo.viaggi', {
+        url: '/viaggi',
+        views: {
+            'tab-viaggi': {
+                templateUrl: 'templates/viaggi.html'
+            }
+        }
+    })
+
+    .state('app.comunitainfo.componenti', {
+        url: '/componenti',
+        views: {
+            'tab-componenti': {
+                templateUrl: 'templates/componenti.html'
+            }
+        }
+    })
+
     .state('app.comunita', {
         url: '/comunita',
         views: {
@@ -115,6 +142,24 @@ angular.module('starter', [
         views: {
             'menuContent': {
                 templateUrl: 'templates/cercacomunita.html'
+            }
+        }
+    })
+
+    .state('app.impostazioninotifiche', {
+        url: '/impostazioninotifiche',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/impostazioninotifiche.html'
+            }
+        }
+    })
+
+    .state('app.comunitainfo', {
+        url: '/comunitainfo',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/comunitainfo.html'
             }
         }
     })
@@ -180,6 +225,12 @@ angular.module('starter', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        lbl_notifications: 'Desidero ricevere notifiche per:',
+        lbl_newmessage: 'Nuovo Messaggio',
+        lbl_drivervalutation: 'Valutazione del conducente',
+        lbl_passengervalutation: 'Valutazione del passeggero',
+        lbl_notificationsettings: 'Impostazioni Notifiche',
+        lbl_communityname: 'Nome Comunità',
         lbl_findcommunity: 'Cerca comunità',
         lbl_name: 'Nome',
         lbl_tripzone: 'Zona di viaggio',
