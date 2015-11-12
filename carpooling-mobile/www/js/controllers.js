@@ -1,8 +1,18 @@
-angular.module('starter.controllers', [])
+angular.module('carpooling.controllers', [])
 
 .controller('AppCtrl', function ($scope) {})
 
-.controller('PartecipoCtrl', function ($scope) {})
+.controller('HomeCtrl', function ($scope) {})
+
+.controller('PartecipoCtrl', function ($scope, Trips) {
+    $scope.travelProfile = 'empty';
+
+    $scope.getTravelProfile = function () {
+        Trips.getProfile().then(function (data) {
+            $scope.travelProfile = data;
+        });
+    }
+})
 
 .controller('OffroCtrl', function ($scope) {})
 
@@ -50,6 +60,4 @@ angular.module('starter.controllers', [])
 .controller('CercaViaggioCtrl', function ($scope, $filter) {
     $scope.date = $filter("date")(Date.now(), 'yyyy-MM-dd');
     $scope.time = '10:30';
-})
-
-.controller('HomeCtrl', function ($scope) {});
+});

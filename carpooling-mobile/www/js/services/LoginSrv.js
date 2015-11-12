@@ -1,6 +1,6 @@
-angular.module('starter.services.login', [])
+angular.module('carpooling.services.login', [])
 
-.factory('Login', function ($q, $http, $rootScope) {
+.factory('Login', function ($rootScope, $q, $http, Config) {
     var UserID = null;
 
     return {
@@ -13,9 +13,9 @@ angular.module('starter.services.login', [])
                     var deferred = $q.defer();
 
                     //Build the OAuth consent page URL
-                    var authUrl = 'https://dev.smartcommunitylab.it/carpooling/userlogin';
+                    var authUrl = Config.getServerURL() + '/userlogin';
                     //Open the OAuth consent page in the InAppBrowser
-                    var authWindow = window.open(authUrl, '_system', 'location=no,toolbar=no');
+                    var authWindow = window.open(authUrl, '_blank', 'location=no,toolbar=no');
                     authWindow.addEventListener('loadstart', function (e) {
                         console.log(e);
                         var url = e.url;
@@ -69,11 +69,10 @@ angular.module('starter.services.login', [])
 
             $http({
                 method: 'GET',
-                url: 'https://dev.smartcommunitylab.it/carpooling/logout',
+                url: Config.getServerURL() + '/carpooling/logout',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
-
                 }
             })
 
