@@ -1,5 +1,10 @@
-<ion-view title="{{'menu_profile'| translate}}">
-    <ion-content>
-        <h1>{{'menu_profile'| translate}}</h1>
-    </ion-content>
-</ion-view>
+<ion-tabs class="tabs-top">
+    <!-- Partecipo Tab -->
+    <ion-tab icon="ion-ios-information" href="#/app/profilo/userinfo">
+        <ion-nav-view name="tab-userinfo"></ion-nav-view>
+    </ion-tab>
+    <!-- Offro Tab -->
+    <ion-tab icon="ion-stats-bars" href="#/app/profilo/userstats">
+        <ion-nav-view name="tab-userstats"></ion-nav-view>
+    </ion-tab>
+</ion-tabs>

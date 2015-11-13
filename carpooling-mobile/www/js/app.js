@@ -205,6 +205,24 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.profilo.userinfo', {
+        url: '/userinfo',
+        views: {
+            'tab-userinfo': {
+                templateUrl: 'templates/userinfo.html'
+            }
+        }
+    })
+
+    .state('app.profilo.userstats', {
+        url: '/userstats',
+        views: {
+            'tab-userstats': {
+                templateUrl: 'templates/userstats.html'
+            }
+        }
+    })
+
     .state('app.chat', {
         url: '/chat',
         views: {
