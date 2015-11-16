@@ -308,6 +308,8 @@ angular.module('carpooling', [
         radio_daily: 'Giornaliera',
         radio_weekly: 'Settimanale',
         radio_monthly: 'Mensile',
+        repeat_every_1: 'Ripeti ogni',
+        repeat_every_2: 'days',
         dow_monday: 'Lunedì',
         dow_tuesday: 'Martedì',
         dow_wednesday: 'Mercoledì',

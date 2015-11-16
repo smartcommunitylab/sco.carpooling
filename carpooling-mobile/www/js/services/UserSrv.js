@@ -29,7 +29,7 @@ angular.module('carpooling.services.user', [])
             var deferred = $q.defer();
 
             if (!!!travelProfile) {
-                deferred.reject('travelProfile is not valid');
+                deferred.reject('Invalid travelProfile');
             } else {
                 $http.post(Config.getServerURL() + '/api/save/profile', travelProfile, Config.getHTTPConfig())
 
@@ -41,6 +41,21 @@ angular.module('carpooling.services.user', [])
                     deferred.reject(err);
                 });
             }
+
+            return deferred.promise;
+        },
+        saveAuto: function (auto) {
+            var deferred = $q.defer();
+
+            $http.post(Config.getServerURL() + '/api/save/autoInfo/' + auto, Config.getHTTPConfig())
+
+            .success(function (data) {
+                deferred.resolve(data);
+            })
+
+            .error(function (err) {
+                deferred.reject(err);
+            });
 
             return deferred.promise;
         },

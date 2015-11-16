@@ -6,7 +6,14 @@
 
 <!-- daily -->
 <div class="list" ng-if="recurrence.recurrenceType === 'd'">
-
+    <label class="item item-input item-select">
+        <div class="input-label">
+            {{'repeat_every_1' | translate}}
+        </div>
+        <select ng-model="recurrence.recurrenceD" ng-update>
+            <option ng-repeat="i in getArray(31)">{{i}}</option>
+        </select>
+    </label>
 </div>
 
 <!-- weekly -->
