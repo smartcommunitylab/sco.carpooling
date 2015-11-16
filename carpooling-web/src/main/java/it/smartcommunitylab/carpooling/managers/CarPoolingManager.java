@@ -311,6 +311,24 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
+	
+	public Map<String, String> updateAutoInfo(String userId, String auto) {
+
+		Map<String, String> errorMap = new HashMap<String, String>();
+
+		User driver = userRepository.findOne(userId);
+
+		if (driver != null) {
+			driver.setAuto(auto);
+			userRepository.save(driver);
+		} else {
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NO_CONTENT.value()));
+			errorMap.put(CarPoolingUtils.ERROR_MSG, "driver does not exist.");
+
+		}
+
+		return errorMap;
+	}
 
 	public Map<String, String> sendMessage(String userId, String travelId, Message message) {
 

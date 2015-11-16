@@ -229,6 +229,24 @@ public class ServiceController {
 		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
 
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo/{auto}")
+	public @ResponseBody
+	Response<String> updateAutoInfo(@PathVariable String auto) {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.updateAutoInfo(getUserId(), auto);
+
+		if (errorMap.isEmpty()) {
+			response.setData("auto information saved successfully");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+	}
 
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody
