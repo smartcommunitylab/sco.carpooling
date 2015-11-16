@@ -106,6 +106,16 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.mioviaggio', {
+        url: '/mioviaggio',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/mioviaggio.html',
+            }
+        }
+    })
+
     .state('app.comunitainfo', {
         url: '/comunitainfo',
         cache: false,
@@ -262,6 +272,7 @@ angular.module('carpooling', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        lbl_mytrip: 'Mio viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
@@ -271,6 +282,10 @@ angular.module('carpooling', [
         lbl_findcommunity: 'Cerca comunità',
         lbl_name: 'Nome',
         lbl_tripzone: 'Zona di viaggio',
+        lbl_start: 'Partenza',
+        lbl_generalinformations: 'INFORMAZIONI GENERALI',
+        lbl_numberauto: 'AUTO A DISPOSIZIONE',
+        lbl_addauto: 'AGGIUNGI LA TUA AUTO',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',

@@ -82,3 +82,18 @@
 .carpooling .list .item-input input[type='text'] {
     border-bottom: 1px solid #ddd;
 }
+
+/* Community infos */
+
+.carpooling .info h5{
+    color: #3448A5;
+}
+
+.carpooling .info span{
+    color: lightgray;
+}
+
+.carpooling .info #auto{
+    color: #3448A5;
+    font-size: 2em;
+}
