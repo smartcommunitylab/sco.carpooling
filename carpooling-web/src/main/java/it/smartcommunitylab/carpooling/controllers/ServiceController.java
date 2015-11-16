@@ -117,7 +117,7 @@ public class ServiceController {
 		return new Response<Travel>(travel);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/accept")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips/{tripId}/accept")
 	public @ResponseBody
 	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
 		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());

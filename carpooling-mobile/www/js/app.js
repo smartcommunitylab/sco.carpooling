@@ -86,6 +86,7 @@ angular.module('carpooling', [
 
     .state('app.home.partecipo', {
         url: '/partecipo',
+        cache: false,
         views: {
             'tab-partecipo': {
                 templateUrl: 'templates/partecipo.html',
@@ -96,6 +97,7 @@ angular.module('carpooling', [
 
     .state('app.home.offro', {
         url: '/offro',
+        cache: false,
         views: {
             'tab-offro': {
                 templateUrl: 'templates/offro.html',
@@ -104,8 +106,29 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.mioviaggio', {
+        url: '/mioviaggio',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/mioviaggio.html',
+            }
+        }
+    })
+
+    .state('app.comunitainfo', {
+        url: '/comunitainfo',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/comunitainfo.html'
+            }
+        }
+    })
+
     .state('app.comunitainfo.info', {
         url: '/info',
+        cache: false,
         views: {
             'tab-info': {
                 templateUrl: 'templates/info.html'
@@ -115,6 +138,7 @@ angular.module('carpooling', [
 
     .state('app.comunitainfo.viaggi', {
         url: '/viaggi',
+        cache: false,
         views: {
             'tab-viaggi': {
                 templateUrl: 'templates/viaggi.html'
@@ -124,6 +148,7 @@ angular.module('carpooling', [
 
     .state('app.comunitainfo.componenti', {
         url: '/componenti',
+        cache: false,
         views: {
             'tab-componenti': {
                 templateUrl: 'templates/componenti.html'
@@ -133,6 +158,7 @@ angular.module('carpooling', [
 
     .state('app.comunita', {
         url: '/comunita',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/comunita.html'
@@ -142,6 +168,7 @@ angular.module('carpooling', [
 
     .state('app.cercacomunita', {
         url: '/cercacomunita',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/cercacomunita.html'
@@ -149,26 +176,9 @@ angular.module('carpooling', [
         }
     })
 
-    .state('app.impostazioninotifiche', {
-        url: '/impostazioninotifiche',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/impostazioninotifiche.html'
-            }
-        }
-    })
-
-    .state('app.comunitainfo', {
-        url: '/comunitainfo',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/comunitainfo.html'
-            }
-        }
-    })
-
     .state('app.cerca', {
         url: '/cerca',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/cerca.html',
@@ -179,6 +189,7 @@ angular.module('carpooling', [
 
     .state('app.offri', {
         url: '/offri',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/offri.html',
@@ -189,6 +200,7 @@ angular.module('carpooling', [
 
     .state('app.notifiche', {
         url: '/notifiche',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/notifiche.html'
@@ -196,8 +208,19 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.impostazioninotifiche', {
+        url: '/impostazioninotifiche',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/impostazioninotifiche.html'
+            }
+        }
+    })
+
     .state('app.profilo', {
         url: '/profilo',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/profilo.html'
@@ -205,8 +228,29 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.profilo.userinfo', {
+        url: '/userinfo',
+        cache: false,
+        views: {
+            'tab-userinfo': {
+                templateUrl: 'templates/userinfo.html'
+            }
+        }
+    })
+
+    .state('app.profilo.userstats', {
+        url: '/userstats',
+        cache: false,
+        views: {
+            'tab-userstats': {
+                templateUrl: 'templates/userstats.html'
+            }
+        }
+    })
+
     .state('app.chat', {
         url: '/chat',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/chat.html',
@@ -228,6 +272,7 @@ angular.module('carpooling', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        lbl_mytrip: 'Mio viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
@@ -237,6 +282,10 @@ angular.module('carpooling', [
         lbl_findcommunity: 'Cerca comunità',
         lbl_name: 'Nome',
         lbl_tripzone: 'Zona di viaggio',
+        lbl_start: 'Partenza',
+        lbl_generalinformations: 'INFORMAZIONI GENERALI',
+        lbl_numberauto: 'AUTO A DISPOSIZIONE',
+        lbl_addauto: 'AGGIUNGI LA TUA AUTO',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',
