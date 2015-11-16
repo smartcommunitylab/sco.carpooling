@@ -2,9 +2,9 @@ angular.module('carpooling', [
     'ionic',
     'ngIOS9UIWebViewPatch',
     'pascalprecht.translate',
+    'carpooling.services',
     'carpooling.services.config',
     'carpooling.services.login',
-    'carpooling.services.trips',
     'carpooling.controllers'
     ])
 

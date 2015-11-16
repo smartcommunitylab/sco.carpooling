@@ -4,11 +4,11 @@ angular.module('carpooling.controllers', [])
 
 .controller('HomeCtrl', function ($scope) {})
 
-.controller('PartecipoCtrl', function ($scope, Trips) {
+.controller('PartecipoCtrl', function ($scope, Srv) {
     $scope.travelProfile = 'empty';
 
     $scope.getTravelProfile = function () {
-        Trips.getProfile().then(function (data) {
+        Srv.getTravelProfile().then(function (data) {
             $scope.travelProfile = data;
         });
     }
