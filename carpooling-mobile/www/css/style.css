@@ -62,6 +62,11 @@
 
 /* Form components */
 
+.carpooling-theme .button-carpooling {
+    border-color: #4EB0E6;
+    background-color: #4EB0E6;
+    color: #FFFFFF;
+}
 .carpooling-theme .button.button-icon.icon {
     color: #4EB0E6;
 }
@@ -75,6 +80,11 @@
 }
 .carpooling-theme .toggle-small input:checked + .track .handle {
     background: #4EB0E6;
+}
+.carpooling-theme .checkbox input:checked:before,
+.carpooling-theme .checkbox input:checked + .checkbox-icon:before {
+    border-color: #4EB0E6;
+    background-color: #4EB0E6;
 }
 
 /* Others */

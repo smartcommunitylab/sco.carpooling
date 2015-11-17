@@ -24,7 +24,7 @@ angular.module('carpooling.controllers', [])
     $scope.getArray = function (num) {
         var array = new Array(num);
         for (var i = 0; i < num; i++) {
-            array[i] = i+1;
+            array[i] = i + 1;
         }
         return array;
     }
@@ -33,7 +33,71 @@ angular.module('carpooling.controllers', [])
         isRecurrent: false,
         recurrenceType: 'd',
         recurrenceD: '1',
-        recurrenceDoW: [0, 0, 0, 0, 0, 0, 0]
+        recurrenceDoW: [],
+        recurrenceDoWstring: ''
+    };
+
+    $scope.recurrentPopupDoW = [
+        {
+            name: 'dow_monday',
+            shortname: 'dow_monday_short',
+            value: 2,
+            checked: false
+            },
+        {
+            name: 'dow_tuesday',
+            shortname: 'dow_tuesday_short',
+            value: 3,
+            checked: false
+            },
+        {
+            name: 'dow_wednesday',
+            shortname: 'dow_wednesday_short',
+            value: 4,
+            checked: false
+            },
+        {
+            name: 'dow_thursday',
+            shortname: 'dow_thursday_short',
+            value: 5,
+            checked: false
+            },
+        {
+            name: 'dow_friday',
+            shortname: 'dow_friday_short',
+            value: 6,
+            checked: false
+            },
+        {
+            name: 'dow_saturday',
+            shortname: 'dow_saturday_short',
+            value: 7,
+            checked: false
+            },
+        {
+            name: 'dow_sunday',
+            shortname: 'dow_sunday_short',
+            value: 1,
+            checked: false
+        }
+    ];
+
+    $scope.updateRecurrence = function () {
+        // update $scope.recurrence.recurrenceDoW
+        // TODO: update $scope.recurrence.recurrenceDoWstring
+        $scope.recurrence.recurrenceDoW = [];
+        $scope.recurrence.recurrenceDoWstring = '';
+
+        for (var i = 0; i < $scope.recurrentPopupDoW.length; i++) {
+            var dow = $scope.recurrentPopupDoW[i];
+            if (dow.checked) {
+                $scope.recurrence.recurrenceDoW.push(dow.value);
+                if (!!$scope.recurrence.recurrenceDoWstring) {
+                    $scope.recurrence.recurrenceDoWstring = $scope.recurrence.recurrenceDoWstring + ', ';
+                }
+                $scope.recurrence.recurrenceDoWstring = $scope.recurrence.recurrenceDoWstring + $filter('translate')(dow.name);
+            }
+        }
     };
 
     var recurrentPopup = {
@@ -46,10 +110,11 @@ angular.module('carpooling.controllers', [])
             },
             {
                 text: $filter('translate')('ok'),
-                type: 'button-positive',
+                type: 'button-carpooling',
                 onTap: function (e) {
                     // don't allow the user to close unless he enters wifi password
                     //e.preventDefault();
+                    $scope.updateRecurrence();
                     return true;
                 }
             }
@@ -64,6 +129,7 @@ angular.module('carpooling.controllers', [])
                     console.log($scope.recurrence.recurrenceType);
                     console.log($scope.recurrence.recurrenceD);
                     console.log($scope.recurrence.recurrenceDoW);
+                    console.log($scope.recurrence.recurrenceDoWstring);
                     if (!!!res) {
                         $scope.recurrence.isRecurrent = false;
                     }
