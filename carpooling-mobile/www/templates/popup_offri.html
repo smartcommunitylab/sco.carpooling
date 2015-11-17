@@ -1,10 +1,13 @@
+<!--
 <div class="list">
     <ion-radio ng-model="recurrence.recurrenceType" ng-checked="recurrence.recurrenceType" ng-value="'d'">{{'radio_daily' | translate}}</ion-radio>
     <ion-radio ng-model="recurrence.recurrenceType" ng-checked="recurrence.recurrenceType" ng-value="'w'">{{'radio_weekly' | translate}}</ion-radio>
     <ion-radio ng-model="recurrence.recurrenceType" ng-checked="recurrence.recurrenceType" ng-value="'m'">{{'radio_monthly' | translate}}</ion-radio>
 </div>
+-->
 
 <!-- daily -->
+<!--
 <div class="list" ng-if="recurrence.recurrenceType === 'd'">
     <label class="item item-input item-select">
         <div class="input-label">
@@ -15,19 +18,20 @@
         </select>
     </label>
 </div>
+-->
 
 <!-- weekly -->
-<div class="list" ng-if="recurrence.recurrenceType === 'w'">
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[1]" ng-true-value="2" ng-false-value="0">{{'dow_monday' | translate}}</ion-checkbox>
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[2]" ng-true-value="3" ng-false-value="0">{{'dow_tuesday' | translate}}</ion-checkbox>
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[3]" ng-true-value="4" ng-false-value="0">{{'dow_wednesday' | translate}}</ion-checkbox>
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[4]" ng-true-value="5" ng-false-value="0">{{'dow_thursday' | translate}}</ion-checkbox>
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[5]" ng-true-value="6" ng-false-value="0">{{'dow_friday' | translate}}</ion-checkbox>
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[6]" ng-true-value="7" ng-false-value="0">{{'dow_saturday' | translate}}</ion-checkbox>
-    <ion-checkbox ng-model="recurrence.recurrenceDoW[0]" ng-true-value="1" ng-false-value="0">{{'dow_sunday' | translate}}</ion-checkbox>
+<!--<div class="list popup-offri-dow" ng-if="recurrence.recurrenceType === 'w'">-->
+<div class="list popup-offri-dow">
+    <!--<ion-checkbox ng-repeat="dow in getDoW()" ng-model="recurrence.recurrenceDoW[dow.pos]" ng-true-value="dow.value" ng-false-value="0">{{dow.shortname | translate}}</ion-checkbox>-->
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[1]" ng-true-value="2" ng-false-value="0">{{'dow_monday_short' | translate}}</ion-checkbox>
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[2]" ng-true-value="3" ng-false-value="0">{{'dow_tuesday_short' | translate}}</ion-checkbox>
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[3]" ng-true-value="4" ng-false-value="0">{{'dow_wednesday_short' | translate}}</ion-checkbox>
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[4]" ng-true-value="5" ng-false-value="0">{{'dow_thursday_short' | translate}}</ion-checkbox>
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[5]" ng-true-value="6" ng-false-value="0">{{'dow_friday_short' | translate}}</ion-checkbox>
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[6]" ng-true-value="7" ng-false-value="0">{{'dow_saturday_short' | translate}}</ion-checkbox>
+    <ion-checkbox ng-model="recurrence.recurrenceDoW[0]" ng-true-value="1" ng-false-value="0">{{'dow_sunday_short' | translate}}</ion-checkbox>
 </div>
 
 <!-- monthly -->
-<div class="list" ng-if="recurrence.recurrenceType === 'm'">
-
-</div>
+<!--<div class="list" ng-if="recurrence.recurrenceType === 'm'"></div>-->

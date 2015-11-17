@@ -62,6 +62,9 @@
 
 /* Form components */
 
+.carpooling-theme .button.button-icon.icon {
+    color: #4EB0E6;
+}
 .carpooling-theme .toggle input:checked + .track {
     background-color: #4EB0E6;
     border-color: #4EB0E6;
@@ -88,15 +91,29 @@
 
 /* Community infos */
 
-.carpooling-theme .info h5{
+.carpooling-theme .info h5 {
     color: #3448A5;
 }
-
-.carpooling-theme .info span{
+.carpooling-theme .info span {
     color: lightgray;
 }
-
-.carpooling-theme .info #auto{
+.carpooling-theme .info #auto {
     color: #3448A5;
     font-size: 2em;
+}
+
+/* Custom */
+
+.popup-offri-dow label.item-checkbox {
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+}
+.popup-offri-dow label.item-checkbox .checkbox {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    margin-top: auto;
+    padding-bottom: 0;
 }

@@ -316,7 +316,14 @@ angular.module('carpooling', [
         dow_thursday: 'Giovedì',
         dow_friday: 'Venerdì',
         dow_saturday: 'Sabato',
-        dow_sunday: 'Domenica'
+        dow_sunday: 'Domenica',
+        dow_monday_short: 'L',
+        dow_tuesday_short: 'M',
+        dow_wednesday_short: 'M',
+        dow_thursday_short: 'G',
+        dow_friday_short: 'V',
+        dow_saturday_short: 'S',
+        dow_sunday_short: 'D'
     });
 
     $translateProvider.preferredLanguage('it');

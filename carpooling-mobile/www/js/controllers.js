@@ -16,7 +16,11 @@ angular.module('carpooling.controllers', [])
 
 .controller('OffroCtrl', function ($scope) {})
 
-.controller('OffriCtrl', function ($scope, $filter, $ionicPopup) {
+.controller('OffriCtrl', function ($scope, $filter, $ionicPopup, Config) {
+    $scope.getDoW = function () {
+        return Config.getDoW();
+    };
+
     $scope.getArray = function (num) {
         var array = new Array(num);
         for (var i = 0; i < num; i++) {
@@ -56,6 +60,8 @@ angular.module('carpooling.controllers', [])
         if (newValue !== oldValue && !!newValue) {
             $ionicPopup.show(recurrentPopup).then(
                 function (res) {
+                    console.log($scope.recurrence.isRecurrent);
+                    console.log($scope.recurrence.recurrenceType);
                     console.log($scope.recurrence.recurrenceD);
                     console.log($scope.recurrence.recurrenceDoW);
                     if (!!!res) {
