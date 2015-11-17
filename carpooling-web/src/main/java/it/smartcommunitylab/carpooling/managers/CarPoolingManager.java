@@ -17,6 +17,7 @@
 package it.smartcommunitylab.carpooling.managers;
 
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
+import it.smartcommunitylab.carpooling.model.Auto;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
@@ -312,7 +313,7 @@ public class CarPoolingManager {
 		return errorMap;
 	}
 	
-	public Map<String, String> updateAutoInfo(String userId, String auto) {
+	public Map<String, String> updateAutoInfo(String userId, Auto auto) {
 
 		Map<String, String> errorMap = new HashMap<String, String>();
 

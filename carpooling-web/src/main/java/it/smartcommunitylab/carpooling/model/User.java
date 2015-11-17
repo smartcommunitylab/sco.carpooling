@@ -37,7 +37,7 @@ public class User {
 	/** user points/ratings (reqd).**/
 	private GameProfile gameProfile;
 	/** description of car(if any).**/
-	private String auto;
+	private Auto auto;
 
 	public User() {
 		super();
@@ -45,7 +45,7 @@ public class User {
 	}
 
 	public User(String userId, String name, String surname, String email, TravelProfile travelProfile,
-			GameProfile gameProfile, String auto) {
+			GameProfile gameProfile, Auto auto) {
 		super();
 		this.userId = userId;
 		this.name = name;
@@ -104,11 +104,11 @@ public class User {
 		this.gameProfile = gameProfile;
 	}
 
-	public String getAuto() {
+	public Auto getAuto() {
 		return auto;
 	}
 
-	public void setAuto(String auto) {
+	public void setAuto(Auto auto) {
 		this.auto = auto;
 	}
 

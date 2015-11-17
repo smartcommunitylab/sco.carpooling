@@ -17,6 +17,7 @@
 package it.smartcommunitylab.carpooling.controllers;
 
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
+import it.smartcommunitylab.carpooling.model.Auto;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
@@ -230,9 +231,9 @@ public class ServiceController {
 
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo/{auto}")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo")
 	public @ResponseBody
-	Response<String> updateAutoInfo(@PathVariable String auto) {
+	Response<String> updateAutoInfo(@RequestBody Auto auto) {
 
 		Response<String> response = new Response<String>();
 
