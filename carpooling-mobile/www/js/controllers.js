@@ -31,7 +31,7 @@ angular.module('carpooling.controllers', [])
 
     $scope.recurrence = {
         isRecurrent: false,
-        recurrenceType: 'd',
+        recurrenceType: 'w',
         recurrenceD: '1',
         recurrenceDoW: [],
         recurrenceDoWstring: ''
@@ -83,8 +83,7 @@ angular.module('carpooling.controllers', [])
     ];
 
     $scope.updateRecurrence = function () {
-        // update $scope.recurrence.recurrenceDoW
-        // TODO: update $scope.recurrence.recurrenceDoWstring
+        // update recurrenceDoW and recurrenceDoWstring
         $scope.recurrence.recurrenceDoW = [];
         $scope.recurrence.recurrenceDoWstring = '';
 
@@ -127,7 +126,6 @@ angular.module('carpooling.controllers', [])
                 function (res) {
                     console.log($scope.recurrence.isRecurrent);
                     console.log($scope.recurrence.recurrenceType);
-                    console.log($scope.recurrence.recurrenceD);
                     console.log($scope.recurrence.recurrenceDoW);
                     console.log($scope.recurrence.recurrenceDoWstring);
                     if (!!!res) {
