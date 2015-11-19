@@ -4,17 +4,17 @@
             <div class="list">
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                <!--<div class="row">-->
+                    <!--<div class="row">-->
                     <placeautocomplete ng-model="fromName" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_from' | translate}}" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
                     <!----------------->
-                    <a class="button button-icon icon ion-map padding-left" ng-click="test()"></a>
+                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                <!--<div class="row">-->
+                    <!--<div class="row">-->
                     <placeautocomplete ng-model="toName" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_to' | translate}}" style="width: 100%" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
                     <!----------------->
-                    <a class="button button-icon icon ion-map padding-left"></a>
+                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">{{'lbl_date' | translate}}</span>
