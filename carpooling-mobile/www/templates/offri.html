@@ -1,14 +1,14 @@
 <ion-view title="{{'lbl_offer' | translate}}">
     <ion-content class="padding">
         <div class="list">
-            <label class="item item-input">
+            <div class="item item-input">
                 <input type="text" placeholder="{{'lbl_from' | translate}}">
-                <a class="button button-icon icon ion-map padding-left"></a>
-            </label>
-            <label class="item item-input">
+                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
+            </div>
+            <div class="item item-input">
                 <input type="text" placeholder="{{'lbl_to' | translate}}">
                 <a class="button button-icon icon ion-map padding-left"></a>
-            </label>
+            </div>
         </div>
 
         <h4>{{'lbl_halfwaystops'| translate}}</h4>
@@ -20,16 +20,16 @@
         <div class="list">
             <div class="row">
                 <div class="col">
-                    <label class="item item-input item-stacked-label">
+                    <div class="item item-input item-stacked-label">
                         <span class="input-label">{{'lbl_date'| translate}}</span>
                         <input type="text">
-                    </label>
+                    </div>
                 </div>
                 <div class="col">
-                    <label class="item item-input item-stacked-label">
+                    <div class="item item-input item-stacked-label">
                         <span class="input-label">{{'lbl_time'| translate}}</span>
                         <input type="text">
-                    </label>
+                    </div>
                 </div>
             </div>
             <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip'| translate}}</ion-toggle>

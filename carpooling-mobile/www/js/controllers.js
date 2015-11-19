@@ -16,7 +16,110 @@ angular.module('carpooling.controllers', [])
 
 .controller('OffroCtrl', function ($scope) {})
 
-.controller('OffriCtrl', function ($scope, $filter, $ionicPopup, Config) {
+.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, Config, MapSrv) {
+    var mapId = 'modalMap';
+
+    // NOTE: to be removed
+    $scope.temp = function () {
+        console.log('ciao');
+    };
+
+    $scope.modalMap = null;
+
+    angular.extend($scope, {
+        center: {
+            lat: 46.067819,
+            lng: 11.121306,
+            zoom: 8
+        },
+        defaults: {
+            scrollWheelZoom: false
+        },
+        events: {}
+    });
+
+    $ionicModal.fromTemplateUrl('templates/modal_map.html', {
+        id: '1',
+        scope: $scope,
+        backdropClickToClose: true,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modalMap = modal;
+    });
+
+    $scope.initMap = function () {
+        MapSrv.initMap(mapId).then(function () {
+
+            $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
+                // TODO: strings, button styles, actions
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'TITOLO',
+                    template: 'LAT:' + args.leafletEvent.latlng.lat.toString().substring(0, 7) + ' LON:' + args.leafletEvent.latlng.lng.toString().substring(0, 7),
+                    buttons: [
+                        {
+                            text: $filter('translate')('cancel'),
+                            type: 'button-positive'
+                        },
+                        {
+                            text: $filter('translate')('ok'),
+                            type: 'button-positive',
+                            onTap: function () {
+                                //$scope.result = args.leafletEvent.latlng;
+                                //return selectPlace(args.leafletEvent.latlng)
+                                console.log(args.leafletEvent.latlng);
+                            }
+                        }
+                    ]
+                });
+
+
+
+                /*
+                $ionicLoading.show();
+                planService.setPosition($scope.place, args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng);
+                var placedata = $q.defer();
+                var url = Config.getGeocoderURL() + '/location?latlng=' + args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+
+                $http.get(encodeURI(url), {
+                    timeout: 5000
+                })
+
+                .success(function (data, status, headers, config) {
+                    $ionicLoading.hide();
+                    name = '';
+                    if (data.response.docs[0]) {
+                        planService.setName($scope.place, data.response.docs[0]);
+                        $scope.showConfirm(name, $filter('translate')("popup_address"), function () {
+                            //$scope.result = name;
+                            return selectPlace(name)
+                        });
+                    } else {
+                        $scope.showConfirm($filter('translate')("popup_lat") + args.leafletEvent.latlng.lat.toString().substring(0, 7) + " " + $filter('translate')("popup_long") + args.leafletEvent.latlng.lng.toString().substring(0, 7), $filter('translate')("popup_no_address"), function () {
+                            //$scope.result = args.leafletEvent.latlng;
+                            return selectPlace(args.leafletEvent.latlng)
+                        });
+                    }
+                })
+
+                .error(function (data, status, headers, config) {
+                    $ionicLoading.hide();
+                    $scope.showNoConnection();
+                });
+                */
+            });
+        });
+    };
+
+    $scope.showModalMap = function () {
+        $scope.modalMap.show().then(function () {
+            var modalMapElement = document.getElementById('modal-map-container');
+            if (modalMapElement != null) {
+                MapSrv.resizeElementHeight(modalMapElement, mapId);
+                MapSrv.refresh(mapId);
+            }
+        });
+    };
+
     $scope.getDoW = function () {
         return Config.getDoW();
     };
@@ -43,37 +146,37 @@ angular.module('carpooling.controllers', [])
             shortname: 'dow_monday_short',
             value: 2,
             checked: false
-            },
+        },
         {
             name: 'dow_tuesday',
             shortname: 'dow_tuesday_short',
             value: 3,
             checked: false
-            },
+        },
         {
             name: 'dow_wednesday',
             shortname: 'dow_wednesday_short',
             value: 4,
             checked: false
-            },
+        },
         {
             name: 'dow_thursday',
             shortname: 'dow_thursday_short',
             value: 5,
             checked: false
-            },
+        },
         {
             name: 'dow_friday',
             shortname: 'dow_friday_short',
             value: 6,
             checked: false
-            },
+        },
         {
             name: 'dow_saturday',
             shortname: 'dow_saturday_short',
             value: 7,
             checked: false
-            },
+        },
         {
             name: 'dow_sunday',
             shortname: 'dow_sunday_short',
@@ -137,9 +240,149 @@ angular.module('carpooling.controllers', [])
     });
 })
 
-.controller('CercaViaggioCtrl', function ($scope, $filter) {
-    $scope.date = $filter("date")(Date.now(), 'yyyy-MM-dd');
-    $scope.time = '10:30';
+.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, planService, GeoLocate) {
+
+    $scope.title = $filter('translate')('plan_map_title');
+    $scope.place = null;
+    $scope.placesandcoordinates = null;
+    $scope.planParams = {
+        from: {
+            name: '',
+            lat: '',
+            long: ''
+        },
+        to: {
+            name: '',
+            lat: '',
+            long: ''
+        },
+        routeType: '',
+        transportTypes: [],
+        departureTime: '',
+        date: ''
+    };
+
+    $scope.plan = function () {
+
+
+        if (setAndCheckPlanParams()) {
+            planService.planJourney($scope.planParams).then(function (value) {
+                //if ok let's go to visualization
+                $state.go('app.planlist')
+            }, function (error) {
+                //error then pop up some problem
+                $scope.showErrorServer()
+            });
+        } else {
+            //message something is missing
+        }
+    }
+    var selectPlace = function (placeSelected) {
+        if ($scope.place == 'from') {
+
+            $scope.fromName = placeSelected;
+            $scope.planParams.from.name = placeSelected;
+            $scope.planParams.from.lat = planService.getPosition($scope.place).latitude;
+            $scope.planParams.from.long = planService.getPosition($scope.place).longitude;
+        } else if ($scope.place == 'to') {
+            $scope.toName = placeSelected;
+            $scope.planParams.to.name = placeSelected;
+            $scope.planParams.to.lat = planService.getPosition($scope.place).latitude;
+            $scope.planParams.to.long = planService.getPosition($scope.place).longitude;
+        }
+        console.log(placeSelected);
+        /*close map*/
+    }
+    $scope.favoriteSelect = function (newplace) {
+        $scope.closeFavorites();
+        planService.setPosition($scope.place, newplace.lat, newplace.long);
+        planService.setName($scope.place, newplace.name);
+        selectPlace(newplace.name);
+    }
+
+    $scope.locateMe = function () {
+        /*$ionicLoading.show()*/
+        ;
+        // if ($window.navigator.geolocation) {
+        // $window.navigator.geolocation.getCurrentPosition(function (position) {
+        GeoLocate.locate().then(function (position) {
+                //                $scope.$apply(function () {
+                $scope.position = position;
+                var placedata = $q.defer();
+                var places = {};
+                var url = Config.getGeocoderURL() + '/location?latlng=' + position[0] + ',' + position[1];
+
+                //add timeout
+                $http.get(encodeURI(url), {
+                    timeout: 5000
+                }).
+                success(function (data, status, headers, config) {
+                    //                         planService.setName($scope.place, data.response.docs[0]);
+
+                    places = data.response.docs;
+                    name = '';
+                    if (data.response.docs[0]) {
+                        $scope.place = 'from';
+                        planService.setPosition($scope.place, position[0], position[1]);
+                        planService.setName($scope.place, data.response.docs[0]);
+                        selectPlace(name);
+                    }
+                    $ionicLoading.hide();
+                }).
+                error(function (data, status, headers, config) {
+                    //temporary
+                    $ionicLoading.hide();
+                    $scope.showNoConnection();
+                });
+
+            }
+
+        );
+
+    };
+
+    $scope.detail = function (view) {
+        window.location.assign(view);
+    }
+
+    $scope.typePlace = function (typedthings) {
+        $scope.result = typedthings;
+        $scope.newplaces = planService.getTypedPlaces(typedthings);
+        $scope.newplaces.then(function (data) {
+            //merge with favorites and check no double values
+            $scope.places = data;
+            $scope.placesandcoordinates = planService.getnames();
+
+        });
+    }
+    $scope.select = function (suggestion) {
+        console.log("select");
+    }
+    $scope.setPlaceById = function (id) {
+        console.log(id);
+    }
+
+    $scope.changeStringFrom = function (suggestion) {
+        console.log("changestringfrom");
+        $scope.place = 'from';
+        planService.setPosition($scope.place, $scope.placesandcoordinates[suggestion].latlong.split(',')[0], $scope.placesandcoordinates[suggestion].latlong.split(',')[1]);
+        planService.setName($scope.place, suggestion);
+        selectPlace(suggestion);
+    }
+    $scope.changeStringTo = function (suggestion) {
+        console.log("changestringto");
+        $scope.place = 'to';
+        planService.setPosition($scope.place, $scope.placesandcoordinates[suggestion].latlong.split(',')[0], $scope.placesandcoordinates[suggestion].latlong.split(',')[1]);
+        planService.setName($scope.place, suggestion);
+        selectPlace(suggestion);
+    }
+
+    $scope.locateMe();
+
+    $scope.test = function () {
+        alert(" Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
+    }
+
 })
 
 .controller('NotificationCtrl', function ($scope, $filter) {
@@ -198,6 +441,5 @@ angular.module('carpooling.controllers', [])
             data_object: null,
             timestamp: '1447918789919'
         }
-
     ];
 });

@@ -7,8 +7,13 @@ angular.module('carpooling', [
     'carpooling.services.user',
     'carpooling.services.passenger',
     'carpooling.services.driver',
-    'carpooling.controllers'
-    ])
+    'carpooling.services.map',
+    'carpooling.services.plan',
+    'carpooling.services.geo',
+    'carpooling.directives',
+    'carpooling.controllers',
+    'leaflet-directive'
+])
 
 .run(function ($ionicPlatform, Login, $rootScope, $q) {
     $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != "null");
