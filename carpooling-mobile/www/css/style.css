@@ -127,3 +127,7 @@
     margin-top: auto;
     padding-bottom: 0;
 }
+#modalMap {
+    width: 100%;
+    height: 600px;
+}

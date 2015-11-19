@@ -1,14 +1,14 @@
 <ion-view title="{{'lbl_offer' | translate}}">
     <ion-content class="padding">
         <div class="list">
-            <label class="item item-input">
+            <div class="item item-input">
                 <input type="text" placeholder="{{'lbl_from' | translate}}">
-                <a class="button button-icon icon ion-map padding-left"></a>
-            </label>
-            <label class="item item-input">
+                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
+            </div>
+            <div class="item item-input">
                 <input type="text" placeholder="{{'lbl_to' | translate}}">
                 <a class="button button-icon icon ion-map padding-left"></a>
-            </label>
+            </div>
         </div>
 
         <h4>{{'lbl_halfwaystops'| translate}}</h4>
