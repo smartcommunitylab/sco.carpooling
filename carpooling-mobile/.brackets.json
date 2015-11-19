@@ -14,6 +14,14 @@
         "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/build/intermediates/assets/debug/www/cordova.js",
         "/home/linuxuser/sco.carpooling/carpooling-mobile/www/js/app.js",
         "/home/oscar/Projects/sco.carpooling/carpooling-mobile/www/js/services/DriverSrv.js",
-        "/home/oscar/Projects/sco.carpooling/carpooling-mobile/platforms/android/build/intermediates/assets/debug/www/lib/ionic/js/ionic.min.js"
+        "/home/oscar/Projects/sco.carpooling/carpooling-mobile/platforms/android/build/intermediates/assets/debug/www/lib/ionic/js/ionic.min.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/platform_www/cordova-js-src/android/promptbasednativeapi.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/platform_www/cordova-js-src/android/nativeapiprovider.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/build/intermediates/assets/debug/www/lib/ionic/js/ionic.bundle.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/cordova/lib/android_sdk_version.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/cordova/lib/spawn.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/cordova/lib/exec.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/cordova/lib/run.js",
+        "/home/linuxuser/sco.carpooling/carpooling-mobile/platforms/android/cordova/lib/retry.js"
     ]
 }

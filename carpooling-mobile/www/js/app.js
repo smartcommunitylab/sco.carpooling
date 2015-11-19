@@ -8,8 +8,11 @@ angular.module('carpooling', [
     'carpooling.services.passenger',
     'carpooling.services.driver',
     'carpooling.services.map',
-    'carpooling.controllers',
+    'carpooling.services.plan',
+    'carpooling.services.geo',
+    'carpooling.directives',
     'leaflet-directive'
+    'carpooling.controllers'
 ])
 
 .run(function ($ionicPlatform, Login, $rootScope, $q) {
