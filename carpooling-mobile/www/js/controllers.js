@@ -58,15 +58,17 @@ angular.module('carpooling.controllers', [])
                     buttons: [
                         {
                             text: $filter('translate')('cancel'),
-                            type: 'button-positive'
+                            type: 'button'
                         },
                         {
                             text: $filter('translate')('ok'),
-                            type: 'button-positive',
+                            type: 'button-carpooling',
                             onTap: function () {
                                 //$scope.result = args.leafletEvent.latlng;
                                 //return selectPlace(args.leafletEvent.latlng)
+                                $scope.hideModalMap();
                                 console.log(args.leafletEvent.latlng);
+                                return args.leafletEvent.latlng;
                             }
                         }
                     ]
@@ -112,12 +114,17 @@ angular.module('carpooling.controllers', [])
 
     $scope.showModalMap = function () {
         $scope.modalMap.show().then(function () {
+            // resize map!
             var modalMapElement = document.getElementById('modal-map-container');
             if (modalMapElement != null) {
                 MapSrv.resizeElementHeight(modalMapElement, mapId);
                 MapSrv.refresh(mapId);
             }
         });
+    };
+
+    $scope.hideModalMap = function () {
+        $scope.modalMap.hide();
     };
 
     $scope.getDoW = function () {
