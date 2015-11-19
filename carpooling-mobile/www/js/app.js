@@ -205,7 +205,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'menuContent': {
-                templateUrl: 'templates/notifiche.html'
+                templateUrl: 'templates/notifiche.html',
+                controller: 'NotificationCtrl'
             }
         }
     })

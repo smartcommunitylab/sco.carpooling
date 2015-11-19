@@ -60,6 +60,30 @@
     border-width: 0px 0px 3px 0px !important;
 }
 
+/* Card */
+
+.carpooling-theme .card .item {
+    background-color: #F0F0F0;
+    border-width: 0px;
+}
+
+.carpooling-theme .card .item-divider {
+    text-align: right;
+    font-size: small;
+    color: #A0A0A0;
+}
+
+.carpooling-theme .card .item-icon-left {
+    white-space: normal;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 20px;
+}
+
+.carpooling-theme .card .item-icon-left span {
+    color: #000000;
+}
+
 /* Form components */
 
 .carpooling-theme .button-carpooling {

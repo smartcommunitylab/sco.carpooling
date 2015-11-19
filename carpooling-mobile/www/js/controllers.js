@@ -140,4 +140,64 @@ angular.module('carpooling.controllers', [])
 .controller('CercaViaggioCtrl', function ($scope, $filter) {
     $scope.date = $filter("date")(Date.now(), 'yyyy-MM-dd');
     $scope.time = '10:30';
+})
+
+.controller('NotificationCtrl', function ($scope, $filter) {
+    $scope.notificationType = [
+        {
+            name: 'message',
+            value: 'Messaggio',
+            image: 'ion-android-chat'
+        }, {
+            name: 'trip_request',
+            value: 'Richiesta di viaggio',
+            image: 'ion-android-car'
+        }, {
+            name: 'trip_response',
+            value: 'Risposta ricerca viaggio',
+            image: 'ion-android-search'
+        }, {
+            name: 'driver_rating',
+            value: 'Valutazione conducente',
+            image: 'ion-android-star'
+        }, {
+            name: 'passenger_rating',
+            value: 'Valutazione passeggero',
+            image: 'ion-android-star'
+        }
+    ]
+    $scope.notifications = [
+        {
+            id: '1',
+            type: $scope.notificationType[0],
+            short_text: 'Nuovo messaggio da Mario Rossi',
+            data_object: null,
+            timestamp: '1447865802692'
+        }, {
+            id: '2',
+            type: $scope.notificationType[1],
+            short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
+            data_object: null,
+            timestamp: '1447865802692'
+        }, {
+            id: '3',
+            type: $scope.notificationType[2],
+            short_text: 'Trovato un viaggio Trento - Pergine',
+            data_object: null,
+            timestamp: '1447918789919'
+        }, {
+            id: '4',
+            type: $scope.notificationType[3],
+            short_text: 'Valuta il conducente del viaggio Rovereto - Mattarello',
+            data_object: null,
+            timestamp: '1447918789919'
+        }, {
+            id: '5',
+            type: $scope.notificationType[4],
+            short_text: 'Valuta i passeggeri del tuo viaggio Verona - Rovereto',
+            data_object: null,
+            timestamp: '1447918789919'
+        }
+
+    ];
 });
