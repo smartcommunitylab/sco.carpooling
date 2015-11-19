@@ -142,7 +142,7 @@ angular.module('carpooling.services.map', [])
         return output;
     };
 
-    mapService.resizeElementHeight = function (element, mapId) {
+    mapService.resizeElementHeight = function (element, mapId, fraction) {
         var height = 0;
         var body = window.document.body;
         if (window.innerHeight) {
@@ -152,8 +152,11 @@ angular.module('carpooling.services.map', [])
         } else if (body && body.clientHeight) {
             height = body.clientHeight;
         }
-        console.log('height' + height);
-        element.style.height = (((height - element.offsetTop) / 2) + "px");
+
+        // header bar is by default 44px
+        //var offsetTop = element.offsetTop;
+        var offsetTop = 44;
+        element.style.height = (((height - offsetTop) / (!!fraction ? fraction : 1)) + 'px');
         this.getMap(mapId).then(function (map) {
             map.invalidateSize();
         });
