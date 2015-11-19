@@ -240,7 +240,110 @@ angular.module('carpooling.controllers', [])
     });
 })
 
-.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, planService, GeoLocate) {
+.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, planService, GeoLocate, MapSrv, $ionicPopup) {
+
+    var mapId = 'modalMap';
+
+    // NOTE: to be removed
+    $scope.temp = function () {
+        console.log('ciao');
+    };
+
+    $scope.modalMap = null;
+
+    angular.extend($scope, {
+        center: {
+            lat: 46.067819,
+            lng: 11.121306,
+            zoom: 8
+        },
+        defaults: {
+            scrollWheelZoom: false
+        },
+        events: {}
+    });
+
+    $ionicModal.fromTemplateUrl('templates/modal_map.html', {
+        id: '1',
+        scope: $scope,
+        backdropClickToClose: true,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modalMap = modal;
+    });
+
+    $scope.initMap = function () {
+        MapSrv.initMap(mapId).then(function () {
+
+            $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
+                // TODO: strings, button styles, actions
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'TITOLO',
+                    template: 'LAT:' + args.leafletEvent.latlng.lat.toString().substring(0, 7) + ' LON:' + args.leafletEvent.latlng.lng.toString().substring(0, 7),
+                    buttons: [
+                        {
+                            text: $filter('translate')('cancel'),
+                            type: 'button-positive'
+                        },
+                        {
+                            text: $filter('translate')('ok'),
+                            type: 'button-positive',
+                            onTap: function () {
+                                //$scope.result = args.leafletEvent.latlng;
+                                //return selectPlace(args.leafletEvent.latlng)
+                                console.log(args.leafletEvent.latlng);
+                            }
+                        }
+                    ]
+                });
+
+
+
+                /*
+                $ionicLoading.show();
+                planService.setPosition($scope.place, args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng);
+                var placedata = $q.defer();
+                var url = Config.getGeocoderURL() + '/location?latlng=' + args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+
+                $http.get(encodeURI(url), {
+                    timeout: 5000
+                })
+
+                .success(function (data, status, headers, config) {
+                    $ionicLoading.hide();
+                    name = '';
+                    if (data.response.docs[0]) {
+                        planService.setName($scope.place, data.response.docs[0]);
+                        $scope.showConfirm(name, $filter('translate')("popup_address"), function () {
+                            //$scope.result = name;
+                            return selectPlace(name)
+                        });
+                    } else {
+                        $scope.showConfirm($filter('translate')("popup_lat") + args.leafletEvent.latlng.lat.toString().substring(0, 7) + " " + $filter('translate')("popup_long") + args.leafletEvent.latlng.lng.toString().substring(0, 7), $filter('translate')("popup_no_address"), function () {
+                            //$scope.result = args.leafletEvent.latlng;
+                            return selectPlace(args.leafletEvent.latlng)
+                        });
+                    }
+                })
+
+                .error(function (data, status, headers, config) {
+                    $ionicLoading.hide();
+                    $scope.showNoConnection();
+                });
+                */
+            });
+        });
+    };
+
+    $scope.showModalMap = function () {
+        $scope.modalMap.show().then(function () {
+            var modalMapElement = document.getElementById('modal-map-container');
+            if (modalMapElement != null) {
+                MapSrv.resizeElementHeight(modalMapElement, mapId);
+                MapSrv.refresh(mapId);
+            }
+        });
+    };
 
     $scope.title = $filter('translate')('plan_map_title');
     $scope.place = null;
@@ -383,4 +486,63 @@ angular.module('carpooling.controllers', [])
         alert(" Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
     }
 
+})
+
+.controller('NotificationCtrl', function ($scope, $filter) {
+    $scope.notificationType = [
+        {
+            name: 'message',
+            value: 'Messaggio',
+            image: 'ion-android-chat'
+        }, {
+            name: 'trip_request',
+            value: 'Richiesta di viaggio',
+            image: 'ion-android-car'
+        }, {
+            name: 'trip_response',
+            value: 'Risposta ricerca viaggio',
+            image: 'ion-android-search'
+        }, {
+            name: 'driver_rating',
+            value: 'Valutazione conducente',
+            image: 'ion-android-star'
+        }, {
+            name: 'passenger_rating',
+            value: 'Valutazione passeggero',
+            image: 'ion-android-star'
+        }
+    ]
+    $scope.notifications = [
+        {
+            id: '1',
+            type: $scope.notificationType[0],
+            short_text: 'Nuovo messaggio da Mario Rossi',
+            data_object: null,
+            timestamp: '1447865802692'
+        }, {
+            id: '2',
+            type: $scope.notificationType[1],
+            short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
+            data_object: null,
+            timestamp: '1447865802692'
+        }, {
+            id: '3',
+            type: $scope.notificationType[2],
+            short_text: 'Trovato un viaggio Trento - Pergine',
+            data_object: null,
+            timestamp: '1447918789919'
+        }, {
+            id: '4',
+            type: $scope.notificationType[3],
+            short_text: 'Valuta il conducente del viaggio Rovereto - Mattarello',
+            data_object: null,
+            timestamp: '1447918789919'
+        }, {
+            id: '5',
+            type: $scope.notificationType[4],
+            short_text: 'Valuta i passeggeri del tuo viaggio Verona - Rovereto',
+            data_object: null,
+            timestamp: '1447918789919'
+        }
+    ];
 });
