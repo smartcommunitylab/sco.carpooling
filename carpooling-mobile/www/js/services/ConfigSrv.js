@@ -2,19 +2,24 @@ angular.module('carpooling.services.config', [])
 
 .factory('Config', function ($http, $q, $filter) {
     var SERVER_URL = 'https://dev.smartcommunitylab.it/carpooling';
+    var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
+
     var HTTP_CONFIG = {
         timeout: 5000
     };
+
     var ttJsonConfig = null;
     var DISTANCE_AUTOCOMPLETE = '6';
     var LAT = 46.069672;
     var LON = 11.121270;
     var ZOOM = 15;
 
-    var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
     return {
         getServerURL: function () {
             return SERVER_URL;
+        },
+        getGeocoderURL: function() {
+            return GEOCODER_URL;
         },
         getHTTPConfig: function () {
             return HTTP_CONFIG;

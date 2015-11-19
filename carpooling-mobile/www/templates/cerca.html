@@ -2,14 +2,16 @@
     <ion-content class="padding">
         <form novalidate class="simple-form search-form">
             <div class="list">
-                <div class="item item-input">
-                    <!--AUTOCOMPLETE-->
-                    <placeautocomplete ng-model="fromName" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_from' | translate}}" style="width: 100%" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
+                <!--AUTOCOMPLETE-->
+                <div class="item item-input item-autocomplete">
+                <!--<div class="row">-->
+                    <placeautocomplete ng-model="fromName" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_from' | translate}}" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="test()"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
-                <div class="item item-input">
+                <div class="item item-input item-autocomplete">
+                <!--<div class="row">-->
                     <placeautocomplete ng-model="toName" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_to' | translate}}" style="width: 100%" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left"></a>

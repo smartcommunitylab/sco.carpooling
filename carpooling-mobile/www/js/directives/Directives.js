@@ -249,14 +249,13 @@ angular.module('carpooling.directives', [])
             });
         },
         template: '\
-        <div class="placeautocomplete {{ attrs.class }}" id="{{ attrs.id }}">\
+        <div class="placeautocomplete {{attrs.class}}" id="{{attrs.id}}">\
           <input\
             type="text"\
             ng-model="searchParam"\
             placeholder="{{ attrs.placeholder }}"\
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"\
-            style="width:75%;"\
             ng-required="{{ placeautocompleteRequired }}" />\
           <ul ng-show="completing && (suggestions).length > 0">\
             <li\

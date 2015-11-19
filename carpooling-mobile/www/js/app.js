@@ -11,8 +11,8 @@ angular.module('carpooling', [
     'carpooling.services.plan',
     'carpooling.services.geo',
     'carpooling.directives',
+    'carpooling.controllers',
     'leaflet-directive'
-    'carpooling.controllers'
 ])
 
 .run(function ($ionicPlatform, Login, $rootScope, $q) {
