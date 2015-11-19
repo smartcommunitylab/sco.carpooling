@@ -7,6 +7,9 @@ angular.module('carpooling', [
     'carpooling.services.user',
     'carpooling.services.passenger',
     'carpooling.services.driver',
+    'carpooling.services.plan',
+    'carpooling.services.geo',
+    'carpooling.directives',
     'carpooling.controllers'
     ])
 
