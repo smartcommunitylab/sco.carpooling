@@ -398,14 +398,15 @@ angular.module('carpooling.controllers', [])
             $scope.planParams.from.name = placeSelected;
             $scope.planParams.from.lat = planService.getPosition($scope.place).latitude;
             $scope.planParams.from.long = planService.getPosition($scope.place).longitude;
+            console.log("(From) Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
         } else if ($scope.place == 'to') {
             $scope.toName = placeSelected;
             $scope.planParams.to.name = placeSelected;
             $scope.planParams.to.lat = planService.getPosition($scope.place).latitude;
             $scope.planParams.to.long = planService.getPosition($scope.place).longitude;
+            console.log("(To) Latitude: " + $scope.planParams.to.lat + "\n Longitude: " + $scope.planParams.to.long);
         }
         console.log(placeSelected);
-        console.log(" Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
         /*close map*/
     }
 
