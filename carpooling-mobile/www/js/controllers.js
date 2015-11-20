@@ -352,6 +352,10 @@ angular.module('carpooling.controllers', [])
         });
     };
 
+    $scope.hideModalMap = function () {
+        $scope.modalMap.hide();
+    };
+
     $scope.title = $filter('translate')('plan_map_title');
     $scope.place = null;
     $scope.placesandcoordinates = null;
@@ -401,13 +405,8 @@ angular.module('carpooling.controllers', [])
             $scope.planParams.to.long = planService.getPosition($scope.place).longitude;
         }
         console.log(placeSelected);
+        console.log(" Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
         /*close map*/
-    }
-    $scope.favoriteSelect = function (newplace) {
-        $scope.closeFavorites();
-        planService.setPosition($scope.place, newplace.lat, newplace.long);
-        planService.setName($scope.place, newplace.name);
-        selectPlace(newplace.name);
     }
 
     $scope.locateMe = function () {
@@ -488,10 +487,6 @@ angular.module('carpooling.controllers', [])
     }
 
     $scope.locateMe();
-
-    $scope.test = function () {
-        alert(" Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
-    }
 
 })
 
