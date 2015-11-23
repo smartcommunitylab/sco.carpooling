@@ -66,21 +66,19 @@
     background-color: #F0F0F0;
     border-width: 0px;
 }
-
 .carpooling-theme .card .item-divider {
     text-align: right;
     font-size: small;
     color: #A0A0A0;
 }
-
 .carpooling-theme .card .item-icon-left {
     white-space: normal;
     padding-top: 2px;
     padding-bottom: 2px;
     padding-right: 20px;
 }
-
 .carpooling-theme .card .item-icon-left span {
+    font-size: large;
     color: #000000;
 }
 

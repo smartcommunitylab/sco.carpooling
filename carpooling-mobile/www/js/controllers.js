@@ -385,7 +385,7 @@ angular.module('carpooling.controllers', [])
 
 })
 
-.controller('NotificationCtrl', function ($scope, $filter) {
+.controller('NotificationCtrl', function ($scope, $filter, $state) {
     $scope.notificationType = [
         {
             name: 'message',
@@ -408,7 +408,7 @@ angular.module('carpooling.controllers', [])
             value: 'Valutazione passeggero',
             image: 'ion-android-star'
         }
-    ]
+    ];
     $scope.notifications = [
         {
             id: '1',
@@ -442,4 +442,31 @@ angular.module('carpooling.controllers', [])
             timestamp: '1447918789919'
         }
     ];
+    $scope.showNotification = function(notific){
+        switch(notific.type){
+            case $scope.notificationType[0]:
+                // messages - to chat
+                $state.go('app.chat');
+                break;
+            case $scope.notificationType[1]:
+                // trip request - to mytrip
+                $state.go('app.mioviaggio');
+                break;
+            case $scope.notificationType[2]:
+                // trip response - to trip
+                $state.go('app.home.partecipo');
+                break;
+            case $scope.notificationType[3]:
+                // driver rating - to driver profile (trip data)
+                $state.go('app.home.partecipo');
+                break;
+            case $scope.notificationType[4]:
+                // passenger rating - to passenger profile (mytrip data)
+                $state.go('app.mioviaggio');
+                break;
+            default:
+                break;
+        };
+    };
+
 });
