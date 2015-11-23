@@ -1,6 +1,6 @@
 angular.module('carpooling.services.geo', [])
 
-.factory('GeoLocate', function ($q, $rootScope) {
+.factory('GeoSrv', function ($q, $rootScope, $http, Config) {
     var localization = undefined;
 
     if (typeof (Number.prototype.toRad) === "undefined") {
@@ -93,6 +93,23 @@ angular.module('carpooling.services.geo', [])
                 //console.log('gotoPosition: ' + JSON.stringify(gotoPosition));
                 return GL.distance(myPosition, gotoPosition);
             });
+        },
+        geolocate: function (position) {
+            var deferred = $q.defer();
+
+            var url = Config.getGeocoderURL() + '/location?latlng=' + position[0] + ',' + position[1];
+
+            $http.get(encodeURI(url), Config.getHTTPConfig())
+
+            .success(function (data) {
+                deferred.resolve(data);
+            })
+
+            .error(function (err) {
+                deferred.reject(err);
+            });
+
+            return deferred.promise;
         }
     };
 })

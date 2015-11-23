@@ -2,12 +2,12 @@
     <ion-content class="padding">
         <div class="list">
             <div class="item item-input">
-                <input type="text" placeholder="{{'lbl_from' | translate}}">
-                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
+                <input type="text" placeholder="{{'lbl_from' | translate}}" ng-model="locations['from'].name">
+                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
             </div>
             <div class="item item-input">
-                <input type="text" placeholder="{{'lbl_to' | translate}}">
-                <a class="button button-icon icon ion-map padding-left"></a>
+                <input type="text" placeholder="{{'lbl_to' | translate}}" ng-model="locations['to'].name">
+                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
             </div>
         </div>
 
