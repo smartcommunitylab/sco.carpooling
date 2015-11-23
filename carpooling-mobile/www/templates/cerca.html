@@ -16,11 +16,18 @@
                 </div>
                 <div class="item item-input">
                     <span class="input-label">{{'lbl_date' | translate}}</span>
-                    <input type="date" ng-model="date" value="{{date}}">
+                    <ionic-datepicker input-obj="datepickerObject">
+                        <span class="input-label"> {{datepickerObject.inputDate | date:'dd - MMMM - yyyy'}}</span>
+                    </ionic-datepicker>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">{{'lbl_time' | translate}}</span>
-                    <input type="time" ng-model="time" value="{{time}}">
+                    <ionic-timepicker input-obj="timePickerObject">
+                        <span class="input-label">
+                    <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
+                        </span>
+
+                    </ionic-timepicker>
                 </div>
             </div>
             <h4>{{'lbl_cerca' | translate}}</h4>

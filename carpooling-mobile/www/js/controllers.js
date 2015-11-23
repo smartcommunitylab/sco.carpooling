@@ -235,6 +235,10 @@ angular.module('carpooling.controllers', [])
 
 .controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, planService, GeoSrv, MapSrv, $ionicPopup) {
 
+    $scope.datepickerObject = {};
+    $scope.dateTimestamp = null;
+    $scope.hourTimestamp = null;
+    $scope.datepickerObject.inputDate = new Date();
     var mapId = 'modalMap';
 
     // NOTE: to be removed
@@ -427,6 +431,70 @@ angular.module('carpooling.controllers', [])
         planService.setName($scope.place, suggestion);
         selectPlace(suggestion);
     }
+
+    /*TIMEPICKER*/
+
+    $scope.timePickerObject = {
+        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60), //Optional
+        step: 1, //Optional
+        format: 24, //Optional
+        setLabel: 'Set', //Optional
+        closeLabel: 'Close', //Optional
+        setButtonType: 'button-positive', //Optional
+        closeButtonType: 'button-stable', //Optional
+        callback: function (val) { //Mandatory
+            timePickerCallback(val);
+        }
+    };
+
+    function timePickerCallback(val) {
+        if (typeof (val) === 'undefined') {
+            console.log('Time not selected');
+        } else {
+            var selectedTime = new Date(val * 1000);
+            console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+            $scope.timePickerObject.inputEpochTime = val;
+        }
+    }
+
+    /*----------*/
+
+    /*DATAPICKER*/
+    $scope.datepickerObject = {
+        titleLabel: $filter('translate')('popup_datepicker_title'),
+        todayLabel: $filter('translate')('popup_datepicker_today'),
+        closeLabel: $filter('translate')('popup_datepicker_close'),
+        setLabel: $filter('translate')('popup_datepicker_set'),
+        setButtonType: 'button-carpooling', //Optional
+        todayButtonType: 'button-carpooling', //Optional
+        closeButtonType: '', //Optional
+        inputDate: new Date(), //Optional
+        mondayFirst: true, //Optional
+        weekDaysList: Config.getweekList(), //Optional
+        monthList: Config.getmonthList(), //Optional
+        templateType: 'popup', //Optional
+        showTodayButton: 'true', //Optional
+        modalHeaderColor: 'bar-positive', //Optional
+        modalFooterColor: 'bar-positive', //Optional
+        from: new Date(2012, 8, 2), //Optional
+        to: new Date(2018, 8, 25), //Optional
+        callback: function (val) { //Mandatory
+            datePickerCallback(val);
+        },
+        dateFormat: 'dd-MM-yyyy', //Optional
+        closeOnSelect: false, //Optional
+    };
+
+    var datePickerCallback = function (val) {
+        if (typeof (val) === 'undefined') {
+            console.log('No date selected');
+        } else {
+            console.log('Selected date is : ', val);
+            $scope.datepickerObject.inputDate = val;
+        }
+    };
+
+    /*----------*/
 
     $scope.locateMe();
 
