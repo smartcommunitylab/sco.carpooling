@@ -340,7 +340,7 @@ angular.module('carpooling', [
         popup_datepicker_close: 'Annulla',
         popup_datepicker_set: 'Ok',
         popup_datepicker_jan: 'Gen',
-        popup_datepicker_jfeb: 'Feb',
+        popup_datepicker_feb: 'Feb',
         popup_datepicker_mar: 'Mar',
         popup_datepicker_apr: 'Apr',
         popup_datepicker_may: 'Mag',

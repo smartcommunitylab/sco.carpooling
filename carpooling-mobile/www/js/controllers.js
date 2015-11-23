@@ -16,15 +16,51 @@ angular.module('carpooling.controllers', [])
 
 .controller('OffroCtrl', function ($scope) {})
 
-.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv) {
+.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv) {
+    $scope.locations = {
+        'from': {
+            'name': '',
+            'latlng': ''
+        },
+        'to': {
+            'name': '',
+            'latlng': ''
+        }
+    };
+
+    // names: array with the names of the places
+    // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
+    $scope.places = {
+        'names': [],
+        'coordinates': {}
+    };
+
+    $scope.typing = function (typedthings) {
+        var result = typedthings;
+        var newPlaces = PlanSrv.getTypedPlaces(typedthings);
+        newPlaces.then(function (data) {
+            //merge with favorites and check no double values
+            $scope.places.names = data;
+            $scope.places.coordinates = PlanSrv.getNames();
+        });
+    };
+
+    $scope.setLocationFrom = function (name) {
+        $scope.locations['from'].name = name;
+        $scope.locations['from'].latlng = $scope.places.coordinates[name].latlng;
+    };
+    $scope.setLocationTo = function (name) {
+        $scope.locations['to'].name = name;
+        $scope.locations['to'].latlng = $scope.places.coordinates[name].latlng;
+    };
+
+    /*
+     * Map stuff
+     */
     var mapId = 'modalMap';
     var selectedField = null;
 
     $scope.modalMap = null;
-    $scope.locations = {
-        'from': {},
-        'to': {}
-    };
 
     angular.extend($scope, {
         center: {
@@ -38,6 +74,7 @@ angular.module('carpooling.controllers', [])
         events: {}
     });
 
+    // Modal Map
     $ionicModal.fromTemplateUrl('templates/modal_map.html', {
         id: '1',
         scope: $scope,
@@ -73,22 +110,32 @@ angular.module('carpooling.controllers', [])
                 GeoSrv.geolocate([args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng]).then(
                     function (data) {
                         $ionicLoading.hide();
-                        confirmPopupOptions.template = data.response.docs[0].name;
+                        var placeName = PlanSrv.generatePlaceString(data.response.docs[0]);
+                        confirmPopupOptions.template = placeName;
                         confirmPopupOptions.buttons[1].onTap = function () {
                             //$scope.result = args.leafletEvent.latlng;
                             //return selectPlace(args.leafletEvent.latlng)
                             if (!!selectedField) {
-                                $scope.locations[selectedField] = data.response.docs[0]
+                                $scope.locations[selectedField].name = placeName;
+                                $scope.locations[selectedField].coordinates = data.response.docs[0].coordinate;
                             }
                             $scope.hideModalMap();
-                            console.log(args.leafletEvent.latlng);
-                            return args.leafletEvent.latlng;
+                            console.log(placeName + ' (' + data.response.docs[0].coordinate + ')');
                         };
                         confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
                     },
                     function (err) {
                         $ionicLoading.hide();
-                        confirmPopupOptions.template = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        var placeName = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        confirmPopupOptions.template = placeName;
+                        confirmPopupOptions.buttons[1].onTap = function () {
+                            if (!!selectedField) {
+                                $scope.locations[selectedField].name = placeName;
+                                $scope.locations[selectedField].coordinates = placeName;
+                            }
+                            $scope.hideModalMap();
+                            console.log('*Unknown* (' + placeName + ')');
+                        };
                         confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
                     }
                 );
@@ -109,6 +156,9 @@ angular.module('carpooling.controllers', [])
         });
     };
 
+    /*
+     * Recurrence popup stuff
+     */
     $scope.hideModalMap = function () {
         $scope.modalMap.hide();
     };
@@ -233,7 +283,7 @@ angular.module('carpooling.controllers', [])
     });
 })
 
-.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, planService, GeoSrv, MapSrv, $ionicPopup) {
+.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup) {
 
     $scope.datepickerObject = {};
     $scope.dateTimestamp = null;
@@ -313,7 +363,7 @@ angular.module('carpooling.controllers', [])
 
     $scope.title = $filter('translate')('plan_map_title');
     $scope.place = null;
-    $scope.placesandcoordinates = null;
+    $scope.placesCoordinates = null;
     $scope.planParams = {
         from: {
             name: '',
@@ -335,7 +385,7 @@ angular.module('carpooling.controllers', [])
 
 
         if (setAndCheckPlanParams()) {
-            planService.planJourney($scope.planParams).then(function (value) {
+            PlanSrv.planJourney($scope.planParams).then(function (value) {
                 //if ok let's go to visualization
                 $state.go('app.planlist')
             }, function (error) {
@@ -351,14 +401,14 @@ angular.module('carpooling.controllers', [])
 
             $scope.fromName = placeSelected;
             $scope.planParams.from.name = placeSelected;
-            $scope.planParams.from.lat = planService.getPosition($scope.place).latitude;
-            $scope.planParams.from.long = planService.getPosition($scope.place).longitude;
+            $scope.planParams.from.lat = PlanSrv.getPosition($scope.place).latitude;
+            $scope.planParams.from.long = PlanSrv.getPosition($scope.place).longitude;
             console.log("(From) Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
         } else if ($scope.place == 'to') {
             $scope.toName = placeSelected;
             $scope.planParams.to.name = placeSelected;
-            $scope.planParams.to.lat = planService.getPosition($scope.place).latitude;
-            $scope.planParams.to.long = planService.getPosition($scope.place).longitude;
+            $scope.planParams.to.lat = PlanSrv.getPosition($scope.place).latitude;
+            $scope.planParams.to.long = PlanSrv.getPosition($scope.place).longitude;
             console.log("(To) Latitude: " + $scope.planParams.to.lat + "\n Longitude: " + $scope.planParams.to.long);
         }
         console.log(placeSelected);
@@ -381,8 +431,8 @@ angular.module('carpooling.controllers', [])
                 name = '';
                 if (data.response.docs[0]) {
                     $scope.place = 'from';
-                    planService.setPosition($scope.place, position[0], position[1]);
-                    planService.setName($scope.place, data.response.docs[0]);
+                    PlanSrv.setPosition($scope.place, position[0], position[1]);
+                    PlanSrv.setName($scope.place, data.response.docs[0]);
                     selectPlace(name);
                 }
                 $ionicLoading.hide();
@@ -398,39 +448,41 @@ angular.module('carpooling.controllers', [])
 
     $scope.detail = function (view) {
         window.location.assign(view);
-    }
+    };
 
     $scope.typePlace = function (typedthings) {
         $scope.result = typedthings;
-        $scope.newplaces = planService.getTypedPlaces(typedthings);
+        $scope.newplaces = PlanSrv.getTypedPlaces(typedthings);
         $scope.newplaces.then(function (data) {
             //merge with favorites and check no double values
-            $scope.places = data;
-            $scope.placesandcoordinates = planService.getnames();
-
+            $scope.placesnames = data;
+            $scope.placesCoordinates = PlanSrv.getNames();
         });
-    }
+    };
+
     $scope.select = function (suggestion) {
         console.log("select");
-    }
+    };
+
     $scope.setPlaceById = function (id) {
         console.log(id);
-    }
+    };
 
     $scope.changeStringFrom = function (suggestion) {
         console.log("changestringfrom");
         $scope.place = 'from';
-        planService.setPosition($scope.place, $scope.placesandcoordinates[suggestion].latlong.split(',')[0], $scope.placesandcoordinates[suggestion].latlong.split(',')[1]);
-        planService.setName($scope.place, suggestion);
+        PlanSrv.setPosition($scope.place, $scope.placesCoordinates[suggestion].latlng.split(',')[0], $scope.placesCoordinates[suggestion].latlng.split(',')[1]);
+        PlanSrv.setName($scope.place, suggestion);
         selectPlace(suggestion);
-    }
+    };
+
     $scope.changeStringTo = function (suggestion) {
         console.log("changestringto");
         $scope.place = 'to';
-        planService.setPosition($scope.place, $scope.placesandcoordinates[suggestion].latlong.split(',')[0], $scope.placesandcoordinates[suggestion].latlong.split(',')[1]);
-        planService.setName($scope.place, suggestion);
+        PlanSrv.setPosition($scope.place, $scope.placesCoordinates[suggestion].latlng.split(',')[0], $scope.placesCoordinates[suggestion].latlng.split(',')[1]);
+        PlanSrv.setName($scope.place, suggestion);
         selectPlace(suggestion);
-    }
+    };
 
     /*TIMEPICKER*/
 

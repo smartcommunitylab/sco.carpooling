@@ -16,28 +16,28 @@ angular.module('carpooling.services.config', [])
 
     var monthList = [
         $filter('translate')('popup_datepicker_jan'),
-    $filter('translate')('popup_datepicker_jfeb'),
-    $filter('translate')('popup_datepicker_mar'),
-    $filter('translate')('popup_datepicker_apr'),
-    $filter('translate')('popup_datepicker_may'),
-    $filter('translate')('popup_datepicker_jun'),
-    $filter('translate')('popup_datepicker_jul'),
-    $filter('translate')('popup_datepicker_ago'),
-    $filter('translate')('popup_datepicker_sep'),
-    $filter('translate')('popup_datepicker_oct'),
-    $filter('translate')('popup_datepicker_nov'),
-    $filter('translate')('popup_datepicker_dic')];
-    var weekDaysList = [
-     $filter('translate')('popup_datepicker_sun'),
-    $filter('translate')('popup_datepicker_mon'),
-    $filter('translate')('popup_datepicker_tue'),
-    $filter('translate')('popup_datepicker_wed'),
-    $filter('translate')('popup_datepicker_thu'),
-    $filter('translate')('popup_datepicker_fri'),
-    $filter('translate')('popup_datepicker_sat')
+        $filter('translate')('popup_datepicker_feb'),
+        $filter('translate')('popup_datepicker_mar'),
+        $filter('translate')('popup_datepicker_apr'),
+        $filter('translate')('popup_datepicker_may'),
+        $filter('translate')('popup_datepicker_jun'),
+        $filter('translate')('popup_datepicker_jul'),
+        $filter('translate')('popup_datepicker_ago'),
+        $filter('translate')('popup_datepicker_sep'),
+        $filter('translate')('popup_datepicker_oct'),
+        $filter('translate')('popup_datepicker_nov'),
+        $filter('translate')('popup_datepicker_dic')
     ];
 
-
+    var weekDaysList = [
+        $filter('translate')('popup_datepicker_sun'),
+        $filter('translate')('popup_datepicker_mon'),
+        $filter('translate')('popup_datepicker_tue'),
+        $filter('translate')('popup_datepicker_wed'),
+        $filter('translate')('popup_datepicker_thu'),
+        $filter('translate')('popup_datepicker_fri'),
+        $filter('translate')('popup_datepicker_sat')
+    ];
 
     return {
         getServerURL: function () {
