@@ -1,5 +1,7 @@
 angular.module('carpooling', [
     'ionic',
+    'ionic-timepicker',
+    'ionic-datepicker',
     'ngIOS9UIWebViewPatch',
     'pascalprecht.translate',
     'carpooling.services.config',
@@ -329,7 +331,33 @@ angular.module('carpooling', [
         dow_thursday_short: 'G',
         dow_friday_short: 'V',
         dow_saturday_short: 'S',
-        dow_sunday_short: 'D'
+        dow_sunday_short: 'D',
+        popup_timepicker_title: 'Selezionare l\'ora',
+        popup_timepicker_cancel: 'Annulla',
+        popup_timepicker_select: 'Ok',
+        popup_datepicker_title: 'Selezionare il giorno',
+        popup_datepicker_today: 'Oggi',
+        popup_datepicker_close: 'Annulla',
+        popup_datepicker_set: 'Ok',
+        popup_datepicker_jan: 'Gen',
+        popup_datepicker_feb: 'Feb',
+        popup_datepicker_mar: 'Mar',
+        popup_datepicker_apr: 'Apr',
+        popup_datepicker_may: 'Mag',
+        popup_datepicker_jun: 'Giu',
+        popup_datepicker_jul: 'Lug',
+        popup_datepicker_ago: 'Ago',
+        popup_datepicker_sep: 'Set',
+        popup_datepicker_oct: 'Ott',
+        popup_datepicker_nov: 'Nov',
+        popup_datepicker_dic: 'Dic',
+        popup_datepicker_mon: 'L',
+        popup_datepicker_tue: 'M',
+        popup_datepicker_wed: 'M',
+        popup_datepicker_thu: 'G',
+        popup_datepicker_fri: 'V',
+        popup_datepicker_sat: 'S',
+        popup_datepicker_sun: 'D'
     });
 
     $translateProvider.preferredLanguage('it');

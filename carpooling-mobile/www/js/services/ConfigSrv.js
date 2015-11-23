@@ -14,11 +14,36 @@ angular.module('carpooling.services.config', [])
     var LON = 11.121270;
     var ZOOM = 15;
 
+    var monthList = [
+        $filter('translate')('popup_datepicker_jan'),
+        $filter('translate')('popup_datepicker_feb'),
+        $filter('translate')('popup_datepicker_mar'),
+        $filter('translate')('popup_datepicker_apr'),
+        $filter('translate')('popup_datepicker_may'),
+        $filter('translate')('popup_datepicker_jun'),
+        $filter('translate')('popup_datepicker_jul'),
+        $filter('translate')('popup_datepicker_ago'),
+        $filter('translate')('popup_datepicker_sep'),
+        $filter('translate')('popup_datepicker_oct'),
+        $filter('translate')('popup_datepicker_nov'),
+        $filter('translate')('popup_datepicker_dic')
+    ];
+
+    var weekDaysList = [
+        $filter('translate')('popup_datepicker_sun'),
+        $filter('translate')('popup_datepicker_mon'),
+        $filter('translate')('popup_datepicker_tue'),
+        $filter('translate')('popup_datepicker_wed'),
+        $filter('translate')('popup_datepicker_thu'),
+        $filter('translate')('popup_datepicker_fri'),
+        $filter('translate')('popup_datepicker_sat')
+    ];
+
     return {
         getServerURL: function () {
             return SERVER_URL;
         },
-        getGeocoderURL: function() {
+        getGeocoderURL: function () {
             return GEOCODER_URL;
         },
         getHTTPConfig: function () {
@@ -35,6 +60,12 @@ angular.module('carpooling.services.config', [])
         },
         getDistanceForAutocomplete: function () {
             return DISTANCE_AUTOCOMPLETE;
+        },
+        getmonthList: function () {
+            return monthList;
+        },
+        getweekList: function () {
+            return weekDaysList;
         },
         init: function () {
             /*

@@ -1,38 +1,40 @@
 <ion-view title="{{'lbl_offer' | translate}}">
     <ion-content class="padding">
         <div class="list">
-            <div class="item item-input">
-                <input type="text" placeholder="{{'lbl_from' | translate}}">
-                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
+            <div class="item item-input item-autocomplete">
+                <!--<input type="text" placeholder="{{'lbl_from' | translate}}" ng-model="locations['from'].name">-->
+                <placeautocomplete ng-model="locations.from.name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="placesNames" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
+                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
             </div>
-            <div class="item item-input">
-                <input type="text" placeholder="{{'lbl_to' | translate}}">
-                <a class="button button-icon icon ion-map padding-left"></a>
+            <div class="item item-input item-autocomplete">
+                <!--<input type="text" placeholder="{{'lbl_to' | translate}}" ng-model="locations['to'].name">-->
+                <placeautocomplete ng-model="locations.to.name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="placesNames" on-type="typing" on-select="setLocationTo"></placeautocomplete>
+                <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
             </div>
         </div>
 
-        <h4>{{'lbl_halfwaystops'| translate}}</h4>
+        <h4>{{'lbl_halfwaystops' | translate}}</h4>
         <div class="list">
-            <ion-radio ng-model="hasHalfwayStops" ng-value="false">{{'lbl_halfwaystops_none'| translate}}</ion-radio>
-            <ion-radio ng-model="hasHalfwayStops" ng-value="true">{{'lbl_halfwaystops_agree'| translate}}</ion-radio>
+            <ion-radio ng-model="hasHalfwayStops" ng-value="false">{{'lbl_halfwaystops_none' | translate}}</ion-radio>
+            <ion-radio ng-model="hasHalfwayStops" ng-value="true">{{'lbl_halfwaystops_agree' | translate}}</ion-radio>
         </div>
 
         <div class="list">
             <div class="row">
                 <div class="col">
                     <div class="item item-input item-stacked-label">
-                        <span class="input-label">{{'lbl_date'| translate}}</span>
+                        <span class="input-label">{{'lbl_date' | translate}}</span>
                         <input type="text">
                     </div>
                 </div>
                 <div class="col">
                     <div class="item item-input item-stacked-label">
-                        <span class="input-label">{{'lbl_time'| translate}}</span>
+                        <span class="input-label">{{'lbl_time' | translate}}</span>
                         <input type="text">
                     </div>
                 </div>
             </div>
-            <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip'| translate}}</ion-toggle>
+            <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
         </div>
     </ion-content>
 </ion-view>

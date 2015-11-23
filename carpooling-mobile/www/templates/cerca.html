@@ -4,25 +4,30 @@
             <div class="list">
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                <!--<div class="row">-->
                     <placeautocomplete ng-model="fromName" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_from' | translate}}" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
                     <!----------------->
-                    <a class="button button-icon icon ion-map padding-left" ng-click="test()"></a>
+                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                <!--<div class="row">-->
-                    <placeautocomplete ng-model="toName" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_to' | translate}}" style="width: 100%" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
+                    <placeautocomplete ng-model="toName" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_to' | translate}}" style="width: 100%" on-select="changeStringTo" ng-blur="setNameParam"></placeautocomplete>
                     <!----------------->
-                    <a class="button button-icon icon ion-map padding-left"></a>
+                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">{{'lbl_date' | translate}}</span>
-                    <input type="date" ng-model="date" value="{{date}}">
+                    <ionic-datepicker input-obj="datepickerObject">
+                        <span class="input-label"> {{datepickerObject.inputDate | date:'dd - MMMM - yyyy'}}</span>
+                    </ionic-datepicker>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">{{'lbl_time' | translate}}</span>
-                    <input type="time" ng-model="time" value="{{time}}">
+                    <ionic-timepicker input-obj="timePickerObject">
+                        <span class="input-label">
+                    <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
+                        </span>
+
+                    </ionic-timepicker>
                 </div>
             </div>
             <h4>{{'lbl_cerca' | translate}}</h4>

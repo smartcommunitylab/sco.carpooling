@@ -16,13 +16,49 @@ angular.module('carpooling.controllers', [])
 
 .controller('OffroCtrl', function ($scope) {})
 
-.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, Config, MapSrv) {
-    var mapId = 'modalMap';
-
-    // NOTE: to be removed
-    $scope.temp = function () {
-        console.log('ciao');
+.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv) {
+    $scope.locations = {
+        'from': {
+            'name': '',
+            'latlng': ''
+        },
+        'to': {
+            'name': '',
+            'latlng': ''
+        }
     };
+
+    // names: array with the names of the places
+    // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
+    $scope.places = {
+        'names': [],
+        'coordinates': {}
+    };
+
+    $scope.typing = function (typedthings) {
+        var result = typedthings;
+        var newPlaces = PlanSrv.getTypedPlaces(typedthings);
+        newPlaces.then(function (data) {
+            //merge with favorites and check no double values
+            $scope.places.names = data;
+            $scope.places.coordinates = PlanSrv.getNames();
+        });
+    };
+
+    $scope.setLocationFrom = function (name) {
+        $scope.locations['from'].name = name;
+        $scope.locations['from'].latlng = $scope.places.coordinates[name].latlng;
+    };
+    $scope.setLocationTo = function (name) {
+        $scope.locations['to'].name = name;
+        $scope.locations['to'].latlng = $scope.places.coordinates[name].latlng;
+    };
+
+    /*
+     * Map stuff
+     */
+    var mapId = 'modalMap';
+    var selectedField = null;
 
     $scope.modalMap = null;
 
@@ -38,6 +74,7 @@ angular.module('carpooling.controllers', [])
         events: {}
     });
 
+    // Modal Map
     $ionicModal.fromTemplateUrl('templates/modal_map.html', {
         id: '1',
         scope: $scope,
@@ -49,75 +86,81 @@ angular.module('carpooling.controllers', [])
 
     $scope.initMap = function () {
         MapSrv.initMap(mapId).then(function () {
-
             $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
+
+                $ionicLoading.show();
+
                 // TODO: strings, button styles, actions
-                var confirmPopup = $ionicPopup.confirm({
+                var confirmPopup = null;
+                var confirmPopupOptions = {
                     title: 'TITOLO',
-                    template: 'LAT:' + args.leafletEvent.latlng.lat.toString().substring(0, 7) + ' LON:' + args.leafletEvent.latlng.lng.toString().substring(0, 7),
+                    template: '',
                     buttons: [
                         {
                             text: $filter('translate')('cancel'),
-                            type: 'button-positive'
+                            type: 'button'
                         },
                         {
                             text: $filter('translate')('ok'),
-                            type: 'button-positive',
-                            onTap: function () {
-                                //$scope.result = args.leafletEvent.latlng;
-                                //return selectPlace(args.leafletEvent.latlng)
-                                console.log(args.leafletEvent.latlng);
-                            }
+                            type: 'button-carpooling'
                         }
                     ]
-                });
+                };
 
-
-
-                /*
-                $ionicLoading.show();
-                planService.setPosition($scope.place, args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng);
-                var placedata = $q.defer();
-                var url = Config.getGeocoderURL() + '/location?latlng=' + args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
-
-                $http.get(encodeURI(url), {
-                    timeout: 5000
-                })
-
-                .success(function (data, status, headers, config) {
-                    $ionicLoading.hide();
-                    name = '';
-                    if (data.response.docs[0]) {
-                        planService.setName($scope.place, data.response.docs[0]);
-                        $scope.showConfirm(name, $filter('translate')("popup_address"), function () {
-                            //$scope.result = name;
-                            return selectPlace(name)
-                        });
-                    } else {
-                        $scope.showConfirm($filter('translate')("popup_lat") + args.leafletEvent.latlng.lat.toString().substring(0, 7) + " " + $filter('translate')("popup_long") + args.leafletEvent.latlng.lng.toString().substring(0, 7), $filter('translate')("popup_no_address"), function () {
+                GeoSrv.geolocate([args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng]).then(
+                    function (data) {
+                        $ionicLoading.hide();
+                        var placeName = PlanSrv.generatePlaceString(data.response.docs[0]);
+                        confirmPopupOptions.template = placeName;
+                        confirmPopupOptions.buttons[1].onTap = function () {
                             //$scope.result = args.leafletEvent.latlng;
-                            return selectPlace(args.leafletEvent.latlng)
-                        });
+                            //return selectPlace(args.leafletEvent.latlng)
+                            if (!!selectedField) {
+                                $scope.locations[selectedField].name = placeName;
+                                $scope.locations[selectedField].coordinates = data.response.docs[0].coordinate;
+                            }
+                            $scope.hideModalMap();
+                            console.log(placeName + ' (' + data.response.docs[0].coordinate + ')');
+                        };
+                        confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
+                    },
+                    function (err) {
+                        $ionicLoading.hide();
+                        var placeName = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        confirmPopupOptions.template = placeName;
+                        confirmPopupOptions.buttons[1].onTap = function () {
+                            if (!!selectedField) {
+                                $scope.locations[selectedField].name = placeName;
+                                $scope.locations[selectedField].coordinates = placeName;
+                            }
+                            $scope.hideModalMap();
+                            console.log('*Unknown* (' + placeName + ')');
+                        };
+                        confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
                     }
-                })
-
-                .error(function (data, status, headers, config) {
-                    $ionicLoading.hide();
-                    $scope.showNoConnection();
-                });
-                */
+                );
             });
         });
     };
 
-    $scope.showModalMap = function () {
+    $scope.showModalMap = function (field) {
+        selectedField = field;
+
         $scope.modalMap.show().then(function () {
+            // resize map!
             var modalMapElement = document.getElementById('modal-map-container');
             if (modalMapElement != null) {
                 MapSrv.resizeElementHeight(modalMapElement, mapId);
                 MapSrv.refresh(mapId);
             }
         });
+    };
+
+    /*
+     * Recurrence popup stuff
+     */
+    $scope.hideModalMap = function () {
+        $scope.modalMap.hide();
     };
 
     $scope.getDoW = function () {
@@ -240,11 +283,87 @@ angular.module('carpooling.controllers', [])
     });
 })
 
-.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, planService, GeoLocate) {
+.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup) {
+
+    $scope.datepickerObject = {};
+    $scope.dateTimestamp = null;
+    $scope.hourTimestamp = null;
+    $scope.datepickerObject.inputDate = new Date();
+    var mapId = 'modalMap';
+
+    // NOTE: to be removed
+    $scope.temp = function () {
+        console.log('ciao');
+    };
+
+    $scope.modalMap = null;
+
+    angular.extend($scope, {
+        center: {
+            lat: 46.067819,
+            lng: 11.121306,
+            zoom: 8
+        },
+        defaults: {
+            scrollWheelZoom: false
+        },
+        events: {}
+    });
+
+    $ionicModal.fromTemplateUrl('templates/modal_map.html', {
+        id: '1',
+        scope: $scope,
+        backdropClickToClose: true,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modalMap = modal;
+    });
+
+    $scope.initMap = function () {
+        MapSrv.initMap(mapId).then(function () {
+
+            $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
+                // TODO: strings, button styles, actions
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'TITOLO',
+                    template: 'LAT:' + args.leafletEvent.latlng.lat.toString().substring(0, 7) + ' LON:' + args.leafletEvent.latlng.lng.toString().substring(0, 7),
+                    buttons: [
+                        {
+                            text: $filter('translate')('cancel'),
+                            type: 'button-positive'
+                        },
+                        {
+                            text: $filter('translate')('ok'),
+                            type: 'button-positive',
+                            onTap: function () {
+                                //$scope.result = args.leafletEvent.latlng;
+                                //return selectPlace(args.leafletEvent.latlng)
+                                console.log(args.leafletEvent.latlng);
+                            }
+                        }
+                    ]
+                });
+            });
+        });
+    };
+
+    $scope.showModalMap = function () {
+        $scope.modalMap.show().then(function () {
+            var modalMapElement = document.getElementById('modal-map-container');
+            if (modalMapElement != null) {
+                MapSrv.resizeElementHeight(modalMapElement, mapId);
+                MapSrv.refresh(mapId);
+            }
+        });
+    };
+
+    $scope.hideModalMap = function () {
+        $scope.modalMap.hide();
+    };
 
     $scope.title = $filter('translate')('plan_map_title');
     $scope.place = null;
-    $scope.placesandcoordinates = null;
+    $scope.placesCoordinates = null;
     $scope.planParams = {
         from: {
             name: '',
@@ -266,7 +385,7 @@ angular.module('carpooling.controllers', [])
 
 
         if (setAndCheckPlanParams()) {
-            planService.planJourney($scope.planParams).then(function (value) {
+            PlanSrv.planJourney($scope.planParams).then(function (value) {
                 //if ok let's go to visualization
                 $state.go('app.planlist')
             }, function (error) {
@@ -282,22 +401,18 @@ angular.module('carpooling.controllers', [])
 
             $scope.fromName = placeSelected;
             $scope.planParams.from.name = placeSelected;
-            $scope.planParams.from.lat = planService.getPosition($scope.place).latitude;
-            $scope.planParams.from.long = planService.getPosition($scope.place).longitude;
+            $scope.planParams.from.lat = PlanSrv.getPosition($scope.place).latitude;
+            $scope.planParams.from.long = PlanSrv.getPosition($scope.place).longitude;
+            console.log("(From) Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
         } else if ($scope.place == 'to') {
             $scope.toName = placeSelected;
             $scope.planParams.to.name = placeSelected;
-            $scope.planParams.to.lat = planService.getPosition($scope.place).latitude;
-            $scope.planParams.to.long = planService.getPosition($scope.place).longitude;
+            $scope.planParams.to.lat = PlanSrv.getPosition($scope.place).latitude;
+            $scope.planParams.to.long = PlanSrv.getPosition($scope.place).longitude;
+            console.log("(To) Latitude: " + $scope.planParams.to.lat + "\n Longitude: " + $scope.planParams.to.long);
         }
         console.log(placeSelected);
         /*close map*/
-    }
-    $scope.favoriteSelect = function (newplace) {
-        $scope.closeFavorites();
-        planService.setPosition($scope.place, newplace.lat, newplace.long);
-        planService.setName($scope.place, newplace.name);
-        selectPlace(newplace.name);
     }
 
     $scope.locateMe = function () {
@@ -305,83 +420,135 @@ angular.module('carpooling.controllers', [])
         ;
         // if ($window.navigator.geolocation) {
         // $window.navigator.geolocation.getCurrentPosition(function (position) {
-        GeoLocate.locate().then(function (position) {
-                //                $scope.$apply(function () {
-                $scope.position = position;
-                var placedata = $q.defer();
-                var places = {};
-                var url = Config.getGeocoderURL() + '/location?latlng=' + position[0] + ',' + position[1];
+        GeoSrv.locate().then(function (position) {
+            //                $scope.$apply(function () {
+            $scope.position = position;
 
-                //add timeout
-                $http.get(encodeURI(url), {
-                    timeout: 5000
-                }).
-                success(function (data, status, headers, config) {
-                    //                         planService.setName($scope.place, data.response.docs[0]);
+            GeoSrv.geolocate(position)
 
-                    places = data.response.docs;
-                    name = '';
-                    if (data.response.docs[0]) {
-                        $scope.place = 'from';
-                        planService.setPosition($scope.place, position[0], position[1]);
-                        planService.setName($scope.place, data.response.docs[0]);
-                        selectPlace(name);
-                    }
-                    $ionicLoading.hide();
-                }).
-                error(function (data, status, headers, config) {
-                    //temporary
-                    $ionicLoading.hide();
-                    $scope.showNoConnection();
-                });
+            .success(function (data, status, headers, config) {
+                places = data.response.docs;
+                name = '';
+                if (data.response.docs[0]) {
+                    $scope.place = 'from';
+                    PlanSrv.setPosition($scope.place, position[0], position[1]);
+                    PlanSrv.setName($scope.place, data.response.docs[0]);
+                    selectPlace(name);
+                }
+                $ionicLoading.hide();
+            })
 
-            }
-
-        );
-
+            .error(function (data, status, headers, config) {
+                //temporary
+                $ionicLoading.hide();
+                $scope.showNoConnection();
+            });
+        });
     };
 
     $scope.detail = function (view) {
         window.location.assign(view);
-    }
+    };
 
     $scope.typePlace = function (typedthings) {
         $scope.result = typedthings;
-        $scope.newplaces = planService.getTypedPlaces(typedthings);
+        $scope.newplaces = PlanSrv.getTypedPlaces(typedthings);
         $scope.newplaces.then(function (data) {
             //merge with favorites and check no double values
-            $scope.places = data;
-            $scope.placesandcoordinates = planService.getnames();
-
+            $scope.placesnames = data;
+            $scope.placesCoordinates = PlanSrv.getNames();
         });
-    }
+    };
+
     $scope.select = function (suggestion) {
         console.log("select");
-    }
+    };
+
     $scope.setPlaceById = function (id) {
         console.log(id);
-    }
+    };
 
     $scope.changeStringFrom = function (suggestion) {
         console.log("changestringfrom");
         $scope.place = 'from';
-        planService.setPosition($scope.place, $scope.placesandcoordinates[suggestion].latlong.split(',')[0], $scope.placesandcoordinates[suggestion].latlong.split(',')[1]);
-        planService.setName($scope.place, suggestion);
+        PlanSrv.setPosition($scope.place, $scope.placesCoordinates[suggestion].latlng.split(',')[0], $scope.placesCoordinates[suggestion].latlng.split(',')[1]);
+        PlanSrv.setName($scope.place, suggestion);
         selectPlace(suggestion);
-    }
+    };
+
     $scope.changeStringTo = function (suggestion) {
         console.log("changestringto");
         $scope.place = 'to';
-        planService.setPosition($scope.place, $scope.placesandcoordinates[suggestion].latlong.split(',')[0], $scope.placesandcoordinates[suggestion].latlong.split(',')[1]);
-        planService.setName($scope.place, suggestion);
+        PlanSrv.setPosition($scope.place, $scope.placesCoordinates[suggestion].latlng.split(',')[0], $scope.placesCoordinates[suggestion].latlng.split(',')[1]);
+        PlanSrv.setName($scope.place, suggestion);
         selectPlace(suggestion);
+    };
+
+    /*TIMEPICKER*/
+
+    $scope.timePickerObject = {
+        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60), //Optional
+        step: 1, //Optional
+        format: 24, //Optional
+        setLabel: 'Set', //Optional
+        closeLabel: 'Close', //Optional
+        setButtonType: 'button-positive', //Optional
+        closeButtonType: 'button-stable', //Optional
+        callback: function (val) { //Mandatory
+            timePickerCallback(val);
+        }
+    };
+
+    function timePickerCallback(val) {
+        if (typeof (val) === 'undefined') {
+            console.log('Time not selected');
+        } else {
+            var selectedTime = new Date(val * 1000);
+            console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+            $scope.timePickerObject.inputEpochTime = val;
+        }
     }
+
+    /*----------*/
+
+    /*DATAPICKER*/
+    $scope.datepickerObject = {
+        titleLabel: $filter('translate')('popup_datepicker_title'),
+        todayLabel: $filter('translate')('popup_datepicker_today'),
+        closeLabel: $filter('translate')('popup_datepicker_close'),
+        setLabel: $filter('translate')('popup_datepicker_set'),
+        setButtonType: 'button-carpooling', //Optional
+        todayButtonType: 'button-carpooling', //Optional
+        closeButtonType: '', //Optional
+        inputDate: new Date(), //Optional
+        mondayFirst: true, //Optional
+        weekDaysList: Config.getweekList(), //Optional
+        monthList: Config.getmonthList(), //Optional
+        templateType: 'popup', //Optional
+        showTodayButton: 'true', //Optional
+        modalHeaderColor: 'bar-positive', //Optional
+        modalFooterColor: 'bar-positive', //Optional
+        from: new Date(2012, 8, 2), //Optional
+        to: new Date(2018, 8, 25), //Optional
+        callback: function (val) { //Mandatory
+            datePickerCallback(val);
+        },
+        dateFormat: 'dd-MM-yyyy', //Optional
+        closeOnSelect: false, //Optional
+    };
+
+    var datePickerCallback = function (val) {
+        if (typeof (val) === 'undefined') {
+            console.log('No date selected');
+        } else {
+            console.log('Selected date is : ', val);
+            $scope.datepickerObject.inputDate = val;
+        }
+    };
+
+    /*----------*/
 
     $scope.locateMe();
-
-    $scope.test = function () {
-        alert(" Latitude: " + $scope.planParams.from.lat + "\n Longitude: " + $scope.planParams.from.long);
-    }
 
 })
 

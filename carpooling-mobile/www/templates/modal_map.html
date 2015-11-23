@@ -4,11 +4,7 @@
             <i class="icon close-modal" ng-class="{'ion-android-arrow-back': platform.isAndroid(), 'ion-ios-arrow-back': !platform.isAndroid()}" ng-click="closeMap()"></i>
         </div>-->
         <h1 class="title">TITOLO</h1>
-        <!--
-        <div class="buttons">
-            <button class="button button-icon ion-close-round button-clear" ng-click="closeMap()"></button>
-        </div>
-        -->
+        <button class="button button-icon ion-close" ng-click="hideModalMap()"></button>
     </ion-header-bar>
     <ion-content scroll="false">
         <div id="modal-map-container" data-tap-disabled="true">
