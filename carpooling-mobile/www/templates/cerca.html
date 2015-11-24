@@ -4,15 +4,15 @@
             <div class="list">
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                    <placeautocomplete ng-model="fromName" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_from' | translate}}" on-select="changeStringFrom" ng-blur="setNameParam"></placeautocomplete>
+                   <placeautocomplete ng-model="locations['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
                     <!----------------->
-                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
+                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                    <placeautocomplete ng-model="toName" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places" on-type="typePlace" placeholder="{{'lbl_to' | translate}}" style="width: 100%" on-select="changeStringTo" ng-blur="setNameParam"></placeautocomplete>
+                    <placeautocomplete ng-model="locations['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
                     <!----------------->
-                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap()"></a>
+                    <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
                 </div>
                 <div class="item item-input">
                     <span class="input-label">{{'lbl_date' | translate}}</span>
