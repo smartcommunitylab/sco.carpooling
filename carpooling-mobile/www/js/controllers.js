@@ -71,7 +71,11 @@ angular.module('carpooling.controllers', [])
         defaults: {
             scrollWheelZoom: false
         },
-        events: {}
+        events: {
+            map: {
+                enable: ['click']
+            }
+        }
     });
 
     // Modal Map
