@@ -3,12 +3,12 @@
         <div class="list">
             <div class="item item-input item-autocomplete">
                 <!--<input type="text" placeholder="{{'lbl_from' | translate}}" ng-model="locations['from'].name">-->
-                <placeautocomplete ng-model="locations.from.name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="placesNames" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
+                <placeautocomplete ng-model="locations['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
                 <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
             </div>
             <div class="item item-input item-autocomplete">
                 <!--<input type="text" placeholder="{{'lbl_to' | translate}}" ng-model="locations['to'].name">-->
-                <placeautocomplete ng-model="locations.to.name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="placesNames" on-type="typing" on-select="setLocationTo"></placeautocomplete>
+                <placeautocomplete ng-model="locations['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
                 <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
             </div>
         </div>

@@ -249,28 +249,31 @@ angular.module('carpooling.services.plan', [])
 
     planService.generatePlaceString = function (place) {
         var temp = '';
-        if (place.name) {
-            temp = temp + place.name;
-        }
-        if (place.street != place.name) {
-            if (place.street) {
+
+        if (!!place) {
+            if (place.name) {
+                temp = temp + place.name;
+            }
+            if (place.street != place.name) {
+                if (place.street) {
+                    if (temp) {
+                        temp = temp + ', ';
+                    }
+                    temp = temp + place.street;
+                }
+            }
+            if (place.housenumber) {
                 if (temp) {
                     temp = temp + ', ';
                 }
-                temp = temp + place.street;
+                temp = temp + place.housenumber;
             }
-        }
-        if (place.housenumber) {
-            if (temp) {
-                temp = temp + ', ';
+            if (place.city) {
+                if (temp) {
+                    temp = temp + ', ';
+                }
+                temp = temp + place.city;
             }
-            temp = temp + place.housenumber;
-        }
-        if (place.city) {
-            if (temp) {
-                temp = temp + ', ';
-            }
-            temp = temp + place.city;
         }
 
         return temp;
