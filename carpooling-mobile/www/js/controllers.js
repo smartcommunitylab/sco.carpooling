@@ -107,36 +107,42 @@ angular.module('carpooling.controllers', [])
                     ]
                 };
 
+                var fillConfirmPopupOptions = function (placeName, coordinates) {
+                    confirmPopupOptions.template = placeName;
+                    confirmPopupOptions.buttons[1].onTap = function () {
+                        if (!!selectedField) {
+                            $scope.locations[selectedField].name = placeName;
+                            $scope.locations[selectedField].coordinates = coordinates;
+                        }
+                        $scope.hideModalMap();
+                    };
+                };
+
                 GeoSrv.geolocate([args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng]).then(
                     function (data) {
                         $ionicLoading.hide();
-                        var placeName = PlanSrv.generatePlaceString(data.response.docs[0]);
-                        confirmPopupOptions.template = placeName;
-                        confirmPopupOptions.buttons[1].onTap = function () {
-                            //$scope.result = args.leafletEvent.latlng;
-                            //return selectPlace(args.leafletEvent.latlng)
-                            if (!!selectedField) {
-                                $scope.locations[selectedField].name = placeName;
-                                $scope.locations[selectedField].coordinates = data.response.docs[0].coordinate;
-                            }
-                            $scope.hideModalMap();
-                            console.log(placeName + ' (' + data.response.docs[0].coordinate + ')');
-                        };
+                        var placeName = '';
+                        var coordinates = '';
+
+                        if (!!data.response.docs[0]) {
+                            placeName = PlanSrv.generatePlaceString(data.response.docs[0]);
+                            coordinates = data.response.docs[0].coordinate;
+                        } else {
+                            placeName = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                            coordinates = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        }
+
+                        fillConfirmPopupOptions(placeName, coordinates);
                         confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
+                        console.log(placeName + ' (' + coordinates + ')');
                     },
                     function (err) {
                         $ionicLoading.hide();
                         var placeName = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
-                        confirmPopupOptions.template = placeName;
-                        confirmPopupOptions.buttons[1].onTap = function () {
-                            if (!!selectedField) {
-                                $scope.locations[selectedField].name = placeName;
-                                $scope.locations[selectedField].coordinates = placeName;
-                            }
-                            $scope.hideModalMap();
-                            console.log('*Unknown* (' + placeName + ')');
-                        };
+                        var coordinates = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        fillConfirmPopupOptions(placeName, coordinates);
                         confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
+                        console.log(placeName + ' (' + coordinates + ')');
                     }
                 );
             });
@@ -609,8 +615,8 @@ angular.module('carpooling.controllers', [])
             timestamp: '1447918789919'
         }
     ];
-    $scope.showNotification = function(notific){
-        switch(notific.type){
+    $scope.showNotification = function (notific) {
+        switch (notific.type) {
             case $scope.notificationType[0]:
                 // messages - to chat
                 $state.go('app.chat');
