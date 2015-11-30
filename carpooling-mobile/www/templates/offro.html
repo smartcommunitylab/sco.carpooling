@@ -3,7 +3,38 @@
         <a href="#/app/notifiche" class="button button-icon ion-android-notifications"></a>
         <a href="#/app/offri" class="button button-icon ion-android-add padding-left"></a>
     </ion-nav-buttons>
-    <ion-content class="has-header padding">
-        <a href="#/app/mioviaggio" class="button"><h1>Viaggio N</h1></a>
+
+    <ion-content>
+        <div class="list">
+            <div class="card card-trip" ng-repeat="i in [1, 2]">
+                <div class="item row">
+                    <div class="col-75 trip-data">
+                        <ul>
+                            <li>
+                                <span>25 novembre 2015</span>
+                            </li>
+                            <li>
+                                DA: <span>Punto di partenza</span>
+                            </li>
+                            <li>
+                                A: <span>Punto di arrivo</span>
+                            </li>
+                            <li>
+                                Orario di partenza: <span>08:00</span>
+                            </li>
+                        </ul>
+                        <!-- TODO: define when the flag needs to be shown here -->
+                        <div class="trip-flag" ng-if="false"></div>
+                    </div>
+                    <div class="col-25 trip-counter">
+                        <!-- TODO: define when to show description or confirmation button -->
+                        <p class="trip-counter-num">{{i}}</p>
+                        <p class="trip-counter-text">posti disponibili</p>
+                    </div>
+                    <!-- TODO: define when the flag needs to be shown here -->
+                    <div class="trip-flag"></div>
+                </div>
+            </div>
+        </div>
     </ion-content>
 </ion-view>

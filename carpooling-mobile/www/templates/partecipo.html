@@ -3,9 +3,43 @@
         <a href="#/app/notifiche" class="button button-icon ion-android-notifications"></a>
         <a href="#/app/cerca" class="button button-icon ion-android-search padding-left"></a>
     </ion-nav-buttons>
-    <ion-content class="has-header padding">
-        <h1>{{'tab_participate' | translate}}</h1>
-        <button class="button" ng-click="getTravelProfile()">getTravelProfile</button>
-        <p>{{travelProfile}}</p>
+
+    <ion-content>
+        <div class="list">
+            <div class="card card-trip" ng-repeat="i in [1, 2, 3]">
+                <div class="item row">
+                    <div class="col-75 trip-data">
+                        <ul>
+                            <li>
+                                <span>25 novembre 2015</span>
+                            </li>
+                            <li>
+                                DA: <span>Punto di partenza</span>
+                            </li>
+                            <li>
+                                A: <span>Punto di arrivo</span>
+                            </li>
+                            <li>
+                                Orario di partenza: <span>08:00</span>
+                            </li>
+                        </ul>
+                        <!-- TODO: define when the flag needs to be shown here -->
+                        <div class="trip-flag" ng-if="false"></div>
+                    </div>
+                    <div class="col-25 trip-counter">
+                        <!-- TODO: define when to show description or confirmation button -->
+                        <p class="trip-counter-num">{{i}}</p>
+                        <p class="trip-counter-text">posti disponibili</p>
+                    </div>
+                    <!-- TODO: define when the flag needs to be shown here -->
+                    <div class="trip-flag"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="padding">
+            <button class="button" ng-click="getTravelProfile()">getTravelProfile</button>
+            <p>{{travelProfile}}</p>
+        </div>
     </ion-content>
 </ion-view>

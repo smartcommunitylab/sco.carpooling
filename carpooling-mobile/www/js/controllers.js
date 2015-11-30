@@ -16,6 +16,7 @@ angular.module('carpooling.controllers', [])
 
 .controller('OffroCtrl', function ($scope) {})
 
+// NOTE OffriCtrl
 .controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv) {
     $scope.locations = {
         'from': {
@@ -94,7 +95,7 @@ angular.module('carpooling.controllers', [])
 
                 $ionicLoading.show();
 
-                // TODO: strings, button styles, actions
+                // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
                     title: 'TITOLO',
@@ -164,6 +165,61 @@ angular.module('carpooling.controllers', [])
                 MapSrv.refresh(mapId);
             }
         });
+    };
+
+    /* Time Picker */
+    $scope.timepickerObj = {
+        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
+        step: 1,
+        format: 24,
+        titleLabel: $filter('translate')('popup_timepicker_title'),
+        setLabel: $filter('translate')('ok'),
+        closeLabel: $filter('translate')('cancel'),
+        setButtonType: 'button-carpooling',
+        closeButtonType: '',
+        callback: function (val) { //Mandatory
+            if (typeof (val) === 'undefined') {
+                console.log('Time not selected');
+            } else {
+                var selectedTime = new Date(val * 1000);
+                console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+                $scope.timepickerObj.inputEpochTime = val;
+            }
+        }
+    };
+
+    /* Date Picker */
+    $scope.dateMask = 'dd MMMM yyyy';
+    var yesterday = new Date();
+    yesterday.setMilliseconds(yesterday.getMilliseconds() - (1000 * 60 * 60 * 24));
+
+    $scope.datepickerObj = {
+        titleLabel: $filter('translate')('popup_datepicker_title'),
+        todayLabel: $filter('translate')('popup_datepicker_today'),
+        closeLabel: $filter('translate')('cancel'),
+        setLabel: $filter('translate')('ok'),
+        errorMsgLabel: null,
+        setButtonType: 'button-carpooling',
+        todayButtonType: 'button-carpooling',
+        closeButtonType: '',
+        templateType: 'popup',
+        modalHeaderColor: '',
+        modalFooterColor: '',
+        from: yesterday,
+        to: new Date(2019, 12, 31),
+        inputDate: new Date(),
+        weekDaysList: Config.getDoWList(),
+        monthList: Config.getMonthList(),
+        mondayFirst: true,
+        disableDates: null,
+        callback: function (val) { //Mandatory
+            if (typeof (val) === 'undefined') {
+                console.log('No date selected');
+            } else {
+                console.log('Selected date is : ', val);
+                $scope.datepickerObj.inputDate = val;
+            }
+        },
     };
 
     /*
@@ -293,12 +349,10 @@ angular.module('carpooling.controllers', [])
     });
 })
 
+// NOTE: CercaViaggioCtrl
 .controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup) {
-
-    $scope.datepickerObject = {};
     $scope.dateTimestamp = null;
     $scope.hourTimestamp = null;
-    $scope.datepickerObject.inputDate = new Date();
 
     $scope.locations = {
         'from': {
@@ -373,7 +427,7 @@ angular.module('carpooling.controllers', [])
 
                 $ionicLoading.show();
 
-                // TODO: strings, button styles, actions
+                // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
                     title: 'TITOLO',
@@ -452,72 +506,57 @@ angular.module('carpooling.controllers', [])
         $scope.modalMap.hide();
     };
 
-
-
-    /*TIMEPICKER*/
-
-    $scope.timePickerObject = {
-        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60), //Optional
-        step: 1, //Optional
-        format: 24, //Optional
-        setLabel: 'Set', //Optional
-        closeLabel: 'Close', //Optional
-        setButtonType: 'button-positive', //Optional
-        closeButtonType: 'button-stable', //Optional
+    /* Time Picker */
+    $scope.timepickerObj = {
+        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
+        step: 1,
+        format: 24,
+        titleLabel: $filter('translate')('popup_timepicker_title'),
+        setLabel: $filter('translate')('ok'),
+        closeLabel: $filter('translate')('cancel'),
+        setButtonType: 'button-carpooling',
+        closeButtonType: '',
         callback: function (val) { //Mandatory
-            timePickerCallback(val);
+            if (typeof (val) === 'undefined') {
+                console.log('Time not selected');
+            } else {
+                var selectedTime = new Date(val * 1000);
+                console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+                $scope.timepickerObj.inputEpochTime = val;
+            }
         }
     };
 
-    function timePickerCallback(val) {
-        if (typeof (val) === 'undefined') {
-            console.log('Time not selected');
-        } else {
-            var selectedTime = new Date(val * 1000);
-            console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
-            $scope.timePickerObject.inputEpochTime = val;
-        }
-    }
-
-    /*----------*/
-
-    /*DATAPICKER*/
-    $scope.datepickerObject = {
+    /* Date Picker */
+    $scope.dateMask = 'dd MMMM yyyy';
+    $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
         todayLabel: $filter('translate')('popup_datepicker_today'),
-        closeLabel: $filter('translate')('popup_datepicker_close'),
-        setLabel: $filter('translate')('popup_datepicker_set'),
-        setButtonType: 'button-carpooling', //Optional
-        todayButtonType: 'button-carpooling', //Optional
-        closeButtonType: '', //Optional
-        inputDate: new Date(), //Optional
-        mondayFirst: true, //Optional
-        weekDaysList: Config.getweekList(), //Optional
-        monthList: Config.getmonthList(), //Optional
-        templateType: 'popup', //Optional
-        showTodayButton: 'true', //Optional
-        modalHeaderColor: 'bar-positive', //Optional
-        modalFooterColor: 'bar-positive', //Optional
-        from: new Date(2012, 8, 2), //Optional
-        to: new Date(2018, 8, 25), //Optional
+        closeLabel: $filter('translate')('cancel'),
+        setLabel: $filter('translate')('ok'),
+        errorMsgLabel: null,
+        setButtonType: 'button-carpooling',
+        todayButtonType: 'button-carpooling',
+        closeButtonType: '',
+        templateType: 'popup',
+        modalHeaderColor: '',
+        modalFooterColor: '',
+        from: new Date(),
+        to: new Date(2019, 12, 31),
+        inputDate: new Date(),
+        weekDaysList: Config.getDoWList(),
+        monthList: Config.getMonthList(),
+        mondayFirst: true,
+        disableDates: null,
         callback: function (val) { //Mandatory
-            datePickerCallback(val);
+            if (typeof (val) === 'undefined') {
+                console.log('No date selected');
+            } else {
+                console.log('Selected date is : ', val);
+                $scope.datepickerObj.inputDate = val;
+            }
         },
-        dateFormat: 'dd-MM-yyyy', //Optional
-        closeOnSelect: false, //Optional
     };
-
-    var datePickerCallback = function (val) {
-        if (typeof (val) === 'undefined') {
-            console.log('No date selected');
-        } else {
-            console.log('Selected date is : ', val);
-            $scope.datepickerObject.inputDate = val;
-        }
-    };
-
-    /*----------*/
-
 })
 
 .controller('NotificationCtrl', function ($scope, $filter, $state) {

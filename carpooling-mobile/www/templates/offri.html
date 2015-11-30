@@ -20,20 +20,19 @@
         </div>
 
         <div class="list">
-            <div class="row">
-                <div class="col">
-                    <div class="item item-input item-stacked-label">
-                        <span class="input-label">{{'lbl_date' | translate}}</span>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="item item-input item-stacked-label">
-                        <span class="input-label">{{'lbl_time' | translate}}</span>
-                        <input type="text">
-                    </div>
-                </div>
+            <div class="item item-input">
+                <span class="input-label">{{'lbl_date' | translate}}</span>
+                <ionic-datepicker input-obj="datepickerObj">
+                    <span class="input-label"> {{datepickerObj.inputDate | date:dateMask}}</span>
+                </ionic-datepicker>
             </div>
+            <div class="item item-input">
+                <span class="input-label">{{'lbl_time' | translate}}</span>
+                <ionic-timepicker input-obj="timepickerObj">
+                    <standard-time-meridian etime='timepickerObj.inputEpochTime'></standard-time-meridian>
+                </ionic-timepicker>
+            </div>
+
             <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
         </div>
     </ion-content>
