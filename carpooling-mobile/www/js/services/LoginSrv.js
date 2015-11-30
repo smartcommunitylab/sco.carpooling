@@ -1,6 +1,6 @@
 angular.module('carpooling.services.login', [])
 
-.factory('Login', function ($rootScope, $q, $http, Config) {
+.factory('Login', function ($rootScope, $q, $http, $window, Config) {
     var UserID = null;
 
     return {
@@ -16,6 +16,7 @@ angular.module('carpooling.services.login', [])
                     var authUrl = Config.getServerURL() + '/userlogin';
                     //Open the OAuth consent page in the InAppBrowser
                     var authWindow = window.open(authUrl, '_blank', 'location=no,toolbar=no');
+
                     authWindow.addEventListener('loadstart', function (e) {
                         console.log(e);
                         var url = e.url;

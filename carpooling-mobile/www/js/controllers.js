@@ -309,6 +309,8 @@ angular.module('carpooling.controllers', [])
                 $scope.recurrence.recurrenceDoWstring = $scope.recurrence.recurrenceDoWstring + $filter('translate')(dow.name);
             }
         }
+
+        $scope.recurrence.isRecurrent = $scope.recurrence.recurrenceDoW.length > 0;
     };
 
     var recurrentPopup = {
@@ -321,30 +323,22 @@ angular.module('carpooling.controllers', [])
             },
             {
                 text: $filter('translate')('ok'),
-                type: 'button-carpooling',
-                onTap: function (e) {
-                    // don't allow the user to close unless he enters wifi password
-                    //e.preventDefault();
-                    $scope.updateRecurrence();
-                    return true;
-                }
+                type: 'button-carpooling'
             }
         ]
     };
 
+    $scope.showRecurrentPopup = function () {
+        $ionicPopup.show(recurrentPopup).then(
+            function (res) {
+                $scope.updateRecurrence();
+            }
+        );
+    };
+
     $scope.$watch('recurrence.isRecurrent', function (newValue, oldValue) {
         if (newValue !== oldValue && !!newValue) {
-            $ionicPopup.show(recurrentPopup).then(
-                function (res) {
-                    console.log($scope.recurrence.isRecurrent);
-                    console.log($scope.recurrence.recurrenceType);
-                    console.log($scope.recurrence.recurrenceDoW);
-                    console.log($scope.recurrence.recurrenceDoWstring);
-                    if (!!!res) {
-                        $scope.recurrence.isRecurrent = false;
-                    }
-                }
-            );
+            $scope.showRecurrentPopup();
         }
     });
 })
@@ -498,6 +492,11 @@ angular.module('carpooling.controllers', [])
             }
         });
     };
+
+    /*
+     * Halfway stops stuff
+     */
+    $scope.hasHalfwayStops = false;
 
     /*
      * Recurrence popup stuff

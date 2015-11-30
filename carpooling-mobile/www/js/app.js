@@ -306,6 +306,7 @@ angular.module('carpooling', [
         lbl_date: 'Data',
         lbl_time: 'Ora',
         lbl_recurrenttrip: 'Viaggio ricorrente',
+        lbl_offri: 'Pubblica',
         lbl_cerca: 'Cerca',
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
@@ -350,4 +351,5 @@ angular.module('carpooling', [
     });
 
     $translateProvider.preferredLanguage('it');
+    $translateProvider.useSanitizeValueStrategy('sanitize');
 });

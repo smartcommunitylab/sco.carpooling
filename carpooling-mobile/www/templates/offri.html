@@ -33,7 +33,17 @@
                 </ionic-timepicker>
             </div>
 
+            <!-- ng-click missing because we use a watch on the model -->
             <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
+            <a class="link-carpooling" ng-if="recurrence.isRecurrent" ng-click="showRecurrentPopup()">{{recurrence.recurrenceDoWstring}}</a>
+        </div>
+
+        <div class="row">
+            <div class="col text-center">
+                <button class="button button-carpooling">
+                    {{'lbl_offri' | translate}}
+                </button>
+            </div>
         </div>
     </ion-content>
 </ion-view>
