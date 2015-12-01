@@ -311,6 +311,7 @@ angular.module('carpooling', [
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
+        lbl_start_time: 'Orario di partenza',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrence: 'Imposta ricorrenza',

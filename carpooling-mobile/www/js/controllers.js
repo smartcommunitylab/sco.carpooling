@@ -4,17 +4,65 @@ angular.module('carpooling.controllers', [])
 
 .controller('HomeCtrl', function ($scope) {})
 
-.controller('PartecipoCtrl', function ($scope, UserSrv) {
+.controller('PartecipoCtrl', function ($scope, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'hh:mm';
+    /*Just for example*/
+    /*$scope.passengerTrips = [
+        {
+            "from": {
+                "name": "Via Fiume",
+                "address": "Via Fiume",
+                "latitude": 46.065487,
+                "longitude": 11.131346,
+                "range": 1,
+                "coordinates": [
+      46.065487,
+      11.131346
+    ]
+            },
+            "to": {
+                "name": "Muse",
+                "address": "Muse",
+                "latitude": 46.063266,
+                "longitude": 11.113062,
+                "range": 1,
+                "coordinates": [
+      46.063266,
+      11.113062
+    ]
+            },
+            "when": 1443425400000,
+            "monitored": true
+}
+    ];*/
 
     $scope.getTravelProfile = function () {
         UserSrv.getTravelProfile().then(function (data) {
             $scope.travelProfile = data;
         });
     }
+
+    $scope.passengerTrips = [];
+
+    PassengerSrv.getPassengerTrips().then(function (data) {
+        $scope.passengerTrips = data;
+    });
+
 })
 
-.controller('OffroCtrl', function ($scope) {})
+.controller('OffroCtrl', function ($scope, DriverSrv) {
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'hh:mm';
+
+    $scope.driverTrips = [];
+
+    DriverSrv.getDriverTrips().then(function (data) {
+        $scope.driverTrips = data;
+    });
+
+})
 
 // NOTE OffriCtrl
 .controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv) {

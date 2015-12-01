@@ -5,22 +5,23 @@
     </ion-nav-buttons>
 
     <ion-content>
-        <div class="list">
-            <div class="card card-trip" ng-repeat="i in [1, 2, 3]">
+        <div ng-if="driverTrips.length==0"></div>
+        <div class="list" ng-if="driverTrips.length>0">
+            <div class="card card-trip" ng-repeat="trip in driverTrips">
                 <div class="item row">
                     <div class="col-75 trip-data">
                         <ul>
                             <li>
-                                <span>25 novembre 2015</span>
+                                <span>{{ trip.when | date: travelDateFormat }}</span>
                             </li>
                             <li>
-                                DA: <span>Punto di partenza</span>
+                                {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
                             </li>
                             <li>
-                                A: <span>Punto di arrivo</span>
+                                {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
                             </li>
                             <li>
-                                Orario di partenza: <span>08:00</span>
+                                {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
                             </li>
                         </ul>
                         <!-- TODO: define when the flag needs to be shown here -->
@@ -28,7 +29,7 @@
                     </div>
                     <div class="col-25 trip-counter">
                         <!-- TODO: define when to show description or confirmation button -->
-                        <p class="trip-counter-num">{{i}}</p>
+                        <p class="trip-counter-num">4</p>
                         <p class="trip-counter-text">posti disponibili</p>
                     </div>
                     <!-- TODO: define when the flag needs to be shown here -->
@@ -36,5 +37,9 @@
                 </div>
             </div>
         </div>
+
+        <!--<div class="padding">
+            <p>Trips: {{driverTrips}}</p>
+        </div>-->
     </ion-content>
 </ion-view>
