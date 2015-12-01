@@ -47,9 +47,11 @@ angular.module('carpooling.controllers', [])
     $scope.passengerTrips = [];
 
     PassengerSrv.getPassengerTrips().then(function (data) {
-        $scope.passengerTrips = data;
-    });
-
+            $scope.passengerTrips = data;
+        },
+        function (error) {
+            // TODO
+        });
 })
 
 .controller('OffroCtrl', function ($scope, DriverSrv) {
@@ -59,9 +61,11 @@ angular.module('carpooling.controllers', [])
     $scope.driverTrips = [];
 
     DriverSrv.getDriverTrips().then(function (data) {
-        $scope.driverTrips = data;
-    });
-
+            $scope.driverTrips = data;
+        },
+        function (error) {
+            // TODO
+        });
 })
 
 // NOTE OffriCtrl

@@ -16,7 +16,11 @@ angular.module('carpooling.services.user', [])
             $http.get(Config.getServerURL() + '/api/read/profile', Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {

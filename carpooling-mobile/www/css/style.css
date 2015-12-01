@@ -3,7 +3,6 @@
 .carpooling {
     color: #4EB0E6;
 }
-
 .carpooling-theme .link-carpooling {
     color: #4EB0E6;
     text-decoration: underline;
@@ -87,32 +86,32 @@
     font-size: large;
     color: #000000;
 }
-.carpooling-theme .card.card-chat{
+.carpooling-theme .card.card-chat {
     box-shadow: none;
 }
-.carpooling-theme .card.card-chat .item{
+.carpooling-theme .card.card-chat .item {
     background-color: #FFFFFF;
     border: 0;
     padding: 0px 8px 0px 8px;
     text-align: left;
     white-space: normal;
 }
-.carpooling-theme .card.card-chat .item-divider{
+.carpooling-theme .card.card-chat .item-divider {
     text-align: left;
     font-size: small;
     color: #A0A0A0;
 }
-.carpooling-theme .card.card-chat .item-divider span{
+.carpooling-theme .card.card-chat .item-divider span {
     text-align: left;
     font-size: small;
     color: #4EB0E6;
 }
-.carpooling-theme .card.card-chat.card-chat-my .item{
+.carpooling-theme .card.card-chat.card-chat-my .item {
     border: 0;
     text-align: right;
     white-space: normal;
 }
-.carpooling-theme .card.card-chat.card-chat-my .item-divider{
+.carpooling-theme .card.card-chat.card-chat-my .item-divider {
     text-align: right;
     font-size: small;
     color: #A0A0A0;
@@ -251,4 +250,16 @@ placeautocomplete ul {
 #modalMap {
     width: 100%;
     height: 100%;
+}
+
+/* USERINFO  */
+
+#usrinf1 {
+    font-size: 3em;
+    left: 50;
+}
+
+#usrinf2 {
+    font-size: 5em;
+    left: 50;
 }

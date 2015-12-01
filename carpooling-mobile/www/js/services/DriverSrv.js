@@ -25,7 +25,11 @@ angular.module('carpooling.services.driver', [])
             $http.get(Config.getServerURL() + '/api/driver/trips', Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {
