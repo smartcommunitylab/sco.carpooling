@@ -264,6 +264,7 @@ angular.module('carpooling', [
         views: {
             'menuContent': {
                 templateUrl: 'templates/chat.html',
+                controller: 'NotificationCtrl'
             }
         }
     });
@@ -282,11 +283,14 @@ angular.module('carpooling', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        msg_talk: 'dice',
         lbl_mytrip: 'Mio viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
         lbl_passengervalutation: 'Valutazione del passeggero',
+        lbl_drivervalutation_parenthesis: '(Dei viaggi a cui ho partecipato)',
+        lbl_passengervalutation_parenthesis: '(Dei viaggi che ho offerto)',
         lbl_notificationsettings: 'Impostazioni Notifiche',
         lbl_communityname: 'Nome Comunità',
         lbl_findcommunity: 'Cerca comunità',

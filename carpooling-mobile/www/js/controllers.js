@@ -603,5 +603,57 @@ angular.module('carpooling.controllers', [])
                 break;
         };
     };
+    $scope.messages = [
+        {
+            id: '1',
+            userId: 1,
+            text: 'Ciao Mario',
+            timestamp: '1447865802692',
+            userId_target: 2
+        }, {
+            id: '2',
+            userId: 1,
+            text: 'E\' possibile aggiungere una tappa intermedia a Mattarello nel tuo viaggio? Grazie',
+            timestamp: '1447865802692',
+            userId_target: 2
+        }, {
+            id: '3',
+            userId: 2,
+            text: 'Ciao Stefano, certo nessun problema. Passo davanti alla Coop mi puoi aspettare li',
+            timestamp: '1447918789919',
+            userId_target: 1
+        }
+    ];
+    // test data for users
+    $scope.tmp_users = [
+        {
+            id: 1,
+            name: 'Stefano',
+            surname: 'Bianchi',
+            email: 'stefano.bianchi@prova.it'
+        }, {
+            id: 2,
+            name: 'Mario',
+            surname: 'Rossi',
+            email: 'mario.rossi@prova.it'
+        }
+    ];
+
+    $scope.getUserById = function (id) {
+        for (var i = 0; i < $scope.tmp_users.length; i++) {
+            var us = $scope.tmp_users[i];
+            if (us.id == id) {
+                return us;
+            }
+        }
+    }
+
+    $scope.me = {
+        id: 1
+    };
+
+    $scope.isMe = function (id) {
+        return id == $scope.me.id;
+    };
 
 });

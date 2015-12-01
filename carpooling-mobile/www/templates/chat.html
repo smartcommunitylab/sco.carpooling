@@ -1,5 +1,17 @@
-<ion-view title="{{'menu_chat'| translate}}">
+<ion-view title="{{'menu_chat' | translate}}">
     <ion-content>
-        <h1>{{'menu_chat'| translate}}</h1>
+        <div ng-repeat="ms in messages" ng-last-repeat="messages">
+            <div class="card card-chat" ng-class="{'card-chat-my': isMe(ms.userId)}">
+                <div ng-if="!isMe(ms.userId)" class="item item-divider">
+                    <span>{{ getUserById(ms.userId).name }} {{'msg_talk' | translate}}</span>
+                </div>
+                <div class="item">
+                    <span>{{ ms.text }}</span>
+                </div>
+                <div class="item item-divider">
+                    {{ ms.timestamp | date:'HH:mm' }}
+                </div>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
