@@ -356,5 +356,5 @@ angular.module('carpooling', [
     });
 
     $translateProvider.preferredLanguage('it');
-    $translateProvider.useSanitizeValueStrategy('sanitize');
+    $translateProvider.useSanitizeValueStrategy('escape');
 });
