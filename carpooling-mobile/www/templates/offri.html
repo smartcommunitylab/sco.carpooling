@@ -20,21 +20,30 @@
         </div>
 
         <div class="list">
-            <div class="row">
-                <div class="col">
-                    <div class="item item-input item-stacked-label">
-                        <span class="input-label">{{'lbl_date' | translate}}</span>
-                        <input type="text">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="item item-input item-stacked-label">
-                        <span class="input-label">{{'lbl_time' | translate}}</span>
-                        <input type="text">
-                    </div>
-                </div>
+            <div class="item item-input">
+                <span class="input-label">{{'lbl_date' | translate}}</span>
+                <ionic-datepicker input-obj="datepickerObj">
+                    <span class="input-label"> {{datepickerObj.inputDate | date:dateMask}}</span>
+                </ionic-datepicker>
             </div>
+            <div class="item item-input">
+                <span class="input-label">{{'lbl_time' | translate}}</span>
+                <ionic-timepicker input-obj="timepickerObj">
+                    <standard-time-meridian etime='timepickerObj.inputEpochTime'></standard-time-meridian>
+                </ionic-timepicker>
+            </div>
+
+            <!-- ng-click missing because we use a watch on the model -->
             <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
+            <a class="link-carpooling" ng-if="recurrence.isRecurrent" ng-click="showRecurrentPopup()">{{recurrence.recurrenceDoWstring}}</a>
+        </div>
+
+        <div class="row">
+            <div class="col text-center">
+                <button class="button button-carpooling">
+                    {{'lbl_offri' | translate}}
+                </button>
+            </div>
         </div>
     </ion-content>
 </ion-view>
