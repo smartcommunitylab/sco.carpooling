@@ -46,11 +46,12 @@ angular.module('carpooling.controllers', [])
 
     $scope.passengerTrips = [];
 
-    PassengerSrv.getPassengerTrips().then(function (data) {
+    PassengerSrv.getPassengerTrips().then(
+        function (data) {
             $scope.passengerTrips = data;
         },
         function (error) {
-            // TODO
+            // TODO: handle error
         });
 })
 
@@ -60,16 +61,17 @@ angular.module('carpooling.controllers', [])
 
     $scope.driverTrips = [];
 
-    DriverSrv.getDriverTrips().then(function (data) {
+    DriverSrv.getDriverTrips().then(
+        function (data) {
             $scope.driverTrips = data;
         },
         function (error) {
-            // TODO
+            // TODO: handle error
         });
 })
 
 // NOTE OffriCtrl
-.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv) {
+.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv) {
     $scope.locations = {
         'from': {
             'name': '',
@@ -81,6 +83,9 @@ angular.module('carpooling.controllers', [])
         }
     };
 
+    /*
+     * Autocompletion stuff
+     */
     // names: array with the names of the places
     // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
     $scope.places = {
@@ -393,6 +398,10 @@ angular.module('carpooling.controllers', [])
             $scope.showRecurrentPopup();
         }
     });
+
+    $scope.offer = function () {
+        // TODO: create Travel object and send it using DriverSrv
+    };
 })
 
 // NOTE: CercaViaggioCtrl
@@ -411,6 +420,9 @@ angular.module('carpooling.controllers', [])
         }
     };
 
+    /*
+     * Autocompletion stuff
+     */
     // names: array with the names of the places
     // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
     $scope.places = {
@@ -745,5 +757,6 @@ angular.module('carpooling.controllers', [])
     $scope.isMe = function (id) {
         return id == $scope.me.id;
     };
+})
 
-});
+.controller('UserInfoCtrl', function ($scope, Config, UserSrv) {});

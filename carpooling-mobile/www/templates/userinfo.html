@@ -1,12 +1,29 @@
-<ion-view title="{{'menu_profile'| translate}}">
+<ion-view title="{{'menu_profile' | translate}}">
     <ion-nav-buttons side="right">
         <a href="#" class="button button-icon ion-edit"></a>
     </ion-nav-buttons>
-    <ion-content class="padding">
-        <h1>USERINFO</h1>
-        <div id="userinfo">
-            <i class="icons ion-android-person" id="usrinf1"></i>
-            <i class="icons ion-ios-circle-outline" id="usrinf2"></i>
+    <ion-content class="padding user-profile">
+        <div class="user-data">
+            <div class="user-image">
+                <i class="icons ion-person"></i>
+            </div>
+            <h4 class="user-name">Nome Cognome</h4>
+        </div>
+
+        <div class="list user-options">
+            <ion-toggle ng-model="hasAuto">{{'lbl_user_car_owner' | translate}}</ion-toggle>
+
+            <label class="item item-input">
+                <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
+                <input type="text">
+            </label>
+
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    {{'lbl_user_car_seats' | translate}}
+                </div>
+                <select ng-model="auto.posts" ng-options="seats.indexOf(seat) as seat for seat in seats"></select>
+            </label>
         </div>
     </ion-content>
 </ion-view>

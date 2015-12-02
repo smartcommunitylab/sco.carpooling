@@ -41,7 +41,7 @@ angular.module('carpooling', [
         }
 
         if (!Login.getUserId()) {
-            Login.login();
+            // FIXME: Login.login();
         }
     });
 
@@ -243,7 +243,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-userinfo': {
-                templateUrl: 'templates/userinfo.html'
+                templateUrl: 'templates/userinfo.html',
+                controller: 'UserInfoCtrl'
             }
         }
     })
@@ -316,6 +317,9 @@ angular.module('carpooling', [
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         lbl_start_time: 'Orario di partenza',
+        lbl_user_car_owner: 'Automunito',
+        lbl_user_car_info: 'Note auto',
+        lbl_user_car_seats: 'Posti disponibili',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrence: 'Imposta ricorrenza',

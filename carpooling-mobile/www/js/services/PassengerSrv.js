@@ -74,9 +74,9 @@ angular.module('carpooling.services.passenger', [])
         bookTrip: function (tripId, booking) {
             var deferred = $q.defer();
 
-            if (!!!tripId) {
+            if (!tripId) {
                 deferred.reject('Invalid tripId');
-            } else if (!!!booking || !(isBookingTravellerValid(booking))) {
+            } else if (!booking || !(isBookingTravellerValid(booking))) {
                 deferred.reject('Invalid travelRequest');
             } else {
                 $http.post(Config.getServerURL() + '/api/passenger/trips/' + tripId + '/book', booking, Config.getHTTPConfig())
@@ -95,9 +95,9 @@ angular.module('carpooling.services.passenger', [])
         rateDriver: function (driverId, rating) {
             var deferred = $q.defer();
 
-            if (!!!driverId) {
+            if (!driverId) {
                 deferred.reject('Invalid driverId');
-            } else if (!!!rating || (rating < 1 || rating > 5)) {
+            } else if (!rating || (rating < 1 || rating > 5)) {
                 deferred.reject('Invalid rating');
             } else {
                 $http.post(Config.getServerURL() + '/api/rate/driver/' + driverId + '/' + rating, booking, Config.getHTTPConfig())
