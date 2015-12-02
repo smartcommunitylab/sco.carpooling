@@ -1,6 +1,8 @@
 angular.module('carpooling.services.passenger', [])
 
 .factory('PassengerSrv', function ($http, $q, Config) {
+    var searchResults = [];
+
     var isTravelRequestValid = function (travelRequest) {
         if (!!travelRequest && !!travelRequest.from && !!travelRequest.to && !!travelRequest.when) {
             return true;
@@ -18,6 +20,9 @@ angular.module('carpooling.services.passenger', [])
     };
 
     return {
+        getSearchResults: function () {
+            return searchResults;
+        },
         getPassengerTrips: function () {
             var deferred = $q.defer();
 
@@ -68,6 +73,7 @@ angular.module('carpooling.services.passenger', [])
                     if (data[0] == '<') {
                         deferred.reject();
                     } else {
+                        searchResults = data.data;
                         deferred.resolve(data);
                     }
                 })
