@@ -8,7 +8,7 @@ angular.module('carpooling.services.login', [])
     loginService.login = function () {
         var deferred = $q.defer();
 
-        //log into the system and set UserID
+        // log into the system and set UserID
         var authapi = {
             authorize: function (url) {
                 var deferred = $q.defer();
@@ -63,8 +63,8 @@ angular.module('carpooling.services.login', [])
             localStorage.userId = "null";
             deferred.reject(reason);
         });
-        return deferred.promise;
 
+        return deferred.promise;
     };
 
     loginService.logout = function () {

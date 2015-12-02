@@ -26,6 +26,7 @@ import it.smartcommunitylab.carpooling.model.Response;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
+import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.UserCommunitiesSetup;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
@@ -67,10 +68,10 @@ public class ServiceController {
 	@PostConstruct
 	private void init() {
 		for (Community community : userCommunitiesSetup.getUserCommunities()) {
-			Community existing = communityRepository.findByIdAndName(community.getId(), community.getName());
-			if (existing == null) {
+//			Community existing = communityRepository.findByIdAndName(community.getId(), community.getName());
+//			if (existing == null) {
 				communityRepository.save(community);
-			}
+//			}
 		}
 
 	}
@@ -247,6 +248,20 @@ public class ServiceController {
 		}
 
 		return response;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/user")
+	public @ResponseBody
+	Response<User> readUser() {
+
+		User user = carPoolingManager.readUser(getUserId());
+
+		if (user != null) {
+			return new Response<User>(user);
+		} else {
+			return new Response<User>(HttpStatus.NO_CONTENT.value(), "user not found");
+		}
+
 	}
 
 	@ExceptionHandler(Exception.class)

@@ -4,8 +4,10 @@ userCommunities:
   users:
   - 52
   - 54
+  - 53
 - id: cPCommunity2
   name: carpooling community 2
   users:
   - 52
   - 54
+  - 53

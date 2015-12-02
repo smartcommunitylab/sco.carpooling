@@ -380,4 +380,14 @@ public class CarPoolingManager {
 		return response;
 	}
 
+	/**
+	 * read user.
+	 * @param userId
+	 * @return
+	 */
+	public User readUser(String userId) {
+		User user = userRepository.findOne(userId);
+		return user;
+	}
+
 }
