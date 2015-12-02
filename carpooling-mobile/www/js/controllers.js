@@ -626,7 +626,6 @@ angular.module('carpooling.controllers', [])
     };
 
     /* Search Trip */
-
     $scope.searchTravel = function () {
         var travelRequest = {
             'from': {
@@ -644,8 +643,11 @@ angular.module('carpooling.controllers', [])
             'when': ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
             'monitored': ($scope.allSearchNotifications.checked)
         };
+
         console.log(travelRequest);
-        PassengerSrv.searchTrip(travelRequest).then(function (data) {
+
+        PassengerSrv.searchTrip(travelRequest).then(
+            function (data) {
                 console.log('Done trip search');
                 $state.go('app.cercaviaggi');
             },
@@ -654,7 +656,6 @@ angular.module('carpooling.controllers', [])
                 console.log(error);
             });
     };
-
 })
 
 .controller('CercaViaggiCtrl', function ($scope, PassengerSrv) {
@@ -669,24 +670,29 @@ angular.module('carpooling.controllers', [])
             name: 'message',
             value: 'Messaggio',
             image: 'ion-android-chat'
-        }, {
+        },
+        {
             name: 'trip_request',
             value: 'Richiesta di viaggio',
             image: 'ion-android-car'
-        }, {
+        },
+        {
             name: 'trip_response',
             value: 'Risposta ricerca viaggio',
             image: 'ion-android-search'
-        }, {
+        },
+        {
             name: 'driver_rating',
             value: 'Valutazione conducente',
             image: 'ion-android-star'
-        }, {
+        },
+        {
             name: 'passenger_rating',
             value: 'Valutazione passeggero',
             image: 'ion-android-star'
         }
     ];
+
     $scope.notifications = [
         {
             id: '1',
@@ -694,25 +700,29 @@ angular.module('carpooling.controllers', [])
             short_text: 'Nuovo messaggio da Mario Rossi',
             data_object: null,
             timestamp: '1447865802692'
-        }, {
+        },
+        {
             id: '2',
             type: $scope.notificationType[1],
             short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
             data_object: null,
             timestamp: '1447865802692'
-        }, {
+        },
+        {
             id: '3',
             type: $scope.notificationType[2],
             short_text: 'Trovato un viaggio Trento - Pergine',
             data_object: null,
             timestamp: '1447918789919'
-        }, {
+        },
+        {
             id: '4',
             type: $scope.notificationType[3],
             short_text: 'Valuta il conducente del viaggio Rovereto - Mattarello',
             data_object: null,
             timestamp: '1447918789919'
-        }, {
+        },
+        {
             id: '5',
             type: $scope.notificationType[4],
             short_text: 'Valuta i passeggeri del tuo viaggio Verona - Rovereto',
@@ -720,6 +730,7 @@ angular.module('carpooling.controllers', [])
             timestamp: '1447918789919'
         }
     ];
+
     $scope.showNotification = function (notific) {
         switch (notific.type) {
             case $scope.notificationType[0]:
@@ -746,6 +757,7 @@ angular.module('carpooling.controllers', [])
                 break;
         };
     };
+
     $scope.messages = [
         {
             id: '1',
@@ -753,13 +765,15 @@ angular.module('carpooling.controllers', [])
             text: 'Ciao Mario',
             timestamp: '1447865802692',
             userId_target: 2
-        }, {
+        },
+        {
             id: '2',
             userId: 1,
             text: 'E\' possibile aggiungere una tappa intermedia a Mattarello nel tuo viaggio? Grazie',
             timestamp: '1447865802692',
             userId_target: 2
-        }, {
+        },
+        {
             id: '3',
             userId: 2,
             text: 'Ciao Stefano, certo nessun problema. Passo davanti alla Coop mi puoi aspettare li',
@@ -767,6 +781,7 @@ angular.module('carpooling.controllers', [])
             userId_target: 1
         }
     ];
+
     // test data for users
     $scope.tmp_users = [
         {
@@ -774,7 +789,8 @@ angular.module('carpooling.controllers', [])
             name: 'Stefano',
             surname: 'Bianchi',
             email: 'stefano.bianchi@prova.it'
-        }, {
+        },
+        {
             id: 2,
             name: 'Mario',
             surname: 'Rossi',
@@ -800,4 +816,16 @@ angular.module('carpooling.controllers', [])
     };
 })
 
-.controller('UserInfoCtrl', function ($scope, Config, UserSrv) {});
+.controller('UserInfoCtrl', function ($scope, Config, LoginSrv, UserSrv) {
+    $scope.user = null;
+
+    UserSrv.getUser(LoginSrv.getUserId()).then(
+        function (data) {
+            $scope.user = data.data;
+        },
+        function (err) {
+            // TODO: in case of error retrieving user...
+            console.log(err);
+        }
+    );
+});
