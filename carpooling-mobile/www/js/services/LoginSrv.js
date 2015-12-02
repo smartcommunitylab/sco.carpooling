@@ -1,8 +1,6 @@
 angular.module('carpooling.services.login', [])
 
-.factory('Login', function ($rootScope, $q, $http, $window, Config) {
-    var UserID = null;
-
+.factory('LoginSrv', function ($rootScope, $q, $http, $window, Config) {
     var loginService = {};
 
     loginService.login = function () {
@@ -50,9 +48,7 @@ angular.module('carpooling.services.login', [])
 
         authapi.authorize().then(function (data) {
             console.log("success:" + data.userId);
-            //prendi google id , metti in local storage e abilita menu
-            //log
-            $rootScope.extLogging("AppCollaborate", "login");
+            //prendi google id, metti in local storage e abilita menu
             $rootScope.userIsLogged = true;
             localStorage.userId = data.userId;
             deferred.resolve(data);
@@ -81,7 +77,7 @@ angular.module('carpooling.services.login', [])
 
         .success(function (data, status, headers, config) {
             $rootScope.userIsLogged = false;
-            localStorage.userIdalert("loggato");
+            alert('Logged in!');
             deferred.resolve(data);
         })
 
@@ -93,7 +89,7 @@ angular.module('carpooling.services.login', [])
     };
 
     loginService.getUserId = function () {
-        //return UserID
+        // return userId
         return localStorage.userId;
     };
 

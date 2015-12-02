@@ -17,8 +17,8 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, Login, $rootScope, $q) {
-    $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != "null");
+.run(function ($ionicPlatform, LoginSrv, $rootScope, $q) {
+    $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != 'null');
 
     $rootScope.getUserId = function () {
         if ($rootScope.userIsLogged) {
@@ -40,15 +40,16 @@ angular.module('carpooling', [
             StatusBar.styleDefault();
         }
 
-        if (!Login.getUserId()) {
-            // FIXME: toggle the line below for browser devel
-            Login.login();
+        if (!LoginSrv.getUserId()) {
+            // FIXME: toggle the lines below for browser devel
+            LoginSrv.login();
+            //localStorage.userId = '14';
         }
     });
 
     $rootScope.login = function () {
         var deferred = $q.defer();
-        Login.login().then(
+        LoginSrv.login().then(
             function (data) {
                 deferred.resolve(data);
             },
@@ -62,7 +63,7 @@ angular.module('carpooling', [
 
     $rootScope.logout = function () {
         var deferred = $q.defer();
-        Login.logout().then(
+        LoginSrv.logout().then(
             function (data) {
                 deferred.resolve(data);
             },
