@@ -32,7 +32,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 @Configuration
-@ComponentScan(basePackages = { "it.smartcommunitylab.carpooling.security", "it.smartcommunitylab.carpooling.managers" })
+@ComponentScan(basePackages = { "it.smartcommunitylab.carpooling.security", "it.smartcommunitylab.carpooling.managers", "it.smartcommunitylab.carpooling.notification" })
 @EnableMongoRepositories(basePackages = "it.smartcommunitylab.carpooling.mongo.repos")
 @PropertySource("classpath:carpooling.properties")
 public class TestConfig {
