@@ -617,20 +617,20 @@ angular.module('carpooling.controllers', [])
 
     $scope.searchTravel = function () {
         var travelRequest = {
-            "from": {
-                "name": $scope.locations['from'].name,
-                "address": $scope.locations['from'].name,
-                "latitude": parseFloat($scope.locations['from'].latlng.split(",")[0]),
-                "longitude": parseFloat($scope.locations['from'].latlng.split(",")[1])
+            'from': {
+                'name': $scope.locations['from'].name,
+                'address': $scope.locations['from'].name,
+                'latitude': parseFloat($scope.locations['from'].latlng.split(',')[0]),
+                'longitude': parseFloat($scope.locations['from'].latlng.split(',')[1])
             },
-            "to": {
-                "name": $scope.locations['to'].name,
-                "address": $scope.locations['to'].name,
-                "latitude": parseFloat($scope.locations['to'].latlng.split(",")[0]),
-                "longitude": parseFloat($scope.locations['to'].latlng.split(",")[1])
+            'to': {
+                'name': $scope.locations['to'].name,
+                'address': $scope.locations['to'].name,
+                'latitude': parseFloat($scope.locations['to'].latlng.split(',')[0]),
+                'longitude': parseFloat($scope.locations['to'].latlng.split(',')[1])
             },
-            "when": ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
-            "monitored": ($scope.allSearchNotifications.checked)
+            'when': ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
+            'monitored': ($scope.allSearchNotifications.checked)
         };
         console.log(travelRequest);
         PassengerSrv.searchTrip(travelRequest).then(function (data) {
