@@ -396,7 +396,7 @@ angular.module('carpooling.controllers', [])
 })
 
 // NOTE: CercaViaggioCtrl
-.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup) {
+.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
     $scope.dateTimestamp = null;
     $scope.hourTimestamp = null;
 
@@ -608,6 +608,40 @@ angular.module('carpooling.controllers', [])
             }
         },
     };
+
+    $scope.allSearchNotifications = function () {
+        console.log('Push Notification Change', $scope.allSearchNotifications.checked);
+    };
+
+    /* Search Trip */
+
+    $scope.searchTravel = function () {
+        var travelRequest = {
+            "from": {
+                "name": $scope.locations['from'].name,
+                "address": $scope.locations['from'].name,
+                "latitude": parseFloat($scope.locations['from'].latlng.split(",")[0]),
+                "longitude": parseFloat($scope.locations['from'].latlng.split(",")[1])
+            },
+            "to": {
+                "name": $scope.locations['to'].name,
+                "address": $scope.locations['to'].name,
+                "latitude": parseFloat($scope.locations['to'].latlng.split(",")[0]),
+                "longitude": parseFloat($scope.locations['to'].latlng.split(",")[1])
+            },
+            "when": ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
+            "monitored": ($scope.allSearchNotifications.checked)
+        };
+        console.log(travelRequest);
+        PassengerSrv.searchTrip(travelRequest).then(function (data) {
+                console.log('Done trip search');
+            },
+            function (error) {
+                // TODO
+                console.log(error);
+            });
+    };
+
 })
 
 .controller('NotificationCtrl', function ($scope, $filter, $state) {

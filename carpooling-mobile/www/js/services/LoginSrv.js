@@ -50,8 +50,6 @@ angular.module('carpooling.services.login', [])
             authapi.authorize().then(function (data) {
                 console.log("success:" + data.userId);
                 //prendi google id , metti in local storage e abilita menu
-                //log
-                $rootScope.extLogging("AppCollaborate", "login");
                 $rootScope.userIsLogged = true;
                 localStorage.userId = data.userId;
                 deferred.resolve(data);

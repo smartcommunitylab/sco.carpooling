@@ -2,7 +2,7 @@ angular.module('carpooling.services.passenger', [])
 
 .factory('PassengerSrv', function ($http, $q, Config) {
     var isTravelRequestValid = function (travelRequest) {
-        if (!!travelRequest && !!travelRequest.from && !!travelRequest.to && !!travelRequest.when && !!travelRequest.userId) {
+        if (!!travelRequest && !!travelRequest.from && !!travelRequest.to && !!travelRequest.when) {
             return true;
         }
         return false;
@@ -43,7 +43,11 @@ angular.module('carpooling.services.passenger', [])
             $http.get(Config.getServerURL() + '/api/passenger/monitored', Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {
@@ -61,7 +65,11 @@ angular.module('carpooling.services.passenger', [])
                 $http.post(Config.getServerURL() + '/api/passenger/trips', travelRequest, Config.getHTTPConfig())
 
                 .success(function (data) {
-                    deferred.resolve(data);
+                    if (data[0] == '<') {
+                        deferred.reject();
+                    } else {
+                        deferred.resolve(data);
+                    }
                 })
 
                 .error(function (err) {
