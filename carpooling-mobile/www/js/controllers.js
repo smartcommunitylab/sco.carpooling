@@ -647,12 +647,19 @@ angular.module('carpooling.controllers', [])
         console.log(travelRequest);
         PassengerSrv.searchTrip(travelRequest).then(function (data) {
                 console.log('Done trip search');
+                $state.go('app.cercaviaggi');
             },
             function (error) {
                 // TODO
                 console.log(error);
             });
     };
+
+})
+
+.controller('CercaViaggiCtrl', function ($scope, PassengerSrv) {
+    $scope.passengerTripsFound = PassengerSrv.getSearchResults();
+    console.log($scope.passengerTripsFound);
 
 })
 
