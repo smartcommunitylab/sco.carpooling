@@ -41,7 +41,8 @@ angular.module('carpooling', [
         }
 
         if (!Login.getUserId()) {
-            // FIXME: Login.login();
+            // FIXME: toggle the line below for browser devel
+            Login.login();
         }
     });
 
