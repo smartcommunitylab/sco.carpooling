@@ -250,11 +250,14 @@ public class ServiceController {
 		return response;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/api/read/user")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/user/{userId}")
 	public @ResponseBody
-	Response<User> readUser() {
+	Response<User> readUser(@PathVariable String userId) {
 
-		User user = carPoolingManager.readUser(getUserId());
+		// perhaps we can add some security here
+		// for e.g. (check if logged in user and passed in user matches, send all)
+		// else send only restricted information.
+		User user = carPoolingManager.readUser(userId);
 
 		if (user != null) {
 			return new Response<User>(user);
@@ -263,7 +266,7 @@ public class ServiceController {
 		}
 
 	}
-
+	
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody
 	Response<Void> handleExceptions(Exception exception) {
