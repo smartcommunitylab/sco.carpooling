@@ -856,6 +856,10 @@ angular.module('carpooling.controllers', [])
 
 .controller('UserInfoCtrl', function ($scope, $rootScope) {
     $scope.user = $rootScope.getUser();
+    $scope.hasAuto = false;
 
     // TODO: user info!
+    $scope.hasAutoChanged = function () {
+        console.log('hasAutoChanged: ' + $scope.hasAuto);
+    };
 });
