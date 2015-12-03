@@ -854,16 +854,8 @@ angular.module('carpooling.controllers', [])
     };
 })
 
-.controller('UserInfoCtrl', function ($scope, Config, LoginSrv, UserSrv) {
-    $scope.user = null;
+.controller('UserInfoCtrl', function ($scope, $rootScope) {
+    $scope.user = $rootScope.getUser();
 
-    UserSrv.getUser(LoginSrv.getUserId()).then(
-        function (data) {
-            $scope.user = data.data;
-        },
-        function (err) {
-            // TODO: in case of error retrieving user...
-            console.log(err);
-        }
-    );
+    // TODO: user info!
 });

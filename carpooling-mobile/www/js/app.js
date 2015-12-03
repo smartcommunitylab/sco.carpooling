@@ -30,6 +30,13 @@ angular.module('carpooling', [
         return null;
     };
 
+    $rootScope.getUser = function () {
+        if ($rootScope.userIsLogged()) {
+            return JSON.parse(localStorage.user);
+        }
+        return null;
+    };
+
     $rootScope.login = function () {
         LoginSrv.login().then(
             function (data) {

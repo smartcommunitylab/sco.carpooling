@@ -47,14 +47,6 @@ angular.module('carpooling.services.login', [])
                     });
                 } else {
                     angular.element($window).bind('message', function (event) {
-                        var doc = event.currentTarget.document;
-                        var cookies = doc.cookie.split(';');
-                        var output = '';
-                        for (var i = 1; i <= cookies.length; i++) {
-                            output += i + ' ' + cookies[i - 1] + "\n";
-                        }
-                        console.log(output);
-
                         $rootScope.$apply(function () {
                             processURL(event.data, deferred);
                         });

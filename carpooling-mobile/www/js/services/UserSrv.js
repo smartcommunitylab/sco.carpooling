@@ -15,7 +15,7 @@ angular.module('carpooling.services.user', [])
             if (data[0] == '<') {
                 deferred.reject();
             } else {
-                localStorage.user = data.data;
+                localStorage.user = JSON.stringify(data.data);
                 deferred.resolve(data);
             }
         })
