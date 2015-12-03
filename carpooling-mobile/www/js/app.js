@@ -17,8 +17,8 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, Login, $rootScope, $q) {
-    $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != "null");
+.run(function ($ionicPlatform, LoginSrv, $rootScope, $q) {
+    $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != 'null');
 
     $rootScope.getUserId = function () {
         if ($rootScope.userIsLogged) {
@@ -40,14 +40,16 @@ angular.module('carpooling', [
             StatusBar.styleDefault();
         }
 
-        if (!Login.getUserId()) {
-            Login.login();
+        if (!LoginSrv.getUserId()) {
+            // FIXME: toggle the lines below for browser devel
+            LoginSrv.login();
+            //localStorage.userId = '14';
         }
     });
 
     $rootScope.login = function () {
         var deferred = $q.defer();
-        Login.login().then(
+        LoginSrv.login().then(
             function (data) {
                 deferred.resolve(data);
             },
@@ -61,7 +63,7 @@ angular.module('carpooling', [
 
     $rootScope.logout = function () {
         var deferred = $q.defer();
-        Login.logout().then(
+        LoginSrv.logout().then(
             function (data) {
                 deferred.resolve(data);
             },
@@ -111,6 +113,20 @@ angular.module('carpooling', [
             'tab-offro': {
                 templateUrl: 'templates/offro.html',
                 controller: 'OffroCtrl'
+            }
+        }
+    })
+
+    .state('app.viaggio', {
+        url: '/viaggio',
+        cache: false,
+        params: {
+            'trip': {}
+        },
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/viaggio.html',
+                controller: 'ViaggioCtrl'
             }
         }
     })
@@ -185,6 +201,17 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.cercaviaggi', {
+        url: '/cercaviaggi',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/cercaviaggi.html',
+                controller: 'CercaViaggiCtrl'
+            }
+        }
+    })
+
     .state('app.cerca', {
         url: '/cerca',
         cache: false,
@@ -243,7 +270,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-userinfo': {
-                templateUrl: 'templates/userinfo.html'
+                templateUrl: 'templates/userinfo.html',
+                controller: 'UserInfoCtrl'
             }
         }
     })
@@ -284,7 +312,9 @@ angular.module('carpooling', [
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
         msg_talk: 'dice',
+        lbl_trips_found: 'Viaggi trovati',
         lbl_mytrip: 'Mio viaggio',
+        lbl_trip: 'Viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
@@ -316,6 +346,9 @@ angular.module('carpooling', [
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         lbl_start_time: 'Orario di partenza',
+        lbl_user_car_owner: 'Automunito',
+        lbl_user_car_info: 'Note auto',
+        lbl_user_car_seats: 'Posti disponibili',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrence: 'Imposta ricorrenza',

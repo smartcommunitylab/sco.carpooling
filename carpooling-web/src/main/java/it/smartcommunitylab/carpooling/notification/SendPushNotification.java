@@ -98,7 +98,7 @@ class SendServerRequest {
 				connection.setDoInput(true);
 				connection.setDoOutput(true);
 
-				// additional headers(if any).			
+				// additional headers(if any).
 				if (headers != null && !headers.isEmpty()) {
 					for (String header : headers.keySet()) {
 						connection.setRequestProperty(header, headers.get(header));
@@ -122,7 +122,7 @@ class SendServerRequest {
 				connection.setDoInput(true);
 				connection.setDoOutput(true);
 
-				// additional headers(if any).			
+				// additional headers(if any).
 				if (headers != null && !headers.isEmpty()) {
 					for (String header : headers.keySet()) {
 						connection.setRequestProperty(header, headers.get(header));

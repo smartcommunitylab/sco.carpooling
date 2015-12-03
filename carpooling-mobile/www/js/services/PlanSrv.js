@@ -216,7 +216,7 @@ angular.module('carpooling.services.plan', [])
 
     planService.saveTrip = function (tripId, trip, name, requestedFrom, requestedTo) {
         var deferred = $q.defer();
-        if (!!!tripId) {
+        if (!tripId) {
             tripId = new Date().getTime();
         }
         var tripToSave = {
@@ -238,7 +238,7 @@ angular.module('carpooling.services.plan', [])
             }
         };
         var savedTrips = JSON.parse(localStorage.getItem(Config.getAppId() + "_savedTrips"));
-        if (!!!savedTrips) {
+        if (!savedTrips) {
             savedTrips = {};
         }
         savedTrips[tripId] = tripToSave;

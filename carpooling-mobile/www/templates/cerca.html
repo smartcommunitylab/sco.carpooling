@@ -34,14 +34,14 @@
             </div>
 
             <div class="list">
-                <ion-toggle ng-model="allSearchNotifications" toggle-class="">
+                <ion-toggle ng-model="allSearchNotifications.checked" ng-change="allSearchNotifications()" toggle-class="">
                     {{'lbl_allsearchnotifications' | translate}}
                 </ion-toggle>
             </div>
 
             <div class="row">
                 <div class="col text-center">
-                    <button class="button button-carpooling">
+                    <button class="button button-carpooling" ng-click="searchTravel()">
                         {{'lbl_cerca' | translate}}
                     </button>
                 </div>

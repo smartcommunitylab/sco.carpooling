@@ -1,14 +1,10 @@
-<ion-view title="{{'app_name' | translate}}">
-    <ion-nav-buttons side="right">
-        <a href="#/app/notifiche" class="button button-icon ion-android-notifications"></a>
-        <a href="#/app/cerca" class="button button-icon ion-android-search padding-left"></a>
-    </ion-nav-buttons>
+<ion-view title="{{'lbl_trips_found' | translate}}">
 
     <ion-content>
-        <div ng-if="passengerTrips.length==0"></div>
-        <div class="list" ng-if="passengerTrips.length>0">
-            <div class="card card-trip" ng-repeat="trip in passengerTrips">
-                <div class="item row">
+        <div ng-if="passengerTripsFound.length==0"></div>
+        <div class="list" ng-if="passengerTripsFound.length>0">
+            <div class="card card-trip" ng-repeat="trip in passengerTripsFound">
+                <div class="item row" ng-click="selectTrip($index)">
                     <div class="col-75 trip-data">
                         <ul>
                             <li>
@@ -37,12 +33,5 @@
                 </div>
             </div>
         </div>
-
-        <!--
-        <div class="padding">
-            <button class="button" ng-click="getTravelProfile()">getTravelProfile</button>
-            <p>{{travelProfile}}</p>
-        </div>
-        -->
     </ion-content>
 </ion-view>

@@ -254,12 +254,13 @@ placeautocomplete ul {
 
 /* USERINFO  */
 
-#usrinf1 {
-    font-size: 3em;
-    left: 50;
+.user-profile .user-data {
+    text-align: center;
+    border-bottom: 1px solid #A0A0A0;
 }
 
-#usrinf2 {
-    font-size: 5em;
-    left: 50;
+.user-profile .user-image i {
+    font-size: 10em;
 }
+
+.user-profile .user-options {}

@@ -249,8 +249,13 @@ public class ServiceController {
 
 		return response;
 	}
+<<<<<<< HEAD
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/user/{userId}")
+=======
+
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/user")
+>>>>>>> origin/master
 	public @ResponseBody
 	Response<User> readUser(@PathVariable String userId) {
 
