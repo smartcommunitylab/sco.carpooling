@@ -17,7 +17,20 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, $rootScope, $q, LoginSrv, UserSrv) {
+.run(function ($ionicPlatform, $rootScope, $q, LoginSrv, UserSrv, Config) {
+    $rootScope.pushRegistration = function(userId){
+    	console.log('logged user id ' + userId);
+        try{
+        	window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
+        	var channel = 'CarPooling_' + userId;
+        	window.parsepushnotification.subscribeToChannel(channel);//parameter: channel
+        	console.log('successfully created channel ' + channel);
+
+        } catch (ex){
+        	console.log('exception ' + ex.message);
+        }
+    };
+
     $rootScope.userIsLogged = function () {
         var userexists = localStorage.user != null;
         return (localStorage.userId != null && localStorage.userId != 'null' && localStorage.user != null);
@@ -41,6 +54,7 @@ angular.module('carpooling', [
         LoginSrv.login().then(
             function (data) {
                 UserSrv.getUser(data.userId);
+                $rootScope.pushRegistration(data.userId);
             },
             function (error) {
                 // TODO: handle login error
@@ -76,6 +90,8 @@ angular.module('carpooling', [
         if (!$rootScope.userIsLogged()) {
             //LoginSrv.login();
             $rootScope.login();
+        } else {
+            $rootScope.pushRegistration($rootScope.getUserId());
         }
     });
 })
