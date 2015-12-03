@@ -73,7 +73,12 @@ angular.module('carpooling', [
     });
 })
 
+.config(function($httpProvider) {
+  $httpProvider.defaults.withCredentials = true;
+})
+
 .config(function ($stateProvider, $urlRouterProvider) {
+
     $stateProvider.state('app', {
         url: '/app',
         abstract: true,
