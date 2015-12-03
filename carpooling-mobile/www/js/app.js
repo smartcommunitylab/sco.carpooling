@@ -114,6 +114,20 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.viaggio', {
+        url: '/viaggio',
+        cache: false,
+        params: {
+            'trip': {}
+        },
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/viaggio.html',
+                controller: 'ViaggioCtrl'
+            }
+        }
+    })
+
     .state('app.mioviaggio', {
         url: '/mioviaggio',
         cache: false,
@@ -297,6 +311,7 @@ angular.module('carpooling', [
         msg_talk: 'dice',
         lbl_trips_found: 'Viaggi trovati',
         lbl_mytrip: 'Mio viaggio',
+        lbl_trip: 'Viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
