@@ -856,10 +856,26 @@ angular.module('carpooling.controllers', [])
 
 .controller('UserInfoCtrl', function ($scope, $rootScope) {
     $scope.user = $rootScope.getUser();
-    $scope.hasAuto = false;
-
-    // TODO: user info!
-    $scope.hasAutoChanged = function () {
-        console.log('hasAutoChanged: ' + $scope.hasAuto);
+    $scope.form = {
+        hasAuto: !!$scope.user.auto
     };
+
+    $scope.$watch('form.hasAuto', function (newValue, oldValue) {
+        console.log('has auto: ' + $scope.form.hasAuto);
+
+        if (newValue === oldValue) {
+            return;
+        }
+
+        if (newValue) {
+            // true
+            $scope.user.auto = {
+                posts: 4,
+                description: 'Car description'
+            };
+        } else {
+            // false
+            $scope.user.auto = null;
+        }
+    });
 });
