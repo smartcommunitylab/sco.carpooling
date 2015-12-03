@@ -22,6 +22,7 @@ import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.Message;
+import it.smartcommunitylab.carpooling.model.Notification;
 import it.smartcommunitylab.carpooling.model.Response;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
@@ -265,6 +266,30 @@ public class ServiceController {
 			return new Response<User>(HttpStatus.NO_CONTENT.value(), "user not found");
 		}
 
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/notifications/{start}/{count}")
+	public @ResponseBody
+	Response<List<Notification>> readNotifications(@PathVariable int start, @PathVariable int count) {
+		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), start, count));
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/api/mark/read/notification/{notificationId}")
+	public @ResponseBody
+	Response<String> markNotificaton(@PathVariable String notificatonId) {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.markNotification(notificatonId);
+
+		if (errorMap.isEmpty()) {
+			response.setData("notification marked.");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
 	}
 	
 	@ExceptionHandler(Exception.class)

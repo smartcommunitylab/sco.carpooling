@@ -23,12 +23,14 @@ import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.GameProfile;
 import it.smartcommunitylab.carpooling.model.Message;
+import it.smartcommunitylab.carpooling.model.Notification;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.DiscussionRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.NotificationRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
@@ -40,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +55,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CarPoolingManager {
-	
+
 	@Autowired
 	private TravelRequestRepository travelRequestRepository;
 	@Autowired
@@ -63,6 +68,8 @@ public class CarPoolingManager {
 	private DiscussionRepository discussionRepository;
 	@Autowired
 	private MobilityPlanner mobilityPlanner;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
 	public List<TravelRequest> getTravelRequest(String userId) {
 		return travelRequestRepository.findByUserId(userId);
@@ -115,7 +122,6 @@ public class CarPoolingManager {
 			}
 			travelRepository.save(travel);
 		}
-		
 
 		return travel;
 	}
@@ -152,7 +158,7 @@ public class CarPoolingManager {
 		//travelRepository.findOne(travelId);
 
 		boolean accepted = false;
-		
+
 		if (travel != null) {
 			for (Booking book : travel.getBookings()) {
 				if (book.equals(booking)) {
@@ -162,10 +168,10 @@ public class CarPoolingManager {
 			}
 
 			if (accepted) {
-				travelRepository.save(travel);	
-			}			
+				travelRepository.save(travel);
+			}
 		}
-		
+
 		return travel;
 	}
 
@@ -248,7 +254,7 @@ public class CarPoolingManager {
 
 		double totalPRater = 0;
 		double totalPRating = 0;
-		
+
 		for (String key : gameProfile.getPassengerRatings().keySet()) {
 
 			totalPRating = totalPRating + gameProfile.getPassengerRatings().get(key);
@@ -312,7 +318,7 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
-	
+
 	public Map<String, String> updateAutoInfo(String userId, Auto auto) {
 
 		Map<String, String> errorMap = new HashMap<String, String>();
@@ -389,5 +395,41 @@ public class CarPoolingManager {
 		User user = userRepository.findOne(userId);
 		return user;
 	}
+
+	/**
+	 * read notifications.
+	 * @param userId
+	 * @param start
+	 * @param count
+	 * @return
+	 */
+	public List<Notification> readNotifications(String userId, int start, int count) {
+
+		Page<Notification> notifications = notificationRepository.findByTargetUserId(userId, new PageRequest(start,
+				count, Direction.DESC, "timestamp"));
+
+		return notifications.getContent();
+
+	}
+
+	public Map<String, String> markNotification(String id) {
+
+		Map<String, String> errorMap = new HashMap<String, String>();
+
+		Notification notification = notificationRepository.findOne(id);
+
+		if (notification != null) {
+			notification.setStatus(true);
+			notificationRepository.save(notification);
+		} else {
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NO_CONTENT.value()));
+			errorMap.put(CarPoolingUtils.ERROR_MSG, "notification does not exist.");
+
+		}
+
+		return errorMap;
+	}
+	
+	
 
 }

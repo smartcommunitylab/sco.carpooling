@@ -42,19 +42,27 @@ public class Notification {
 	private boolean status;
 	/** travelId.**/
 	private String travelId;
+	/** timestamp.(server side time of creation) **/
+	private long timestamp;
 
 	public Notification() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Notification(String targetUserId, String type, Map<String, String> data, boolean status, String travelId) {
+	public Notification(String targetUserId, String type, Map<String, String> data, boolean status, String travelId,
+			long timestamp) {
 		super();
 		this.targetUserId = targetUserId;
 		this.type = type;
 		this.data = data;
 		this.status = status;
 		this.travelId = travelId;
+		this.timestamp = timestamp;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String getTargetUserId() {
@@ -95,6 +103,14 @@ public class Notification {
 
 	public void setTravelId(String travelId) {
 		this.travelId = travelId;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 }
