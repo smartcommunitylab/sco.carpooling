@@ -4,7 +4,7 @@
         <div ng-if="passengerTripsFound.length==0"></div>
         <div class="list" ng-if="passengerTripsFound.length>0">
             <div class="card card-trip" ng-repeat="trip in passengerTripsFound">
-                <div class="item row">
+                <div class="item row" ng-click="selectTrip($index)">
                     <div class="col-75 trip-data">
                         <ul>
                             <li>

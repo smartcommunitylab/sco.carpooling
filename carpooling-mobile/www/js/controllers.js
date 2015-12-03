@@ -654,14 +654,52 @@ angular.module('carpooling.controllers', [])
             function (error) {
                 // TODO
                 console.log(error);
+                $state.go('app.cercaviaggi'); // DA TOGLIERE!!!
             });
     };
 })
 
-.controller('CercaViaggiCtrl', function ($scope, PassengerSrv) {
-    $scope.passengerTripsFound = PassengerSrv.getSearchResults();
+.controller('CercaViaggiCtrl', function ($scope, PassengerSrv, $state) {
+    //$scope.passengerTripsFound = PassengerSrv.getSearchResults();
+    $scope.passengerTripsFound = [ // DA TOGLIERE!!!
+        {
+            "from": {
+                "name": "Via Fiume",
+                "address": "Via Fiume",
+                "latitude": 46.065487,
+                "longitude": 11.131346,
+                "range": 1,
+                "coordinates": [
+      46.065487,
+      11.131346
+    ]
+            },
+            "to": {
+                "name": "Muse",
+                "address": "Muse",
+                "latitude": 46.063266,
+                "longitude": 11.113062,
+                "range": 1,
+                "coordinates": [
+      46.063266,
+      11.113062
+    ]
+            },
+            "when": 1443425400000,
+            "monitored": true
+}
+    ];
     console.log($scope.passengerTripsFound);
+    $scope.selectTrip = function (index) {
+        $state.go('app.viaggio', {
+            'trip': $scope.passengerTripsFound[index]
+        });
+    };
+})
 
+.controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams) {
+
+    console.log($stateParams.trip);
 })
 
 .controller('NotificationCtrl', function ($scope, $filter, $state) {
