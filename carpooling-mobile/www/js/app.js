@@ -17,14 +17,40 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, LoginSrv, $rootScope, $q) {
-    $rootScope.userIsLogged = (localStorage.userId != null && localStorage.userId != 'null');
+.run(function ($ionicPlatform, $rootScope, $q, LoginSrv, UserSrv) {
+    $rootScope.userIsLogged = function () {
+        var userexists = localStorage.user != null;
+        return (localStorage.userId != null && localStorage.userId != 'null' && localStorage.user != null);
+    };
 
     $rootScope.getUserId = function () {
-        if ($rootScope.userIsLogged) {
+        if ($rootScope.userIsLogged()) {
             return localStorage.userId;
         }
         return null;
+    };
+
+    $rootScope.login = function () {
+        LoginSrv.login().then(
+            function (data) {
+                UserSrv.getUser(data.userId);
+            },
+            function (error) {
+                // TODO: handle login error
+                //localStorage.user = null;
+            }
+        );
+    }
+
+    $rootScope.logout = function () {
+        LoginSrv.logout().then(
+            function (data) {
+                localStorage.user = null;
+            },
+            function (error) {
+                // TODO: handle logout error
+            }
+        );
     };
 
     $ionicPlatform.ready(function () {
@@ -40,40 +66,11 @@ angular.module('carpooling', [
             StatusBar.styleDefault();
         }
 
-        if (!LoginSrv.getUserId()) {
-            // FIXME: toggle the lines below for browser devel
-            LoginSrv.login();
-            //localStorage.userId = '14';
+        if (!$rootScope.userIsLogged()) {
+            //LoginSrv.login();
+            $rootScope.login();
         }
     });
-
-    $rootScope.login = function () {
-        var deferred = $q.defer();
-        LoginSrv.login().then(
-            function (data) {
-                deferred.resolve(data);
-            },
-            function (error) {
-                deferred.reject(error);
-            }
-        );
-
-        return deferred.promise;
-    }
-
-    $rootScope.logout = function () {
-        var deferred = $q.defer();
-        LoginSrv.logout().then(
-            function (data) {
-                deferred.resolve(data);
-            },
-            function (error) {
-                deferred.reject(error);
-            }
-        );
-
-        return deferred.promise;
-    };
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
