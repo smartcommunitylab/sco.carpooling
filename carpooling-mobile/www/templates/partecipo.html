@@ -4,9 +4,11 @@
         <a href="#/app/cerca" class="button button-icon ion-android-search padding-left"></a>
     </ion-nav-buttons>
 
-    <ion-content>
-        <div ng-if="passengerTrips.length==0"></div>
-        <div class="list" ng-if="passengerTrips.length>0">
+    <ion-content class="padding">
+        <div ng-if="!passengerTrips || passengerTrips.length == 0">
+            <h4>{{'lbl_no_results' | translate}}</h4>
+        </div>
+        <div class="list" ng-if="passengerTrips.length > 0">
             <div class="card card-trip" ng-repeat="trip in passengerTrips">
                 <div class="item row">
                     <div class="col-75 trip-data">

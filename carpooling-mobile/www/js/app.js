@@ -210,6 +210,9 @@ angular.module('carpooling', [
     .state('app.cercaviaggi', {
         url: '/cercaviaggi',
         cache: false,
+        params: {
+            'searchResults': {}
+        },
         views: {
             'menuContent': {
                 templateUrl: 'templates/cercaviaggi.html',
@@ -318,6 +321,7 @@ angular.module('carpooling', [
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
         msg_talk: 'dice',
+        lbl_no_results: 'Nessun risultato.',
         lbl_trips_found: 'Viaggi trovati',
         lbl_mytrip: 'Mio viaggio',
         lbl_trip: 'Viaggio',

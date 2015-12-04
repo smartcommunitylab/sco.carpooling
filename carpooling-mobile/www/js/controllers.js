@@ -8,8 +8,10 @@ angular.module('carpooling.controllers', [])
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'hh:mm';
+
     /*Just for example*/
-    /*$scope.passengerTrips = [
+    /*
+    $scope.passengerTrips = [
         {
             "from": {
                 "name": "Via Fiume",
@@ -18,9 +20,9 @@ angular.module('carpooling.controllers', [])
                 "longitude": 11.131346,
                 "range": 1,
                 "coordinates": [
-      46.065487,
-      11.131346
-    ]
+                    46.065487,
+                    11.131346
+                ]
             },
             "to": {
                 "name": "Muse",
@@ -29,30 +31,32 @@ angular.module('carpooling.controllers', [])
                 "longitude": 11.113062,
                 "range": 1,
                 "coordinates": [
-      46.063266,
-      11.113062
-    ]
+                    46.063266,
+                    11.113062
+                ]
             },
             "when": 1443425400000,
             "monitored": true
-}
-    ];*/
+        }
+    ];
+    */
 
     $scope.getTravelProfile = function () {
         UserSrv.getTravelProfile().then(function (data) {
             $scope.travelProfile = data;
         });
-    }
+    };
 
     $scope.passengerTrips = [];
 
     PassengerSrv.getPassengerTrips().then(
-        function (data) {
-            $scope.passengerTrips = data;
+        function (trips) {
+            $scope.passengerTrips = trips;
         },
         function (error) {
             // TODO: handle error
-        });
+        }
+    );
 })
 
 .controller('OffroCtrl', function ($scope, DriverSrv) {
@@ -62,12 +66,13 @@ angular.module('carpooling.controllers', [])
     $scope.driverTrips = [];
 
     DriverSrv.getDriverTrips().then(
-        function (data) {
-            $scope.driverTrips = data;
+        function (trips) {
+            $scope.driverTrips = trips;
         },
         function (error) {
             // TODO: handle error
-        });
+        }
+    );
 })
 
 // NOTE OffriCtrl
@@ -647,21 +652,23 @@ angular.module('carpooling.controllers', [])
         console.log(travelRequest);
 
         PassengerSrv.searchTrip(travelRequest).then(
-            function (data) {
+            function (searchResults) {
                 console.log('Done trip search');
-                $state.go('app.cercaviaggi');
+                $state.go('app.cercaviaggi', {'searchResults': searchResults});
             },
             function (error) {
-                // TODO
+                // TODO: handle search error
                 console.log(error);
-                $state.go('app.cercaviaggi'); // DA TOGLIERE!!!
-            });
+            }
+        );
     };
 })
 
-.controller('CercaViaggiCtrl', function ($scope, PassengerSrv, $state) {
-    //$scope.passengerTripsFound = PassengerSrv.getSearchResults();
-    $scope.passengerTripsFound = [ // DA TOGLIERE!!!
+.controller('CercaViaggiCtrl', function ($scope, $state, $stateParams, PassengerSrv) {
+    $scope.passengerTripsFound = $stateParams['searchResults'];
+
+    // FIXME: temporary mock results TO BE REMOVED
+    $scope.passengerTripsFound = [
         {
             "from": {
                 "name": "Via Fiume",
@@ -670,9 +677,9 @@ angular.module('carpooling.controllers', [])
                 "longitude": 11.131346,
                 "range": 1,
                 "coordinates": [
-      46.065487,
-      11.131346
-    ]
+                    46.065487,
+                    11.131346
+                ]
             },
             "to": {
                 "name": "Muse",
@@ -681,15 +688,17 @@ angular.module('carpooling.controllers', [])
                 "longitude": 11.113062,
                 "range": 1,
                 "coordinates": [
-      46.063266,
-      11.113062
-    ]
+                    46.063266,
+                    11.113062
+                ]
             },
             "when": 1443425400000,
             "monitored": true
-}
+        }
     ];
+
     console.log($scope.passengerTripsFound);
+
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
             'trip': $scope.passengerTripsFound[index]
@@ -698,8 +707,8 @@ angular.module('carpooling.controllers', [])
 })
 
 .controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams) {
-
-    console.log($stateParams.trip);
+    // TODO: build UI and fill it here
+    console.log($stateParams['trip']);
 })
 
 .controller('NotificationCtrl', function ($scope, $filter, $state) {
@@ -858,7 +867,7 @@ angular.module('carpooling.controllers', [])
     $scope.user = angular.copy(StorageSrv.getUser());
 
     // FIXME: temporary control, waiting for the deploy
-    var hasAuto = function(auto) {
+    var hasAuto = function (auto) {
         // return !!$scope.user.auto
         if (!!auto && !!auto.description && auto.posts !== 0) {
             return true;
