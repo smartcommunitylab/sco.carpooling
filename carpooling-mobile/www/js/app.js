@@ -12,42 +12,23 @@ angular.module('carpooling', [
     'carpooling.services.map',
     'carpooling.services.plan',
     'carpooling.services.geo',
+    'carpooling.services.storage',
     'carpooling.directives',
     'carpooling.controllers',
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, $rootScope, $q, LoginSrv, UserSrv, Config) {
-    $rootScope.pushRegistration = function(userId){
-    	console.log('logged user id ' + userId);
-        try{
-        	window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
-        	var channel = 'CarPooling_' + userId;
-        	window.parsepushnotification.subscribeToChannel(channel);//parameter: channel
-        	console.log('successfully created channel ' + channel);
-
-        } catch (ex){
-        	console.log('exception ' + ex.message);
+.run(function ($ionicPlatform, $rootScope, $q, StorageSrv, LoginSrv, UserSrv, Config) {
+    $rootScope.pushRegistration = function (userId) {
+        //console.log('logged user id ' + userId);
+        try {
+            window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
+            var channel = 'CarPooling_' + userId;
+            window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
+            //console.log('successfully created channel ' + channel);
+        } catch (ex) {
+            //console.log('exception ' + ex.message);
         }
-    };
-
-    $rootScope.userIsLogged = function () {
-        var userexists = localStorage.user != null;
-        return (localStorage.userId != null && localStorage.userId != 'null' && localStorage.user != null);
-    };
-
-    $rootScope.getUserId = function () {
-        if ($rootScope.userIsLogged()) {
-            return localStorage.userId;
-        }
-        return null;
-    };
-
-    $rootScope.getUser = function () {
-        if ($rootScope.userIsLogged()) {
-            return JSON.parse(localStorage.user);
-        }
-        return null;
     };
 
     $rootScope.login = function () {
@@ -66,7 +47,7 @@ angular.module('carpooling', [
     $rootScope.logout = function () {
         LoginSrv.logout().then(
             function (data) {
-                localStorage.user = null;
+                StorageSrv.saveUser(null);
             },
             function (error) {
                 // TODO: handle logout error
@@ -87,11 +68,11 @@ angular.module('carpooling', [
             StatusBar.styleDefault();
         }
 
-        if (!$rootScope.userIsLogged()) {
+        if (!LoginSrv.userIsLogged()) {
             //LoginSrv.login();
             $rootScope.login();
         } else {
-            $rootScope.pushRegistration($rootScope.getUserId());
+            $rootScope.pushRegistration(StorageSrv.getUserId());
         }
     });
 })

@@ -1,7 +1,11 @@
 angular.module('carpooling.services.login', [])
 
-.factory('LoginSrv', function ($rootScope, $q, $http, $window, Config) {
+.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, Config) {
     var loginService = {};
+
+    loginService.userIsLogged = function () {
+        return (StorageSrv.getUserId() != null && StorageSrv.getUser() != null);
+    };
 
     loginService.login = function () {
         var deferred = $q.defer();
@@ -60,13 +64,15 @@ angular.module('carpooling.services.login', [])
         authapi.authorize().then(
             function (data) {
                 //console.log('success: ' + data.userId);
-                localStorage.userId = data.userId;
-                deferred.resolve(data);
+                StorageSrv.saveUserId(data.userId).then(function () {
+                    deferred.resolve(data);
+                });
             },
             function (reason) {
                 //reset data
-                localStorage.userId = null;
-                deferred.reject(reason);
+                StorageSrv.saveUserId(null).then(function () {
+                    deferred.reject(reason);
+                });
             }
         );
 
@@ -84,8 +90,9 @@ angular.module('carpooling.services.login', [])
         })
 
         .success(function (data, status, headers, config) {
-            localStorage.userId = null;
-            deferred.resolve(data);
+            StorageSrv.saveUserId(null).then(function () {
+                deferred.resolve(data);
+            });
         })
 
         .error(function (data, status, headers, config) {
@@ -93,11 +100,6 @@ angular.module('carpooling.services.login', [])
         });
 
         return deferred.promise;
-    };
-
-    loginService.getUserId = function () {
-        // return userId
-        return localStorage.userId;
     };
 
     return loginService;

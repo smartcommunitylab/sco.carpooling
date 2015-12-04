@@ -854,14 +854,54 @@ angular.module('carpooling.controllers', [])
     };
 })
 
-.controller('UserInfoCtrl', function ($scope, $rootScope) {
-    $scope.user = $rootScope.getUser();
-    $scope.form = {
-        hasAuto: !!$scope.user.auto
+.controller('UserInfoCtrl', function ($scope, $rootScope, StorageSrv, UserSrv) {
+    $scope.user = angular.copy(StorageSrv.getUser());
+
+    // FIXME: temporary control, waiting for the deploy
+    var hasAuto = function(auto) {
+        // return !!$scope.user.auto
+        if (!!auto && !!auto.description && auto.posts !== 0) {
+            return true;
+        }
+        return false;
     };
 
-    $scope.$watch('form.hasAuto', function (newValue, oldValue) {
-        console.log('has auto: ' + $scope.form.hasAuto);
+    $scope.editMode = false;
+    $scope.edit = {
+        hasAuto: hasAuto($scope.user.auto),
+        postsAvailable: [1, 2, 3, 4, 5, 6, 7]
+    };
+
+    $scope.toggleEditMode = function () {
+        $scope.editMode = !$scope.editMode;
+    };
+
+    $scope.cancelChanges = function () {
+        $scope.toggleEditMode();
+        $scope.user = angular.copy(StorageSrv.getUser());
+        $scope.edit.hasAuto = hasAuto($scope.user.auto);
+    };
+
+    $scope.saveProfile = function () {
+        console.log(JSON.stringify($scope.user.auto));
+        UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
+            function (data) {
+                $scope.toggleEditMode();
+                UserSrv.getUser($scope.user.userId).then(
+                    function () {
+                        $scope.user = angular.copy(StorageSrv.getUser());
+                        $scope.edit.hasAuto = hasAuto($scope.user.auto);
+                    }
+                );
+            },
+            function (error) {
+                // TODO: handle saveAuto error
+            }
+        );
+    };
+
+    $scope.$watch('edit.hasAuto', function (newValue, oldValue) {
+        console.log('has auto: ' + $scope.edit.hasAuto);
 
         if (newValue === oldValue) {
             return;
@@ -871,7 +911,7 @@ angular.module('carpooling.controllers', [])
             // true
             $scope.user.auto = {
                 posts: 4,
-                description: 'Car description'
+                description: '...'
             };
         } else {
             // false

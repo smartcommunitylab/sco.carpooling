@@ -1,6 +1,7 @@
 <ion-view title="{{'menu_profile' | translate}}">
     <ion-nav-buttons side="right">
-        <a href="#" class="button button-icon ion-edit"></a>
+        <a ng-if="editMode" class="button button-icon ion-close-round" ng-click="cancelChanges()"></a>
+        <a class="button button-icon" ng-class="{'ion-edit': !editMode, 'ion-checkmark-round': editMode}" ng-click="editMode ? saveProfile() : toggleEditMode()"></a>
     </ion-nav-buttons>
     <ion-content class="padding user-profile">
         <div class="user-data">
@@ -11,18 +12,18 @@
         </div>
 
         <div class="list user-options">
-            <ion-toggle ng-model="form.hasAuto">{{'lbl_user_car_owner' | translate}}</ion-toggle>
+            <ion-toggle ng-model="edit.hasAuto" ng-disabled="!editMode">{{'lbl_user_car_owner' | translate}}</ion-toggle>
 
             <label class="item item-input">
                 <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
-                <input type="text" ng-model="user.auto.description">
+                <input type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode">
             </label>
 
             <label class="item item-input item-select">
                 <div class="input-label">
                     {{'lbl_user_car_seats' | translate}}
                 </div>
-                <select ng-model="user.auto.posts" ng-options="seats.indexOf(seat) as seat for seat in seats"></select>
+                <select ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!editMode || !user.auto"></select>
             </label>
         </div>
     </ion-content>

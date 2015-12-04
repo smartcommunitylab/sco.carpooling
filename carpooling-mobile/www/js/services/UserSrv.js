@@ -1,6 +1,6 @@
 angular.module('carpooling.services.user', [])
 
-.factory('UserSrv', function ($http, $q, Config) {
+.factory('UserSrv', function ($http, $q, Config, StorageSrv) {
     var user = null;
 
     var userService = {};
@@ -15,8 +15,11 @@ angular.module('carpooling.services.user', [])
             if (data[0] == '<') {
                 deferred.reject();
             } else {
-                localStorage.user = JSON.stringify(data.data);
-                deferred.resolve(data);
+                StorageSrv.saveUser(data.data).then(
+                    function (data) {
+                        deferred.resolve(data);
+                    }
+                );
             }
         })
 
@@ -70,7 +73,7 @@ angular.module('carpooling.services.user', [])
     userService.saveAuto = function (auto) {
         var deferred = $q.defer();
 
-        $http.post(Config.getServerURL() + '/api/save/autoInfo/' + auto, Config.getHTTPConfig())
+        $http.post(Config.getServerURL() + '/api/save/autoInfo', auto, Config.getHTTPConfig())
 
         .success(function (data) {
             deferred.resolve(data);
