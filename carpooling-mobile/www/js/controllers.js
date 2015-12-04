@@ -76,7 +76,7 @@ angular.module('carpooling.controllers', [])
 })
 
 // NOTE OffriCtrl
-.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv) {
+.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
     $scope.locations = {
         'from': {
             'name': '',
@@ -160,7 +160,7 @@ angular.module('carpooling.controllers', [])
                 // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
-                    title: 'TITOLO',
+                    title: $filter('translate')('modal_map_confirm'),
                     template: '',
                     buttons: [
                         {
@@ -406,6 +406,8 @@ angular.module('carpooling.controllers', [])
 
     $scope.offer = function () {
         // TODO: create Travel object and send it using DriverSrv
+        var posts = StorageSrv.getUser().auto.posts;
+        console.log('posts: ' + posts);
     };
 })
 
@@ -493,7 +495,7 @@ angular.module('carpooling.controllers', [])
                 // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
-                    title: 'TITOLO',
+                    title: $filter('translate')('modal_map_confirm'),
                     template: '',
                     buttons: [
                         {
@@ -892,7 +894,6 @@ angular.module('carpooling.controllers', [])
     };
 
     $scope.saveProfile = function () {
-        console.log(JSON.stringify($scope.user.auto));
         UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
             function (data) {
                 $scope.toggleEditMode();
@@ -910,8 +911,6 @@ angular.module('carpooling.controllers', [])
     };
 
     $scope.$watch('edit.hasAuto', function (newValue, oldValue) {
-        console.log('has auto: ' + $scope.edit.hasAuto);
-
         if (newValue === oldValue) {
             return;
         }

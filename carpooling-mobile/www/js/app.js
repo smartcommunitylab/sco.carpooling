@@ -320,6 +320,8 @@ angular.module('carpooling', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        modal_map: 'Scegli da mappa',
+        modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
         lbl_no_results: 'Nessun risultato.',
         lbl_trips_found: 'Viaggi trovati',
