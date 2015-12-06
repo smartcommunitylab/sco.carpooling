@@ -28,5 +28,7 @@ public interface TravelRequestRepository extends MongoRepository<TravelRequest, 
 	List<TravelRequest> findByUserId(String userId);
 	@Query("{'userId':?0, 'monitored': true}")
 	List<TravelRequest> findMonitoredTravelRequest(String userId);
+	@Query("{'id':?0, 'userId':?1}")
+	TravelRequest findTravelRequestIdAndUserId(String id, String userId);
 
 }

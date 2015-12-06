@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.carpooling.test.managers;
 
+import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
@@ -181,7 +182,7 @@ public class TestManager {
 	}
 
 	@Test
-	public void testRecurrentTravelBooking() throws JsonProcessingException, IOException, ParseException {
+	public void testRecurrentTravelBooking() throws JsonProcessingException, IOException, ParseException, CarPoolingCustomException {
 
 		/**
 		 * travel with 4 places, has two recurrent bookings. (since one is rejected, see recurrentTravel.json)

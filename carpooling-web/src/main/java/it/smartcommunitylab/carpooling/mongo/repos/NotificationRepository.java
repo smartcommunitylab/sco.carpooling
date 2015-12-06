@@ -22,5 +22,8 @@ public interface NotificationRepository extends PagingAndSortingRepository<Notif
 	
 	@Query("{'targetUserId':?0}")
 	List<Notification> findAllNotifications(String targetUserId);
+	
+	@Query("{'id':?0, 'targetUserId':?1}")
+	Notification findByIdAndTargetUserId(String id, String targetUserId);
 
 }

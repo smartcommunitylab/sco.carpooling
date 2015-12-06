@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.carpooling.test.managers;
 
+import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
@@ -78,7 +79,7 @@ public class TestUser {
 		InputStream userJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("users.json");
 		InputStream communityJson = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("community.json");
-		
+
 		try {
 			JsonNode travelRootNode = mapper.readTree(travelJson);
 			ArrayNode travelArrayNode = (ArrayNode) travelRootNode;
@@ -117,7 +118,7 @@ public class TestUser {
 	}
 
 	@Test
-	public void testUserTransitionReccToRecc() {
+	public void testUserTransitionReccToRecc() throws CarPoolingCustomException {
 		/**
 		 * User("52") with Recc Booking exist.
 		 * User try to make another Recc booking.
@@ -173,11 +174,15 @@ public class TestUser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // booking avaialble for this date.
+		catch (CarPoolingCustomException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
 	@Test
-	public void testUserTransitionNonReccToRecc() {
+	public void testUserTransitionNonReccToRecc() throws CarPoolingCustomException {
 		/**
 		 * User("53") with non-recc booking exist.
 		 * User try to make recc booking.
@@ -256,9 +261,13 @@ public class TestUser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // available date.
+		catch (CarPoolingCustomException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
-	
+
 	@Test
 	public void testSelfRatingForbidden() {
 		/**
@@ -273,9 +282,9 @@ public class TestUser {
 		Assert.assertEquals(driver.getGameProfile().getDriverRating(), 5, 5);
 		travelManager.rateDriver("54", "54", 5);
 		Assert.assertEquals(driver.getGameProfile().getDriverRating(), 5, 5);
-		
+
 	}
-	
+
 	@Test
 	public void testRatingDriver() {
 		/**
@@ -293,9 +302,9 @@ public class TestUser {
 		Assert.assertEquals(passenger.getGameProfile().getDriverRating(), 5, 5);
 		travelManager.ratePassenger("52", "52", 10);
 		Assert.assertEquals(passenger.getGameProfile().getDriverRating(), 5, 5);
-		
+
 	}
-	
+
 	@Test
 	public void testRatingPassenger() {
 		/**
@@ -317,11 +326,11 @@ public class TestUser {
 		travelManager.ratePassenger("54", "52", 0);
 		Assert.assertEquals(passenger1.getGameProfile().getDriverRating(), 2.5, 2.5);
 		Assert.assertEquals(passenger2.getGameProfile().getDriverRating(), 2.5, 2.5);
-		
+
 	}
-	
+
 	@Test
-	public void testSaveReadProfile() throws JsonProcessingException, IOException {
+	public void testSaveReadProfile() throws JsonProcessingException, IOException, CarPoolingCustomException {
 		/**
 		 * user("52") read profile, empty.
 		 * user("52") save a travel profile and read it back.
@@ -337,13 +346,13 @@ public class TestUser {
 		Assert.assertTrue(travelProfile.getRoutes().isEmpty());
 
 		travelManager.saveTravelProfile(refTravelProfile, "52");
-		
+
 		travelProfile = travelManager.readTravelProfile("52");
 
 		Assert.assertFalse(travelProfile.getRoutes().isEmpty());
 
 	}
-	
+
 	@Test
 	public void readCommunities() {
 		/**
@@ -354,10 +363,10 @@ public class TestUser {
 		Assert.assertEquals(travelManager.readCommunities("53").size(), 2);
 		Assert.assertEquals(travelManager.readCommunities("54").size(), 2);
 		Assert.assertEquals(travelManager.readCommunities("70").size(), 2);
-		
+
 		Assert.assertEquals(travelManager.readCommunities("60").size(), 1);
 		Assert.assertEquals(travelManager.readCommunities("65").size(), 1);
-		
+
 	}
 
 }

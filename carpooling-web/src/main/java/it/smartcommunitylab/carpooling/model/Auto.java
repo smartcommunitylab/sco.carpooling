@@ -18,8 +18,8 @@ package it.smartcommunitylab.carpooling.model;
 
 public class Auto {
 
-	private int posts;
-	private String description;
+	private int posts = -1;
+	private String description = "";
 
 	public Auto() {
 	}

@@ -56,6 +56,7 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 
 	@Override
 	public List<String> getCommunityIdsForUser(String userId) {
+	
 		List<String> communityIds = new ArrayList<String>();
 		Criteria criteria = new Criteria().where("users").in(userId);
 		Query query = new Query();

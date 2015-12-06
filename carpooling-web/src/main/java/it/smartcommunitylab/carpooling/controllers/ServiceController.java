@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.carpooling.controllers;
 
+import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Auto;
 import it.smartcommunitylab.carpooling.model.Booking;
@@ -32,12 +33,12 @@ import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.UserCommunitiesSetup;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,44 +70,73 @@ public class ServiceController {
 	@PostConstruct
 	private void init() {
 		for (Community community : userCommunitiesSetup.getUserCommunities()) {
-//			Community existing = communityRepository.findByIdAndName(community.getId(), community.getName());
-//			if (existing == null) {
-				communityRepository.save(community);
-//			}
+			//Community existing = communityRepository.findByIdAndName(community.getId(), community.getName());
+			//if (existing == null) {
+			communityRepository.save(community);
+			//}
 		}
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
 	public @ResponseBody
-	Response<List<Travel>> readPassengerTrips() {
-		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId()));
+	Response<List<Travel>> readPassengerTrips() throws CarPoolingCustomException {
+
+		List<Travel> passengerTrips = carPoolingManager.getPassengerTrips(getUserId());
+
+		if (passengerTrips != null && !passengerTrips.isEmpty()) {
+			return new Response<List<Travel>>(passengerTrips);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "passenger travel not found");
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/monitored")
 	public @ResponseBody
-	Response<List<TravelRequest>> readPassengerMonitoredRequests() {
-		return new Response<List<TravelRequest>>(carPoolingManager.getMonitoredTravelRequest(getUserId()));
+	Response<List<TravelRequest>> readPassengerMonitoredRequests() throws CarPoolingCustomException {
+
+		List<TravelRequest> travelRequests = carPoolingManager.getMonitoredTravelRequest(getUserId());
+
+		if (travelRequests != null && !travelRequests.isEmpty()) {
+			return new Response<List<TravelRequest>>(travelRequests);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "passenger monitored travel request not found");
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")
 	public @ResponseBody
-	Response<List<Travel>> readDriverTrips() {
-		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId()));
+	Response<List<Travel>> readDriverTrips() throws CarPoolingCustomException {
+
+		List<Travel> driverTravels = carPoolingManager.getDriverTrips(getUserId());
+
+		if (driverTravels != null && !driverTravels.isEmpty()) {
+			return new Response<List<Travel>>(driverTravels);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "driver travels not found");
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips")
 	public @ResponseBody
-	Response<List<Travel>> searchTrips(@RequestBody TravelRequest travelRequest, HttpServletRequest req) {
-		List<Travel> foundTravels = new ArrayList<Travel>();
-		foundTravels = carPoolingManager.searchTravels(travelRequest, getUserId());
+	Response<List<Travel>> searchTrips(@RequestBody TravelRequest travelRequest) throws CarPoolingCustomException {
 
-		return new Response<List<Travel>>(foundTravels);
+		List<Travel> foundTravels = carPoolingManager.searchTravels(travelRequest, getUserId());
+
+		if (foundTravels != null && !foundTravels.isEmpty()) {
+			return new Response<List<Travel>>(foundTravels);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel not found");
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips")
 	public @ResponseBody
-	Response<Travel> createTrips(@RequestBody Travel travel, HttpServletRequest req) {
+	Response<Travel> createTrips(@RequestBody Travel travel) throws CarPoolingCustomException {
+
 		Travel savedTravel = carPoolingManager.saveTravel(travel, getUserId());
 
 		return new Response<Travel>(savedTravel);
@@ -114,7 +144,9 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
 	public @ResponseBody
-	Response<Travel> bookTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
+	Response<Travel> bookTrip(@PathVariable String tripId, @RequestBody Booking booking)
+			throws CarPoolingCustomException {
+
 		Travel travel = carPoolingManager.bookTrip(tripId, booking, getUserId());
 
 		return new Response<Travel>(travel);
@@ -122,15 +154,18 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips/{tripId}/accept")
 	public @ResponseBody
-	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking, HttpServletRequest req) {
+	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking)
+			throws CarPoolingCustomException {
+
 		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());
 
 		return new Response<Travel>(travel);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/api/message/{travelId}/send")
 	public @ResponseBody
-	Response<String> sendMsg(@PathVariable String travelId, @RequestBody Message message) {
+	Response<String> sendMsg(@PathVariable String travelId, @RequestBody Message message)
+			throws CarPoolingCustomException {
 
 		Response<String> response = new Response<String>();
 
@@ -139,45 +174,47 @@ public class ServiceController {
 		if (errorMap.isEmpty()) {
 			response.setData("message sent successfully.");
 		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
-			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
-			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
 		}
 
 		return response;
 
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/{travelId}/{targetUserId}/discussion")
 	public @ResponseBody
-	Response<Discussion> readThread(@PathVariable String travelId, @PathVariable String targetUserId) {
+	Response<Discussion> readThread(@PathVariable String travelId, @PathVariable String targetUserId)
+			throws CarPoolingCustomException {
 
 		Discussion discussion = carPoolingManager.readDiscussion(getUserId(), travelId, targetUserId);
 
 		if (discussion != null) {
 			return new Response<Discussion>(discussion);
 		} else {
-			return new Response<Discussion>(HttpStatus.NO_CONTENT.value(), "discussion not found");
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "discussion not found");
 		}
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/profile")
 	public @ResponseBody
-	Response<TravelProfile> readProfile() {
+	Response<TravelProfile> readProfile() throws CarPoolingCustomException {
 
 		TravelProfile travelProfile = carPoolingManager.readTravelProfile(getUserId());
 
 		if (travelProfile != null) {
 			return new Response<TravelProfile>(travelProfile);
 		} else {
-			return new Response<TravelProfile>(HttpStatus.NO_CONTENT.value(), "travel profile is not found");
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel profile is null");
 		}
 
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/rate/driver/{driverId}/{rating}")
 	public @ResponseBody
-	Response<String> rateDriver(@PathVariable String driverId, @PathVariable int rating) {
+	Response<String> rateDriver(@PathVariable String driverId, @PathVariable int rating)
+			throws CarPoolingCustomException {
 
 		Response<String> response = new Response<String>();
 
@@ -186,8 +223,8 @@ public class ServiceController {
 		if (errorMap.isEmpty()) {
 			response.setData("rating done successfully");
 		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
-			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
-			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
 		}
 
 		return response;
@@ -195,7 +232,8 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/rate/passenger/{passengerId}/{rating}")
 	public @ResponseBody
-	Response<String> ratePassenger(@PathVariable String passengerId, @PathVariable int rating) {
+	Response<String> ratePassenger(@PathVariable String passengerId, @PathVariable int rating)
+			throws CarPoolingCustomException {
 
 		Response<String> response = new Response<String>();
 
@@ -204,38 +242,44 @@ public class ServiceController {
 		if (errorMap.isEmpty()) {
 			response.setData("rating done successfully.");
 		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
-			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
-			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
 		}
 
 		return response;
 	}
 
-
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/profile")
 	public @ResponseBody
-	Response<TravelProfile> saveProfile(@RequestBody TravelProfile profile) {
+	Response<TravelProfile> saveProfile(@RequestBody TravelProfile profile) throws CarPoolingCustomException {
 
 		TravelProfile travelProfile = carPoolingManager.saveTravelProfile(profile, getUserId());
 
 		if (travelProfile != null) {
 			return new Response<TravelProfile>(travelProfile);
 		} else {
-			return new Response<TravelProfile>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel profile is not saved");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel profile not saved.");
 		}
 
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities")
 	public @ResponseBody
-	Response<List<Community>> readCommunities() {
-		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
+	Response<List<Community>> readCommunities() throws CarPoolingCustomException {
+		
+		List<Community> userCommunities = carPoolingManager.readCommunities(getUserId());
+		
+		if (userCommunities != null && !userCommunities.isEmpty()) {
+			return new Response<List<Community>>(userCommunities);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user communities not found.");
+		}
 
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo")
 	public @ResponseBody
-	Response<String> updateAutoInfo(@RequestBody Auto auto) {
+	Response<String> updateAutoInfo(@RequestBody Auto auto) throws CarPoolingCustomException {
 
 		Response<String> response = new Response<String>();
 
@@ -243,9 +287,13 @@ public class ServiceController {
 
 		if (errorMap.isEmpty()) {
 			response.setData("auto information saved successfully");
+
 		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
-			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
-			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			//response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			//response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
+
 		}
 
 		return response;
@@ -253,7 +301,7 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/user/{userId}")
 	public @ResponseBody
-	Response<User> readUser(@PathVariable String userId) {
+	Response<User> readUser(@PathVariable String userId) throws CarPoolingCustomException {
 
 		// perhaps we can add some security here
 		// for e.g. (check if logged in user and passed in user matches, send all)
@@ -263,39 +311,88 @@ public class ServiceController {
 		if (user != null) {
 			return new Response<User>(user);
 		} else {
-			return new Response<User>(HttpStatus.NO_CONTENT.value(), "user not found");
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user not found");
 		}
 
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/notifications/{start}/{count}")
 	public @ResponseBody
-	Response<List<Notification>> readNotifications(@PathVariable int start, @PathVariable int count) {
-		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), start, count));
+	Response<List<Notification>> readNotifications(@PathVariable int start, @PathVariable int count)
+			throws CarPoolingCustomException {
+
+		List<Notification> notifications = carPoolingManager.readNotifications(getUserId(), start, count);
+
+		if (notifications != null && !notifications.isEmpty()) {
+			return new Response<List<Notification>>(notifications);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user notifications not found");
+		}
+
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/mark/read/notification/{notificationId}")
 	public @ResponseBody
-	Response<String> markNotificaton(@PathVariable String notificatonId) {
+	Response<String> markNotificaton(@PathVariable String notificationId) throws CarPoolingCustomException {
 
 		Response<String> response = new Response<String>();
 
-		Map<String, String> errorMap = carPoolingManager.markNotification(notificatonId);
+		Map<String, String> errorMap = carPoolingManager.markNotification(notificationId);
 
 		if (errorMap.isEmpty()) {
 			response.setData("notification marked.");
 		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
-			response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
-			response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
 		}
 
 		return response;
 	}
-	
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/api/delete/notification/{notificationId}")
+	public @ResponseBody
+	Response<String> deleteNotification(@PathVariable String notificationId) throws CarPoolingCustomException {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.deleteNotification(notificationId);
+
+		if (errorMap.isEmpty()) {
+			response.setData("notification deleted successfully");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/api/delete/tripRequest/{travelRequestId}")
+	public @ResponseBody
+	Response<String> deleteTravelRequest(@PathVariable String travelRequestId) throws CarPoolingCustomException {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.deleteTravelRequest(travelRequestId, getUserId());
+
+		if (errorMap.isEmpty()) {
+			response.setData("travelRequest deleted successfully");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+	}
+
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody
-	Response<Void> handleExceptions(Exception exception) {
-		return new Response<Void>(500, exception.getMessage());
+	Response<Void> handleExceptions(Exception exception, HttpServletResponse response) {
+		Response<Void> res = exception instanceof CarPoolingCustomException ? ((CarPoolingCustomException) exception)
+				.getBody() : new Response<Void>(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, exception.getMessage());
+		response.setStatus(res.getErrorCode());
+		return res;
 	}
 
 	private String getUserId() {
