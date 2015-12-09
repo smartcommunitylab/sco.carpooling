@@ -29,6 +29,7 @@ import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.User;
+import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.DiscussionRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.NotificationRepository;
@@ -121,9 +122,40 @@ public class CarPoolingManager {
 		List<Itinerary> itns = mobilityPlanner.plan(travel);
 
 		if (!itns.isEmpty()) {
+			
+			String fromName = "";
+			String toName = "";
+			String fromAddr = "";
+			String toAddr = "";
+			
 			travel.setUserId(userId);
 			travel.setRoute(itns.get(0));
 			travel.setActive(true);
+			
+			if (travel.getFrom().getName() != null && !travel.getFrom().getName().isEmpty()) {
+				fromName = travel.getFrom().getName(); 
+			}
+					
+			if (travel.getFrom().getAddress() != null && !travel.getFrom().getAddress().isEmpty()) {
+				fromAddr = travel.getFrom().getAddress();
+			}
+					
+			if (travel.getTo().getName() != null && !travel.getTo().getName().isEmpty()) {
+				toName = travel.getTo().getName();
+			}
+			
+			if (travel.getTo().getAddress() != null && !travel.getTo().getAddress().isEmpty()) {
+				toAddr = travel.getTo().getAddress();
+			}
+			// from.
+			Zone updateFrom = new Zone(fromName, fromAddr, travel.getFrom().getLatitude(), travel.getFrom().getLongitude(), travel
+					.getFrom().getRange());
+			travel.setFrom(updateFrom);
+			// to
+			Zone updateTo = new Zone(toName, toAddr, travel.getTo().getLatitude(), travel.getTo().getLongitude(), travel
+					.getTo().getRange());
+			travel.setTo(updateTo);
+			
 			for (Community community : communityRepository.findByUserId(userId)) {
 				if (!travel.getCommunityIds().contains(community.getId())) {
 					travel.getCommunityIds().add(community.getId());
