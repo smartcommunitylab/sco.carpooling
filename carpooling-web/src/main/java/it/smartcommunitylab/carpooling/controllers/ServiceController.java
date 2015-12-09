@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,85 +80,45 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
 	public @ResponseBody
 	Response<List<Travel>> readPassengerTrips() throws CarPoolingCustomException {
-
-		List<Travel> passengerTrips = carPoolingManager.getPassengerTrips(getUserId());
-
-		if (passengerTrips != null && !passengerTrips.isEmpty()) {
-			return new Response<List<Travel>>(passengerTrips);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "passenger travel not found");
-		}
+		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/monitored")
 	public @ResponseBody
 	Response<List<TravelRequest>> readPassengerMonitoredRequests() throws CarPoolingCustomException {
-
-		List<TravelRequest> travelRequests = carPoolingManager.getMonitoredTravelRequest(getUserId());
-
-		if (travelRequests != null && !travelRequests.isEmpty()) {
-			return new Response<List<TravelRequest>>(travelRequests);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "passenger monitored travel request not found");
-		}
-
+		return new Response<List<TravelRequest>>(carPoolingManager.getMonitoredTravelRequest(getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")
 	public @ResponseBody
 	Response<List<Travel>> readDriverTrips() throws CarPoolingCustomException {
-
-		List<Travel> driverTravels = carPoolingManager.getDriverTrips(getUserId());
-
-		if (driverTravels != null && !driverTravels.isEmpty()) {
-			return new Response<List<Travel>>(driverTravels);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "driver travels not found");
-		}
-
+		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips")
 	public @ResponseBody
 	Response<List<Travel>> searchTrips(@RequestBody TravelRequest travelRequest) throws CarPoolingCustomException {
-
-		List<Travel> foundTravels = carPoolingManager.searchTravels(travelRequest, getUserId());
-
-		if (foundTravels != null && !foundTravels.isEmpty()) {
-			return new Response<List<Travel>>(foundTravels);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel not found");
-		}
-
+		return new Response<List<Travel>>(carPoolingManager.searchTravels(travelRequest, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips")
 	public @ResponseBody
 	Response<Travel> createTrips(@RequestBody Travel travel) throws CarPoolingCustomException {
-
-		Travel savedTravel = carPoolingManager.saveTravel(travel, getUserId());
-
-		return new Response<Travel>(savedTravel);
+		return new Response<Travel>(carPoolingManager.saveTravel(travel, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
 	public @ResponseBody
 	Response<Travel> bookTrip(@PathVariable String tripId, @RequestBody Booking booking)
 			throws CarPoolingCustomException {
-
-		Travel travel = carPoolingManager.bookTrip(tripId, booking, getUserId());
-
-		return new Response<Travel>(travel);
+		return new Response<Travel>(carPoolingManager.bookTrip(tripId, booking, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips/{tripId}/accept")
 	public @ResponseBody
 	Response<Travel> acceptTrip(@PathVariable String tripId, @RequestBody Booking booking)
 			throws CarPoolingCustomException {
-
-		Travel travel = carPoolingManager.acceptTrip(tripId, booking, getUserId());
-
-		return new Response<Travel>(travel);
+		return new Response<Travel>(carPoolingManager.acceptTrip(tripId, booking, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/message/{travelId}/send")
@@ -192,7 +151,7 @@ public class ServiceController {
 		if (discussion != null) {
 			return new Response<Discussion>(discussion);
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "discussion not found");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "discussion not found");
 		}
 
 	}
@@ -206,7 +165,7 @@ public class ServiceController {
 		if (travelProfile != null) {
 			return new Response<TravelProfile>(travelProfile);
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel profile is null");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel profile is null");
 		}
 
 	}
@@ -266,15 +225,7 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities")
 	public @ResponseBody
 	Response<List<Community>> readCommunities() throws CarPoolingCustomException {
-		
-		List<Community> userCommunities = carPoolingManager.readCommunities(getUserId());
-		
-		if (userCommunities != null && !userCommunities.isEmpty()) {
-			return new Response<List<Community>>(userCommunities);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user communities not found.");
-		}
-
+		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo")
@@ -311,7 +262,7 @@ public class ServiceController {
 		if (user != null) {
 			return new Response<User>(user);
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user not found");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "user not found");
 		}
 
 	}
@@ -320,15 +271,7 @@ public class ServiceController {
 	public @ResponseBody
 	Response<List<Notification>> readNotifications(@PathVariable int start, @PathVariable int count)
 			throws CarPoolingCustomException {
-
-		List<Notification> notifications = carPoolingManager.readNotifications(getUserId(), start, count);
-
-		if (notifications != null && !notifications.isEmpty()) {
-			return new Response<List<Notification>>(notifications);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user notifications not found");
-		}
-
+		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), start, count));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/mark/read/notification/{notificationId}")
