@@ -49,8 +49,8 @@
         <div class="padding-left passenger">
             <p>{{'lbl_passenger' | translate | uppercase}}</p>
             <ul class="custom-icons">
-                <li class="icons ion-ios-person"  ng-repeat="i in getNumber(passengerNum) track by $index"></li>
-             <li id="places_left"><div><span>+{{selectedTrip.places}}</span>
+                <li class="icons ion-ios-person"  ng-repeat="i in getNumber(passengerCount) track by $index"></li>
+             <li id="places_left"><div><span>+{{freeSpaces}}</span>
                         <p>{{'lbl_spaces_left' | translate | uppercase}}</p>
         </div>
         </li>

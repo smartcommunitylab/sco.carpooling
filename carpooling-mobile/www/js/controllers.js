@@ -740,10 +740,18 @@ angular.module('carpooling.controllers', [])
                     11.113062
                 ]
             },
+            "bookings": [
+                {
+                    accepted: 1
+                },
+                {
+                    accepted: -1
+                }
+            ],
             "userId": 73,
             "places": 4,
             "when": 1443425400000,
-            "monitored": true
+            "monitored": false
         }
     ];
 
@@ -761,7 +769,15 @@ angular.module('carpooling.controllers', [])
     $scope.selectedTrip = $stateParams['trip'];
     console.log($scope.selectedTrip);
     $scope.driverInfo = {};
-    $scope.passengerNum = 4; //FIXME JUST FOR TEST (correct value is 0)
+    $scope.passengerCount = 0;
+    $scope.freeSpaces = angular.copy($scope.selectedTrip.places);
+    $scope.selectedTrip.bookings.forEach(function (booking) {
+        //TODO: availability logic
+        if (booking.accepted >= 0) {
+            $scope.passengerCount++;
+            $scope.freeSpaces--;
+        }
+    });
     $scope.getNumber = function (num) {
         return new Array(num);
     }
