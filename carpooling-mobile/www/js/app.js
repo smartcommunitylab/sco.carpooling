@@ -48,6 +48,7 @@ angular.module('carpooling', [
         LoginSrv.logout().then(
             function (data) {
                 StorageSrv.saveUser(null);
+                ionic.Platform.exitApp();
             },
             function (error) {
                 // TODO: handle logout error
@@ -320,6 +321,7 @@ angular.module('carpooling', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        menu_logout: 'Logout',
         modal_map: 'Scegli da mappa',
         modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
@@ -363,7 +365,7 @@ angular.module('carpooling', [
         lbl_user_car_seats: 'Posti disponibili',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
-        title_setrecurrence: 'Imposta ricorrenza',
+        title_setrecurrency: 'Imposta ricorrenza',
         radio_daily: 'Giornaliera',
         radio_weekly: 'Settimanale',
         radio_monthly: 'Mensile',
