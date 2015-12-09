@@ -23,7 +23,7 @@ import it.smartcommunitylab.carpooling.model.TravelRequest;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-public interface TravelRequestRepository extends MongoRepository<TravelRequest, String> {
+public interface TravelRequestRepository extends MongoRepository<TravelRequest, String>, TravelRequestRepositoryCustom {
 	@Query("{'userId':?0}")
 	List<TravelRequest> findByUserId(String userId);
 	@Query("{'userId':?0, 'monitored': true}")

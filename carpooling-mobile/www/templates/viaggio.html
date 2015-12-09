@@ -1,4 +1,68 @@
 <ion-view title="{{'lbl_trip'| translate}}">
     <ion-content>
+        <div>MAPPA</div>
+        <div class="button-bar">
+            <a class="button">
+                <i class="icons ion-ios-person"></i>
+                <span>{{driverInfo.name + " " + driverInfo.surname}}</span>
+            </a>
+            <a class="button">
+                <i class="icons ion-ios-people"></i>
+                <span>Nome Community</span>
+            </a>
+        </div>
+        <div class="padding trip-info">
+            <ul>
+                <p>
+                    <li>
+                        <span>{{ selectedTrip.when | date: travelDateFormat }}</span>
+                    </li>
+                </p>
+                <p>
+                    <li>
+                        {{'lbl_from' | translate | uppercase}}: <span>{{selectedTrip.from.name}}</span>
+                    </li>
+                    <li>
+                        {{'lbl_to' | translate | uppercase}}: <span>{{selectedTrip.to.name}}</span>
+                    </li>
+                </p>
+                <p>
+                    <li>
+                        {{'lbl_start_time' | translate}}: <span> <!--TO DO: insert correct time-->{{000000000000 | date: travelTimeFormat}}</span>
+                    </li>
+                    <li>
+                        {{'lbl_end_time' | translate}}: <span> <!--TO DO: insert correct time--> {{000000000000 | date: travelTimeFormat}}</span>
+                    </li>
+                </p>
+                <p>
+                    <li>
+                        {{'lbl_halfwaystops' | translate}}: <span> <!--TO DO: insert correct data-->su richiesta
+                    </li>
+                </p>
+                <p>
+                    <li><!--TO DO: insert correct time-->
+                        {{'lbl_recurrency' | translate}}: <span> ogni mercoledì
+                    </li>
+                </p>
+            </ul>
+        </div>
+        <div class="padding-left passenger">
+            <p>{{'lbl_passenger' | translate | uppercase}}</p>
+            <ul class="custom-icons">
+                <li class="icons ion-ios-person"  ng-repeat="i in getNumber(passengerNum) track by $index"></li>
+             <li id="places_left"><div><span>+{{selectedTrip.places}}</span>
+                        <p>{{'lbl_spaces_left' | translate | uppercase}}</p>
+        </div>
+        </li>
+        </ul>
+        </div>
+        <div class="trip-actions">
+            <button class="button">
+                {{'lbl_driver_contact' | translate | uppercase}}
+            </button>
+            <button class="button">
+                {{'lbl_ask_trip' | translate | uppercase}}
+            </button>
+        </div>
     </ion-content>
 </ion-view>
