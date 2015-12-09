@@ -1,0 +1,30 @@
+[{
+	"id": "560263eed1f1f802c2a83ijk",
+	"from": {
+		"name": "Povo",
+		"address": "Povo",
+		"latitude": 46.072536560771496,
+		"longitude": 11.151847913861275,
+		"range": 1,
+		"coordinates": [46.072536560771496,
+		11.151847913861275]
+	},
+	"to": {
+		"name": "Cavalese",
+		"address": "Cavalese",
+		"latitude": 46.28677256825742,
+		"longitude": 11.488571763038635,
+		"range": 1,
+		"coordinates": [46.28677256825742,
+		11.488571763038635]
+	},
+	"when": 1443088800000,
+	"route": {},
+	"userId": "52",
+	"places": 1,
+	"intermediateStops": false,
+	"bookings": [],
+	"active": true,
+	"communityIds": ["cPCommunity1",
+	"cPCommunity2"]
+}]

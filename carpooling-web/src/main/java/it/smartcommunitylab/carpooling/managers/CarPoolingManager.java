@@ -35,13 +35,16 @@ import it.smartcommunitylab.carpooling.mongo.repos.NotificationRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
+import it.smartcommunitylab.carpooling.notification.SendPushNotification;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,6 +74,8 @@ public class CarPoolingManager {
 	private MobilityPlanner mobilityPlanner;
 	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
+	private SendPushNotification sendPushNotification;
 
 	public List<TravelRequest> getTravelRequest(String userId) {
 		return travelRequestRepository.findByUserId(userId);
@@ -102,6 +107,8 @@ public class CarPoolingManager {
 		searchTravels = travelRepository.searchTravels(commIdsForUser, travelRequest);
 
 		if (travelRequest.isMonitored()) {
+			// make sure if its the logged in user.
+			travelRequest.setUserId(userId);
 			travelRequestRepository.save(travelRequest);
 		}
 
@@ -123,6 +130,27 @@ public class CarPoolingManager {
 				}
 			}
 			travelRepository.save(travel);
+
+			// loop on all trip request and check if this new travel matches any of those.
+			for (TravelRequest travelRequest : travelRequestRepository.findAllMatchTravelRequest(travel)) {
+				String travelRequestId = travelRequest.getId();
+				String targetUserId = travelRequest.getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("travelRequestId", travelRequestId);
+				Notification tripAvailability = new Notification(targetUserId,
+						CarPoolingUtils.NOTIFICATION_AVALIABILITY, data, false, travel.getId(),
+						System.currentTimeMillis());
+				notificationRepository.save(tripAvailability);
+				// notify via parse.
+				try {
+					sendPushNotification.sendNotification("parse.api.uri", targetUserId, "alert",
+							"Hi, a new travel offer is available matching your travel request Id " + travelRequestId);
+				} catch (MalformedURLException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			}
 		} else {
 			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel itinerary not found");
 		}
