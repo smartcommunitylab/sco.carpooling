@@ -29,12 +29,12 @@
             </div>
             <h4>{{'lbl_cerca' | translate}}</h4>
             <div class="list">
-                <ion-radio ng-model="myCommunity" ng-value="false">{{'lbl_mycommunity' | translate}}</ion-radio>
-                <ion-radio ng-model="allCommunity" ng-value="true">{{'lbl_allcommunity' | translate}}</ion-radio>
+                <ion-radio ng-model="communities.useMyCommunities" ng-value="true" ng-disabled="!communities.enabled">{{'lbl_mycommunity' | translate}}</ion-radio>
+                <ion-radio ng-model="communities.useMyCommunities" ng-value="false" ng-disabled="!communities.enabled">{{'lbl_allcommunity' | translate}}</ion-radio>
             </div>
 
             <div class="list">
-                <ion-toggle ng-model="allSearchNotifications.checked" ng-change="allSearchNotifications()" toggle-class="">
+                <ion-toggle ng-model="monitoring.enabled">
                     {{'lbl_allsearchnotifications' | translate}}
                 </ion-toggle>
             </div>

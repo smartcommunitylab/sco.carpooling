@@ -453,6 +453,18 @@ angular.module('carpooling.controllers', [])
 
 // NOTE: CercaViaggioCtrl
 .controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
+    // TODO: move travelRequest default here; modify that object
+    $scope.travelRequest = {};
+
+    $scope.communities = {
+        enabled: false,
+        useMyCommunities: false
+    };
+
+    $scope.monitoring = {
+        enabled: false
+    };
+
     $scope.dateTimestamp = null;
     $scope.hourTimestamp = null;
 
@@ -605,11 +617,6 @@ angular.module('carpooling.controllers', [])
     };
 
     /*
-     * Halfway stops stuff
-     */
-    $scope.hasHalfwayStops = false;
-
-    /*
      * Recurrence popup stuff
      */
     $scope.hideModalMap = function () {
@@ -668,13 +675,9 @@ angular.module('carpooling.controllers', [])
         },
     };
 
-    $scope.allSearchNotifications = function () {
-        console.log('Push Notification Change', $scope.allSearchNotifications.checked);
-    };
-
     /* Search Trip */
     $scope.searchTravel = function () {
-        var travelRequest = {
+        var travelReq = {
             'from': {
                 'name': $scope.locations['from'].name,
                 'address': $scope.locations['from'].name,
@@ -688,12 +691,12 @@ angular.module('carpooling.controllers', [])
                 'longitude': parseFloat($scope.locations['to'].latlng.split(',')[1])
             },
             'when': ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
-            'monitored': ($scope.allSearchNotifications.checked)
+            'monitored': ($scope.monitoring.enabled)
         };
 
-        console.log(travelRequest);
+        console.log(travelReq);
 
-        PassengerSrv.searchTrip(travelRequest).then(
+        PassengerSrv.searchTrip(travelReq).then(
             function (searchResults) {
                 console.log('Done trip search');
                 $state.go('app.cercaviaggi', {
