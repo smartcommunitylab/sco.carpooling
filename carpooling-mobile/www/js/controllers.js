@@ -656,11 +656,14 @@ angular.module('carpooling.controllers', [])
         PassengerSrv.searchTrip(travelRequest).then(
             function (searchResults) {
                 console.log('Done trip search');
-                $state.go('app.cercaviaggi', {'searchResults': searchResults});
+                $state.go('app.cercaviaggi', {
+                    'searchResults': searchResults
+                });
             },
             function (error) {
                 // TODO: handle search error
                 console.log(error);
+                $state.go('app.cercaviaggi'); //FIXME: temporary TO BE REMOVED
             }
         );
     };
@@ -694,6 +697,8 @@ angular.module('carpooling.controllers', [])
                     11.113062
                 ]
             },
+            "userId": 73,
+            "places": 4,
             "when": 1443425400000,
             "monitored": true
         }
@@ -708,9 +713,31 @@ angular.module('carpooling.controllers', [])
     };
 })
 
-.controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams) {
+.controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams, UserSrv) {
     // TODO: build UI and fill it here
-    console.log($stateParams['trip']);
+    $scope.selectedTrip = $stateParams['trip'];
+    console.log($scope.selectedTrip);
+    $scope.driverInfo = {};
+    $scope.passengerNum = 4; //FIXME JUST FOR TEST (correct value is 0)
+    $scope.getNumber = function (num) {
+        return new Array(num);
+    }
+    UserSrv.getUser($scope.selectedTrip.userId).then(
+        function (userInfo) {
+            console.log('User found');
+            $scope.driverInfo = userInfo;
+            if (!!userInfo.auto) {
+                $scope.passengerNum = userInfo.auto.posts - $scope.selectedTrip.places;
+                console.log($scope.passengerNum);
+            }
+            console.log($scope.driverInfo);
+        },
+        function (error) {
+            // TODO: handle search error
+            console.log(error);
+        }
+    );
+
 })
 
 .controller('NotificationCtrl', function ($scope, $filter, $state) {
