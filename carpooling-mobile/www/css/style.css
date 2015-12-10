@@ -213,6 +213,9 @@ placeautocomplete ul {
 .card.card-trip {
     position: relative;
 }
+.card.card-trip:first-child {
+    margin-top: 10px;
+}
 .card.card-trip .row {
     padding-top: 0;
     padding-bottom: 0;
