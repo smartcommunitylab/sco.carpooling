@@ -1,7 +1,8 @@
 <ion-view title="{{'lbl_trips_found' | translate}}">
-
-    <ion-content>
-        <div ng-if="passengerTripsFound.length == 0"></div>
+    <ion-content class="padding">
+        <div ng-if="!passengerTripsFound || passengerTripsFound.length == 0">
+            <h4>{{'lbl_no_results' | translate}}</h4>
+        </div>
         <div class="list" ng-if="passengerTripsFound.length > 0">
             <div class="card card-trip" ng-repeat="trip in passengerTripsFound" ng-click="selectTrip($index)">
                 <div class="item row">

@@ -114,12 +114,15 @@ angular.module('carpooling.controllers.cercaviaggi', [])
                     ]
                 };
 
-                var fillConfirmPopupOptions = function (placeName, coordinates) {
-                    confirmPopupOptions.template = placeName;
+                var fillConfirmPopupOptions = function (name, coordinates) {
+                    confirmPopupOptions.template = name;
                     confirmPopupOptions.buttons[1].onTap = function () {
                         if (!!selectedField) {
-                            $scope.travelRequest[selectedField].name = placeName;
-                            $scope.travelRequest[selectedField].coordinates = coordinates;
+                            $scope.travelRequest[selectedField].name = name;
+                            $scope.travelRequest[selectedField].address = name;
+                            var splittedCoords = coordinates.split(',');
+                            $scope.travelRequest[selectedField].latitude = parseFloat(splittedCoords[0]);
+                            $scope.travelRequest[selectedField].longitude = parseFloat(splittedCoords[1]);
                         }
                         $scope.hideModalMap();
                     };
