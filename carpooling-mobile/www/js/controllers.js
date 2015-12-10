@@ -249,8 +249,10 @@ angular.module('carpooling.controllers', [])
 
     /* Date Picker */
     $scope.dateMask = 'dd MMMM yyyy';
-    var yesterday = new Date();
-    yesterday.setMilliseconds(yesterday.getMilliseconds() - (1000 * 60 * 60 * 24));
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var yesterday = angular.copy(today);
+    yesterday.setHours(-24);
 
     $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
@@ -265,25 +267,30 @@ angular.module('carpooling.controllers', [])
         modalHeaderColor: '',
         modalFooterColor: '',
         from: yesterday,
-        to: new Date(2019, 12, 31),
-        inputDate: new Date(),
+        to: new Date(2019, 12, 31, 23, 59, 59),
+        inputDate: today,
         weekDaysList: Config.getDoWList(),
         monthList: Config.getMonthList(),
         mondayFirst: true,
         disableDates: null,
         callback: function (val) { // Mandatory
             if (typeof (val) === 'undefined') {
-                console.log('No date selected');
+                console.error('[datepicker] Date not selected');
             } else {
-                console.log('Selected date is : ', val);
+                /*console.log('Selected date is : ', val);
+                console.log('Selected time is : ', $scope.timepickerObj.inputEpochTime);
+                var total = angular.copy(val);
+                total.setSeconds(total.getSeconds() + $scope.timepickerObj.inputEpochTime);
+                console.log('Total date/time: ' + total);*/
                 $scope.datepickerObj.inputDate = val;
             }
         },
     };
 
     /* Time Picker */
+    var now = new Date();
     $scope.timepickerObj = {
-        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
+        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
         step: 1,
         format: 24,
         titleLabel: $filter('translate')('popup_timepicker_title'),
@@ -293,10 +300,13 @@ angular.module('carpooling.controllers', [])
         closeButtonType: '',
         callback: function (val) { //Mandatory
             if (typeof (val) === 'undefined') {
-                console.log('Time not selected');
+                console.error('[timepicker] Time not selected');
             } else {
-                var selectedTime = new Date(val * 1000);
-                console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+                /*console.log('Selected date is : ', $scope.datepickerObj.inputDate);
+                console.log('Selected time is : ', val);
+                var total = angular.copy($scope.datepickerObj.inputDate);
+                total.setSeconds(total.getSeconds() + val);
+                console.log('Total date/time: ' + total);*/
                 $scope.timepickerObj.inputEpochTime = val;
             }
         }
@@ -429,25 +439,28 @@ angular.module('carpooling.controllers', [])
 
         if (!!auto && auto.posts > 0) {
             $scope.travel['places'] = auto.posts;
-            $scope.travel['when'] = ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime());
+            var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
+            selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
+            $scope.travel['when'] = selectedDateTime.getTime();
 
             if ($scope.recurrency.isRecurrent) {
                 $scope.travel['recurrency'] = {
-                    time: (new Date($scope.timepickerObj.inputEpochTime)).getHours(),
+                    time: selectedDateTime.getHours(),
                     days: $scope.recurrency.recurrencyDoW
                 }
             }
-        }
 
-        DriverSrv.createTrip($scope.travel).then(
-            function (savedTravel) {
-                console.log(savedTravel);
-            },
-            function (error) {
-                // TODO: handle travel creation error
-                console.log(error);
-            }
-        );
+            DriverSrv.createTrip($scope.travel).then(
+                function (savedTravel) {
+                    // TODO: handle travel creation success
+                    console.log(savedTravel);
+                },
+                function (error) {
+                    // TODO: handle travel creation error
+                    console.log(error);
+                }
+            );
+        }
     };
 })
 
@@ -623,29 +636,13 @@ angular.module('carpooling.controllers', [])
         $scope.modalMap.hide();
     };
 
-    /* Time Picker */
-    $scope.timepickerObj = {
-        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
-        step: 1,
-        format: 24,
-        titleLabel: $filter('translate')('popup_timepicker_title'),
-        setLabel: $filter('translate')('ok'),
-        closeLabel: $filter('translate')('cancel'),
-        setButtonType: 'button-carpooling',
-        closeButtonType: '',
-        callback: function (val) { //Mandatory
-            if (typeof (val) === 'undefined') {
-                console.log('Time not selected');
-            } else {
-                var selectedTime = new Date(val * 1000);
-                console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
-                $scope.timepickerObj.inputEpochTime = val;
-            }
-        }
-    };
-
     /* Date Picker */
     $scope.dateMask = 'dd MMMM yyyy';
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var yesterday = angular.copy(today);
+    yesterday.setHours(-24);
+
     $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
         todayLabel: $filter('translate')('popup_datepicker_today'),
@@ -658,9 +655,9 @@ angular.module('carpooling.controllers', [])
         templateType: 'popup',
         modalHeaderColor: '',
         modalFooterColor: '',
-        from: new Date(),
-        to: new Date(2019, 12, 31),
-        inputDate: new Date(),
+        from: yesterday,
+        to: new Date(2019, 12, 31, 23, 59, 59),
+        inputDate: today,
         weekDaysList: Config.getDoWList(),
         monthList: Config.getMonthList(),
         mondayFirst: true,
@@ -675,8 +672,31 @@ angular.module('carpooling.controllers', [])
         },
     };
 
+    /* Time Picker */
+    var now = new Date();
+    $scope.timepickerObj = {
+        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
+        step: 1,
+        format: 24,
+        titleLabel: $filter('translate')('popup_timepicker_title'),
+        setLabel: $filter('translate')('ok'),
+        closeLabel: $filter('translate')('cancel'),
+        setButtonType: 'button-carpooling',
+        closeButtonType: '',
+        callback: function (val) { //Mandatory
+            if (typeof (val) === 'undefined') {
+                console.log('Time not selected');
+            } else {
+                $scope.timepickerObj.inputEpochTime = val;
+            }
+        }
+    };
+
     /* Search Trip */
     $scope.searchTravel = function () {
+        var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
+        selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
+
         var travelReq = {
             'from': {
                 'name': $scope.locations['from'].name,
@@ -690,7 +710,7 @@ angular.module('carpooling.controllers', [])
                 'latitude': parseFloat($scope.locations['to'].latlng.split(',')[0]),
                 'longitude': parseFloat($scope.locations['to'].latlng.split(',')[1])
             },
-            'when': ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
+            'when': selectedDateTime.getTime(),
             'monitored': ($scope.monitoring.enabled)
         };
 
@@ -716,7 +736,7 @@ angular.module('carpooling.controllers', [])
     $scope.passengerTripsFound = $stateParams['searchResults'];
 
     // FIXME: temporary mock results TO BE REMOVED
-    $scope.passengerTripsFound = [
+    $scope.passengerTripsFoundFAKE = [
         {
             "from": {
                 "name": "Via Fiume",
