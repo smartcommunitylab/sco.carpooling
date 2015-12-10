@@ -12,7 +12,7 @@ angular.module('carpooling.services.driver', [])
             if (data[0] == '<') {
                 deferred.reject();
             } else {
-                deferred.resolve(data);
+                deferred.resolve(data.data);
             }
         })
 

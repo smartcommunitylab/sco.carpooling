@@ -20,14 +20,15 @@ angular.module('carpooling', [
 
 .run(function ($ionicPlatform, $rootScope, $q, StorageSrv, LoginSrv, UserSrv, Config) {
     $rootScope.pushRegistration = function (userId) {
-        //console.log('logged user id ' + userId);
         try {
             window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
-            var channel = 'CarPooling_' + userId;
-            window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
-            //console.log('successfully created channel ' + channel);
+            window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
+                var channel = 'CarPooling_' + userId;
+                window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
+                console.log('successfully created channel ' + channel);
+            };
         } catch (ex) {
-            //console.log('exception ' + ex.message);
+            console.log('exception ' + ex.message);
         }
     };
 
