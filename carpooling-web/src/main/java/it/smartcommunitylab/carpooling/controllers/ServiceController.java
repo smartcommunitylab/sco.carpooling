@@ -154,11 +154,7 @@ public class ServiceController {
 
 		Discussion discussion = carPoolingManager.readDiscussion(getUserId(), travelId, targetUserId);
 
-		if (discussion != null) {
-			return new Response<Discussion>(discussion);
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "discussion not found");
-		}
+		return new Response<Discussion>(discussion);
 
 	}
 
