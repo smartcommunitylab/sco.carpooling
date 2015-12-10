@@ -1,10 +1,11 @@
 angular.module('carpooling.services.map', [])
 
-.factory('MapSrv', function ($q, $http, leafletData) {
+.factory('MapSrv', function ($q, $http, leafletData, $ionicPlatform, GeoSrv) {
     var cachedMap = {};
     var myLocation = {};
 
     var mapService = {};
+
 
     mapService.getMap = function (mapId) {
         var deferred = $q.defer();
@@ -21,112 +22,107 @@ angular.module('carpooling.services.map', [])
     }
 
     mapService.setMyLocation = function (myNewLocation) {
-        myLocation = myNewLocation;
+        myLocation = myNewLocation
     };
-
     mapService.getMyLocation = function () {
         return myLocation;
     };
 
-    // init map with tile server provider and show my position
+    //init map with tile server provider and show my position
     mapService.initMap = function (mapId) {
         var deferred = $q.defer();
 
         leafletData.getMap(mapId).then(function (map) {
-            cachedMap[mapId] = map;
+                cachedMap[mapId] = map;
+                L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
+                    type: 'map',
+                    ext: 'jpg',
+                    attribution: '',
+                    subdomains: '1234',
+                    maxZoom: 18
+                }).addTo(map);
+//                $ionicPlatform.ready(function () {
+//                    GeoSrv.locate().then(function (e) {
+//                        L.marker(L.latLng(e[0], e[1])).addTo(map);
+//                    });
+//                });
 
-            L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
-                type: 'map',
-                ext: 'jpg',
-                attribution: '',
-                subdomains: '1234',
-                maxZoom: 18
-            }).addTo(map);
-
-            map.locate({
-                setView: false,
-                maxZoom: 8,
-                watch: false,
-                enableHighAccuracy: true
+                deferred.resolve(map);
+            },
+            function (error) {
+                console.log('error creation');
+                deferred.reject(error);
             });
-
-            map.on('locationfound', onLocationFound);
-
-            function onLocationFound(e) {
-                mapService.setMyLocation(e);
-                var radius = e.accuracy / 2;
-                L.marker(e.latlng).addTo(map);
-                L.circle(e.latlng, radius).addTo(map);
-            }
-
-            L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/{type}/{z}/{x}/{y}.{ext}', {
-                type: 'map',
-                ext: 'jpg',
-                attribution: '',
-                subdomains: '1234',
-                maxZoom: 18
-            }).addTo(map);
-
-            deferred.resolve(true);
-        }, function (error) {
-            console.log('error creation');
-            deferred.reject(error);
+        return deferred.promise;
+    }
+    mapService.centerOnMe = function (mapId, zoom) {
+        leafletData.getMap(mapId).then(function (map) {
+            GeoSrv.locate().then(function (e) {
+                $timeout(function () {
+                    map.setView(L.latLng(e[0], e[1]), zoom);
+                });
+            });
         });
 
-        return deferred.promise;
     };
 
     mapService.getTripPolyline = function (trip) {
-        var listOfPoints = {};
-        for (var k = 0; k < trip.leg.length; k++) {
-            listOfPoints["p" + k] = {
-                color: getColorByType(trip.leg[k].transport),
-                weight: 5,
-                latlngs: mapService.decodePolyline(trip.leg[k].legGeometery.points),
-                message: getPopUpMessage(trip.steps[k]),
+            var listOfPoints = {};
+            for (var k = 0; k < trip.leg.length; k++) {
+                listOfPoints["p" + k] = {
+                    color: getColorByType(trip.leg[k].transport),
+                    weight: 5,
+                    latlngs: mapService.decodePolyline(trip.leg[k].legGeometery.points),
+                    message: getPopUpMessage(trip, trip.leg[k], k),
+                }
             }
+            return listOfPoints;
         }
-        return listOfPoints;
-    };
 
     mapService.getTripPoints = function (trip) {
+        //manage park&walk
         var markers = [];
         for (i = 0; i < trip.leg.length; i++) {
+            //if (!parkAndWalk(trip, i)) {
             markers.push({
-                lat: parseFloat(trip.leg[i].from.lat),
-                lng: parseFloat(trip.leg[i].from.lon),
-                message: getPopUpMessage(trip.steps[i])
-                    /*
+                    lat: parseFloat(trip.leg[i].from.lat),
+                    lng: parseFloat(trip.leg[i].from.lon),
+
+                    message: getPopUpMessage(trip, trip.leg[i], i),
                     icon: {
                         iconUrl: getIconByType(trip.leg[i].transport),
                         iconSize: [36, 50],
                         iconAnchor: [18, 50],
                         popupAnchor: [-0, -50]
-                    }
-                    */
-                    //focus: true
-            });
-        }
+                    },
+                    //                        focus: true
+                })
+                //            }
+                //        else {
+                //                markers.push(getMarkerParkAndWalk(trip.leg[i]));
+                //            }
+            var bound = [trip.leg[i].from.lat, trip.leg[i].from.lon];
 
+        }
         //add the arrival place
         markers.push({
             lat: parseFloat(trip.leg[trip.leg.length - 1].to.lat),
             lng: parseFloat(trip.leg[trip.leg.length - 1].to.lon),
-            message: getPopUpMessage(trip.steps[trip.leg.length - 1])
-                /*
-                icon: {
-                    iconUrl: "img/ic_arrival.png",
-                    iconSize: [36, 50],
-                    iconAnchor: [0, 50],
-                    popupAnchor: [18, -50]
-                }
-                */
-                //focus: true
+
+            message: $filter('translate')('pop_up_arrival'),
+            icon: {
+                iconUrl: "img/ic_arrival.png",
+                iconSize: [36, 50],
+                iconAnchor: [0, 50],
+                popupAnchor: [18, -50]
+            },
+            //                        focus: true
         });
 
-        return markers;
-    };
 
+
+        return markers;
+    }
     mapService.encodePolyline = function (coordinate, factor) {
         coordinate = Math.round(coordinate * factor);
         coordinate <<= 1;
@@ -140,9 +136,9 @@ angular.module('carpooling.services.map', [])
         }
         output += String.fromCharCode(coordinate + 63);
         return output;
-    };
+    }
 
-    mapService.resizeElementHeight = function (element, mapId, fraction) {
+    mapService.resizeElementHeight = function (element, mapId) {
         var height = 0;
         var body = window.document.body;
         if (window.innerHeight) {
@@ -152,22 +148,17 @@ angular.module('carpooling.services.map', [])
         } else if (body && body.clientHeight) {
             height = body.clientHeight;
         }
-
-        // header bar is by default 44px
-        //var offsetTop = element.offsetTop;
-        var offsetTop = 44;
-        element.style.height = (((height - offsetTop) / (!!fraction ? fraction : 1)) + 'px');
+        console.log('height' + height);
+        element.style.height = (((height - element.offsetTop)) + "px");
         this.getMap(mapId).then(function (map) {
             map.invalidateSize();
-        });
-    };
-
+        })
+    }
     mapService.refresh = function (mapId) {
         this.getMap(mapId).then(function (map) {
             map.invalidateSize();
-        });
-    };
-
+        })
+    }
     mapService.decodePolyline = function (str, precision) {
         var index = 0,
             lat = 0,

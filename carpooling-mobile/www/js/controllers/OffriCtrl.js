@@ -384,4 +384,8 @@ angular.module('carpooling.controllers.offri', [])
             );
         }
     };
+    $scope.$on('$ionicView.beforeEnter', function () {
+        MapSrv.refresh('modalMap');
+    });
+
 });
