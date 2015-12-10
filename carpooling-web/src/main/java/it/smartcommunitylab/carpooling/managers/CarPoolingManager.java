@@ -517,6 +517,7 @@ public class CarPoolingManager {
 
 			response = new Discussion();
 			response.setTravelId(travelId);
+			response.setPersonName(userRepository.findOne(targetUserId).fullName());
 
 			// msgs are ordered by the insertion at server side, since it can be sent from diff timezones.
 			for (Message msg : discussion.getMessages()) {

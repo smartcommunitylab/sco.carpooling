@@ -33,6 +33,8 @@ public class Discussion {
 	private String travelId;
 	/** list of messages(reqd).**/
 	private List<Message> messages = new ArrayList<Message>();
+	
+	private String personName;
 
 	public Discussion() {
 		super();
@@ -61,4 +63,11 @@ public class Discussion {
 		this.messages = messages;
 	}
 
+	public String getPersonName() {
+		return personName;
+	}
+
+	public void setPersonName(String personName) {
+		this.personName = personName;
+	}
 }
