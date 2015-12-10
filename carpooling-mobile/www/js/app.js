@@ -14,7 +14,12 @@ angular.module('carpooling', [
     'carpooling.services.geo',
     'carpooling.services.storage',
     'carpooling.directives',
-    'carpooling.controllers',
+    'carpooling.controllers.home',
+    'carpooling.controllers.offri',
+    'carpooling.controllers.cercaviaggi',
+    'carpooling.controllers.viaggio',
+    'carpooling.controllers.notifications',
+    'carpooling.controllers.user',
     'leaflet-directive'
 ])
 
@@ -209,16 +214,16 @@ angular.module('carpooling', [
         }
     })
 
-    .state('app.cercaviaggi', {
-        url: '/cercaviaggi',
+    .state('app.risultaticercaviaggi', {
+        url: '/risultaticercaviaggi',
         cache: false,
         params: {
             'searchResults': {}
         },
         views: {
             'menuContent': {
-                templateUrl: 'templates/cercaviaggi.html',
-                controller: 'CercaViaggiCtrl'
+                templateUrl: 'templates/risultaticercaviaggi.html',
+                controller: 'RisultatiCercaViaggiCtrl'
             }
         }
     })
@@ -250,7 +255,7 @@ angular.module('carpooling', [
         views: {
             'menuContent': {
                 templateUrl: 'templates/notifiche.html',
-                controller: 'NotificationCtrl'
+                controller: 'NotificationsCtrl'
             }
         }
     })
