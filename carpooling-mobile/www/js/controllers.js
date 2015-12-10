@@ -7,7 +7,7 @@ angular.module('carpooling.controllers', [])
 .controller('PartecipoCtrl', function ($scope, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
-    $scope.travelTimeFormat = 'hh:mm';
+    $scope.travelTimeFormat = 'HH:mm';
 
     /*Just for example*/
     /*
@@ -734,9 +734,10 @@ angular.module('carpooling.controllers', [])
 
 .controller('CercaViaggiCtrl', function ($scope, $state, $stateParams, PassengerSrv) {
     $scope.passengerTripsFound = $stateParams['searchResults'];
-
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'HH:mm';
     // FIXME: temporary mock results TO BE REMOVED
-    $scope.passengerTripsFoundFAKE = [
+    /*$scope.passengerTripsFoundFAKE = [
         {
             "from": {
                 "name": "Via Fiume",
@@ -773,7 +774,7 @@ angular.module('carpooling.controllers', [])
             "when": 1443425400000,
             "monitored": false
         }
-    ];
+    ];*/
 
     console.log($scope.passengerTripsFound);
 
@@ -785,6 +786,8 @@ angular.module('carpooling.controllers', [])
 })
 
 .controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams, UserSrv) {
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'HH:mm';
     // TODO: build UI and fill it here
     $scope.selectedTrip = $stateParams['trip'];
     console.log($scope.selectedTrip);
