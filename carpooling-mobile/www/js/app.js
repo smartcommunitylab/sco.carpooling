@@ -225,7 +225,6 @@ angular.module('carpooling', [
 
     .state('app.cerca', {
         url: '/cerca',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/cerca.html',
