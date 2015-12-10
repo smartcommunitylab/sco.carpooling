@@ -2,9 +2,13 @@ angular.module('carpooling.controllers.home', [])
 
 .controller('AppCtrl', function ($scope) {})
 
-.controller('HomeCtrl', function ($scope) {})
+.controller('HomeCtrl', function ($scope, $state, StorageSrv) {
+  if (!StorageSrv.isProfileComplete()) {
+    $state.go('app.profilo');
+  }
+})
 
-.controller('PartecipoCtrl', function ($scope, $state, UserSrv, PassengerSrv) {
+.controller('PartecipoCtrl', function ($scope, $state, UserSrv, PassengerSrv, Utils) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
@@ -42,47 +46,61 @@ angular.module('carpooling.controllers.home', [])
     */
 
     $scope.getTravelProfile = function () {
+        Utils.loading();
         UserSrv.getTravelProfile().then(function (data) {
             $scope.travelProfile = data;
+            Utils.loaded();
         });
     };
 
     $scope.passengerTrips = [];
 
-    PassengerSrv.getPassengerTrips().then(
-        function (trips) {
-            $scope.passengerTrips = trips;
-        },
-        function (error) {
-            // TODO: handle getPassengerTrips error
-        }
-    );
+    var init = function() {
+      Utils.loading();
+      PassengerSrv.getPassengerTrips().then(
+          function (trips) {
+              Utils.loaded();
+              $scope.passengerTrips = trips;
+          },
+          function (error) {
+              // TODO: handle getPassengerTrips error
+              Utils.loaded();
+          }
+      );
+    };
+
+    init();
 
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
-            'trip': $scope.passengerTrips[index]
+            'travelId': $scope.passengerTrips[index].id
         });
     };
 })
 
-.controller('OffroCtrl', function ($scope, $state, DriverSrv) {
+.controller('OffroCtrl', function ($scope, $state, DriverSrv, Utils) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
     $scope.driverTrips = [];
 
-    DriverSrv.getDriverTrips().then(
-        function (trips) {
-            $scope.driverTrips = trips;
-        },
-        function (error) {
-            // TODO: handle getDriverTrips error
-        }
-    );
-
+    var init = function() {
+      Utils.loading();
+      DriverSrv.getDriverTrips().then(
+          function (trips) {
+              Utils.loaded();
+              $scope.driverTrips = trips;
+          },
+          function (error) {
+              Utils.loaded();
+              // TODO: handle getDriverTrips error
+          }
+      );
+    };
+  init();
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
-            'trip': $scope.driverTrips[index]
+            'travelId': $scope.driverTrips[index].id
         });
     };
 });

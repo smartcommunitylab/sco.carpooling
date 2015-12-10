@@ -3,6 +3,25 @@ angular.module('carpooling.services.passenger', [])
 .factory('PassengerSrv', function ($http, $q, Config) {
     var passengerService = {};
 
+      passengerService.getTrip = function (travelId) {
+        var deferred = $q.defer();
+
+        $http.get(Config.getServerURL() + '/api/passenger/trips/'+travelId, Config.getHTTPConfig())
+
+        .success(function (data) {
+            if (data[0] == '<') {
+                deferred.reject();
+            } else {
+                deferred.resolve(data.data);
+            }
+        })
+
+        .error(function (err) {
+            deferred.reject(err);
+        });
+
+        return deferred.promise;
+    };
     passengerService.getPassengerTrips = function () {
         var deferred = $q.defer();
 

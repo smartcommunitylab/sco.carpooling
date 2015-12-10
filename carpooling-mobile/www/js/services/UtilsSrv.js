@@ -1,6 +1,6 @@
 angular.module('carpooling.services.utils', [])
 
-.factory('Utils', function ($q, $filter) {
+.factory('Utils', function ($q, $filter, $ionicLoading) {
     var utilsService = {};
 
     var monthList = [
@@ -93,6 +93,15 @@ angular.module('carpooling.services.utils', [])
 
         return dowString;
     };
+
+    utilsService.loading = function () {
+            $ionicLoading.show();
+    };
+    utilsService.loaded = function () {
+            $ionicLoading.hide();
+    };
+
+
 
     return utilsService;
 });

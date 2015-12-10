@@ -108,7 +108,7 @@ angular.module('carpooling.services.user', [])
         $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
 
         .success(function (data) {
-            deferred.resolve(data);
+            deferred.resolve(data.data);
         })
 
         .error(function (err) {
@@ -126,7 +126,7 @@ angular.module('carpooling.services.user', [])
         } else if (!message || !message.userId || !message.timestamp || !message.message || !message.targetUserId) {
             deferred.reject('Invalid message');
         } else {
-            $http.get(Config.getServerURL() + '/api/message/' + travelId + '/send', message, Config.getHTTPConfig())
+            $http.post(Config.getServerURL() + '/api/message/' + travelId + '/send', message, Config.getHTTPConfig())
 
             .success(function (data) {
                 deferred.resolve(data);

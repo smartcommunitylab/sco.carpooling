@@ -3,6 +3,15 @@ angular.module('carpooling.services.storage', [])
 .factory('StorageSrv', function ($http, $q, Config) {
     var storageService = {};
 
+    storageService.isProfileComplete = function () {
+        if (!!localStorage.profileComplete) {
+            return true;
+        }
+        return false;
+    };
+    storageService.setProfileComplete = function () {
+      localStorage.profileComplete = true;
+    };
     storageService.getUserId = function () {
         if (!!localStorage.userId) {
             return localStorage.userId;

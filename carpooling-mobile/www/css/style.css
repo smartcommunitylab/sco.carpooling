@@ -362,3 +362,10 @@ placeautocomplete ul {
     width: 48%;
     line-height: 1em;
 }
+
+.requests {
+  margin: 8px 16px;
+  color: #3448A5;
+  padding-top: 16px;
+  border-top: 1px solid #f2f2f2;
+}

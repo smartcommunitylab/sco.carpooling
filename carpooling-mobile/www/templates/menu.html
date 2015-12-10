@@ -5,7 +5,7 @@
             <ion-nav-back-button>
             </ion-nav-back-button>
             <ion-nav-buttons side="left">
-                <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-if="!initialSetup"></button>
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>
@@ -20,9 +20,11 @@
                 <ion-item nav-clear menu-close href="#/app/comunita">
                     <i class="icon ion-ios-people">{{'menu_community'| translate}}</i>
                 </ion-item>
+<!--
                 <ion-item nav-clear menu-close href="#/app/chat">
                     <i class="icon ion-chatboxes">{{'menu_chat'| translate}}</i>
                 </ion-item>
+-->
                 <ion-item nav-clear menu-close href="#/app/notifiche">
                     <i class="icon ion-ios-bell">{{'menu_notifications'| translate}}</i>
                 </ion-item>

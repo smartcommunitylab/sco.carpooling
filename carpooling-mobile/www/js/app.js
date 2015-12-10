@@ -85,8 +85,10 @@ angular.module('carpooling', [
     });
 })
 
-.config(function ($httpProvider) {
+.config(function ($httpProvider,$ionicConfigProvider) {
     $httpProvider.defaults.withCredentials = true;
+    $ionicConfigProvider.backButton.text('');
+    $ionicConfigProvider.backButton.previousTitleText(false);
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
@@ -111,7 +113,6 @@ angular.module('carpooling', [
 
     .state('app.home.partecipo', {
         url: '/partecipo',
-        cache: false,
         views: {
             'tab-partecipo': {
                 templateUrl: 'templates/partecipo.html',
@@ -122,7 +123,6 @@ angular.module('carpooling', [
 
     .state('app.home.offro', {
         url: '/offro',
-        cache: false,
         views: {
             'tab-offro': {
                 templateUrl: 'templates/offro.html',
@@ -132,11 +132,7 @@ angular.module('carpooling', [
     })
 
     .state('app.viaggio', {
-        url: '/viaggio',
-        cache: false,
-        params: {
-            'trip': {}
-        },
+        url: '/viaggio/:travelId',
         views: {
             'menuContent': {
                 templateUrl: 'templates/viaggio.html',
@@ -303,12 +299,12 @@ angular.module('carpooling', [
     })
 
     .state('app.chat', {
-        url: '/chat',
+        url: '/chat/:travelId/:personId',
         cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/chat.html',
-                controller: 'NotificationCtrl'
+                controller: 'ChatCtrl'
             }
         }
     });
@@ -413,7 +409,14 @@ angular.module('carpooling', [
         month_dic: 'Dic',
         popup_timepicker_title: 'Selezionare l\'ora',
         popup_datepicker_title: 'Selezionare il giorno',
-        popup_datepicker_today: 'Oggi'
+        popup_datepicker_today: 'Oggi',
+        send_msg_placeholder: 'Scrivi un messaggio',
+        notif_short_chat: 'Nuovo messaggio da {{name}}',
+        notif_short_avail: 'Trovato un viaggio',
+        notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
+        notif_short_response_ok : 'Viaggio confermato',
+        notif_short_response_ko : 'Viaggio rifiutato',
+        lbl_requests : 'Richeste di partecipazione'
     });
 
     $translateProvider.preferredLanguage('it');

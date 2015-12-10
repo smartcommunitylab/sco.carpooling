@@ -1,7 +1,9 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, StorageSrv, UserSrv) {
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils) {
     $scope.user = angular.copy(StorageSrv.getUser());
+
+    $rootScope.initialSetup = !StorageSrv.isProfileComplete();
 
     // FIXME: temporary control, waiting for the deploy
     var hasAuto = function (auto) {
@@ -12,7 +14,7 @@ angular.module('carpooling.controllers.user', [])
         return false;
     };
 
-    $scope.editMode = false;
+    $scope.editMode = false || $rootScope.initialSetup;
     $scope.edit = {
         hasAuto: hasAuto($scope.user.auto),
         postsAvailable: [1, 2, 3, 4, 5, 6, 7]
@@ -29,18 +31,28 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.saveProfile = function () {
+      Utils.loading();
         // UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
         UserSrv.saveAuto($scope.user.auto).then(
             function (data) {
-                $scope.toggleEditMode();
-                UserSrv.getUser($scope.user.userId).then(
-                    function () {
-                        $scope.user = angular.copy(StorageSrv.getUser());
-                        $scope.edit.hasAuto = hasAuto($scope.user.auto);
-                    }
-                );
+                if ($rootScope.initialSetup) {
+                  Utils.loaded();
+                  StorageSrv.setProfileComplete();
+                  $rootScope.initialSetup = false;
+                  $state.go('app.home');
+                } else {
+                  Utils.loaded();
+                  $scope.toggleEditMode();
+                  UserSrv.getUser($scope.user.userId).then(
+                      function () {
+                          $scope.user = angular.copy(StorageSrv.getUser());
+                          $scope.edit.hasAuto = hasAuto($scope.user.auto);
+                      }
+                  );
+                }
             },
             function (error) {
+                  Utils.loaded();
                 // TODO: handle saveAuto error
             }
         );

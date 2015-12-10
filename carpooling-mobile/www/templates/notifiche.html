@@ -1,16 +1,18 @@
 <ion-view title="{{'menu_notifications' | translate}}">
+<!--
     <ion-nav-buttons side="right">
         <a href="#/app/impostazioninotifiche" class="button button-icon ion-ios-gear"></a>
     </ion-nav-buttons>
+-->
     <ion-content>
 <!--        <ion-list class="animate-ripple">-->
-        <div ng-repeat="notific in notifications" ng-last-repeat="notifications">
+        <div ng-repeat="notific in notifications">
             <div class="card" ng-click="showNotification(notific)">
                 <div class="item item-divider">
                     {{ notific.timestamp | date:'dd MMMM yyyy - hh:mm' }}
                 </div>
                 <div class="item item-icon-left">
-                    <i class="icon {{ notific.type.image }}"></i>
+                    <i class="icon {{ notificationType[notific.type].image }}"></i>
                     <span>{{ notific.short_text }}</span>
 
                     <!--<div class="row">

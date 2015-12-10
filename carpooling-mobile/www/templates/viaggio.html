@@ -1,15 +1,17 @@
-<ion-view title="{{'lbl_trip'| translate}}">
+<ion-view title="{{isMine ? 'lbl_mytrip': 'lbl_trip'| translate}}">
     <ion-content>
-        <div>MAPPA</div>
+        <div ng-if="!isMine">MAPPA</div>
         <div class="button-bar">
-            <a class="button">
+            <a class="button" ng-if="!isMine">
                 <i class="icons ion-ios-person"></i>
                 <span>{{driverInfo.name + " " + driverInfo.surname}}</span>
             </a>
+<!-- hide temporary
             <a class="button">
                 <i class="icons ion-ios-people"></i>
                 <span>{{selectedTrip.communityIds[0]}}</span>
             </a>
+-->
         </div>
         <div class="padding trip-info">
             <ul>
@@ -48,13 +50,16 @@
                 </li>
             </ul>
         </div>
-        <div class="trip-actions">
+        <div class="trip-actions" ng-if="!isMine">
             <button class="button">
                 {{'lbl_driver_contact' | translate | uppercase}}
             </button>
             <button class="button">
                 {{'lbl_ask_trip' | translate | uppercase}}
             </button>
+        </div>
+        <div class="text-center requests" ng-if="isMine">
+            <p>{{'lbl_requests' | translate}}</p>
         </div>
     </ion-content>
 </ion-view>
