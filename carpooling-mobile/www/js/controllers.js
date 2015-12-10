@@ -54,7 +54,7 @@ angular.module('carpooling.controllers', [])
             $scope.passengerTrips = trips;
         },
         function (error) {
-            // TODO: handle error
+            // TODO: handle getPassengerTrips error
         }
     );
 })
@@ -70,13 +70,12 @@ angular.module('carpooling.controllers', [])
             $scope.driverTrips = trips;
         },
         function (error) {
-            // TODO: handle error
+            // TODO: handle getDriverTrips error
         }
     );
 })
 
-// NOTE OffriCtrl
-.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+.controller('OffriCtrl', function ($scope, $state, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
     // 'from' and 'to' are 'zone' objects
     $scope.travel = {
         'from': {
@@ -169,10 +168,8 @@ angular.module('carpooling.controllers', [])
     $scope.initMap = function () {
         MapSrv.initMap(mapId).then(function () {
             $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
-
                 $ionicLoading.show();
 
-                // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
                     title: $filter('translate')('modal_map_confirm'),
@@ -433,8 +430,7 @@ angular.module('carpooling.controllers', [])
     });
 
     $scope.offer = function () {
-        // TODO: create Travel object and send it using DriverSrv
-        // 'from', 'to' and 'intermediateStops' is updated directly on $scope.travel
+        // NOTE: 'from', 'to' and 'intermediateStops' is updated directly on $scope.travel
         var auto = StorageSrv.getUser().auto;
 
         if (!!auto && auto.posts > 0) {
@@ -452,11 +448,12 @@ angular.module('carpooling.controllers', [])
 
             DriverSrv.createTrip($scope.travel).then(
                 function (savedTravel) {
-                    // TODO: handle travel creation success
-                    console.log(savedTravel);
+                    // TODO: handle createTrip success
+                    //console.log(savedTravel);
+                    $state.go('app.home.offro');
                 },
                 function (error) {
-                    // TODO: handle travel creation error
+                    // TODO: handle createTrip error
                     console.log(error);
                 }
             );
@@ -464,32 +461,29 @@ angular.module('carpooling.controllers', [])
     };
 })
 
-// NOTE: CercaViaggioCtrl
 .controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
     // TODO: move travelRequest default here; modify that object
-    $scope.travelRequest = {};
-
-    $scope.communities = {
-        enabled: false,
-        useMyCommunities: false
-    };
-
-    $scope.monitoring = {
-        enabled: false
-    };
-
-    $scope.dateTimestamp = null;
-    $scope.hourTimestamp = null;
-
-    $scope.locations = {
+    $scope.travelRequest = {
         'from': {
             'name': '',
-            'latlng': ''
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
         },
         'to': {
             'name': '',
-            'latlng': ''
-        }
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
+        },
+        'when': 0,
+        'monitored': false
+    };
+
+    // NOTE: communities are not used right now in client-side search
+    $scope.communities = {
+        enabled: false,
+        useMyCommunities: false
     };
 
     /*
@@ -513,12 +507,19 @@ angular.module('carpooling.controllers', [])
     };
 
     $scope.setLocationFrom = function (name) {
-        $scope.locations['from'].name = name;
-        $scope.locations['from'].latlng = $scope.places.coordinates[name].latlng;
+        $scope.travelRequest['from'].name = name;
+        $scope.travelRequest['from'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travelRequest['from'].latitude = parseFloat(coordinates[0]);
+        $scope.travelRequest['from'].longitude = parseFloat(coordinates[1]);
     };
+
     $scope.setLocationTo = function (name) {
-        $scope.locations['to'].name = name;
-        $scope.locations['to'].latlng = $scope.places.coordinates[name].latlng;
+        $scope.travelRequest['to'].name = name;
+        $scope.travelRequest['to'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travelRequest['to'].latitude = parseFloat(coordinates[0]);
+        $scope.travelRequest['to'].longitude = parseFloat(coordinates[1]);
     };
 
     /*
@@ -664,9 +665,9 @@ angular.module('carpooling.controllers', [])
         disableDates: null,
         callback: function (val) { //Mandatory
             if (typeof (val) === 'undefined') {
-                console.log('No date selected');
+                console.log('[datepicker] Date not selected');
             } else {
-                console.log('Selected date is : ', val);
+                /*console.log('Selected date is : ', val);*/
                 $scope.datepickerObj.inputDate = val;
             }
         },
@@ -685,7 +686,7 @@ angular.module('carpooling.controllers', [])
         closeButtonType: '',
         callback: function (val) { //Mandatory
             if (typeof (val) === 'undefined') {
-                console.log('Time not selected');
+                console.log('[timepicker] Time not selected');
             } else {
                 $scope.timepickerObj.inputEpochTime = val;
             }
@@ -694,29 +695,14 @@ angular.module('carpooling.controllers', [])
 
     /* Search Trip */
     $scope.searchTravel = function () {
+        // NOTE: 'from', 'to' and 'monitored' is updated directly on $scope.travelRequest
         var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
         selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
+        $scope.travelRequest['when'] = selectedDateTime.getTime();
 
-        var travelReq = {
-            'from': {
-                'name': $scope.locations['from'].name,
-                'address': $scope.locations['from'].name,
-                'latitude': parseFloat($scope.locations['from'].latlng.split(',')[0]),
-                'longitude': parseFloat($scope.locations['from'].latlng.split(',')[1])
-            },
-            'to': {
-                'name': $scope.locations['to'].name,
-                'address': $scope.locations['to'].name,
-                'latitude': parseFloat($scope.locations['to'].latlng.split(',')[0]),
-                'longitude': parseFloat($scope.locations['to'].latlng.split(',')[1])
-            },
-            'when': selectedDateTime.getTime(),
-            'monitored': ($scope.monitoring.enabled)
-        };
+        //console.log($scope.travelRequest);
 
-        console.log(travelReq);
-
-        PassengerSrv.searchTrip(travelReq).then(
+        PassengerSrv.searchTrip($scope.travelRequest).then(
             function (searchResults) {
                 console.log('Done trip search');
                 $state.go('app.cercaviaggi', {
@@ -724,9 +710,9 @@ angular.module('carpooling.controllers', [])
                 });
             },
             function (error) {
-                // TODO: handle search error
+                // TODO: handle searchTrip error
                 console.log(error);
-                $state.go('app.cercaviaggi'); //FIXME: temporary TO BE REMOVED
+                //$state.go('app.cercaviaggi');
             }
         );
     };
