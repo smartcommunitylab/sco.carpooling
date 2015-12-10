@@ -359,6 +359,8 @@ angular.module('carpooling', [
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
+        lbl_on_request: 'Su richiesta',
+        lbl_no_inter_stops: 'Nessuna',
         lbl_start_time: 'Orario di partenza',
         lbl_user_car_owner: 'Automunito',
         lbl_user_car_info: 'Note auto',
