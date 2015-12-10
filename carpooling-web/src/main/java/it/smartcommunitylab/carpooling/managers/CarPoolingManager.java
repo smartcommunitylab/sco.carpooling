@@ -509,15 +509,13 @@ public class CarPoolingManager {
 
 	public Discussion readDiscussion(String userId, String travelId, String targetUserId) {
 
-		Discussion response = null;
+		Discussion response = new Discussion();
+		response.setTravelId(travelId);
+		response.setPersonName(userRepository.findOne(targetUserId).fullName());
 
 		Discussion discussion = discussionRepository.findOne(travelId);
 
 		if (discussion != null) {
-
-			response = new Discussion();
-			response.setTravelId(travelId);
-			response.setPersonName(userRepository.findOne(targetUserId).fullName());
 
 			// msgs are ordered by the insertion at server side, since it can be sent from diff timezones.
 			for (Message msg : discussion.getMessages()) {

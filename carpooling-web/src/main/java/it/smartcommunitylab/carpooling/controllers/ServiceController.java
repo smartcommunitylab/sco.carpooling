@@ -153,7 +153,7 @@ public class ServiceController {
 			throws CarPoolingCustomException {
 
 		Discussion discussion = carPoolingManager.readDiscussion(getUserId(), travelId, targetUserId);
-
+		
 		return new Response<Discussion>(discussion);
 
 	}
