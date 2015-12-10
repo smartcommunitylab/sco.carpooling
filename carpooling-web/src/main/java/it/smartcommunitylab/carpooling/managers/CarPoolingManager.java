@@ -240,6 +240,20 @@ public class CarPoolingManager {
 		return travel;
 	}
 
+	/**
+	 * @param tripId
+	 * @return
+	 * @throws CarPoolingCustomException 
+	 */
+	public Travel getTrip(String tripId) throws CarPoolingCustomException {
+		Travel travel = travelRepository.findOne(tripId);
+
+		if (travel != null) {
+			return travel;
+		}
+		throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
+	}
+
 	public Travel acceptTrip(String travelId, Booking booking, String userId) throws CarPoolingCustomException {
 
 		Travel travel = travelRepository.findTravelByIdAndDriverId(travelId, userId);
@@ -610,6 +624,6 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
-	
+
 
 }

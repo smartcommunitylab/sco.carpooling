@@ -107,6 +107,12 @@ public class ServiceController {
 		return new Response<Travel>(carPoolingManager.saveTravel(travel, getUserId()));
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips/{tripId}")
+	public @ResponseBody
+	Response<Travel> createTrips(@PathVariable String tripId) throws CarPoolingCustomException {
+		return new Response<Travel>(carPoolingManager.getTrip(tripId));
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
 	public @ResponseBody
 	Response<Travel> bookTrip(@PathVariable String tripId, @RequestBody Booking booking)
