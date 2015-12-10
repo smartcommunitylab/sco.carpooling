@@ -7,7 +7,7 @@ angular.module('carpooling.controllers', [])
 .controller('PartecipoCtrl', function ($scope, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
-    $scope.travelTimeFormat = 'hh:mm';
+    $scope.travelTimeFormat = 'HH:mm';
 
     /*Just for example*/
     /*
@@ -54,14 +54,14 @@ angular.module('carpooling.controllers', [])
             $scope.passengerTrips = trips;
         },
         function (error) {
-            // TODO: handle error
+            // TODO: handle getPassengerTrips error
         }
     );
 })
 
 .controller('OffroCtrl', function ($scope, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
-    $scope.travelTimeFormat = 'hh:mm';
+    $scope.travelTimeFormat = 'HH:mm';
 
     $scope.driverTrips = [];
 
@@ -70,22 +70,29 @@ angular.module('carpooling.controllers', [])
             $scope.driverTrips = trips;
         },
         function (error) {
-            // TODO: handle error
+            // TODO: handle getDriverTrips error
         }
     );
 })
 
-// NOTE OffriCtrl
-.controller('OffriCtrl', function ($scope, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
-    $scope.locations = {
+.controller('OffriCtrl', function ($scope, $state, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+    // 'from' and 'to' are 'zone' objects
+    $scope.travel = {
         'from': {
             'name': '',
-            'latlng': ''
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
         },
         'to': {
             'name': '',
-            'latlng': ''
-        }
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
+        },
+        'when': 0,
+        'places': 0,
+        'intermediateStops': false
     };
 
     /*
@@ -109,12 +116,19 @@ angular.module('carpooling.controllers', [])
     };
 
     $scope.setLocationFrom = function (name) {
-        $scope.locations['from'].name = name;
-        $scope.locations['from'].latlng = $scope.places.coordinates[name].latlng;
+        $scope.travel['from'].name = name;
+        $scope.travel['from'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travel['from'].latitude = parseFloat(coordinates[0]);
+        $scope.travel['from'].longitude = parseFloat(coordinates[1]);
     };
+
     $scope.setLocationTo = function (name) {
-        $scope.locations['to'].name = name;
-        $scope.locations['to'].latlng = $scope.places.coordinates[name].latlng;
+        $scope.travel['to'].name = name;
+        $scope.travel['to'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travel['to'].latitude = parseFloat(coordinates[0]);
+        $scope.travel['to'].longitude = parseFloat(coordinates[1]);
     };
 
     /*
@@ -154,10 +168,8 @@ angular.module('carpooling.controllers', [])
     $scope.initMap = function () {
         MapSrv.initMap(mapId).then(function () {
             $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
-
                 $ionicLoading.show();
 
-                // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
                     title: $filter('translate')('modal_map_confirm'),
@@ -174,12 +186,15 @@ angular.module('carpooling.controllers', [])
                     ]
                 };
 
-                var fillConfirmPopupOptions = function (placeName, coordinates) {
-                    confirmPopupOptions.template = placeName;
+                var fillConfirmPopupOptions = function (name, coordinates) {
+                    confirmPopupOptions.template = name;
                     confirmPopupOptions.buttons[1].onTap = function () {
                         if (!!selectedField) {
-                            $scope.locations[selectedField].name = placeName;
-                            $scope.locations[selectedField].coordinates = coordinates;
+                            $scope.travel[selectedField].name = name;
+                            $scope.travel[selectedField].address = name;
+                            var splittedCoords = coordinates.split(',');
+                            $scope.travel[selectedField].latitude = parseFloat(splittedCoords[0]);
+                            $scope.travel[selectedField].longitude = parseFloat(splittedCoords[1]);
                         }
                         $scope.hideModalMap();
                     };
@@ -229,31 +244,12 @@ angular.module('carpooling.controllers', [])
         });
     };
 
-    /* Time Picker */
-    $scope.timepickerObj = {
-        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
-        step: 1,
-        format: 24,
-        titleLabel: $filter('translate')('popup_timepicker_title'),
-        setLabel: $filter('translate')('ok'),
-        closeLabel: $filter('translate')('cancel'),
-        setButtonType: 'button-carpooling',
-        closeButtonType: '',
-        callback: function (val) { //Mandatory
-            if (typeof (val) === 'undefined') {
-                console.log('Time not selected');
-            } else {
-                var selectedTime = new Date(val * 1000);
-                console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
-                $scope.timepickerObj.inputEpochTime = val;
-            }
-        }
-    };
-
     /* Date Picker */
     $scope.dateMask = 'dd MMMM yyyy';
-    var yesterday = new Date();
-    yesterday.setMilliseconds(yesterday.getMilliseconds() - (1000 * 60 * 60 * 24));
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var yesterday = angular.copy(today);
+    yesterday.setHours(-24);
 
     $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
@@ -268,24 +264,53 @@ angular.module('carpooling.controllers', [])
         modalHeaderColor: '',
         modalFooterColor: '',
         from: yesterday,
-        to: new Date(2019, 12, 31),
-        inputDate: new Date(),
+        to: new Date(2019, 12, 31, 23, 59, 59),
+        inputDate: today,
         weekDaysList: Config.getDoWList(),
         monthList: Config.getMonthList(),
         mondayFirst: true,
         disableDates: null,
-        callback: function (val) { //Mandatory
+        callback: function (val) { // Mandatory
             if (typeof (val) === 'undefined') {
-                console.log('No date selected');
+                console.error('[datepicker] Date not selected');
             } else {
-                console.log('Selected date is : ', val);
+                /*console.log('Selected date is : ', val);
+                console.log('Selected time is : ', $scope.timepickerObj.inputEpochTime);
+                var total = angular.copy(val);
+                total.setSeconds(total.getSeconds() + $scope.timepickerObj.inputEpochTime);
+                console.log('Total date/time: ' + total);*/
                 $scope.datepickerObj.inputDate = val;
             }
         },
     };
 
+    /* Time Picker */
+    var now = new Date();
+    $scope.timepickerObj = {
+        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
+        step: 1,
+        format: 24,
+        titleLabel: $filter('translate')('popup_timepicker_title'),
+        setLabel: $filter('translate')('ok'),
+        closeLabel: $filter('translate')('cancel'),
+        setButtonType: 'button-carpooling',
+        closeButtonType: '',
+        callback: function (val) { //Mandatory
+            if (typeof (val) === 'undefined') {
+                console.error('[timepicker] Time not selected');
+            } else {
+                /*console.log('Selected date is : ', $scope.datepickerObj.inputDate);
+                console.log('Selected time is : ', val);
+                var total = angular.copy($scope.datepickerObj.inputDate);
+                total.setSeconds(total.getSeconds() + val);
+                console.log('Total date/time: ' + total);*/
+                $scope.timepickerObj.inputEpochTime = val;
+            }
+        }
+    };
+
     /*
-     * Recurrence popup stuff
+     * Recurrency popup stuff
      */
     $scope.hideModalMap = function () {
         $scope.modalMap.hide();
@@ -303,15 +328,15 @@ angular.module('carpooling.controllers', [])
         return array;
     }
 
-    $scope.recurrence = {
+    $scope.recurrency = {
         isRecurrent: false,
-        recurrenceType: 'w',
-        recurrenceD: '1',
-        recurrenceDoW: [],
-        recurrenceDoWstring: ''
+        recurrencyType: 'w',
+        recurrencyD: '1',
+        recurrencyDoW: [],
+        recurrencyDoWstring: ''
     };
 
-    $scope.recurrentPopupDoW = [
+    $scope.recurrencyPopupDoW = [
         {
             name: 'dow_monday',
             shortname: 'dow_monday_short',
@@ -356,28 +381,28 @@ angular.module('carpooling.controllers', [])
         }
     ];
 
-    $scope.updateRecurrence = function () {
+    $scope.updateRecurrency = function () {
         // update recurrenceDoW and recurrenceDoWstring
-        $scope.recurrence.recurrenceDoW = [];
-        $scope.recurrence.recurrenceDoWstring = '';
+        $scope.recurrency.recurrencyDoW = [];
+        $scope.recurrency.recurrencyDoWstring = '';
 
-        for (var i = 0; i < $scope.recurrentPopupDoW.length; i++) {
-            var dow = $scope.recurrentPopupDoW[i];
+        for (var i = 0; i < $scope.recurrencyPopupDoW.length; i++) {
+            var dow = $scope.recurrencyPopupDoW[i];
             if (dow.checked) {
-                $scope.recurrence.recurrenceDoW.push(dow.value);
-                if (!!$scope.recurrence.recurrenceDoWstring) {
-                    $scope.recurrence.recurrenceDoWstring = $scope.recurrence.recurrenceDoWstring + ', ';
+                $scope.recurrency.recurrencyDoW.push(dow.value);
+                if (!!$scope.recurrency.recurrencyDoWstring) {
+                    $scope.recurrency.recurrencyDoWstring = $scope.recurrency.recurrencyDoWstring + ', ';
                 }
-                $scope.recurrence.recurrenceDoWstring = $scope.recurrence.recurrenceDoWstring + $filter('translate')(dow.name);
+                $scope.recurrency.recurrencyDoWstring = $scope.recurrency.recurrencyDoWstring + $filter('translate')(dow.name);
             }
         }
 
-        $scope.recurrence.isRecurrent = $scope.recurrence.recurrenceDoW.length > 0;
+        $scope.recurrency.isRecurrent = $scope.recurrency.recurrencyDoW.length > 0;
     };
 
-    var recurrentPopup = {
+    var recurrencyPopup = {
         templateUrl: 'templates/popup_offri.html',
-        title: $filter('translate')('title_setrecurrence'),
+        title: $filter('translate')('title_setrecurrency'),
         scope: $scope,
         buttons: [
             {
@@ -390,41 +415,75 @@ angular.module('carpooling.controllers', [])
         ]
     };
 
-    $scope.showRecurrentPopup = function () {
-        $ionicPopup.show(recurrentPopup).then(
+    $scope.showRecurrencyPopup = function () {
+        $ionicPopup.show(recurrencyPopup).then(
             function (res) {
-                $scope.updateRecurrence();
+                $scope.updateRecurrency();
             }
         );
     };
 
-    $scope.$watch('recurrence.isRecurrent', function (newValue, oldValue) {
+    $scope.$watch('recurrency.isRecurrent', function (newValue, oldValue) {
         if (newValue !== oldValue && !!newValue) {
-            $scope.showRecurrentPopup();
+            $scope.showRecurrencyPopup();
         }
     });
 
     $scope.offer = function () {
-        // TODO: create Travel object and send it using DriverSrv
-        var posts = StorageSrv.getUser().auto.posts;
-        console.log('posts: ' + posts);
+        // NOTE: 'from', 'to' and 'intermediateStops' is updated directly on $scope.travel
+        var auto = StorageSrv.getUser().auto;
+
+        if (!!auto && auto.posts > 0) {
+            $scope.travel['places'] = auto.posts;
+            var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
+            selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
+            $scope.travel['when'] = selectedDateTime.getTime();
+
+            if ($scope.recurrency.isRecurrent) {
+                $scope.travel['recurrency'] = {
+                    time: selectedDateTime.getHours(),
+                    days: $scope.recurrency.recurrencyDoW
+                }
+            }
+
+            DriverSrv.createTrip($scope.travel).then(
+                function (savedTravel) {
+                    // TODO: handle createTrip success
+                    //console.log(savedTravel);
+                    $state.go('app.home.offro');
+                },
+                function (error) {
+                    // TODO: handle createTrip error
+                    console.log(error);
+                }
+            );
+        }
     };
 })
 
-// NOTE: CercaViaggioCtrl
 .controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
-    $scope.dateTimestamp = null;
-    $scope.hourTimestamp = null;
-
-    $scope.locations = {
+    // TODO: move travelRequest default here; modify that object
+    $scope.travelRequest = {
         'from': {
             'name': '',
-            'latlng': ''
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
         },
         'to': {
             'name': '',
-            'latlng': ''
-        }
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
+        },
+        'when': 0,
+        'monitored': false
+    };
+
+    // NOTE: communities are not used right now in client-side search
+    $scope.communities = {
+        enabled: false,
+        useMyCommunities: false
     };
 
     /*
@@ -448,12 +507,19 @@ angular.module('carpooling.controllers', [])
     };
 
     $scope.setLocationFrom = function (name) {
-        $scope.locations['from'].name = name;
-        $scope.locations['from'].latlng = $scope.places.coordinates[name].latlng;
+        $scope.travelRequest['from'].name = name;
+        $scope.travelRequest['from'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travelRequest['from'].latitude = parseFloat(coordinates[0]);
+        $scope.travelRequest['from'].longitude = parseFloat(coordinates[1]);
     };
+
     $scope.setLocationTo = function (name) {
-        $scope.locations['to'].name = name;
-        $scope.locations['to'].latlng = $scope.places.coordinates[name].latlng;
+        $scope.travelRequest['to'].name = name;
+        $scope.travelRequest['to'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travelRequest['to'].latitude = parseFloat(coordinates[0]);
+        $scope.travelRequest['to'].longitude = parseFloat(coordinates[1]);
     };
 
     /*
@@ -565,40 +631,19 @@ angular.module('carpooling.controllers', [])
     };
 
     /*
-     * Halfway stops stuff
-     */
-    $scope.hasHalfwayStops = false;
-
-    /*
      * Recurrence popup stuff
      */
     $scope.hideModalMap = function () {
         $scope.modalMap.hide();
     };
 
-    /* Time Picker */
-    $scope.timepickerObj = {
-        inputEpochTime: ((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60),
-        step: 1,
-        format: 24,
-        titleLabel: $filter('translate')('popup_timepicker_title'),
-        setLabel: $filter('translate')('ok'),
-        closeLabel: $filter('translate')('cancel'),
-        setButtonType: 'button-carpooling',
-        closeButtonType: '',
-        callback: function (val) { //Mandatory
-            if (typeof (val) === 'undefined') {
-                console.log('Time not selected');
-            } else {
-                var selectedTime = new Date(val * 1000);
-                console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
-                $scope.timepickerObj.inputEpochTime = val;
-            }
-        }
-    };
-
     /* Date Picker */
     $scope.dateMask = 'dd MMMM yyyy';
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var yesterday = angular.copy(today);
+    yesterday.setHours(-24);
+
     $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
         todayLabel: $filter('translate')('popup_datepicker_today'),
@@ -611,56 +656,63 @@ angular.module('carpooling.controllers', [])
         templateType: 'popup',
         modalHeaderColor: '',
         modalFooterColor: '',
-        from: new Date(),
-        to: new Date(2019, 12, 31),
-        inputDate: new Date(),
+        from: yesterday,
+        to: new Date(2019, 12, 31, 23, 59, 59),
+        inputDate: today,
         weekDaysList: Config.getDoWList(),
         monthList: Config.getMonthList(),
         mondayFirst: true,
         disableDates: null,
         callback: function (val) { //Mandatory
             if (typeof (val) === 'undefined') {
-                console.log('No date selected');
+                console.log('[datepicker] Date not selected');
             } else {
-                console.log('Selected date is : ', val);
+                /*console.log('Selected date is : ', val);*/
                 $scope.datepickerObj.inputDate = val;
             }
         },
     };
 
-    $scope.allSearchNotifications = function () {
-        console.log('Push Notification Change', $scope.allSearchNotifications.checked);
+    /* Time Picker */
+    var now = new Date();
+    $scope.timepickerObj = {
+        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
+        step: 1,
+        format: 24,
+        titleLabel: $filter('translate')('popup_timepicker_title'),
+        setLabel: $filter('translate')('ok'),
+        closeLabel: $filter('translate')('cancel'),
+        setButtonType: 'button-carpooling',
+        closeButtonType: '',
+        callback: function (val) { //Mandatory
+            if (typeof (val) === 'undefined') {
+                console.log('[timepicker] Time not selected');
+            } else {
+                $scope.timepickerObj.inputEpochTime = val;
+            }
+        }
     };
 
     /* Search Trip */
     $scope.searchTravel = function () {
-        var travelRequest = {
-            'from': {
-                'name': $scope.locations['from'].name,
-                'address': $scope.locations['from'].name,
-                'latitude': parseFloat($scope.locations['from'].latlng.split(',')[0]),
-                'longitude': parseFloat($scope.locations['from'].latlng.split(',')[1])
-            },
-            'to': {
-                'name': $scope.locations['to'].name,
-                'address': $scope.locations['to'].name,
-                'latitude': parseFloat($scope.locations['to'].latlng.split(',')[0]),
-                'longitude': parseFloat($scope.locations['to'].latlng.split(',')[1])
-            },
-            'when': ($scope.timepickerObj.inputEpochTime * 1000) + ($scope.datepickerObj.inputDate.getTime()),
-            'monitored': ($scope.allSearchNotifications.checked)
-        };
+        // NOTE: 'from', 'to' and 'monitored' is updated directly on $scope.travelRequest
+        var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
+        selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
+        $scope.travelRequest['when'] = selectedDateTime.getTime();
 
-        console.log(travelRequest);
+        //console.log($scope.travelRequest);
 
-        PassengerSrv.searchTrip(travelRequest).then(
+        PassengerSrv.searchTrip($scope.travelRequest).then(
             function (searchResults) {
                 console.log('Done trip search');
-                $state.go('app.cercaviaggi', {'searchResults': searchResults});
+                $state.go('app.cercaviaggi', {
+                    'searchResults': searchResults
+                });
             },
             function (error) {
-                // TODO: handle search error
+                // TODO: handle searchTrip error
                 console.log(error);
+                //$state.go('app.cercaviaggi');
             }
         );
     };
@@ -668,9 +720,10 @@ angular.module('carpooling.controllers', [])
 
 .controller('CercaViaggiCtrl', function ($scope, $state, $stateParams, PassengerSrv) {
     $scope.passengerTripsFound = $stateParams['searchResults'];
-
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'HH:mm';
     // FIXME: temporary mock results TO BE REMOVED
-    $scope.passengerTripsFound = [
+    /*$scope.passengerTripsFoundFAKE = [
         {
             "from": {
                 "name": "Via Fiume",
@@ -694,10 +747,20 @@ angular.module('carpooling.controllers', [])
                     11.113062
                 ]
             },
+            "bookings": [
+                {
+                    accepted: 1
+                },
+                {
+                    accepted: -1
+                }
+            ],
+            "userId": 73,
+            "places": 4,
             "when": 1443425400000,
-            "monitored": true
+            "monitored": false
         }
-    ];
+    ];*/
 
     console.log($scope.passengerTripsFound);
 
@@ -708,9 +771,67 @@ angular.module('carpooling.controllers', [])
     };
 })
 
-.controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams) {
+.controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams, $filter, UserSrv) {
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'HH:mm';
     // TODO: build UI and fill it here
-    console.log($stateParams['trip']);
+    $scope.selectedTrip = $stateParams['trip'];
+    console.log($scope.selectedTrip);
+    $scope.driverInfo = {};
+    $scope.passengerCount = 0;
+    $scope.freeSpaces = angular.copy($scope.selectedTrip.places);
+
+    $scope.dowString = '';
+    $scope.onRequest = '';
+    $scope.recurrencyDoW = ['dow_monday', 'dow_tuesday', 'dow_wednesday', 'dow_thursday', 'dow_friday', 'dow_saturday', 'dow_sunday'];
+
+    //TODO: To put in a function
+    /*Check if there are intermediateStops or not in the selected trip*/
+    if (!!$scope.selectedTrip.intermediateStops) {
+        $scope.onRequest = $filter('translate')('lbl_on_request');
+    } else {
+        $scope.onRequest = $filter('translate')('lbl_no_inter_stops');
+    }
+    /////////////////////////////////
+
+    //TODO: To put in a function
+    /*Check if there are recurrency in the selected trip*/
+    for (var i = 0; i < $scope.selectedTrip.recurrency.days.length; i++) {
+        var dayOfW = $scope.selectedTrip.recurrency.days[i];
+        if (!!$scope.dowString) {
+            $scope.dowString = $scope.dowString + ', ';
+        }
+        $scope.dowString = $scope.dowString + $filter('translate')($scope.recurrencyDoW[dayOfW]);
+    }
+
+    //////////////////////////////
+
+    $scope.selectedTrip.bookings.forEach(function (booking) {
+        //TODO: availability logic
+        if (booking.accepted >= 0) {
+            $scope.passengerCount++;
+            $scope.freeSpaces--;
+        }
+    });
+    $scope.getNumber = function (num) {
+        return new Array(num);
+    }
+    UserSrv.getUser($scope.selectedTrip.userId).then(
+        function (userInfo) {
+            console.log('User found');
+            $scope.driverInfo = userInfo;
+            if (!!userInfo.auto) {
+                $scope.passengerNum = userInfo.auto.posts - $scope.selectedTrip.places;
+                console.log($scope.passengerNum);
+            }
+            console.log($scope.driverInfo);
+        },
+        function (error) {
+            // TODO: handle search error
+            console.log(error);
+        }
+    );
+
 })
 
 .controller('NotificationCtrl', function ($scope, $filter, $state, $timeout, $ionicScrollDelegate) {
@@ -966,7 +1087,8 @@ angular.module('carpooling.controllers', [])
     };
 
     $scope.saveProfile = function () {
-        UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
+        // UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
+        UserSrv.saveAuto($scope.user.auto).then(
             function (data) {
                 $scope.toggleEditMode();
                 UserSrv.getUser($scope.user.userId).then(

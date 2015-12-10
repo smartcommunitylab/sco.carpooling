@@ -4,13 +4,13 @@
             <div class="list">
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                    <placeautocomplete ng-model="locations['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
+                    <placeautocomplete ng-model="travelRequest['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete">
-                    <placeautocomplete ng-model="locations['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
+                    <placeautocomplete ng-model="travelRequest['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
                 </div>
@@ -29,12 +29,12 @@
             </div>
             <h4>{{'lbl_cerca' | translate}}</h4>
             <div class="list">
-                <ion-radio ng-model="myCommunity" ng-value="false">{{'lbl_mycommunity' | translate}}</ion-radio>
-                <ion-radio ng-model="allCommunity" ng-value="true">{{'lbl_allcommunity' | translate}}</ion-radio>
+                <ion-radio ng-model="communities.useMyCommunities" ng-value="true" ng-disabled="!communities.enabled">{{'lbl_mycommunity' | translate}}</ion-radio>
+                <ion-radio ng-model="communities.useMyCommunities" ng-value="false" ng-disabled="!communities.enabled">{{'lbl_allcommunity' | translate}}</ion-radio>
             </div>
 
             <div class="list">
-                <ion-toggle ng-model="allSearchNotifications.checked" ng-change="allSearchNotifications()" toggle-class="">
+                <ion-toggle ng-model="traverRequest.monitored">
                     {{'lbl_allsearchnotifications' | translate}}
                 </ion-toggle>
             </div>

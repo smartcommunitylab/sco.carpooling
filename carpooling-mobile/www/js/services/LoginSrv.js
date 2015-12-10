@@ -82,7 +82,7 @@ angular.module('carpooling.services.login', [])
     loginService.logout = function () {
         var deferred = $q.defer();
 
-        $http.get(Config.getServerURL() + '/carpooling/logout', {
+        $http.get(Config.getServerURL() + '/logout', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

@@ -17,7 +17,9 @@
 package it.smartcommunitylab.carpooling.controllers;
 
 import it.smartcommunitylab.carpooling.managers.UserManager;
+import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.User;
+import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.CarPoolingUserDetails;
 
 import java.io.IOException;
@@ -61,6 +63,8 @@ public class UserAuthController {
 	private Environment env;
 	@Autowired
 	private UserManager userManager;
+	@Autowired
+	private CommunityRepository communityRepository;
 
 	private AACService service;
 	private BasicProfileService profileService;
@@ -103,6 +107,14 @@ public class UserAuthController {
 
 			User user = User.fromUserProfile(basicProfile);
 			userManager.saveUser(user);
+			
+			/** add user to community. **/
+			for (Community community : communityRepository.findAll()) {
+				if (!community.getUsers().contains(user.getUserId())) {
+					community.getUsers().add(user.getUserId());
+					communityRepository.save(community);
+				}
+			}
 
 			rememberMeServices.loginSuccess(request, response, authenticatedUser);
 			response.sendRedirect("userloginsuccess?profile="

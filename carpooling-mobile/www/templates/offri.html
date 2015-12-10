@@ -3,20 +3,20 @@
         <div class="list">
             <div class="item item-input item-autocomplete">
                 <!--<input type="text" placeholder="{{'lbl_from' | translate}}" ng-model="locations['from'].name">-->
-                <placeautocomplete ng-model="locations['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
+                <placeautocomplete ng-model="travel['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
                 <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
             </div>
             <div class="item item-input item-autocomplete">
                 <!--<input type="text" placeholder="{{'lbl_to' | translate}}" ng-model="locations['to'].name">-->
-                <placeautocomplete ng-model="locations['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
+                <placeautocomplete ng-model="travel['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
                 <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
             </div>
         </div>
 
         <h4>{{'lbl_halfwaystops' | translate}}</h4>
         <div class="list">
-            <ion-radio ng-model="hasHalfwayStops" ng-value="false">{{'lbl_halfwaystops_none' | translate}}</ion-radio>
-            <ion-radio ng-model="hasHalfwayStops" ng-value="true">{{'lbl_halfwaystops_agree' | translate}}</ion-radio>
+            <ion-radio ng-model="travel.intermediateStops" ng-value="false">{{'lbl_halfwaystops_none' | translate}}</ion-radio>
+            <ion-radio ng-model="travel.intermediateStops" ng-value="true">{{'lbl_halfwaystops_agree' | translate}}</ion-radio>
         </div>
 
         <div class="list">
@@ -34,8 +34,8 @@
             </div>
 
             <!-- ng-click missing because we use a watch on the model -->
-            <ion-toggle ng-model="recurrence.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
-            <a class="link-carpooling" ng-if="recurrence.isRecurrent" ng-click="showRecurrentPopup()">{{recurrence.recurrenceDoWstring}}</a>
+            <ion-toggle ng-model="recurrency.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
+            <a class="link-carpooling" ng-if="recurrency.isRecurrent" ng-click="showRecurrencyPopup()">{{recurrency.recurrencyDoWstring}}</a>
         </div>
 
         <div class="row">

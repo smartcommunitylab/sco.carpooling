@@ -3,8 +3,8 @@ angular.module('carpooling.services.config', [])
 .factory('Config', function ($http, $q, $filter) {
     var SERVER_URL = 'https://dev.smartcommunitylab.it/carpooling';
     var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
-    var APPID = '1E6tkJ4KTgmxaJUAjkhz59ML92XxxGJmfU2JUFmr';
-    var CLIENTKEY = 'p2RufG05OrYKX78LOYEEoRbMgEFSfZNfbYBOWr28';
+    var APPID = 'QZByJ7flOj4rmtN3gpyBhMyw7jONUU3sgzJJT3pL';
+    var CLIENTKEY = 'mTCHyDLCaogDtE5IA7g3xM0J0o400j4a8u9Nnc8N';
 
     var HTTP_CONFIG = {
         timeout: 5000

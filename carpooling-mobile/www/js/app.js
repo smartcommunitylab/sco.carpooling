@@ -20,14 +20,15 @@ angular.module('carpooling', [
 
 .run(function ($ionicPlatform, $rootScope, $q, StorageSrv, LoginSrv, UserSrv, Config) {
     $rootScope.pushRegistration = function (userId) {
-        //console.log('logged user id ' + userId);
         try {
             window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
-            var channel = 'CarPooling_' + userId;
-            window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
-            //console.log('successfully created channel ' + channel);
+            window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
+                var channel = 'CarPooling_' + userId;
+                window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
+                console.log('successfully created channel ' + channel);
+            };
         } catch (ex) {
-            //console.log('exception ' + ex.message);
+            console.log('exception ' + ex.message);
         }
     };
 
@@ -48,6 +49,7 @@ angular.module('carpooling', [
         LoginSrv.logout().then(
             function (data) {
                 StorageSrv.saveUser(null);
+                ionic.Platform.exitApp();
             },
             function (error) {
                 // TODO: handle logout error
@@ -223,7 +225,6 @@ angular.module('carpooling', [
 
     .state('app.cerca', {
         url: '/cerca',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/cerca.html',
@@ -320,6 +321,7 @@ angular.module('carpooling', [
         menu_chat: 'Chat',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        menu_logout: 'Logout',
         modal_map: 'Scegli da mappa',
         modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
@@ -357,13 +359,21 @@ angular.module('carpooling', [
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
+        lbl_on_request: 'Su richiesta',
+        lbl_no_inter_stops: 'Nessuna',
         lbl_start_time: 'Orario di partenza',
         lbl_user_car_owner: 'Automunito',
         lbl_user_car_info: 'Note auto',
         lbl_user_car_seats: 'Posti disponibili',
+        lbl_end_time: 'Orario di arrivo',
+        lbl_recurrency: 'Ricorrenza',
+        lbl_passenger: 'Passeggeri',
+        lbl_spaces_left: 'liberi',
+        lbl_driver_contact: 'contatta il conducente',
+        lbl_ask_trip: 'richiedi passaggio',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
-        title_setrecurrence: 'Imposta ricorrenza',
+        title_setrecurrency: 'Imposta ricorrenza',
         radio_daily: 'Giornaliera',
         radio_weekly: 'Settimanale',
         radio_monthly: 'Mensile',

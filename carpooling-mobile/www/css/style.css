@@ -248,6 +248,9 @@ placeautocomplete ul {
 .card.card-trip {
     position: relative;
 }
+.card.card-trip:first-child {
+    margin-top: 10px;
+}
 .card.card-trip .row {
     padding-top: 0;
     padding-bottom: 0;
@@ -293,9 +296,69 @@ placeautocomplete ul {
     text-align: center;
     border-bottom: 1px solid #A0A0A0;
 }
-
 .user-profile .user-image i {
     font-size: 10em;
 }
-
 .user-profile .user-options {}
+
+/* USERINFO  */
+
+.user-profile .user-data {
+    text-align: center;
+    border-bottom: 1px solid #A0A0A0;
+}
+.user-profile .user-image i {
+    font-size: 10em;
+}
+.user-profile .user-options {}
+
+/* VIAGGIO */
+
+.carpooling-theme .trip-info {
+    color: gray;
+}
+.carpooling-theme .trip-info span {
+    color: #000000;
+}
+.carpooling-theme .passenger {
+    color: #3448A5;
+}
+.carpooling-theme .custom-icons {
+    font-size: 3em;
+    text-align: center;
+}
+.carpooling-theme .custom-icons li {
+    display: inline-block;
+    padding-right: 0.8em;
+    color: #000000;
+}
+.carpooling-theme .passenger #places_left {
+    font-size: 0.6em;
+    border: 2px solid #3448A5;
+    border-radius: 50%;
+    position: relative;
+    bottom: 0.3em;
+    color: #3448A5;
+}
+.carpooling-theme .passenger #places_left p {
+    font-size: 0.3em;
+}
+.carpooling-theme .passenger #places_left div {
+    position: relative;
+    left: 0.3em;
+    top: 0.3em;
+}
+.carpooling-theme .trip-actions {
+    text-align: center;
+}
+.carpooling-theme .trip-actions button {
+    margin-right: 2px;
+    margin-left: 2px;
+    color: white;
+    background-color: dodgerblue;
+    font-size: 0.8em;
+    font-weight: bold;
+    display: inline-block;
+    width: 48%;
+    line-height: 1em;
+}

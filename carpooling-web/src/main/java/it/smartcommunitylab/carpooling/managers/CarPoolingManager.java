@@ -29,19 +29,23 @@ import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.User;
+import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.DiscussionRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.NotificationRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
+import it.smartcommunitylab.carpooling.notification.SendPushNotification;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,6 +75,8 @@ public class CarPoolingManager {
 	private MobilityPlanner mobilityPlanner;
 	@Autowired
 	private NotificationRepository notificationRepository;
+	@Autowired
+	private SendPushNotification sendPushNotification;
 
 	public List<TravelRequest> getTravelRequest(String userId) {
 		return travelRequestRepository.findByUserId(userId);
@@ -102,6 +108,8 @@ public class CarPoolingManager {
 		searchTravels = travelRepository.searchTravels(commIdsForUser, travelRequest);
 
 		if (travelRequest.isMonitored()) {
+			// make sure if its the logged in user.
+			travelRequest.setUserId(userId);
 			travelRequestRepository.save(travelRequest);
 		}
 
@@ -114,17 +122,69 @@ public class CarPoolingManager {
 		List<Itinerary> itns = mobilityPlanner.plan(travel);
 
 		if (!itns.isEmpty()) {
+			
+			String fromName = "";
+			String toName = "";
+			String fromAddr = "";
+			String toAddr = "";
+			
 			travel.setUserId(userId);
 			travel.setRoute(itns.get(0));
 			travel.setActive(true);
+			
+			if (travel.getFrom().getName() != null && !travel.getFrom().getName().isEmpty()) {
+				fromName = travel.getFrom().getName(); 
+			}
+					
+			if (travel.getFrom().getAddress() != null && !travel.getFrom().getAddress().isEmpty()) {
+				fromAddr = travel.getFrom().getAddress();
+			}
+					
+			if (travel.getTo().getName() != null && !travel.getTo().getName().isEmpty()) {
+				toName = travel.getTo().getName();
+			}
+			
+			if (travel.getTo().getAddress() != null && !travel.getTo().getAddress().isEmpty()) {
+				toAddr = travel.getTo().getAddress();
+			}
+			// from.
+			Zone updateFrom = new Zone(fromName, fromAddr, travel.getFrom().getLatitude(), travel.getFrom().getLongitude(), travel
+					.getFrom().getRange());
+			travel.setFrom(updateFrom);
+			// to
+			Zone updateTo = new Zone(toName, toAddr, travel.getTo().getLatitude(), travel.getTo().getLongitude(), travel
+					.getTo().getRange());
+			travel.setTo(updateTo);
+			
 			for (Community community : communityRepository.findByUserId(userId)) {
 				if (!travel.getCommunityIds().contains(community.getId())) {
 					travel.getCommunityIds().add(community.getId());
 				}
 			}
 			travelRepository.save(travel);
+
+			// loop on all trip request and check if this new travel matches any of those.
+			for (TravelRequest travelRequest : travelRequestRepository.findAllMatchTravelRequest(travel)) {
+				String travelRequestId = travelRequest.getId();
+				String targetUserId = travelRequest.getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("travelRequestId", travelRequestId);
+				Notification tripAvailability = new Notification(targetUserId,
+						CarPoolingUtils.NOTIFICATION_AVALIABILITY, data, false, travel.getId(),
+						System.currentTimeMillis());
+				notificationRepository.save(tripAvailability);
+				// notify via parse.
+				try {
+					sendPushNotification.sendNotification("parse.api.uri", targetUserId, "alert",
+							"Hi, a new travel offer is available matching your travel request Id " + travelRequestId);
+				} catch (MalformedURLException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			}
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel itinerary not found");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel itinerary not found");
 		}
 
 		return travel;
@@ -160,7 +220,7 @@ public class CarPoolingManager {
 				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user not valid.");
 			}
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel not found.");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
 		}
 
 		return travel;
@@ -187,7 +247,7 @@ public class CarPoolingManager {
 				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not accepted");
 			}
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "travel not found");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found");
 		}
 
 		return travel;
@@ -227,7 +287,7 @@ public class CarPoolingManager {
 			}
 			
 		} else {
-			throw new CarPoolingCustomException(HttpStatus.NOT_FOUND.value(), "user not found");
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "user not found");
 		}
 
 		return travelProfile;
@@ -257,12 +317,12 @@ public class CarPoolingManager {
 				gameProfile.getPassengerRatings().put(userId, rating);
 				recalculateRatings(passenger);
 			} else {
-				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 				errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger has null game profile.");
 			}
 		} else {
 
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "passenger does not exist.");
 
 		}
@@ -327,14 +387,14 @@ public class CarPoolingManager {
 
 			} else {
 
-				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+				errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 				errorMap.put(CarPoolingUtils.ERROR_MSG, "driver has null game profile.");
 
 			}
 
 		} else {
 
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "driver does not exist.");
 
 		}
@@ -356,7 +416,7 @@ public class CarPoolingManager {
 			}
 			userRepository.save(driver);
 		} else {
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "driver does not exist.");
 
 		}
@@ -454,7 +514,7 @@ public class CarPoolingManager {
 			notification.setStatus(true);
 			notificationRepository.save(notification);
 		} else {
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "notification does not exist.");
 
 		}
@@ -476,7 +536,7 @@ public class CarPoolingManager {
 		if (notification != null) {
 			notificationRepository.delete(notification);
 		} else {
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "notification does not exist.");
 
 		}
@@ -498,7 +558,7 @@ public class CarPoolingManager {
 		if (travelRequest != null) {
 			travelRequestRepository.delete(travelRequest);
 		} else {
-			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.NOT_FOUND.value()));
+			errorMap.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			errorMap.put(CarPoolingUtils.ERROR_MSG, "travelRequest does not exist.");
 
 		}

@@ -77,6 +77,7 @@ public class TestManager {
 		travelRequestRepository.deleteAll();
 		communityRepository.deleteAll();
 		travelRepository.deleteAll();
+		travelRequestRepository.deleteAll();
 		userRepository.deleteAll();
 
 	}
@@ -87,6 +88,7 @@ public class TestManager {
 		travelRequestRepository.deleteAll();
 		communityRepository.deleteAll();
 		travelRepository.deleteAll();
+		travelRequestRepository.deleteAll();
 		userRepository.deleteAll();
 
 		InputStream travelJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("travel.json");
@@ -276,6 +278,30 @@ public class TestManager {
 		}
 
 		Assert.assertTrue(accepted);
+	}
+	
+	@Test
+	public void testTravelRequestMatching() throws JsonProcessingException, IOException, CarPoolingCustomException {
+
+		InputStream jsonTravelRequestFile = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("match-travel-request.json");
+		JsonNode rootNodeTravelReq = mapper.readTree(jsonTravelRequestFile);
+		ArrayNode arrayNodeTravelReqs = (ArrayNode) rootNodeTravelReq;
+		for (JsonNode node : arrayNodeTravelReqs) {
+			TravelRequest refTravelRequest = mapper.convertValue(node, TravelRequest.class);
+			travelRequestRepository.save(refTravelRequest);
+
+		}
+
+		// create travel with ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("match-travel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+		for (JsonNode node : arrayNode) {
+			Travel refTravel = mapper.convertValue(node, Travel.class);
+			travelManager.saveTravel(refTravel, "53");
+
+		}
 	}
 
 }
