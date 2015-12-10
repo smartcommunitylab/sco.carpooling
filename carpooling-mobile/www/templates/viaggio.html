@@ -13,48 +13,40 @@
         </div>
         <div class="padding trip-info">
             <ul>
-                <p>
-                    <li>
-                        <span>{{selectedTrip.when | date: travelDateFormat}}</span>
-                    </li>
-                </p>
-                <p>
-                    <li>
-                        {{'lbl_from' | translate | uppercase}}: <span>{{selectedTrip.from.name}}</span>
-                    </li>
-                    <li>
-                        {{'lbl_to' | translate | uppercase}}: <span>{{selectedTrip.to.name}}</span>
-                    </li>
-                </p>
-                <p>
-                    <li>
-                        {{'lbl_start_time' | translate}}: <span>{{selectedTrip.route.startime | date: travelTimeFormat}}</span>
-                    </li>
-                    <li>
-                        {{'lbl_end_time' | translate}}: <span>{{selectedTrip.route.endtime | date: travelTimeFormat}}</span>
-                    </li>
-                </p>
-                <p>
-                    <li>
-                        {{'lbl_halfwaystops' | translate}}: <span>{{onRequest}}
-                    </li>
-                </p>
-                <p>
-                    <li>
-                        {{'lbl_recurrency' | translate}}: <span>  {{dowString}}
-                    </li>
-                </p>
+                <li>
+                    <p><span>{{selectedTrip.when | date: travelDateFormat}}</span></p>
+                </li>
+                <li>
+                    <p>{{'lbl_from' | translate | uppercase}}: <span>{{selectedTrip.from.name}}</span></p>
+                </li>
+                <li>
+                    <p>{{'lbl_to' | translate | uppercase}}: <span>{{selectedTrip.to.name}}</span></p>
+                </li>
+                <li>
+                    <p>{{'lbl_start_time' | translate}}: <span>{{selectedTrip.route.startime | date: travelTimeFormat}}</span></p>
+                </li>
+                <li>
+                    <p>{{'lbl_end_time' | translate}}: <span>{{selectedTrip.route.endtime | date: travelTimeFormat}}</span></p>
+                </li>
+                <li>
+                    <p>{{'lbl_halfwaystops' | translate}}: <span>{{(!!selectedTrip.intermediateStops ? 'lbl_halfwaystops_onrequest' : 'lbl_halfwaystops_none') | translate}}</span></p>
+                </li>
+                <li>
+                    <p>{{'lbl_recurrency' | translate}}: <span>{{!!selectedTrip.recurrency ? dowString : 'lbl_recurrency_none' | translate}}</span></p>
+                </li>
             </ul>
         </div>
         <div class="padding-left passenger">
             <p>{{'lbl_passenger' | translate | uppercase}}</p>
             <ul class="custom-icons">
-                <li class="icons ion-ios-person"  ng-repeat="i in getNumber(passengerCount) track by $index"></li>
-             <li id="places_left"><div><span>+{{freeSpaces}}</span>
+                <li class="icons ion-ios-person" ng-repeat="i in getNumber(bookingCounters.booked) track by $index"></li>
+                <li id="places_left">
+                    <div>
+                        <span>+{{bookingCounters.available}}</span>
                         <p>{{'lbl_spaces_left' | translate | uppercase}}</p>
-        </div>
-        </li>
-        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
         <div class="trip-actions">
             <button class="button">

@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.cercaviaggi', [])
 
-.controller('CercaViaggioCtrl', function ($scope, Config, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
+.controller('CercaViaggioCtrl', function ($scope, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, Config, Utils, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
     // TODO: move travelRequest default here; modify that object
     $scope.travelRequest = {
         'from': {
@@ -198,8 +198,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         from: yesterday,
         to: new Date(2019, 12, 31, 23, 59, 59),
         inputDate: today,
-        weekDaysList: Config.getDoWList(),
-        monthList: Config.getMonthList(),
+        weekDaysList: Utils.getSDoWList(),
+        monthList: Utils.getMonthList(),
         mondayFirst: true,
         disableDates: null,
         callback: function (val) { //Mandatory

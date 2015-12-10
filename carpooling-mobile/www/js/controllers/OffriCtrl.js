@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.offri', [])
 
-.controller('OffriCtrl', function ($scope, $state, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+.controller('OffriCtrl', function ($scope, $state, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
     // 'from' and 'to' are 'zone' objects
     $scope.travel = {
         'from': {
@@ -191,8 +191,8 @@ angular.module('carpooling.controllers.offri', [])
         from: yesterday,
         to: new Date(2019, 12, 31, 23, 59, 59),
         inputDate: today,
-        weekDaysList: Config.getDoWList(),
-        monthList: Config.getMonthList(),
+        weekDaysList: Utils.getSDoWList(),
+        monthList: Utils.getMonthList(),
         mondayFirst: true,
         disableDates: null,
         callback: function (val) { // Mandatory
@@ -242,7 +242,7 @@ angular.module('carpooling.controllers.offri', [])
     };
 
     $scope.getDoW = function () {
-        return Config.getDoW();
+        return Utils.getSDoWList();
     };
 
     $scope.getArray = function (num) {

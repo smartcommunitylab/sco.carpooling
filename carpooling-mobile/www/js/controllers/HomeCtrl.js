@@ -4,7 +4,7 @@ angular.module('carpooling.controllers.home', [])
 
 .controller('HomeCtrl', function ($scope) {})
 
-.controller('PartecipoCtrl', function ($scope, UserSrv, PassengerSrv) {
+.controller('PartecipoCtrl', function ($scope, $state, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
@@ -57,9 +57,15 @@ angular.module('carpooling.controllers.home', [])
             // TODO: handle getPassengerTrips error
         }
     );
+
+    $scope.selectTrip = function (index) {
+        $state.go('app.viaggio', {
+            'trip': $scope.passengerTrips[index]
+        });
+    };
 })
 
-.controller('OffroCtrl', function ($scope, DriverSrv) {
+.controller('OffroCtrl', function ($scope, $state, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -73,4 +79,10 @@ angular.module('carpooling.controllers.home', [])
             // TODO: handle getDriverTrips error
         }
     );
+
+    $scope.selectTrip = function (index) {
+        $state.go('app.viaggio', {
+            'trip': $scope.driverTrips[index]
+        });
+    };
 });
