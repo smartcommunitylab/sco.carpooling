@@ -109,7 +109,7 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips/{tripId}")
 	public @ResponseBody
-	Response<Travel> createTrips(@PathVariable String tripId) throws CarPoolingCustomException {
+	Response<Travel> getTrip(@PathVariable String tripId) throws CarPoolingCustomException {
 		return new Response<Travel>(carPoolingManager.getTrip(tripId));
 	}
 
