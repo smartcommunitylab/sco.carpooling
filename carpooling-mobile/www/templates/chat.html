@@ -1,17 +1,25 @@
 <ion-view title="{{'menu_chat' | translate}}">
-    <ion-content>
-        <div ng-repeat="ms in messages" ng-last-repeat="messages">
-            <div class="card card-chat" ng-class="{'card-chat-my': isMe(ms.userId)}">
-                <div ng-if="!isMe(ms.userId)" class="item item-divider">
-                    <span>{{ getUserById(ms.userId).name }} {{'msg_talk' | translate}}</span>
-                </div>
-                <div class="item">
-                    <span>{{ ms.text }}</span>
-                </div>
-                <div class="item item-divider">
-                    {{ ms.timestamp | date:'HH:mm' }}
+    <ion-content ng-init="loadAllMsg()" delegate-handle="userMessageScroll">
+        <div class="chat-wrapper">
+            <div ng-repeat="ms in messages" ng-last-repeat="messages">
+                <div class="card card-chat" ng-class="{'card-chat-my': (isMe(ms.userId) && !chatExtraLength(ms.text)), 'card-chat-my-extra': (isMe(ms.userId) && chatExtraLength(ms.text))}">
+                    <div ng-if="!isMe(ms.userId)" class="item item-divider">
+                        <span>{{ getUserById(ms.userId).name }} {{'msg_talk' | translate}}</span>
+                    </div>
+                    <div class="item">
+                        <span>{{ ms.text }}</span>
+                    </div>
+                    <div class="item item-divider">
+                        {{ ms.timestamp | date:'HH:mm' }}
+                    </div>
                 </div>
             </div>
         </div>
     </ion-content>
+    <ion-footer-bar keyboard-attach class="bar-stable item-input input-chat">
+        <input type="text" placeholder="Scrivi un messaggio" ng-model="new_message" ng-focus="inputUp()" ng-blur="inputDown()">
+        <button class="button button-carpooling icon ion-android-send" ng-click="sendMessage(new_message)"><!-- button-icon button-large -->
+<!--          <i class="icon ion-android-send"></i>-->
+        </button>
+    </ion-footer-bar>
 </ion-view>

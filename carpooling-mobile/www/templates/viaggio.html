@@ -28,20 +28,20 @@
                 </p>
                 <p>
                     <li>
-                        {{'lbl_start_time' | translate}}: <span> <!--TO DO: insert correct time-->{{selectedTrip.route.startime | date: travelTimeFormat}}</span>
+                        {{'lbl_start_time' | translate}}: <span>{{selectedTrip.route.startime | date: travelTimeFormat}}</span>
                     </li>
                     <li>
-                        {{'lbl_end_time' | translate}}: <span> <!--TO DO: insert correct time--> {{selectedTrip.route.endtime | date: travelTimeFormat}}</span>
+                        {{'lbl_end_time' | translate}}: <span>{{selectedTrip.route.endtime | date: travelTimeFormat}}</span>
                     </li>
                 </p>
                 <p>
                     <li>
-                        {{'lbl_halfwaystops' | translate}}: <span> <!--TO DO: insert correct data-->su richiesta
+                        {{'lbl_halfwaystops' | translate}}: <span>{{onRequest}}
                     </li>
                 </p>
                 <p>
-                    <li><!--TO DO: insert correct time-->
-                        {{'lbl_recurrency' | translate}}: <span> ogni mercoledì
+                    <li>
+                        {{'lbl_recurrency' | translate}}: <span>  {{dowString}}
                     </li>
                 </p>
             </ul>

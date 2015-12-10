@@ -1,0 +1,387 @@
+angular.module('carpooling.controllers.offri', [])
+
+.controller('OffriCtrl', function ($scope, $state, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+    // 'from' and 'to' are 'zone' objects
+    $scope.travel = {
+        'from': {
+            'name': '',
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
+        },
+        'to': {
+            'name': '',
+            'address': '',
+            'latitude': 0,
+            'longitude': 0
+        },
+        'when': 0,
+        'places': 0,
+        'intermediateStops': false
+    };
+
+    /*
+     * Autocompletion stuff
+     */
+    // names: array with the names of the places
+    // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
+    $scope.places = {
+        'names': [],
+        'coordinates': {}
+    };
+
+    $scope.typing = function (typedthings) {
+        var result = typedthings;
+        var newPlaces = PlanSrv.getTypedPlaces(typedthings);
+        newPlaces.then(function (data) {
+            //merge with favorites and check no double values
+            $scope.places.names = data;
+            $scope.places.coordinates = PlanSrv.getNames();
+        });
+    };
+
+    $scope.setLocationFrom = function (name) {
+        $scope.travel['from'].name = name;
+        $scope.travel['from'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travel['from'].latitude = parseFloat(coordinates[0]);
+        $scope.travel['from'].longitude = parseFloat(coordinates[1]);
+    };
+
+    $scope.setLocationTo = function (name) {
+        $scope.travel['to'].name = name;
+        $scope.travel['to'].address = name;
+        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        $scope.travel['to'].latitude = parseFloat(coordinates[0]);
+        $scope.travel['to'].longitude = parseFloat(coordinates[1]);
+    };
+
+    /*
+     * Map stuff
+     */
+    var mapId = 'modalMap';
+    var selectedField = null;
+
+    $scope.modalMap = null;
+
+    angular.extend($scope, {
+        center: {
+            lat: 46.067819,
+            lng: 11.121306,
+            zoom: 8
+        },
+        defaults: {
+            scrollWheelZoom: false
+        },
+        events: {
+            map: {
+                enable: ['click']
+            }
+        }
+    });
+
+    // Modal Map
+    $ionicModal.fromTemplateUrl('templates/modal_map.html', {
+        id: '1',
+        scope: $scope,
+        backdropClickToClose: true,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modalMap = modal;
+    });
+
+    $scope.initMap = function () {
+        MapSrv.initMap(mapId).then(function () {
+            $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
+                $ionicLoading.show();
+
+                var confirmPopup = null;
+                var confirmPopupOptions = {
+                    title: $filter('translate')('modal_map_confirm'),
+                    template: '',
+                    buttons: [
+                        {
+                            text: $filter('translate')('cancel'),
+                            type: 'button'
+                        },
+                        {
+                            text: $filter('translate')('ok'),
+                            type: 'button-carpooling'
+                        }
+                    ]
+                };
+
+                var fillConfirmPopupOptions = function (name, coordinates) {
+                    confirmPopupOptions.template = name;
+                    confirmPopupOptions.buttons[1].onTap = function () {
+                        if (!!selectedField) {
+                            $scope.travel[selectedField].name = name;
+                            $scope.travel[selectedField].address = name;
+                            var splittedCoords = coordinates.split(',');
+                            $scope.travel[selectedField].latitude = parseFloat(splittedCoords[0]);
+                            $scope.travel[selectedField].longitude = parseFloat(splittedCoords[1]);
+                        }
+                        $scope.hideModalMap();
+                    };
+                };
+
+                GeoSrv.geolocate([args.leafletEvent.latlng.lat, args.leafletEvent.latlng.lng]).then(
+                    function (data) {
+                        $ionicLoading.hide();
+                        var placeName = '';
+                        var coordinates = '';
+
+                        if (!!data.response.docs[0]) {
+                            placeName = PlanSrv.generatePlaceString(data.response.docs[0]);
+                            coordinates = data.response.docs[0].coordinate;
+                        } else {
+                            placeName = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                            coordinates = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        }
+
+                        fillConfirmPopupOptions(placeName, coordinates);
+                        confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
+                        console.log(placeName + ' (' + coordinates + ')');
+                    },
+                    function (err) {
+                        $ionicLoading.hide();
+                        var placeName = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        var coordinates = args.leafletEvent.latlng.lat + ',' + args.leafletEvent.latlng.lng;
+                        fillConfirmPopupOptions(placeName, coordinates);
+                        confirmPopup = $ionicPopup.confirm(confirmPopupOptions);
+                        console.log(placeName + ' (' + coordinates + ')');
+                    }
+                );
+            });
+        });
+    };
+
+    $scope.showModalMap = function (field) {
+        selectedField = field;
+
+        $scope.modalMap.show().then(function () {
+            // resize map!
+            var modalMapElement = document.getElementById('modal-map-container');
+            if (modalMapElement != null) {
+                MapSrv.resizeElementHeight(modalMapElement, mapId);
+                MapSrv.refresh(mapId);
+            }
+        });
+    };
+
+    /* Date Picker */
+    $scope.dateMask = 'dd MMMM yyyy';
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var yesterday = angular.copy(today);
+    yesterday.setHours(-24);
+
+    $scope.datepickerObj = {
+        titleLabel: $filter('translate')('popup_datepicker_title'),
+        todayLabel: $filter('translate')('popup_datepicker_today'),
+        closeLabel: $filter('translate')('cancel'),
+        setLabel: $filter('translate')('ok'),
+        errorMsgLabel: null,
+        setButtonType: 'button-carpooling',
+        todayButtonType: 'button-carpooling',
+        closeButtonType: '',
+        templateType: 'popup',
+        modalHeaderColor: '',
+        modalFooterColor: '',
+        from: yesterday,
+        to: new Date(2019, 12, 31, 23, 59, 59),
+        inputDate: today,
+        weekDaysList: Config.getDoWList(),
+        monthList: Config.getMonthList(),
+        mondayFirst: true,
+        disableDates: null,
+        callback: function (val) { // Mandatory
+            if (typeof (val) === 'undefined') {
+                console.error('[datepicker] Date not selected');
+            } else {
+                /*console.log('Selected date is : ', val);
+                console.log('Selected time is : ', $scope.timepickerObj.inputEpochTime);
+                var total = angular.copy(val);
+                total.setSeconds(total.getSeconds() + $scope.timepickerObj.inputEpochTime);
+                console.log('Total date/time: ' + total);*/
+                $scope.datepickerObj.inputDate = val;
+            }
+        },
+    };
+
+    /* Time Picker */
+    var now = new Date();
+    $scope.timepickerObj = {
+        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
+        step: 1,
+        format: 24,
+        titleLabel: $filter('translate')('popup_timepicker_title'),
+        setLabel: $filter('translate')('ok'),
+        closeLabel: $filter('translate')('cancel'),
+        setButtonType: 'button-carpooling',
+        closeButtonType: '',
+        callback: function (val) { //Mandatory
+            if (typeof (val) === 'undefined') {
+                console.error('[timepicker] Time not selected');
+            } else {
+                /*console.log('Selected date is : ', $scope.datepickerObj.inputDate);
+                console.log('Selected time is : ', val);
+                var total = angular.copy($scope.datepickerObj.inputDate);
+                total.setSeconds(total.getSeconds() + val);
+                console.log('Total date/time: ' + total);*/
+                $scope.timepickerObj.inputEpochTime = val;
+            }
+        }
+    };
+
+    /*
+     * Recurrency popup stuff
+     */
+    $scope.hideModalMap = function () {
+        $scope.modalMap.hide();
+    };
+
+    $scope.getDoW = function () {
+        return Config.getDoW();
+    };
+
+    $scope.getArray = function (num) {
+        var array = new Array(num);
+        for (var i = 0; i < num; i++) {
+            array[i] = i + 1;
+        }
+        return array;
+    }
+
+    $scope.recurrency = {
+        isRecurrent: false,
+        recurrencyType: 'w',
+        recurrencyD: '1',
+        recurrencyDoW: [],
+        recurrencyDoWstring: ''
+    };
+
+    $scope.recurrencyPopupDoW = [
+        {
+            name: 'dow_monday',
+            shortname: 'dow_monday_short',
+            value: 2,
+            checked: false
+        },
+        {
+            name: 'dow_tuesday',
+            shortname: 'dow_tuesday_short',
+            value: 3,
+            checked: false
+        },
+        {
+            name: 'dow_wednesday',
+            shortname: 'dow_wednesday_short',
+            value: 4,
+            checked: false
+        },
+        {
+            name: 'dow_thursday',
+            shortname: 'dow_thursday_short',
+            value: 5,
+            checked: false
+        },
+        {
+            name: 'dow_friday',
+            shortname: 'dow_friday_short',
+            value: 6,
+            checked: false
+        },
+        {
+            name: 'dow_saturday',
+            shortname: 'dow_saturday_short',
+            value: 7,
+            checked: false
+        },
+        {
+            name: 'dow_sunday',
+            shortname: 'dow_sunday_short',
+            value: 1,
+            checked: false
+        }
+    ];
+
+    $scope.updateRecurrency = function () {
+        // update recurrenceDoW and recurrenceDoWstring
+        $scope.recurrency.recurrencyDoW = [];
+        $scope.recurrency.recurrencyDoWstring = '';
+
+        for (var i = 0; i < $scope.recurrencyPopupDoW.length; i++) {
+            var dow = $scope.recurrencyPopupDoW[i];
+            if (dow.checked) {
+                $scope.recurrency.recurrencyDoW.push(dow.value);
+                if (!!$scope.recurrency.recurrencyDoWstring) {
+                    $scope.recurrency.recurrencyDoWstring = $scope.recurrency.recurrencyDoWstring + ', ';
+                }
+                $scope.recurrency.recurrencyDoWstring = $scope.recurrency.recurrencyDoWstring + $filter('translate')(dow.name);
+            }
+        }
+
+        $scope.recurrency.isRecurrent = $scope.recurrency.recurrencyDoW.length > 0;
+    };
+
+    var recurrencyPopup = {
+        templateUrl: 'templates/popup_offri.html',
+        title: $filter('translate')('title_setrecurrency'),
+        scope: $scope,
+        buttons: [
+            {
+                text: $filter('translate')('cancel')
+            },
+            {
+                text: $filter('translate')('ok'),
+                type: 'button-carpooling'
+            }
+        ]
+    };
+
+    $scope.showRecurrencyPopup = function () {
+        $ionicPopup.show(recurrencyPopup).then(
+            function (res) {
+                $scope.updateRecurrency();
+            }
+        );
+    };
+
+    $scope.$watch('recurrency.isRecurrent', function (newValue, oldValue) {
+        if (newValue !== oldValue && !!newValue) {
+            $scope.showRecurrencyPopup();
+        }
+    });
+
+    $scope.offer = function () {
+        // NOTE: 'from', 'to' and 'intermediateStops' is updated directly on $scope.travel
+        var auto = StorageSrv.getUser().auto;
+
+        if (!!auto && auto.posts > 0) {
+            $scope.travel['places'] = auto.posts;
+            var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
+            selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
+            $scope.travel['when'] = selectedDateTime.getTime();
+
+            if ($scope.recurrency.isRecurrent) {
+                $scope.travel['recurrency'] = {
+                    time: selectedDateTime.getHours(),
+                    days: $scope.recurrency.recurrencyDoW
+                }
+            }
+
+            DriverSrv.createTrip($scope.travel).then(
+                function (savedTravel) {
+                    // TODO: handle createTrip success
+                    //console.log(savedTravel);
+                    $state.go('app.home.offro');
+                },
+                function (error) {
+                    // TODO: handle createTrip error
+                    console.log(error);
+                }
+            );
+        }
+    };
+});

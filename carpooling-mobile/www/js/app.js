@@ -14,7 +14,12 @@ angular.module('carpooling', [
     'carpooling.services.geo',
     'carpooling.services.storage',
     'carpooling.directives',
-    'carpooling.controllers',
+    'carpooling.controllers.home',
+    'carpooling.controllers.offri',
+    'carpooling.controllers.cercaviaggi',
+    'carpooling.controllers.viaggio',
+    'carpooling.controllers.notifications',
+    'carpooling.controllers.user',
     'leaflet-directive'
 ])
 
@@ -209,23 +214,22 @@ angular.module('carpooling', [
         }
     })
 
-    .state('app.cercaviaggi', {
-        url: '/cercaviaggi',
+    .state('app.risultaticercaviaggi', {
+        url: '/risultaticercaviaggi',
         cache: false,
         params: {
             'searchResults': {}
         },
         views: {
             'menuContent': {
-                templateUrl: 'templates/cercaviaggi.html',
-                controller: 'CercaViaggiCtrl'
+                templateUrl: 'templates/risultaticercaviaggi.html',
+                controller: 'RisultatiCercaViaggiCtrl'
             }
         }
     })
 
     .state('app.cerca', {
         url: '/cerca',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/cerca.html',
@@ -251,7 +255,7 @@ angular.module('carpooling', [
         views: {
             'menuContent': {
                 templateUrl: 'templates/notifiche.html',
-                controller: 'NotificationCtrl'
+                controller: 'NotificationsCtrl'
             }
         }
     })
@@ -360,6 +364,8 @@ angular.module('carpooling', [
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
+        lbl_on_request: 'Su richiesta',
+        lbl_no_inter_stops: 'Nessuna',
         lbl_start_time: 'Orario di partenza',
         lbl_user_car_owner: 'Automunito',
         lbl_user_car_info: 'Note auto',
