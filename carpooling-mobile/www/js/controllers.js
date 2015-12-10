@@ -61,7 +61,7 @@ angular.module('carpooling.controllers', [])
 
 .controller('OffroCtrl', function ($scope, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
-    $scope.travelTimeFormat = 'hh:mm';
+    $scope.travelTimeFormat = 'HH:mm';
 
     $scope.driverTrips = [];
 
