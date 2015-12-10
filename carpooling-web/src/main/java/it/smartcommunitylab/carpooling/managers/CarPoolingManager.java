@@ -175,10 +175,7 @@ public class CarPoolingManager {
 				notificationRepository.save(tripAvailability);
 				// notify via parse.
 				try {
-					sendPushNotification.sendNotification("parse.api.uri", targetUserId, "alert",
-							"Hi, a new travel offer is available matching your travel request Id " + travelRequestId);
-				} catch (MalformedURLException e) {
-					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+					sendPushNotification.sendNotification(targetUserId, tripAvailability);
 				} catch (JSONException e) {
 					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
 				}
@@ -216,6 +213,23 @@ public class CarPoolingManager {
 								"travel not bookable.");
 					}
 				}
+				if (travel != null) {
+					String targetUserId = travel.getUserId();
+					Map<String, String> data = new HashMap<String, String>();
+					data.put("senderId", userId);
+					User user = userRepository.findOne(userId);
+					data.put("senderFullName", user.fullName());
+					Notification tripAvailability = new Notification(targetUserId,
+							CarPoolingUtils.NOTIFICATION_BOOKING, data, false, travel.getId(),
+							System.currentTimeMillis());
+					notificationRepository.save(tripAvailability);
+					// notify via parse.
+					try {
+						sendPushNotification.sendNotification(targetUserId, tripAvailability);
+					} catch (JSONException e) {
+						throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+					}	
+				}
 			} else {
 				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user not valid.");
 			}
@@ -231,20 +245,33 @@ public class CarPoolingManager {
 		Travel travel = travelRepository.findTravelByIdAndDriverId(travelId, userId);
 		//travelRepository.findOne(travelId);
 
-		boolean accepted = false;
+		boolean found = false;
 
 		if (travel != null) {
 			for (Booking book : travel.getBookings()) {
 				if (book.equals(booking)) {
 					book.setAccepted(booking.getAccepted());
-					accepted = true;
+					found = true;
+					break;
 				}
 			}
 
-			if (accepted) {
+			if (found) {
 				travelRepository.save(travel);
+				String targetUserId = booking.getTraveller().getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("status", ""+booking.getAccepted());
+				Notification tripAvailability = new Notification(targetUserId,
+						CarPoolingUtils.NOTIFICATION_CONFIRM, data, false, travel.getId(),
+						System.currentTimeMillis());
+				notificationRepository.save(tripAvailability);
+				try {
+					sendPushNotification.sendNotification(targetUserId, tripAvailability);
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}	
 			} else {
-				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not accepted");
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not found");
 			}
 		} else {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found");
@@ -438,6 +465,24 @@ public class CarPoolingManager {
 
 			discussion.getMessages().add(message);
 			discussionRepository.save(discussion);
+			
+			String targetUserId = message.getTargetUserId();
+			Map<String, String> data = new HashMap<String, String>();
+			data.put("senderId", userId);
+			User user = userRepository.findOne(userId);
+			data.put("senderFullName", user.fullName());
+			data.put("message", message.getMessage());
+			Notification tripAvailability = new Notification(targetUserId,
+					CarPoolingUtils.NOTIFICATION_CHAT, data, false, travelId,
+					System.currentTimeMillis());
+			notificationRepository.save(tripAvailability);
+			// notify via parse.
+			try {
+				sendPushNotification.sendNotification(targetUserId, tripAvailability);
+			} catch (JSONException e) {
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+			}	
+
 
 		} catch (Exception e) {
 			status.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));

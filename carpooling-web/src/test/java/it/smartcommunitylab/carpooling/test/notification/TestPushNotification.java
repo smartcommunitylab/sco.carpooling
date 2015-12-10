@@ -16,6 +16,7 @@
 
 package it.smartcommunitylab.carpooling.test.notification;
 
+import it.smartcommunitylab.carpooling.model.Notification;
 import it.smartcommunitylab.carpooling.notification.SendPushNotification;
 import it.smartcommunitylab.carpooling.test.TestConfig;
 
@@ -43,10 +44,9 @@ public class TestPushNotification {
 	@Test
 	public void testSendNotification() throws MalformedURLException, JSONException {
 
-		String pushNotificationResult = sendPushNotification.sendNotification("parse.api.uri", "53", "alert",
-				"Hi, a new trip offer is available matching your request");
+		boolean pushNotificationResult = sendPushNotification.sendNotification("53", new Notification());
 
-		Assert.assertEquals(pushNotificationResult, "success");
+		Assert.assertEquals(pushNotificationResult, true);
 
 	}
 }

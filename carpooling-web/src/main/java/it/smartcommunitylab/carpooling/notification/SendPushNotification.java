@@ -1,5 +1,7 @@
 package it.smartcommunitylab.carpooling.notification;
 
+import it.smartcommunitylab.carpooling.model.Notification;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,52 +31,46 @@ public class SendPushNotification {
 	private String channel = "CarPooling_";
 
 	private Map<String, String> parseheaders = new HashMap<String, String>();
+	private URL apiURL = null;
 
 	@PostConstruct
-	void init() {
+	void init() throws MalformedURLException {
 		parseheaders.put("X-Parse-Application-Id", env.getProperty("parse.application.key"));
 		parseheaders.put("X-Parse-REST-API-Key", env.getProperty("parse.rest.api.key"));
-
+		apiURL = new URL(env.getProperty("parse.api.uri"));
 	}
 
-	public String sendNotification(String providerKey, String userId, String msgType, String msg)
-			throws MalformedURLException, JSONException {
+	public boolean sendNotification(String userId, Notification n)
+			throws JSONException {
 
-		String result = "failed";
-		URL url = new URL(env.getProperty(providerKey));
+		boolean result = false;
 
-		if (providerKey.equalsIgnoreCase("parse.api.uri")) {
-			/**
-			 *
-			{
-				"channels": ["CarPooling_53"],
-				"data": {
-					"alert": "I am waiting at Povo Manci."
-				}
+		JSONArray channelIdArray = new JSONArray().put(channel + userId);
+
+		JSONObject channels = new JSONObject();
+		channels.put("$in", channelIdArray);
+
+		JSONObject whereClause = new JSONObject();
+		whereClause.put("channels", channels);
+
+		JSONObject dataClause = new JSONObject();
+		dataClause.put("cp_type", n.getType());
+		dataClause.put("cp_travelId", n.getTravelId());
+		
+		if (n.getData() != null) {
+			for (String key : n.getData().keySet()) {
+				dataClause.put("cp_"+key, n.getData().get(key));
 			}
-			 */
+		}
 
-			JSONArray channelIdArray = new JSONArray().put(channel + userId);
+		JSONObject request = new JSONObject();
+		request.put("data", dataClause);
+		request.put("where", whereClause);
 
-			JSONObject channels = new JSONObject();
-			channels.put("$in", channelIdArray);
+		JSONObject response = SendServerRequest.sendJSONRequest(apiURL, parseheaders, request.toString(), true);
 
-			JSONObject whereClause = new JSONObject();
-			whereClause.put("channels", channels);
-
-			JSONObject dataClause = new JSONObject();
-			dataClause.put(msgType, msg);
-
-			JSONObject request = new JSONObject();
-			request.put("data", dataClause);
-			request.put("where", whereClause);
-
-			JSONObject response = SendServerRequest.sendJSONRequest(url, parseheaders, request.toString(), true);
-
-			if (response != null && response.has("result") && response.getBoolean("result")) {
-				result = "success";
-			}
-
+		if (response != null && response.has("result") && response.getBoolean("result")) {
+			result = true;
 		}
 
 		return result;

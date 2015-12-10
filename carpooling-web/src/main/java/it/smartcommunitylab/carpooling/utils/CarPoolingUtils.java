@@ -38,7 +38,11 @@ public class CarPoolingUtils {
 	/** constants. **/
 	public static final String ERROR_CODE = "errorCode";
 	public static final String ERROR_MSG = "errorMsg";
+
 	public static final String NOTIFICATION_AVALIABILITY = "TripAvailability";
+	public static final String NOTIFICATION_BOOKING = "ParticipationRequest";
+	public static final String NOTIFICATION_CONFIRM = "ParticipationResponse";
+	public static final String NOTIFICATION_CHAT = "Chat";
 
 	public static Date getTimeByOffset(Date reqDate, int offset) {
 		Date result;
