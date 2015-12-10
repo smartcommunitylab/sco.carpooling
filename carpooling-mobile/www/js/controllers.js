@@ -713,7 +713,10 @@ angular.module('carpooling.controllers', [])
     console.log($stateParams['trip']);
 })
 
-.controller('NotificationCtrl', function ($scope, $filter, $state) {
+.controller('NotificationCtrl', function ($scope, $filter, $state, $timeout, $ionicScrollDelegate) {
+
+    var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
+
     $scope.notificationType = [
         {
             name: 'message',
@@ -828,8 +831,33 @@ angular.module('carpooling.controllers', [])
             text: 'Ciao Stefano, certo nessun problema. Passo davanti alla Coop mi puoi aspettare li',
             timestamp: '1447918789919',
             userId_target: 1
+        },
+        {
+            id: '4',
+            userId: 1,
+            text: 'Provo a scrivere ancora per vedere se poi mi mette la scrollbar quando la pagina dei messaggi inizia ad allungarsi',
+            timestamp: '1447865802692',
+            userId_target: 2
+        },
+        {
+            id: '5',
+            userId: 2,
+            text: 'Ciao Stefano, nessun problema. Tu continua pure a scrivere che poi vediamo se scoppia tutto o se funziona...',
+            timestamp: '1447918789919',
+            userId_target: 1
+        },
+        {
+            id: '6',
+            userId: 1,
+            text: 'Speriamo in bene, tu incrocia le dita e vediamo cosa succede.',
+            timestamp: '1447918789919',
+            userId_target: 1
         }
     ];
+
+    $scope.loadAllMsg = function(){
+        viewScroll.scrollBottom();
+    };
 
     // test data for users
     $scope.tmp_users = [
@@ -862,6 +890,50 @@ angular.module('carpooling.controllers', [])
 
     $scope.isMe = function (id) {
         return id == $scope.me.id;
+    };
+
+    $scope.chatExtraLength = function(chat){
+        if(chat != null){
+            if(chat.length > 30){
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    $scope.inputUp = function() {
+        //if (isIOS) $scope.data.keyboardHeight = 216;
+        $timeout(function() {
+            viewScroll.resize();
+            viewScroll.scrollBottom(true);
+        }, 500);
+    };
+
+    $scope.inputDown = function() {
+        //if (isIOS) $scope.data.keyboardHeight = 0;
+        $timeout(function() {
+            viewScroll.resize();
+        }, 500);
+    };
+
+    $scope.sendMessage = function(value){
+        if(value != null && value != ""){
+            var now = new Date();
+            var msg_timestamp = now.getTime();
+            console.log("Msg value " + value);
+            var msg_length = $scope.messages.length + 1;
+            var new_m = {
+                id: msg_length + '',
+                userId: 1,
+                text: value,
+                timestamp: msg_timestamp+'',
+                userId_target: 2
+            }
+            $scope.messages.push(new_m);
+        }
+        viewScroll.scrollBottom(true);
+        $scope.new_message = "";
     };
 })
 

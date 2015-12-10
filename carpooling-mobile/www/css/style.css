@@ -109,9 +109,21 @@
 .carpooling-theme .card.card-chat.card-chat-my .item {
     border: 0;
     text-align: right;
+    margin-left: 50px;
+    white-space: normal;
+}
+.carpooling-theme .card.card-chat.card-chat-my-extra .item{
+    border: 0;
+    text-align: left;
+    margin-left: 50px;
     white-space: normal;
 }
 .carpooling-theme .card.card-chat.card-chat-my .item-divider {
+    text-align: right;
+    font-size: small;
+    color: #A0A0A0;
+}
+.carpooling-theme .card.card-chat.card-chat-my-extra .item-divider {
     text-align: right;
     font-size: small;
     color: #A0A0A0;
@@ -158,11 +170,34 @@
     padding-top: 15px;
     padding-bottom: 15px;
 }
+.carpooling-theme .chat-wrapper {
+    margin: 30px 10px 50px 10px;
+    overflow: auto;
+}
 .carpooling-theme .list .item-checkbox p {
     font-size: small;
 }
 .carpooling-theme .list .item-input input[type='text'] {
     border-bottom: 1px solid #ddd;
+}
+.carpooling-theme .input-chat {
+    padding-right: 10px;
+    border: 0;
+    position: absolute;
+    width:100%;
+    bottom: 0px;
+    min-height: 60px;
+    background-color: #fff;
+}
+.carpooling-theme .input-chat input[type='text'] {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.carpooling-theme .input-chat button {
+    padding: 0 0 0 0;
+    min-height: 50px;
+    min-width: 65px;
+    margin-left: 5px;
 }
 
 /* Community infos */
