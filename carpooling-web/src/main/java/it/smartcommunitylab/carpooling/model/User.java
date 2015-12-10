@@ -18,6 +18,7 @@ package it.smartcommunitylab.carpooling.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.util.StringUtils;
 
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -124,6 +125,19 @@ public class User {
 		user.setTravelProfile(new TravelProfile());
 		user.setGameProfile(new GameProfile());
 		return user;
+	}
+
+	/**
+	 * @return
+	 */
+	public String fullName() {
+		String res = "";
+		if (!StringUtils.isEmpty(name)) res += name.trim();
+		if (!StringUtils.isEmpty(surname)) {
+			if (res.length() > 0) res += " "; 
+			res += surname.trim();
+		}
+		return res;
 	}
 
 }
