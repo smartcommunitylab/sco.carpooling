@@ -15,7 +15,7 @@ angular.module('carpooling.controllers.user', [])
 
     $scope.editMode = false || $rootScope.initialSetup;
     $scope.edit = {
-        hasAuto: hasAuto($scope.user.auto),
+        hasAuto: $rootScope.initialSetup ? false : hasAuto($scope.user.auto),
         postsAvailable: [1, 2, 3, 4, 5, 6, 7]
     };
 

@@ -83,8 +83,6 @@ angular.module('carpooling', [
         } else {
             $rootScope.pushRegistration(StorageSrv.getUserId());
         }
-
-        Utils.toast('ciao');
     });
 })
 
@@ -376,6 +374,7 @@ angular.module('carpooling', [
         lbl_spaces_left: 'liberi',
         lbl_driver_contact: 'contatta il conducente',
         lbl_ask_trip: 'richiedi passaggio',
+        lbl_requests : 'Richeste di partecipazione',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrency: 'Imposta ricorrenza',
@@ -419,7 +418,7 @@ angular.module('carpooling', [
         notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
         notif_short_response_ok : 'Viaggio confermato',
         notif_short_response_ko : 'Viaggio rifiutato',
-        lbl_requests : 'Richeste di partecipazione'
+        toast_error_generic: 'There was a problem...'
     });
 
     $translateProvider.preferredLanguage('it');
