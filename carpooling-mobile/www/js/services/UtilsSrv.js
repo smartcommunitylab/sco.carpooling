@@ -1,6 +1,6 @@
 angular.module('carpooling.services.utils', [])
 
-.factory('Utils', function ($q, $filter, $ionicLoading) {
+.factory('Utils', function ($rootScope, $q, $filter, $ionicLoading, $ionicPopup, $timeout) {
     var utilsService = {};
 
     var monthList = [
@@ -94,14 +94,48 @@ angular.module('carpooling.services.utils', [])
         return dowString;
     };
 
+    utilsService.toast = function (message, duration, position) {
+        message = message || "...";
+        duration = duration || 'short';
+        position = position || 'bottom';
+
+        if (!!window.cordova) {
+            // Use the Cordova Toast plugin
+            //$cordovaToast.show(message, duration, position);
+            window.plugins.toast.show(message, duration, position);
+        } else {
+            if (duration == 'short') {
+                duration = 2000;
+            } else {
+                duration = 5000;
+            }
+
+            var myPopup = $ionicPopup.show({
+                template: '<div class="toast">' + message + '</div>',
+                scope: $rootScope,
+                buttons: []
+            });
+
+            $timeout(
+                function () {
+                    myPopup.close();
+                },
+                duration
+            );
+        }
+    };
+
+    utilsService.getNumber = function (num) {
+        return new Array(num);
+    };
+
     utilsService.loading = function () {
-            $ionicLoading.show();
+        $ionicLoading.show();
     };
+
     utilsService.loaded = function () {
-            $ionicLoading.hide();
+        $ionicLoading.hide();
     };
-
-
 
     return utilsService;
 });

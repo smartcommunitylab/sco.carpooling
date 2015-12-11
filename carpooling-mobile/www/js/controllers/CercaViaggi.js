@@ -1,7 +1,6 @@
 angular.module('carpooling.controllers.cercaviaggi', [])
 
 .controller('CercaViaggioCtrl', function ($scope, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, Config, Utils, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
-    // TODO: move travelRequest default here; modify that object
     $scope.travelRequest = {
         'from': {
             'name': '',
@@ -19,7 +18,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         'monitored': false
     };
 
-    // NOTE: communities are not used right now in client-side search
+    // FIXME: communities are not used right now in client-side search
     $scope.communities = {
         enabled: false,
         useMyCommunities: false
@@ -97,7 +96,6 @@ angular.module('carpooling.controllers.cercaviaggi', [])
 
                 $ionicLoading.show();
 
-                // TODO: strings, actions
                 var confirmPopup = null;
                 var confirmPopupOptions = {
                     title: $filter('translate')('modal_map_confirm'),
@@ -244,28 +242,32 @@ angular.module('carpooling.controllers.cercaviaggi', [])
 
         //console.log($scope.travelRequest);
 
+        Utils.loading();
         PassengerSrv.searchTrip($scope.travelRequest).then(
             function (searchResults) {
-                console.log('Done trip search');
+                Utils.loaded();
+                // console.log('Done trip search');
                 $state.go('app.risultaticercaviaggi', {
                     'searchResults': searchResults
                 });
             },
             function (error) {
+                Utils.loaded();
                 // TODO: handle searchTrip error
                 console.log(error);
-                //$state.go('app.cercaviaggi');
             }
         );
     };
 })
 
-.controller('RisultatiCercaViaggiCtrl', function ($scope, $state, $stateParams, PassengerSrv) {
+.controller('RisultatiCercaViaggiCtrl', function ($scope, $state, $stateParams, Utils, PassengerSrv) {
     $scope.passengerTripsFound = $stateParams['searchResults'];
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
-    // FIXME: temporary mock results TO BE REMOVED
-    /*$scope.passengerTripsFoundFAKE = [
+
+    // NOTE: temporary mock results TO BE REMOVED
+    /*
+    $scope.passengerTripsFoundFAKE = [
         {
             "from": {
                 "name": "Via Fiume",
@@ -302,13 +304,18 @@ angular.module('carpooling.controllers.cercaviaggi', [])
             "when": 1443425400000,
             "monitored": false
         }
-    ];*/
+    ];
+    */
 
     console.log($scope.passengerTripsFound);
 
+    $scope.passengerTripsFound.forEach(function (travel) {
+        travel.bookingCounters = Utils.getBookingCounters(travel);
+    });
+
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
-            'trip': $scope.passengerTripsFound[index]
+            'travelId': $scope.passengerTripsFound[index].id
         });
     };
 });

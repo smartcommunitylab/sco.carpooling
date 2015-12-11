@@ -3,9 +3,9 @@ angular.module('carpooling.controllers.home', [])
 .controller('AppCtrl', function ($scope) {})
 
 .controller('HomeCtrl', function ($scope, $state, StorageSrv) {
-  if (!StorageSrv.isProfileComplete()) {
-    $state.go('app.profilo');
-  }
+    if (!StorageSrv.isProfileComplete()) {
+        $state.go('app.profilo');
+    }
 })
 
 .controller('PartecipoCtrl', function ($scope, $state, UserSrv, PassengerSrv, Utils) {
@@ -55,18 +55,18 @@ angular.module('carpooling.controllers.home', [])
 
     $scope.passengerTrips = [];
 
-    var init = function() {
-      Utils.loading();
-      PassengerSrv.getPassengerTrips().then(
-          function (trips) {
-              Utils.loaded();
-              $scope.passengerTrips = trips;
-          },
-          function (error) {
-              // TODO: handle getPassengerTrips error
-              Utils.loaded();
-          }
-      );
+    var init = function () {
+        Utils.loading();
+        PassengerSrv.getPassengerTrips().then(
+            function (trips) {
+                Utils.loaded();
+                $scope.passengerTrips = trips;
+            },
+            function (error) {
+                Utils.loaded();
+                // TODO: handle getPassengerTrips error
+            }
+        );
     };
 
     init();
@@ -84,20 +84,22 @@ angular.module('carpooling.controllers.home', [])
 
     $scope.driverTrips = [];
 
-    var init = function() {
-      Utils.loading();
-      DriverSrv.getDriverTrips().then(
-          function (trips) {
-              Utils.loaded();
-              $scope.driverTrips = trips;
-          },
-          function (error) {
-              Utils.loaded();
-              // TODO: handle getDriverTrips error
-          }
-      );
+    var init = function () {
+        Utils.loading();
+        DriverSrv.getDriverTrips().then(
+            function (trips) {
+                Utils.loaded();
+                $scope.driverTrips = trips;
+            },
+            function (error) {
+                Utils.loaded();
+                // TODO: handle getDriverTrips error
+            }
+        );
     };
-  init();
+
+    init();
+
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.driverTrips[index].id

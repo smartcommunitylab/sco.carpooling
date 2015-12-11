@@ -22,7 +22,8 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-plugin-inappbrowser",
-    "cordova-plugin-pushnotification-parsepushnotification"
+    "cordova-plugin-pushnotification-parsepushnotification",
+    "cordova-plugin-x-toast"
   ],
   "cordovaPlatforms": [
     "android",
