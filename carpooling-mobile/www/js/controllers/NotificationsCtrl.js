@@ -42,26 +42,48 @@ angular.module('carpooling.controllers.notifications', [])
     };
 
     var notifications = [];
+    $scope.notifications = [];
+    $scope.start = 0;
+    $scope.all = 10;
+    $scope.end = $scope.all+1;
 
     $scope.getNotifications = function(){
-        var start = 0;
-        var all = 10;
-
+        //var start = 0;
+        //var all = 4;
         Utils.loading();
-        UserSrv.readNotifications(start, all).then(function(notifics) {
+        UserSrv.readNotifications($scope.start, $scope.all).then(function(notifics) {
             notifications = notifics ? notifics : [];
-            $scope.notifications = correctNotificsShorText(notifications);
+            $scope.notifications = correctNotificsShortText(notifications);
             Utils.loaded();
         }, function(err) {
             // TODO
             Utils.loaded();
         });
-
     };
 
     $scope.getNotifications();
 
-    var correctNotificsShorText = function(list){
+    $scope.loadMoreNotifications = function(){
+        $scope.start++;
+        UserSrv.readNotifications($scope.start, $scope.all).then(function(notifics) {
+            notifications = notifics ? notifics : [];
+            notifications = correctNotificsShortText(notifications);
+            for(var i = 0; i < notifications.length; i++){
+               $scope.notifications.push(notifications[i]);
+            }
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        }, function(err) {
+            // TODO
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+
+    }
+
+    $scope.canWeLoadMoreNotifics = function(){
+        return ($scope.notifications.length >= $scope.end) ? false : true;
+    };
+
+    var correctNotificsShortText = function(list){
         list.forEach(function(m) {
             m.short_text = shortText(m);
         });
