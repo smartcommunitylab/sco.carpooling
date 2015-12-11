@@ -39,7 +39,6 @@ import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
 import it.smartcommunitylab.carpooling.notification.SendPushNotification;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,9 +102,7 @@ public class CarPoolingManager {
 		
 		List<Travel> searchTravels = new ArrayList<Travel>();
 
-		List<String> commIdsForUser = communityRepository.getCommunityIdsForUser(userId);
-
-		searchTravels = travelRepository.searchTravels(commIdsForUser, travelRequest);
+		searchTravels = travelRepository.searchTravels(travelRequest);
 
 		if (travelRequest.isMonitored()) {
 			// make sure if its the logged in user.

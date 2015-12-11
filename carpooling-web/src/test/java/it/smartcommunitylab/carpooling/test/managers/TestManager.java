@@ -142,9 +142,9 @@ public class TestManager {
 		ArrayNode arrayNode = (ArrayNode) rootNode;
 		TravelRequest travelRequest = mapper.convertValue(arrayNode.get(0), TravelRequest.class);
 
-		List<String> commIdsForUser = communityRepository.getCommunityIdsForUser("52");
+//		List<String> commIdsForUser = communityRepository.getCommunityIdsForUser("52");
 
-		List<Travel> travels = travelRepository.searchTravels(commIdsForUser, travelRequest);
+		List<Travel> travels = travelRepository.searchTravels(travelRequest);
 
 		Assert.assertFalse(travels.isEmpty());
 
@@ -163,23 +163,23 @@ public class TestManager {
 		ArrayNode arrayNode = (ArrayNode) rootNode;
 		TravelRequest travelRequest = mapper.convertValue(arrayNode.get(0), TravelRequest.class);
 
-		List<String> commIdsForUser = communityRepository.getCommunityIdsForUser("65");
+//		List<String> commIdsForUser = communityRepository.getCommunityIdsForUser("65");
 
-		List<Travel> travels = travelRepository.searchTravels(commIdsForUser, travelRequest);
+		List<Travel> travels = travelRepository.searchTravels(travelRequest);
 
 		Assert.assertEquals(travels.size(), 1);
 		// driver has same community as of user.
 		String driverId = travels.get(0).getUserId();
 
-		boolean found = false;
-		for (String communityId : commIdsForUser) {
-			Community community = communityRepository.findOne(communityId);
-			if (community.getUsers().contains(driverId)) {
-				found = true;
-				break;
-			}
-		}
-		Assert.assertTrue(found);
+//		boolean found = false;
+//		for (String communityId : commIdsForUser) {
+//			Community community = communityRepository.findOne(communityId);
+//			if (community.getUsers().contains(driverId)) {
+//				found = true;
+//				break;
+//			}
+//		}
+//		Assert.assertTrue(found);
 
 	}
 

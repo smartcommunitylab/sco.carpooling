@@ -31,6 +31,6 @@ public interface TravelRepositoryCustom {
 
 	List<Travel> getAllMatchedTimeTravels(TravelRequest travelRequest);
 
-	List<Travel> searchTravels(List<String> userCommunityIds, TravelRequest travelRequest);
+	List<Travel> searchTravels(TravelRequest travelRequest);
 
 }

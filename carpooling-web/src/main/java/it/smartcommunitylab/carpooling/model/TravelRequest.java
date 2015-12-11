@@ -16,6 +16,8 @@
 
 package it.smartcommunitylab.carpooling.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,6 +43,8 @@ public class TravelRequest {
 	/** no of post required. **/
 	private int nrOfPost;
 
+	private List<String> communityIds;
+	
 	public TravelRequest() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -110,6 +114,14 @@ public class TravelRequest {
 
 	public void setNrOfPost(int nrOfPost) {
 		this.nrOfPost = nrOfPost;
+	}
+
+	public List<String> getCommunityIds() {
+		return communityIds;
+	}
+
+	public void setCommunityIds(List<String> communityIds) {
+		this.communityIds = communityIds;
 	}
 
 	@Override

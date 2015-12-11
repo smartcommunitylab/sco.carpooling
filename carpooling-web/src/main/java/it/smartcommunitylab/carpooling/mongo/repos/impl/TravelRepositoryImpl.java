@@ -194,13 +194,17 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	}
 
 	@Override
-	public List<Travel> searchTravels(List<String> userCommunityIds, TravelRequest travelRequest) {
+	public List<Travel> searchTravels(TravelRequest travelRequest) {
 
 		List<Travel> travels = new ArrayList<Travel>();
 
 		Criteria commonCriteria = new Criteria().where("active").is(true);
 		/** community. **/
-		Criteria communityCriteria = new Criteria().where("communityIds").in(userCommunityIds);
+		
+		Criteria communityCriteria = null;
+		if (travelRequest.getCommunityIds() != null && !travelRequest.getCommunityIds().isEmpty()) {
+			communityCriteria = new Criteria().where("communityIds").in(travelRequest.getCommunityIds());
+		}
 		/** zone. **/
 		Point pFrom = new Point(travelRequest.getFrom().getLatitude(), travelRequest.getFrom().getLongitude());
 		Circle circleFrom = new Circle(pFrom, travelRequest.getFrom().getRange() / 6371);
@@ -238,7 +242,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		Query query = new Query();
 		query.addCriteria(commonCriteria);
-		query.addCriteria(communityCriteria);
+		if (communityCriteria != null) query.addCriteria(communityCriteria);
 		query.addCriteria(zoneCriteria);
 		query.addCriteria(timeCriteria);
 		
