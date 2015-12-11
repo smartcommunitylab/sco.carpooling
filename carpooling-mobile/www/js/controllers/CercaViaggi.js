@@ -308,7 +308,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
 
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
-            'trip': $scope.passengerTripsFound[index]
+            'travelId': $scope.passengerTripsFound[index].id
         });
     };
 });
