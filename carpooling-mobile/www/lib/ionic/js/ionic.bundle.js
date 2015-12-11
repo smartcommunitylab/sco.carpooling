@@ -11451,7 +11451,7 @@ var jqCache = JQLite.cache = {},
     };
 
 /*
- * !!! This is an undocumented "private" function !!!
+ * ! This is an undocumented "private" function !
  */
 JQLite._data = function(node) {
   //jQuery always returns an object on cache miss
@@ -19109,7 +19109,7 @@ function $HttpProvider() {
     /**
      * Makes the request.
      *
-     * !!! ACCESSES CLOSURE VARS:
+     * ! ACCESSES CLOSURE VARS:
      * $httpBackend, defaults, $log, $rootScope, defaultCache, $http.pendingRequests
      */
     function sendReq(config, reqData) {
@@ -26212,7 +26212,7 @@ function $SceProvider() {
 }
 
 /**
- * !!! This is an undocumented "private" service !!!
+ * ! This is an undocumented "private" service !
  *
  * @name $sniffer
  * @requires $window
@@ -42323,7 +42323,7 @@ var $$UMFP; // reference to $UrlMatcherFactoryProvider
  *
  * * `'/hello/'` - Matches only if the path is exactly '/hello/'. There is no special treatment for
  *   trailing slashes, and patterns have to match the entire path, not just a prefix.
- * * `'/user/:id'` - Matches '/user/bob' or '/user/1234!!!' or even '/user/' but not '/user' or
+ * * `'/user/:id'` - Matches '/user/bob' or '/user/1234!' or even '/user/' but not '/user' or
  *   '/user/bob/details'. The second path segment will be captured as the parameter 'id'.
  * * `'/user/{id}'` - Same as the previous example, but using curly brace syntax.
  * * `'/user/{id:[^/]*}'` - Same as the previous example.

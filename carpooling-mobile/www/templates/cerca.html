@@ -34,9 +34,14 @@
             </div>
 
             <div class="list">
-                <ion-toggle ng-model="traverRequest.monitored">
-                    {{'lbl_allsearchnotifications' | translate}}
-                </ion-toggle>
+                <div class="row">
+                    <div class="col-75">
+                        {{'lbl_allsearchnotifications' | translate}}
+                    </div>
+                    <div class="col-25">
+                        <ion-toggle ng-model="traverRequest.monitored"></ion-toggle>
+                    </div>
+                </div>
             </div>
 
             <div class="row">

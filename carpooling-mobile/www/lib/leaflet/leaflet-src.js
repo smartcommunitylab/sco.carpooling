@@ -1672,7 +1672,7 @@ L.Map = L.Class.extend({
 			this._updateZoomLevels();
 		}
 
-		// TODO looks ugly, refactor!!!
+		// TODO looks ugly, refactor!
 		if (this.options.zoomAnimation && L.TileLayer && (layer instanceof L.TileLayer)) {
 			this._tileLayersNum++;
 			this._tileLayersToLoad++;

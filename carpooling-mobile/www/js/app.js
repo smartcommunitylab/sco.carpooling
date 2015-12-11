@@ -1,5 +1,6 @@
 angular.module('carpooling', [
     'ionic',
+    'ngCordova',
     'ionic-timepicker',
     'ionic-datepicker',
     'ngIOS9UIWebViewPatch',
@@ -24,7 +25,7 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, $rootScope, $q, StorageSrv, LoginSrv, UserSrv, Config) {
+.run(function ($ionicPlatform, $rootScope, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
     $rootScope.pushRegistration = function (userId) {
         try {
             window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
@@ -82,6 +83,8 @@ angular.module('carpooling', [
         } else {
             $rootScope.pushRegistration(StorageSrv.getUserId());
         }
+
+        Utils.toast('ciao');
     });
 })
 
