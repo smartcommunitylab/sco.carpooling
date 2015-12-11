@@ -65,6 +65,7 @@ angular.module('carpooling.controllers.home', [])
             function (error) {
                 Utils.loaded();
                 // TODO: handle getPassengerTrips error
+                Utils.toast();
             }
         );
     };
@@ -94,6 +95,7 @@ angular.module('carpooling.controllers.home', [])
             function (error) {
                 Utils.loaded();
                 // TODO: handle getDriverTrips error
+                Utils.toast();
             }
         );
     };

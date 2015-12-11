@@ -259,6 +259,10 @@ placeautocomplete ul {
     position: relative;
     padding: 0.5em 1em 0.5em 0;
 }
+.card.card-trip .trip-data ul li {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .card.card-trip .trip-data ul li span {
     color: #000000;
 }

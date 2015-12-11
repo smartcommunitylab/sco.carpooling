@@ -95,7 +95,7 @@ angular.module('carpooling.services.utils', [])
     };
 
     utilsService.toast = function (message, duration, position) {
-        message = message || "...";
+        message = message || $filter('translate')('toast_error_generic');
         duration = duration || 'short';
         position = position || 'bottom';
 
