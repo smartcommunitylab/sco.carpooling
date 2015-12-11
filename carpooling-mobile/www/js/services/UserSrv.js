@@ -140,5 +140,78 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
     }
 
+    userService.readNotifications = function (start, count) {
+        var deferred = $q.defer();
+
+//        $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
+//
+//        .success(function (data) {
+//            deferred.resolve(data.data);
+//        })
+//
+//        .error(function (err) {
+//            deferred.reject(err);
+//        });
+//
+//        return deferred.promise;
+        if (start == null || start < 0) {
+            deferred.reject('Invalid start position');
+        } else if (!count) {
+            deferred.reject('Invalid count');
+        } else {
+            $http.get(Config.getServerURL() + '/api/read/notifications/' + start + '/' + count, Config.getHTTPConfig())
+
+            .success(function (data) {
+                deferred.resolve(data.data);
+            })
+
+            .error(function (err) {
+                deferred.reject(err);
+            });
+        }
+
+        return deferred.promise;
+    }
+
+    userService.markNotification = function (id) {
+        var deferred = $q.defer();
+
+        if (!id) {
+            deferred.reject('Invalid notification id');
+        } else {
+            $http.post(Config.getServerURL() + '/api/mark/read/notification/' + id, id, Config.getHTTPConfig())
+
+            .success(function (data) {
+                deferred.resolve(data);
+            })
+
+            .error(function (err) {
+                deferred.reject(err);
+            });
+        }
+
+        return deferred.promise;
+    }
+
+    userService.deleteNotification = function (id) {
+        var deferred = $q.defer();
+
+        if (!id) {
+            deferred.reject('Invalid notification id');
+        } else {
+            $http.delete(Config.getServerURL() + '/api/delete/notification/' + id, id, Config.getHTTPConfig())
+
+            .success(function (data) {
+                deferred.resolve(data);
+            })
+
+            .error(function (err) {
+                deferred.reject(err);
+            });
+        }
+
+        return deferred.promise;
+    }
+
     return userService;
 });

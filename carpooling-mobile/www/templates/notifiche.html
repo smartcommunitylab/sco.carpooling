@@ -5,44 +5,18 @@
     </ion-nav-buttons>
 -->
     <ion-content>
-<!--        <ion-list class="animate-ripple">-->
         <div ng-repeat="notific in notifications">
-            <div class="card" ng-click="showNotification(notific)">
-                <div class="item item-divider">
+            <div class="card">
+                <div class="item item-divider" ng-class="{'unread': !notific.status}" ng-click="showNotification(notific)">
                     {{ notific.timestamp | date:'dd MMMM yyyy - hh:mm' }}
                 </div>
-                <div class="item item-icon-left">
+                <div class="item item-icon-left" ng-class="{'unread': !notific.status}" ng-click="showNotification(notific)">
                     <i class="icon {{ notificationType[notific.type].image }}"></i>
                     <span>{{ notific.short_text }}</span>
-
-                    <!--<div class="row">
-                        <div class="col-md-2 text-center" style="min-height: 100px;">
-                            <div>{{journey.startime | date:'hh:mm'}}</div>
-                            <div style="position: absolute; bottom: 0;">{{journey.endtime | date:'hh:mm'}}</div>
-                        </div>
-                        <div class="col-md-10">
-                            <div class="row">
-                                <div class="col-md-12 text-right">
-                                    <small class="text-muted text-center">{{journey.length}}km</small>
-                                    <small class="text-muted text-center" ng-if="journey.price > 0">/ {{journey.price}} EUR</small>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="tt thumbnail col-md-2" ng-repeat="mean in journey.means">
-                                    <img ng-src="{{mean.img}}">
-                                    <div class="text-center">
-                                        <div ng-repeat="n in mean.note">{{n}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
                 </div>
-                <div class="item item-divider">
+                <div class="item item-divider" ng-class="{'unread': !notific.status}" ng-click="showNotification(notific)">
                 </div>
             </div>
         </div>
-<!--        </ion-list>-->
-<!--        <h1>{{'menu_notifications' | translate}}</h1>-->
     </ion-content>
 </ion-view>
