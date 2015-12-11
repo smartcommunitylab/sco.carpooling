@@ -94,14 +94,17 @@ angular.module('carpooling.services.utils', [])
         return dowString;
     };
 
+    utilsService.getNumber = function (num) {
+        return new Array(num);
+    };
+
     utilsService.loading = function () {
             $ionicLoading.show();
     };
+
     utilsService.loaded = function () {
             $ionicLoading.hide();
     };
-
-
 
     return utilsService;
 });

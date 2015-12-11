@@ -5,7 +5,6 @@ angular.module('carpooling.controllers.user', [])
 
     $rootScope.initialSetup = !StorageSrv.isProfileComplete();
 
-    // FIXME: temporary control, waiting for the deploy
     var hasAuto = function (auto) {
         // return !!$scope.user.auto
         if (!!auto && !!auto.description && auto.posts !== 0) {
@@ -31,28 +30,28 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.saveProfile = function () {
-      Utils.loading();
+        Utils.loading();
         // UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
         UserSrv.saveAuto($scope.user.auto).then(
             function (data) {
                 if ($rootScope.initialSetup) {
-                  Utils.loaded();
-                  StorageSrv.setProfileComplete();
-                  $rootScope.initialSetup = false;
-                  $state.go('app.home');
+                    Utils.loaded();
+                    StorageSrv.setProfileComplete();
+                    $rootScope.initialSetup = false;
+                    $state.go('app.home');
                 } else {
-                  Utils.loaded();
-                  $scope.toggleEditMode();
-                  UserSrv.getUser($scope.user.userId).then(
-                      function () {
-                          $scope.user = angular.copy(StorageSrv.getUser());
-                          $scope.edit.hasAuto = hasAuto($scope.user.auto);
-                      }
-                  );
+                    Utils.loaded();
+                    $scope.toggleEditMode();
+                    UserSrv.getUser($scope.user.userId).then(
+                        function () {
+                            $scope.user = angular.copy(StorageSrv.getUser());
+                            $scope.edit.hasAuto = hasAuto($scope.user.auto);
+                        }
+                    );
                 }
             },
             function (error) {
-                  Utils.loaded();
+                Utils.loaded();
                 // TODO: handle saveAuto error
             }
         );

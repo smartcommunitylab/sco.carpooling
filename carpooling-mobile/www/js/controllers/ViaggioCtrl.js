@@ -5,47 +5,52 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.travelTimeFormat = 'HH:mm';
     $scope.driverInfo = {};
 
-    var init = function() {
-      $scope.travelId = $stateParams.travelId;
-      Utils.loading();
-      PassengerSrv.getTrip($scope.travelId).then(function(data) {
-        $scope.selectedTrip = data;
-        console.log($scope.selectedTrip);
+    var init = function () {
+        $scope.travelId = $stateParams.travelId;
 
-        $scope.isMine = $scope.selectedTrip.userId == StorageSrv.getUserId();
-        $scope.bookingCounters = Utils.getBookingCounters($scope.selectedTrip);
-        $scope.dowString = Utils.getRecurrencyString($scope.selectedTrip);
+        Utils.loading();
+        PassengerSrv.getTrip($scope.travelId).then(
+            function (data) {
+                $scope.selectedTrip = data;
+                console.log($scope.selectedTrip);
 
-        if (!$scope.isMine) {
-          UserSrv.getUser($scope.selectedTrip.userId).then(
-              function (userInfo) {
-                  Utils.loaded();
-                  console.log('User found');
-                  $scope.driverInfo = userInfo;
-                  if (!!userInfo.auto) {
-                      $scope.passengerNum = userInfo.auto.posts - $scope.selectedTrip.places;
-                      console.log($scope.passengerNum);
-                  }
-                  console.log($scope.driverInfo);
-              },
-              function (error) {
-                  // TODO: handle search error
-                  console.log(error);
-                  Utils.loaded();
-              }
-          );
-        } else {
-          Utils.loaded();
-        }
-      }, function() {
-        // TODO
-        Utils.loaded();
-      });
-    }
+                $scope.isMine = $scope.selectedTrip.userId == StorageSrv.getUserId();
+                $scope.bookingCounters = Utils.getBookingCounters($scope.selectedTrip);
+                $scope.dowString = Utils.getRecurrencyString($scope.selectedTrip);
+
+                // TODO: handle getUser that isn't me
+                if (!$scope.isMine) {
+                    UserSrv.getUser($scope.selectedTrip.userId).then(
+                        function (userInfo) {
+                            Utils.loaded();
+                            console.log('User found');
+                            $scope.driverInfo = userInfo;
+                            if (!!userInfo.auto) {
+                                $scope.passengerNum = userInfo.auto.posts - $scope.selectedTrip.places;
+                                console.log($scope.passengerNum);
+                            }
+                            console.log($scope.driverInfo);
+                        },
+                        function (error) {
+                            Utils.loaded();
+                            // TODO: handle getUser error
+                            console.log(error);
+                        }
+                    );
+                } else {
+                    Utils.loaded();
+                }
+            },
+            function (error) {
+                Utils.loaded();
+                // TODO: handle getTrip error
+            }
+        );
+    };
 
     init();
 
-    $scope.getNumber = function (num) {
-        return new Array(num);
+    $scope.getNumber = function () {
+        return Utils.getNumber();
     }
 });

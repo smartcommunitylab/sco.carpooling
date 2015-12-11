@@ -371,13 +371,16 @@ angular.module('carpooling.controllers.offri', [])
                 }
             }
 
+            Utils.loading();
             DriverSrv.createTrip($scope.travel).then(
                 function (savedTravel) {
+                    Utils.loaded();
                     // TODO: handle createTrip success
                     //console.log(savedTravel);
                     $state.go('app.home.offro');
                 },
                 function (error) {
+                    Utils.loaded();
                     // TODO: handle createTrip error
                     console.log(error);
                 }

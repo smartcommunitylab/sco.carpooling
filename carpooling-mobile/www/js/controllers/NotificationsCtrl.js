@@ -1,7 +1,6 @@
 angular.module('carpooling.controllers.notifications', [])
 
 .controller('NotificationsCtrl', function ($scope, $filter, $state, $timeout, $ionicScrollDelegate) {
-
     $scope.notificationType = {
         Chat: {
             label: 'notif_chat',
@@ -24,28 +23,32 @@ angular.module('carpooling.controllers.notifications', [])
     var shortText = function (notific) {
         switch (notific.type) {
             case 'Chat':
-              return $filter('translate')('notif_short_chat',{name:notific.data.senderFullName});
+                return $filter('translate')('notif_short_chat', {
+                    name: notific.data.senderFullName
+                });
             case 'TripAvailability':
-              return $filter('translate')('notif_short_avail');
+                return $filter('translate')('notif_short_avail');
             case 'ParticipationRequest':
-              return $filter('translate')('notif_short_request',{name:notific.data.senderFullName});
+                return $filter('translate')('notif_short_request', {
+                    name: notific.data.senderFullName
+                });
             case 'ParticipationResponse':
-              return $filter('translate')(notific.data.status+'' == 'true' ? 'notif_short_response_ok' : 'notif_short_response_ko');
+                return $filter('translate')(notific.data.status + '' == 'true' ? 'notif_short_response_ok' : 'notif_short_response_ko');
             default:
-              return '';
+                return '';
         };
         return '';
     };
 
-
+    // NOTE: temporary mock notifications TO BE REMOVED
     var notifications = [
         {
             id: '1',
             type: 'Chat',
             data: {
-              senderId: '3',
-              senderFullName: 'Mario Rossi',
-              message: 'New test message'
+                senderId: '3',
+                senderFullName: 'Mario Rossi',
+                message: 'New test message'
             },
             travelId: '5669a7fce4b0c10934dc5389',
             timestamp: '1447865802692'
@@ -53,10 +56,10 @@ angular.module('carpooling.controllers.notifications', [])
         {
             id: '2',
             type: 'ParticipationRequest',
-//            short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
+            // short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
             data: {
-              senderId: '54',
-              senderFullName: 'Mario Rossi'
+                senderId: '54',
+                senderFullName: 'Mario Rossi'
             },
             travelId: '5669a7fce4b0c10934dc5389',
             timestamp: '1447865802692'
@@ -64,25 +67,24 @@ angular.module('carpooling.controllers.notifications', [])
         {
             id: '3',
             type: 'TripAvailability',
-//            short_text: 'Trovato un viaggio Trento - Pergine',
-            data: {
-            },
+            // short_text: 'Trovato un viaggio Trento - Pergine',
+            data: {},
             travelId: '5669a7fce4b0c10934dc5389',
             timestamp: '1447918789919'
         },
         {
             id: '4',
             type: 'ParticipationResponse',
-//            short_text: 'Viaggio confermato',
+            // short_text: 'Viaggio confermato',
             data: {
-              status: 'false'
+                status: 'false'
             },
             travelId: '5669a7fce4b0c10934dc5389',
             timestamp: '1447918789919'
         }
     ];
-    notifications.forEach(function(n) {
-      n.short_text = shortText(n);
+    notifications.forEach(function (n) {
+        n.short_text = shortText(n);
     });
     $scope.notifications = notifications;
 
@@ -91,93 +93,103 @@ angular.module('carpooling.controllers.notifications', [])
         switch (notific.type) {
             case 'Chat':
                 // messages - to chat
-                $state.go('app.chat',{travelId:notific.travelId, personId: notific.data.senderId});
+                $state.go('app.chat', {
+                    travelId: notific.travelId,
+                    personId: notific.data.senderId
+                });
                 break;
             case 'TripAvailability':
                 // trip request - to mytrip
-                $state.go('app.viaggio',{travelId:notific.travelId});
+                $state.go('app.viaggio', {
+                    travelId: notific.travelId
+                });
                 break;
             case 'ParticipationRequest':
                 // trip response - to trip
-                $state.go('app.viaggio',{travelId:notific.travelId});
+                $state.go('app.viaggio', {
+                    travelId: notific.travelId
+                });
                 break;
             case 'ParticipationResponse':
                 // driver rating - to driver profile (trip data)
-                $state.go('app.viaggio',{travelId:notific.travelId});
+                $state.go('app.viaggio', {
+                    travelId: notific.travelId
+                });
                 break;
             default:
                 break;
         };
     };
 })
-.controller('ChatCtrl', function ($scope, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, Utils, UserSrv, StorageSrv) {
 
+.controller('ChatCtrl', function ($scope, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, Utils, UserSrv, StorageSrv) {
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     $scope.messages = [];
     $scope.id = StorageSrv.getUserId();
 
-    var init = function() {
-      $scope.personId = $stateParams.personId;
-      $scope.travelId = $stateParams.travelId;
-      Utils.loading();
-      UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function(discussion) {
-        $scope.messages = discussion.messages ? discussion.messages : [];
-        $scope.personName = discussion.personName;
-        Utils.loaded();
-      }, function(err) {
-        // TODO
-        Utils.loaded();
-      });
+    var init = function () {
+        $scope.personId = $stateParams.personId;
+        $scope.travelId = $stateParams.travelId;
+
+        Utils.loading();
+        UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
+            $scope.messages = discussion.messages ? discussion.messages : [];
+            $scope.personName = discussion.personName;
+            Utils.loaded();
+        }, function (err) {
+            Utils.loaded();
+            // TODO: handle getDiscussion error
+        });
 
     };
     init();
 
-//    $scope.messages = [
-//        {
-//            id: '1',
-//            userId: 1,
-//            text: 'Ciao Mario',
-//            timestamp: '1447865802692',
-//            userId_target: 2
-//        },
-//        {
-//            id: '2',
-//            userId: 1,
-//            text: 'E\' possibile aggiungere una tappa intermedia a Mattarello nel tuo viaggio? Grazie',
-//            timestamp: '1447865802692',
-//            userId_target: 2
-//        },
-//        {
-//            id: '3',
-//            userId: 2,
-//            text: 'Ciao Stefano, certo nessun problema. Passo davanti alla Coop mi puoi aspettare li',
-//            timestamp: '1447918789919',
-//            userId_target: 1
-//        },
-//        {
-//            id: '4',
-//            userId: 1,
-//            text: 'Provo a scrivere ancora per vedere se poi mi mette la scrollbar quando la pagina dei messaggi inizia ad allungarsi',
-//            timestamp: '1447865802692',
-//            userId_target: 2
-//        },
-//        {
-//            id: '5',
-//            userId: 2,
-//            text: 'Ciao Stefano, nessun problema. Tu continua pure a scrivere che poi vediamo se scoppia tutto o se funziona...',
-//            timestamp: '1447918789919',
-//            userId_target: 1
-//        },
-//        {
-//            id: '6',
-//            userId: 1,
-//            text: 'Speriamo in bene, tu incrocia le dita e vediamo cosa succede.',
-//            timestamp: '1447918789919',
-//            userId_target: 1
-//        }
-//    ];
+    //    $scope.messages = [
+    //        {
+    // id: '1',
+    // userId: 1,
+    // text: 'Ciao Mario',
+    // timestamp: '1447865802692',
+    // userId_target: 2
+    //        },
+    //        {
+    // id: '2',
+    // userId: 1,
+    // text: 'E\' possibile aggiungere una tappa intermedia a Mattarello nel tuo viaggio? Grazie',
+    // timestamp: '1447865802692',
+    // userId_target: 2
+    //        },
+    //        {
+    // id: '3',
+    // userId: 2,
+    // text: 'Ciao Stefano, certo nessun problema. Passo davanti alla Coop mi puoi aspettare li',
+    // timestamp: '1447918789919',
+    // userId_target: 1
+    //        },
+    //        {
+    // id: '4',
+    // userId: 1,
+    // text: 'Provo a scrivere ancora per vedere se poi mi mette la scrollbar quando la pagina dei messaggi inizia ad allungarsi',
+    // timestamp: '1447865802692',
+    // userId_target: 2
+    //        },
+    //        {
+    // id: '5',
+    // userId: 2,
+    // text: 'Ciao Stefano, nessun problema. Tu continua pure a scrivere che poi vediamo se scoppia tutto o se funziona...',
+    // timestamp: '1447918789919',
+    // userId_target: 1
+    //        },
+    //        {
+    // id: '6',
+    // userId: 1,
+    // text: 'Speriamo in bene, tu incrocia le dita e vediamo cosa succede.',
+    // timestamp: '1447918789919',
+    // userId_target: 1
+    //        }
+    //    ];
 
-    $scope.loadAllMsg = function(){
+    $scope.loadAllMsg = function () {
         viewScroll.scrollBottom();
     };
 
@@ -185,9 +197,9 @@ angular.module('carpooling.controllers.notifications', [])
         return id == $scope.id;
     };
 
-    $scope.chatExtraLength = function(chat){
-        if(chat != null){
-            if(chat.length > 30){
+    $scope.chatExtraLength = function (chat) {
+        if (chat != null) {
+            if (chat.length > 30) {
                 return true;
             } else {
                 return false;
@@ -195,23 +207,23 @@ angular.module('carpooling.controllers.notifications', [])
         }
     };
 
-    $scope.inputUp = function() {
+    $scope.inputUp = function () {
         //if (isIOS) $scope.data.keyboardHeight = 216;
-        $timeout(function() {
+        $timeout(function () {
             viewScroll.resize();
             viewScroll.scrollBottom(true);
         }, 500);
     };
 
-    $scope.inputDown = function() {
+    $scope.inputDown = function () {
         //if (isIOS) $scope.data.keyboardHeight = 0;
-        $timeout(function() {
+        $timeout(function () {
             viewScroll.resize();
         }, 500);
     };
 
-    $scope.sendMessage = function(value){
-        if(value != null && value != ""){
+    $scope.sendMessage = function (value) {
+        if (value != null && value != "") {
             var now = new Date();
             var msg_timestamp = now.getTime();
             var new_m = {
@@ -220,15 +232,20 @@ angular.module('carpooling.controllers.notifications', [])
                 timestamp: msg_timestamp,
                 targetUserId: $scope.personId
             }
+
             Utils.loading();
-            UserSrv.sendMessage($scope.travelId, new_m).then(function(){
-              init();
-            }, function(err) {
-              // TODO
-              Utils.loaded();
-            });
+            UserSrv.sendMessage($scope.travelId, new_m).then(
+                function () {
+                    init();
+                },
+                function (err) {
+                    Utils.loaded();
+                    // TODO: handle sendMessage error
+                }
+            );
         }
+
         viewScroll.scrollBottom(true);
-        $scope.new_message = "";
+        $scope.new_message = '';
     };
 });
