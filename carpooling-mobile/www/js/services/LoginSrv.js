@@ -1,6 +1,6 @@
 angular.module('carpooling.services.login', [])
 
-.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, Config) {
+.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, UserSrv, Config) {
     var loginService = {};
 
     loginService.userIsLogged = function () {
@@ -65,7 +65,13 @@ angular.module('carpooling.services.login', [])
             function (data) {
                 //console.log('success: ' + data.userId);
                 StorageSrv.saveUserId(data.userId).then(function () {
-                    deferred.resolve(data);
+                    UserSrv.getUser(data.userId).then(function() {
+                      deferred.resolve(data);
+                    }, function(reason) {
+                      StorageSrv.saveUserId(null).then(function () {
+                          deferred.reject(reason);
+                      });
+                    });
                 });
             },
             function (reason) {
@@ -90,7 +96,7 @@ angular.module('carpooling.services.login', [])
         })
 
         .success(function (data, status, headers, config) {
-            StorageSrv.saveUserId(null).then(function () {
+            StorageSrv.reset().then(function () {
                 deferred.resolve(data);
             });
         })

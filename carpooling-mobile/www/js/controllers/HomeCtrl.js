@@ -2,9 +2,12 @@ angular.module('carpooling.controllers.home', [])
 
 .controller('AppCtrl', function ($scope) {})
 
-.controller('HomeCtrl', function ($scope, $state, StorageSrv) {
+.controller('HomeCtrl', function ($scope, $state, StorageSrv, UserSrv) {
+    if (StorageSrv.getUserId() == null) return;
     if (!StorageSrv.isProfileComplete()) {
+      UserSrv.getUser(StorageSrv.getUserId()).then(function() {
         $state.go('app.profilo');
+      });
     }
 })
 
