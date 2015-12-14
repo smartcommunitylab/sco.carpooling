@@ -5,7 +5,6 @@ angular.module('carpooling.services.user', [])
 
     var userService = {};
 
-    // /api/read/user/{userId}
     userService.getUser = function (userId) {
         var deferred = $q.defer();
 
@@ -15,11 +14,19 @@ angular.module('carpooling.services.user', [])
             if (data[0] == '<') {
                 deferred.reject();
             } else {
-                StorageSrv.saveUser(data.data).then(
-                    function (data) {
-                        deferred.resolve(data);
-                    }
-                );
+                if (StorageSrv.getUserId() === userId) {
+                    // It's-a-me!
+                    StorageSrv.saveUser(data.data).then(
+                        function (data) {
+                            deferred.resolve(data.data);
+                        },
+                        function (err) {
+                            deferred.reject(err);
+                        }
+                    );
+                } else {
+                    deferred.resolve(data.data);
+                }
             }
         })
 
@@ -143,17 +150,17 @@ angular.module('carpooling.services.user', [])
     userService.readNotifications = function (start, count) {
         var deferred = $q.defer();
 
-//        $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
-//
-//        .success(function (data) {
-//            deferred.resolve(data.data);
-//        })
-//
-//        .error(function (err) {
-//            deferred.reject(err);
-//        });
-//
-//        return deferred.promise;
+        //        $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
+        //
+        //        .success(function (data) {
+        //            deferred.resolve(data.data);
+        //        })
+        //
+        //        .error(function (err) {
+        //            deferred.reject(err);
+        //        });
+        //
+        //        return deferred.promise;
         if (start == null || start < 0) {
             deferred.reject('Invalid start position');
         } else if (!count) {

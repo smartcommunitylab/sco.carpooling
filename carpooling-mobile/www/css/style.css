@@ -122,7 +122,7 @@
     margin-left: 50px;
     white-space: normal;
 }
-.carpooling-theme .card.card-chat.card-chat-my-extra .item{
+.carpooling-theme .card.card-chat.card-chat-my-extra .item {
     border: 0;
     text-align: left;
     margin-left: 50px;
@@ -194,7 +194,7 @@
     padding-right: 10px;
     border: 0;
     position: absolute;
-    width:100%;
+    width: 100%;
     bottom: 0px;
     min-height: 60px;
     background-color: #fff;
@@ -337,35 +337,46 @@ placeautocomplete ul {
 .carpooling-theme .trip-info span {
     color: #000000;
 }
-.carpooling-theme .passenger {
+.carpooling-theme .trip-passengers h5 {
     color: #3448A5;
 }
-.carpooling-theme .custom-icons {
+.carpooling-theme .trip-requests h5 {
+    color: #3448A5;
+    text-align: center;
+}
+.carpooling-theme .trip-passengers ul {
     font-size: 3em;
     text-align: center;
 }
-.carpooling-theme .custom-icons li {
+.carpooling-theme .trip-passengers ul li {
     display: inline-block;
-    padding-right: 0.8em;
     color: #000000;
+    text-align: center;
 }
-.carpooling-theme .passenger #places_left {
+.carpooling-theme .trip-passengers ul li.trip-places-booked {
+    margin-right: 0.2em;
+}
+.carpooling-theme .trip-passengers ul li.trip-places-booked:last-child {
+    margin-right: 0;
+}
+.carpooling-theme .trip-passengers ul li.trip-places-left {
+    width: 2.5em;
+    height: 2.5em;
     font-size: 0.6em;
     border: 2px solid #3448A5;
     border-radius: 50%;
-    position: relative;
-    bottom: 0.3em;
     color: #3448A5;
 }
-.carpooling-theme .passenger #places_left p {
-    font-size: 0.3em;
+.carpooling-theme .trip-passengers ul li.trip-places-left span {
+    line-height: 1.5em;
 }
-.carpooling-theme .passenger #places_left div {
-    position: relative;
-    left: 0.3em;
-    top: 0.3em;
+.carpooling-theme .trip-passengers ul li.trip-places-left div {
+    font-size: 0.5em;
+    line-height: 1em;
+    margin: 0;
 }
 .carpooling-theme .trip-actions {
+    margin-top: 2em;
     text-align: center;
 }
 .carpooling-theme .trip-actions button {
@@ -379,10 +390,9 @@ placeautocomplete ul {
     width: 48%;
     line-height: 1em;
 }
-
 .requests {
-  margin: 8px 16px;
-  color: #3448A5;
-  padding-top: 16px;
-  border-top: 1px solid #f2f2f2;
+    margin: 8px 16px;
+    color: #3448A5;
+    padding-top: 16px;
+    border-top: 1px solid #f2f2f2;
 }

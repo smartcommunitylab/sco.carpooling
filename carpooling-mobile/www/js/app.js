@@ -25,7 +25,7 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, $rootScope, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
+.run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
     $rootScope.pushRegistration = function (userId) {
         try {
             window.parsePlugin.initialize(Config.getAppId(), Config.getClientKey(),function() {
@@ -66,10 +66,12 @@ angular.module('carpooling', [
             function (data) {
                 UserSrv.getUser(data.userId);
                 $rootScope.pushRegistration(data.userId);
+                $state.go('app.home',{},{reload:true});
             },
             function (error) {
-                // TODO: handle login error
-                //localStorage.user = null;
+                Utils.toast();
+                StorageSrv.saveUser(null);
+                ionic.Platform.exitApp();
             }
         );
     }
@@ -77,11 +79,11 @@ angular.module('carpooling', [
     $rootScope.logout = function () {
         LoginSrv.logout().then(
             function (data) {
-                StorageSrv.saveUser(null);
+                StorageSrv.reset();
                 ionic.Platform.exitApp();
             },
             function (error) {
-                // TODO: handle logout error
+                Utils.toast();
             }
         );
     };
@@ -100,7 +102,6 @@ angular.module('carpooling', [
         }
 
         if (!LoginSrv.userIsLogged()) {
-            //LoginSrv.login();
             $rootScope.login();
         } else {
             $rootScope.pushRegistration(StorageSrv.getUserId());

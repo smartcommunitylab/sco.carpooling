@@ -9,9 +9,11 @@ angular.module('carpooling.services.storage', [])
         }
         return false;
     };
+
     storageService.setProfileComplete = function () {
-      localStorage.profileComplete = true;
+        localStorage.profileComplete = true;
     };
+
     storageService.getUserId = function () {
         if (!!localStorage.userId) {
             return localStorage.userId;
@@ -39,6 +41,15 @@ angular.module('carpooling.services.storage', [])
         return null;
     };
 
+    storageService.reset = function() {
+      var deferred = $q.defer();
+      localStorage.removeItem('userId');
+      localStorage.removeItem('user');
+      localStorage.removeItem('profileComplete');
+      deferred.resolve(true);
+      return deferred.promise;
+
+    };
     storageService.saveUser = function (user) {
         var deferred = $q.defer();
 
