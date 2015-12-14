@@ -126,6 +126,9 @@ angular.module('carpooling.services.utils', [])
     };
 
     utilsService.getNumber = function (num) {
+        if (num === 0) {
+            return [];
+        }
         return new Array(num);
     };
 

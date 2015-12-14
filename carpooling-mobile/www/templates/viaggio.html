@@ -1,65 +1,92 @@
 <ion-view title="{{isMine ? 'lbl_mytrip': 'lbl_trip'| translate}}">
     <ion-content>
-        <div ng-if="!isMine">MAPPA</div>
-        <div class="button-bar">
-            <a class="button" ng-if="!isMine">
-                <i class="icons ion-ios-person"></i>
-                <span>{{driverInfo.name + " " + driverInfo.surname}}</span>
+        <div ng-if="!isMine">
+            <div>
+                MAPPA
+            </div>
+            <a class="button button-full" ng-if="!isMine">
+                <i class="icons ion-person"></i>
+                <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span>
             </a>
-<!-- hide temporary
+            <!-- hide temporary
             <a class="button">
                 <i class="icons ion-ios-people"></i>
                 <span>{{selectedTrip.communityIds[0]}}</span>
             </a>
--->
+            -->
         </div>
+
         <div class="padding trip-info">
+            <p>
+                <span>{{selectedTrip.when | date:travelDateFormat}}</span>
+            </p>
+
             <ul>
                 <li>
-                    <p><span>{{selectedTrip.when | date: travelDateFormat}}</span></p>
+                    {{'lbl_from' | translate | uppercase}}: <span>{{selectedTrip.from.name}}</span>
                 </li>
                 <li>
-                    <p>{{'lbl_from' | translate | uppercase}}: <span>{{selectedTrip.from.name}}</span></p>
+                    {{'lbl_to' | translate | uppercase}}: <span>{{selectedTrip.to.name}}</span>
+                </li>
+            </ul>
+
+            <ul class="padding-top padding-bottom">
+                <li>
+                    {{'lbl_start_time' | translate}}: <span>{{selectedTrip.route.startime | date:travelTimeFormat}}</span>
                 </li>
                 <li>
-                    <p>{{'lbl_to' | translate | uppercase}}: <span>{{selectedTrip.to.name}}</span></p>
+                    {{'lbl_end_time' | translate}}: <span>{{selectedTrip.route.endtime | date:travelTimeFormat}}</span>
                 </li>
-                <li>
-                    <p>{{'lbl_start_time' | translate}}: <span>{{selectedTrip.route.startime | date: travelTimeFormat}}</span></p>
+            </ul>
+
+            <p>
+                {{'lbl_halfwaystops' | translate}}: <span>{{(!!selectedTrip.intermediateStops ? 'lbl_halfwaystops_onrequest' : 'lbl_halfwaystops_none') | translate}}</span>
+            </p>
+
+            <p>
+                {{'lbl_recurrency' | translate}}: <span>{{!!selectedTrip.recurrency ? dowString : 'lbl_recurrency_none' | translate}}</span>
+            </p>
+        </div>
+
+        <div class="padding trip-passengers">
+            <h5>{{'lbl_passenger' | translate | uppercase}}</h5>
+            <ul>
+                <li class="trip-places-booked" ng-repeat="i in getNumber(bookingCounters.booked) track by $index">
+                    <i class="icons ion-person"></i>
                 </li>
-                <li>
-                    <p>{{'lbl_end_time' | translate}}: <span>{{selectedTrip.route.endtime | date: travelTimeFormat}}</span></p>
-                </li>
-                <li>
-                    <p>{{'lbl_halfwaystops' | translate}}: <span>{{(!!selectedTrip.intermediateStops ? 'lbl_halfwaystops_onrequest' : 'lbl_halfwaystops_none') | translate}}</span></p>
-                </li>
-                <li>
-                    <p>{{'lbl_recurrency' | translate}}: <span>{{!!selectedTrip.recurrency ? dowString : 'lbl_recurrency_none' | translate}}</span></p>
+                <li class="trip-places-left">
+                    <span>+{{bookingCounters.available}}</span>
+                    <div>{{'lbl_spaces_left' | translate | uppercase}}</div>
                 </li>
             </ul>
         </div>
-        <div class="padding-left passenger">
-            <p>{{'lbl_passenger' | translate | uppercase}}</p>
-            <ul class="custom-icons">
-                <li class="icons ion-ios-person" ng-repeat="i in getNumber(bookingCounters.booked) track by $index"></li>
-                <li id="places_left">
-                    <div>
-                        <span>+{{bookingCounters.available}}</span>
-                        <p>{{'lbl_spaces_left' | translate | uppercase}}</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="trip-actions" ng-if="!isMine">
-            <button class="button">
+
+        <div class="padding trip-actions" ng-if="!isMine">
+            <button class="button button-carpooling">
                 {{'lbl_driver_contact' | translate | uppercase}}
             </button>
-            <button class="button">
+            <button class="button button-carpooling">
                 {{'lbl_ask_trip' | translate | uppercase}}
             </button>
         </div>
-        <div class="text-center requests" ng-if="isMine">
-            <p>{{'lbl_requests' | translate}}</p>
+
+        <div class="padding trip-requests" ng-if="isMine">
+            <h5>{{'lbl_requests' | translate}}</h5>
+            <ul>
+                <!--<li ng-repeat="booking in $scope.selectedTrip.bookings">-->
+                <li>
+                    <div class="row">
+                        <div class="col">
+                            <i class="icons ion-person"></i>
+                        </div>
+                        <div class="col">
+                            <!--{{booking.traveller.userId}} {{booking.traveller.name}} {{booking.traveller.surname}}-->
+                            <p>Oscar Zambotti</p>
+                            <p><a>Vedi profilo</a></p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
     </ion-content>
 </ion-view>

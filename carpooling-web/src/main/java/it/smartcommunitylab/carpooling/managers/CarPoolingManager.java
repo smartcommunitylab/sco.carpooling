@@ -107,6 +107,10 @@ public class CarPoolingManager {
 		if (travelRequest.isMonitored()) {
 			// make sure if its the logged in user.
 			travelRequest.setUserId(userId);
+			if (travelRequest.getCommunityIds().isEmpty()) {
+				List<String> communityIds = communityRepository.getCommunityIdsForUser(userId);
+				travelRequest.setCommunityIds(communityIds);
+			}
 			travelRequestRepository.save(travelRequest);
 		}
 
@@ -216,13 +220,13 @@ public class CarPoolingManager {
 					data.put("senderId", userId);
 					User user = userRepository.findOne(userId);
 					data.put("senderFullName", user.fullName());
-					Notification tripAvailability = new Notification(targetUserId,
+					Notification bookingNotification = new Notification(targetUserId,
 							CarPoolingUtils.NOTIFICATION_BOOKING, data, false, travel.getId(),
 							System.currentTimeMillis());
-					notificationRepository.save(tripAvailability);
+					notificationRepository.save(bookingNotification);
 					// notify via parse.
 					try {
-						sendPushNotification.sendNotification(targetUserId, tripAvailability);
+						sendPushNotification.sendNotification(targetUserId, bookingNotification);
 					} catch (JSONException e) {
 						throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
 					}	
@@ -272,12 +276,12 @@ public class CarPoolingManager {
 				String targetUserId = booking.getTraveller().getUserId();
 				Map<String, String> data = new HashMap<String, String>();
 				data.put("status", ""+booking.getAccepted());
-				Notification tripAvailability = new Notification(targetUserId,
+				Notification confirmNotification = new Notification(targetUserId,
 						CarPoolingUtils.NOTIFICATION_CONFIRM, data, false, travel.getId(),
 						System.currentTimeMillis());
-				notificationRepository.save(tripAvailability);
+				notificationRepository.save(confirmNotification);
 				try {
-					sendPushNotification.sendNotification(targetUserId, tripAvailability);
+					sendPushNotification.sendNotification(targetUserId, confirmNotification);
 				} catch (JSONException e) {
 					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
 				}	
@@ -483,13 +487,13 @@ public class CarPoolingManager {
 			User user = userRepository.findOne(userId);
 			data.put("senderFullName", user.fullName());
 			data.put("message", message.getMessage());
-			Notification tripAvailability = new Notification(targetUserId,
+			Notification chatNotification = new Notification(targetUserId,
 					CarPoolingUtils.NOTIFICATION_CHAT, data, false, travelId,
 					System.currentTimeMillis());
-			notificationRepository.save(tripAvailability);
+			notificationRepository.save(chatNotification);
 			// notify via parse.
 			try {
-				sendPushNotification.sendNotification(targetUserId, tripAvailability);
+				sendPushNotification.sendNotification(targetUserId, chatNotification);
 			} catch (JSONException e) {
 				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
 			}	

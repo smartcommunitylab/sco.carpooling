@@ -14,7 +14,7 @@ angular.module('carpooling.controllers.viaggio', [])
                 $scope.selectedTrip = data;
                 console.log($scope.selectedTrip);
 
-                $scope.isMine = $scope.selectedTrip.userId == StorageSrv.getUserId();
+                $scope.isMine = $scope.selectedTrip.userId === StorageSrv.getUserId();
                 $scope.bookingCounters = Utils.getBookingCounters($scope.selectedTrip);
                 $scope.dowString = Utils.getRecurrencyString($scope.selectedTrip);
 
@@ -38,12 +38,15 @@ angular.module('carpooling.controllers.viaggio', [])
                         }
                     );
                 } else {
+
+
                     Utils.loaded();
                 }
             },
             function (error) {
                 Utils.loaded();
                 // TODO: handle getTrip error
+                Utils.toast();
             }
         );
     };
