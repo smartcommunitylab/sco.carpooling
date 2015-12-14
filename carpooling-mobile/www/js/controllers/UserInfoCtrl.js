@@ -33,18 +33,23 @@ angular.module('carpooling.controllers.user', [])
         Utils.loading();
         var auto = $scope.user.auto;
         if (!auto) {
-          auto = {description: '', posts: -1};
+            auto = {
+                description: '',
+                posts: -1
+            };
         }
         // UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
         UserSrv.saveAuto(auto).then(
             function (data) {
                 if ($rootScope.initialSetup) {
-                    UserSrv.getUser($scope.user.userId).then(function () {
-                      Utils.loaded();
-                      StorageSrv.setProfileComplete();
-                      $rootScope.initialSetup = false;
-                      $state.go('app.home');
-                    });
+                    UserSrv.getUser($scope.user.userId).then(
+                        function () {
+                            Utils.loaded();
+                            StorageSrv.setProfileComplete();
+                            $rootScope.initialSetup = false;
+                            $state.go('app.home');
+                        }
+                    );
                 } else {
                     Utils.loaded();
                     $scope.toggleEditMode();

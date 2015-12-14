@@ -43,7 +43,7 @@
                 {{'lbl_halfwaystops' | translate}}: <span>{{(!!selectedTrip.intermediateStops ? 'lbl_halfwaystops_onrequest' : 'lbl_halfwaystops_none') | translate}}</span>
             </p>
 
-            <p>
+            <p ng-if="isRecurrencyEnabled()">
                 {{'lbl_recurrency' | translate}}: <span>{{!!selectedTrip.recurrency ? dowString : 'lbl_recurrency_none' | translate}}</span>
             </p>
         </div>
@@ -61,13 +61,26 @@
             </ul>
         </div>
 
-        <div class="padding trip-actions" ng-if="!isMine">
-            <button class="button button-carpooling">
-                {{'lbl_driver_contact' | translate | uppercase}}
-            </button>
-            <button class="button button-carpooling">
-                {{'lbl_ask_trip' | translate | uppercase}}
-            </button>
+        <div class="padding trip-status" ng-if="!isMine && bookingState !== null">
+            <span ng-if="bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
+            <span ng-if="bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
+            <span ng-if="bookingState === 1">{{'lbl_trip_accepted' | translate}}</span>
+        </div>
+
+        <div class="padding row trip-actions" ng-if="!isMine">
+            <div class="col">
+                <button class="button button-carpooling">
+                    {{'lbl_driver_contact' | translate | uppercase}}
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-carpooling" ng-click="bookingAction()">
+                    <span ng-if="bookingState === null">{{'lbl_trip_ask' | translate | uppercase}}</span>
+                    <span ng-if="bookingState === -1">{{'lbl_trip_rejected' | translate | uppercase}}</span>
+                    <span ng-if="bookingState === 0">{{'lbl_trip_requested' | translate | uppercase}}</span>
+                    <span ng-if="bookingState === 1">{{'lbl_trip_accepted' | translate | uppercase}}</span>
+                </button>
+            </div>
         </div>
 
         <div class="padding trip-requests" ng-if="isMine">

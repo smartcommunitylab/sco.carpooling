@@ -34,8 +34,10 @@
             </div>
 
             <!-- ng-click missing because we use a watch on the model -->
-            <ion-toggle ng-model="recurrency.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
-            <a class="link-carpooling" ng-if="recurrency.isRecurrent" ng-click="showRecurrencyPopup()">{{recurrency.recurrencyDoWstring}}</a>
+            <div ng-if="isRecurrencyEnabled()">
+                <ion-toggle ng-model="recurrency.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
+                <a class="link-carpooling" ng-if="recurrency.isRecurrent" ng-click="showRecurrencyPopup()">{{recurrency.recurrencyDoWstring}}</a>
+            </div>
         </div>
 
         <div class="row">

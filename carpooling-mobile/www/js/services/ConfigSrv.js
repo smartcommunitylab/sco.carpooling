@@ -6,6 +6,8 @@ angular.module('carpooling.services.config', [])
     var APPID = 'QZByJ7flOj4rmtN3gpyBhMyw7jONUU3sgzJJT3pL';
     var CLIENTKEY = 'mTCHyDLCaogDtE5IA7g3xM0J0o400j4a8u9Nnc8N';
 
+    var RECURRENCY = false;
+
     var HTTP_CONFIG = {
         timeout: 5000
     };
@@ -22,6 +24,9 @@ angular.module('carpooling.services.config', [])
         },
         getGeocoderURL: function () {
             return GEOCODER_URL;
+        },
+        isRecurrencyEnabled: function () {
+            return RECURRENCY;
         },
         getHTTPConfig: function () {
             return HTTP_CONFIG;
