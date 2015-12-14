@@ -1,8 +1,28 @@
-<ion-view title="{{'menu_community'| translate}}">
+<ion-view title="{{'menu_community'| translate}}" class="communities">
     <ion-nav-buttons side="right">
         <a href="#/app/cercacomunita" class="button button-icon ion-android-search padding-left"></a>
     </ion-nav-buttons>
     <ion-content>
-        <a href="#/app/comunitainfo" class="button"><h1>{{'menu_community'| translate}}</h1></a>
+        <!--TODO: display the cards only if the user has 1 or more community. If not display "No communities"-->
+        <div class="card card-trip" ng-repeat="comm in communities" ng-click="selectCommunity()">
+            <div class="item row">
+                    <ul class="padding-bottom">
+                        <li class="padding-bottom">
+                            <h1 class="padding">{{comm.name}}</h1>
+                        </li>
+                        <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
+                        <li class="padding">
+                            {{'lbl_tripzone'| translate}}: <span>Rovereto, Trento</span>
+                        </li>
+                        <li class="padding-bottom row">
+                            <!--TODO: change fake data (12,3,3) count with the real data-->
+                            <span class="col first" id="custom-icons"><i class="icons ion-android-people"></i> 12 </span>
+                            <span class="col mid" id="custom-icons"><i class="icons ion-model-s"></i> 3 </span>
+                            <span class="col last" id="custom-icons"><i class="icons ion-chatbox-working"></i> 3 </span>
+                        </li>
+                    </ul>
+            </div>
+        </div>
+        </div>
     </ion-content>
 </ion-view>

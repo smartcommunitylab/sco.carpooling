@@ -22,6 +22,7 @@ angular.module('carpooling', [
     'carpooling.controllers.viaggio',
     'carpooling.controllers.notifications',
     'carpooling.controllers.user',
+    'carpooling.controllers.communities',
     'leaflet-directive'
 ])
 
@@ -228,7 +229,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'menuContent': {
-                templateUrl: 'templates/comunita.html'
+                templateUrl: 'templates/comunita.html',
+                controller: 'CommunityCtrl'
             }
         }
     })
