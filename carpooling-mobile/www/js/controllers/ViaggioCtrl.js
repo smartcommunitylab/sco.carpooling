@@ -1,51 +1,59 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, PassengerSrv, $state, $stateParams, $filter, UserSrv, Utils, StorageSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, UserSrv, Utils, StorageSrv, PassengerSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
     $scope.driverInfo = {};
 
+    $scope.selectedTrip = {};
+    $scope.bookingCounters = {};
+
+    // -1 rejected, 0 requested, 1 accepted
+    $scope.bookingState = null;
+
+    var refreshTrip = function (trip) {
+        $scope.selectedTrip = trip;
+        console.log($scope.selectedTrip);
+
+        $scope.isMine = $scope.selectedTrip.userId === StorageSrv.getUserId();
+        $scope.bookingCounters = Utils.getBookingCounters($scope.selectedTrip);
+        $scope.dowString = Utils.getRecurrencyString($scope.selectedTrip);
+
+        if (!$scope.isMine) {
+            $scope.selectedTrip.bookings.forEach(function (booking) {
+                if (booking.traveller.userId === StorageSrv.getUserId()) {
+                    // my booking
+                    $scope.bookingState = booking.accepted;
+                }
+            });
+
+            UserSrv.getUser($scope.selectedTrip.userId).then(
+                function (userInfo) {
+                    $scope.driverInfo = userInfo;
+                    //console.log('User found');
+                    Utils.loaded();
+                },
+                function (error) {
+                    Utils.loaded();
+                    Utils.toast();
+                }
+            );
+        } else {
+            Utils.loaded();
+        }
+    };
+
     var init = function () {
+        Utils.loading();
+
         $scope.travelId = $stateParams.travelId;
 
-        Utils.loading();
         PassengerSrv.getTrip($scope.travelId).then(
             function (data) {
-                $scope.selectedTrip = data;
-                console.log($scope.selectedTrip);
-
-                $scope.isMine = $scope.selectedTrip.userId === StorageSrv.getUserId();
-                $scope.bookingCounters = Utils.getBookingCounters($scope.selectedTrip);
-                $scope.dowString = Utils.getRecurrencyString($scope.selectedTrip);
-
-                // TODO: handle getUser that isn't me
-                if (!$scope.isMine) {
-                    UserSrv.getUser($scope.selectedTrip.userId).then(
-                        function (userInfo) {
-                            Utils.loaded();
-                            console.log('User found');
-                            $scope.driverInfo = userInfo;
-                            if (!!userInfo.auto) {
-                                $scope.passengerNum = userInfo.auto.posts - $scope.selectedTrip.places;
-                                console.log($scope.passengerNum);
-                            }
-                            console.log($scope.driverInfo);
-                        },
-                        function (error) {
-                            Utils.loaded();
-                            // TODO: handle getUser error
-                            console.log(error);
-                        }
-                    );
-                } else {
-
-
-                    Utils.loaded();
-                }
+                refreshTrip(data);
             },
             function (error) {
                 Utils.loaded();
-                // TODO: handle getTrip error
                 Utils.toast();
             }
         );
@@ -53,7 +61,47 @@ angular.module('carpooling.controllers.viaggio', [])
 
     init();
 
-    $scope.getNumber = function () {
-        return Utils.getNumber();
-    }
+    $scope.book = function () {
+        var me = StorageSrv.getUser();
+
+        var booking = {
+            traveller: {
+                userId: me.userId,
+                name: me.name,
+                surname: me.surname,
+                email: me.email
+            }
+        };
+
+        if ($rootScope.isRecurrencyEnabled()) {
+            // TODO handle recurrency ('recurrent' and 'date' field, TBD)
+        } else {
+            booking.recurrent = false;
+            booking.date = new Date($scope.selectedTrip.when);
+        }
+
+        PassengerSrv.bookTrip($scope.travelId, booking).then(
+            function (updatedTrip) {
+                refreshTrip(updatedTrip);
+            },
+            function (error) {
+                Utils.toast();
+            }
+        );
+    };
+
+    $scope.bookingAction = function () {
+        if ($scope.bookingState === null) {
+            $scope.book();
+        } else if ($scope.bookingState === -1) {
+            // TODO rejected
+            console.log('rejected');
+        } else if ($scope.bookingState === 0) {
+            // TODO requested
+            console.log('requested');
+        } else if ($scope.bookingState === 1) {
+            // TODO accepted
+            console.log('accepted');
+        }
+    };
 });

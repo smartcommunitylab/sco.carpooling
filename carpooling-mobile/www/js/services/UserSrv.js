@@ -24,6 +24,17 @@ angular.module('carpooling.services.user', [])
                             deferred.reject(err);
                         }
                     );
+
+                    // My communities
+                    userService.getCommunities().then(
+                        function (data) {
+                            data.data.forEach(function (community) {
+                                delete community['users'];
+                            });
+                            StorageSrv.saveCommunities(data.data);
+                            deferred.resolve(data.data);
+                        }
+                    );
                 } else {
                     deferred.resolve(data.data);
                 }

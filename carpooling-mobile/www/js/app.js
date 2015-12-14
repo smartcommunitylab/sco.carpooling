@@ -50,7 +50,7 @@ angular.module('carpooling', [
                 });
 
             });
-/*            window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
+            /* window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
             window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
                 var channel = 'CarPooling_' + userId;
                 window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
@@ -61,12 +61,20 @@ angular.module('carpooling', [
         }
     };
 
+    $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
+
+    $rootScope.getNumber = function () {
+        return Utils.getNumber();
+    };
+
     $rootScope.login = function () {
         LoginSrv.login().then(
             function (data) {
                 UserSrv.getUser(data.userId);
                 $rootScope.pushRegistration(data.userId);
-                $state.go('app.home',{},{reload:true});
+                $state.go('app.home', {}, {
+                    reload: true
+                });
             },
             function (error) {
                 Utils.toast();
@@ -109,7 +117,7 @@ angular.module('carpooling', [
     });
 })
 
-.config(function ($httpProvider,$ionicConfigProvider) {
+.config(function ($httpProvider, $ionicConfigProvider) {
     $httpProvider.defaults.withCredentials = true;
     $ionicConfigProvider.backButton.text('');
     $ionicConfigProvider.backButton.previousTitleText(false);
@@ -396,8 +404,11 @@ angular.module('carpooling', [
         lbl_passenger: 'Passeggeri',
         lbl_spaces_left: 'liberi',
         lbl_driver_contact: 'contatta il conducente',
-        lbl_ask_trip: 'richiedi passaggio',
-        lbl_requests : 'Richeste di partecipazione',
+        lbl_trip_ask: 'Richiedi passaggio',
+        lbl_trip_rejected: 'Passaggio rifiutato',
+        lbl_trip_requested: 'Passaggio richiesto',
+        lbl_trip_accepted: 'Passaggio accettato',
+        lbl_requests: 'Richeste di partecipazione',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrency: 'Imposta ricorrenza',
@@ -439,8 +450,8 @@ angular.module('carpooling', [
         notif_short_chat: 'Nuovo messaggio da {{name}}',
         notif_short_avail: 'Trovato un viaggio',
         notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
-        notif_short_response_ok : 'Viaggio confermato',
-        notif_short_response_ko : 'Viaggio rifiutato',
+        notif_short_response_ok: 'Viaggio confermato',
+        notif_short_response_ko: 'Viaggio rifiutato',
         toast_error_generic: 'There was a problem...'
     });
 

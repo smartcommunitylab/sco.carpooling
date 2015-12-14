@@ -375,19 +375,14 @@ placeautocomplete ul {
     line-height: 1em;
     margin: 0;
 }
-.carpooling-theme .trip-actions {
-    margin-top: 2em;
+.carpooling-theme .trip-status {
     text-align: center;
+    color: #4EB0E6;
+    font-weight: bold;
 }
 .carpooling-theme .trip-actions button {
-    margin-right: 2px;
-    margin-left: 2px;
-    color: white;
-    background-color: dodgerblue;
     font-size: 0.8em;
     font-weight: bold;
-    display: inline-block;
-    width: 48%;
     line-height: 1em;
 }
 .requests {
