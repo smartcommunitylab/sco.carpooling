@@ -46,8 +46,9 @@ angular.module('carpooling', [
                 $rootScope.pushRegistration(data.userId);
             },
             function (error) {
-                // TODO: handle login error
-                //localStorage.user = null;
+                Utils.toast();
+                StorageSrv.saveUser(null);
+                ionic.Platform.exitApp();
             }
         );
     }
@@ -59,7 +60,7 @@ angular.module('carpooling', [
                 ionic.Platform.exitApp();
             },
             function (error) {
-                // TODO: handle logout error
+                Utils.toast();
             }
         );
     };
@@ -78,7 +79,6 @@ angular.module('carpooling', [
         }
 
         if (!LoginSrv.userIsLogged()) {
-            //LoginSrv.login();
             $rootScope.login();
         } else {
             $rootScope.pushRegistration(StorageSrv.getUserId());

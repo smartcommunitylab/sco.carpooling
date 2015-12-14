@@ -9,9 +9,11 @@ angular.module('carpooling.services.storage', [])
         }
         return false;
     };
+
     storageService.setProfileComplete = function () {
-      localStorage.profileComplete = true;
+        localStorage.profileComplete = true;
     };
+
     storageService.getUserId = function () {
         if (!!localStorage.userId) {
             return localStorage.userId;

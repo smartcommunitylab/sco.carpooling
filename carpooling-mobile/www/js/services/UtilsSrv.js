@@ -59,7 +59,7 @@ angular.module('carpooling.services.utils', [])
             };
 
             travel.bookings.forEach(function (booking) {
-                // TODO: availability logic
+                // NOTE Availability logic: busy if 0 (requested) or 1 (accepted), free if -1 (rejected)
                 if (booking.accepted >= 0) {
                     bookingCounters.booked++;
                     bookingCounters.available--;
@@ -126,7 +126,7 @@ angular.module('carpooling.services.utils', [])
     };
 
     utilsService.getNumber = function (num) {
-        if (num === 0) {
+        if (!num || num === 0) {
             return [];
         }
         return new Array(num);

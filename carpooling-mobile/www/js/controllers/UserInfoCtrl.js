@@ -52,7 +52,7 @@ angular.module('carpooling.controllers.user', [])
             },
             function (error) {
                 Utils.loaded();
-                // TODO: handle saveAuto error
+                Utils.toast();
             }
         );
     };
