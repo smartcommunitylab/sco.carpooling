@@ -49,7 +49,7 @@ angular.module('carpooling.controllers.notifications', [])
 
     $scope.getNotifications = function(){
         //var start = 0;
-        //var all = 4;
+        //var all = 10;
         Utils.loading();
         UserSrv.readNotifications($scope.start, $scope.all).then(function(notifics) {
             notifications = notifics ? notifics : [];

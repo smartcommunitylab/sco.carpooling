@@ -2,6 +2,11 @@ angular.module('carpooling.controllers.user', [])
 
 .controller('UserInfoCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils) {
     $scope.user = angular.copy(StorageSrv.getUser());
+    if(!$scope.user){
+        $scope.user = {
+            auto: null
+        };
+    }
 
     $rootScope.initialSetup = !StorageSrv.isProfileComplete();
 

@@ -22,11 +22,11 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-plugin-inappbrowser",
-    "cordova-plugin-pushnotification-parsepushnotification",
+    "com.parse.cordova.core.pushplugin",
     "cordova-plugin-x-toast"
   ],
   "cordovaPlatforms": [
-    "android",
-    "ios"
+    "ios",
+    "android"
   ]
 }

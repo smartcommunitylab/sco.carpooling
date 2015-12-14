@@ -72,8 +72,9 @@
     border-width: 0px;
 }
 .carpooling-theme .card .item.unread{
-    background-color: #4EB0E6;
+    background-color: #F7F7F7;/*#4EB0E6;*/
     border-width: 0px;
+    font-weight: bold;
 }
 .carpooling-theme .card .item-divider {
     text-align: right;
