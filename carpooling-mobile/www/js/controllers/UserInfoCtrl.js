@@ -15,7 +15,7 @@ angular.module('carpooling.controllers.user', [])
 
     $scope.editMode = false || $rootScope.initialSetup;
     $scope.edit = {
-        hasAuto: $rootScope.initialSetup ? false : hasAuto($scope.user.auto),
+        hasAuto: hasAuto($scope.user.auto),
         postsAvailable: [1, 2, 3, 4, 5, 6, 7]
     };
 
@@ -31,14 +31,20 @@ angular.module('carpooling.controllers.user', [])
 
     $scope.saveProfile = function () {
         Utils.loading();
+        var auto = $scope.user.auto;
+        if (!auto) {
+          auto = {description: '', posts: -1};
+        }
         // UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
-        UserSrv.saveAuto($scope.user.auto).then(
+        UserSrv.saveAuto(auto).then(
             function (data) {
                 if ($rootScope.initialSetup) {
-                    Utils.loaded();
-                    StorageSrv.setProfileComplete();
-                    $rootScope.initialSetup = false;
-                    $state.go('app.home');
+                    UserSrv.getUser($scope.user.userId).then(function () {
+                      Utils.loaded();
+                      StorageSrv.setProfileComplete();
+                      $rootScope.initialSetup = false;
+                      $state.go('app.home');
+                    });
                 } else {
                     Utils.loaded();
                     $scope.toggleEditMode();
