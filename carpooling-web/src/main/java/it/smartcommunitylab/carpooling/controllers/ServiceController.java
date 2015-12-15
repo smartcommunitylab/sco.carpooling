@@ -229,6 +229,12 @@ public class ServiceController {
 	Response<List<Community>> readCommunities() throws CarPoolingCustomException {
 		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities/details")
+	public @ResponseBody
+	Response<List<Community>> readCommunitiesWithDetails() throws CarPoolingCustomException {
+		return new Response<List<Community>>(carPoolingManager.readCommunitiesWithDetails(getUserId()));
+	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo")
 	public @ResponseBody

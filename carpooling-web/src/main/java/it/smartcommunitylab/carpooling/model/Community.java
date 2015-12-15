@@ -37,6 +37,14 @@ public class Community {
 	private String name;
 	/** list of user ids (reqd).**/
 	private List<String> users = new ArrayList<String>();
+	/** color. **/
+	private String color;
+	/** zone. **/
+	private String zone;
+	/** number of cars in community. **/
+	private int cars;
+	/** list of user objects. **/
+	private List<User> userObjs = new ArrayList<User>();
 
 	public Community() {
 		super();
@@ -48,6 +56,15 @@ public class Community {
 		this.id = id;
 		this.name = name;
 		this.users = users;
+	}
+
+	public Community(String id, String name, List<String> users, String color, String zone) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.users = users;
+		this.color = color;
+		this.zone = zone;
 	}
 
 	public String getId() {
@@ -72,6 +89,38 @@ public class Community {
 
 	public void setUsers(List<String> users) {
 		this.users = users;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getZone() {
+		return zone;
+	}
+
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+
+	public int getCars() {
+		return cars;
+	}
+
+	public void setCars(int cars) {
+		this.cars = cars;
+	}
+
+	public List<User> getUserObjs() {
+		return userObjs;
+	}
+
+	public void setUserObjs(List<User> userObjs) {
+		this.userObjs = userObjs;
 	}
 
 }
