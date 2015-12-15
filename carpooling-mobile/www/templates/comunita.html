@@ -4,7 +4,7 @@
     </ion-nav-buttons>
     <ion-content>
         <!--TODO: display the cards only if the user has 1 or more community. If not display "No communities"-->
-        <div class="card card-trip" ng-repeat="comm in communities" ng-click="selectCommunity()">
+        <div class="card card-trip" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
             <div class="item row">
                     <ul class="padding-bottom">
                         <li class="padding-bottom">

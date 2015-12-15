@@ -187,9 +187,13 @@ angular.module('carpooling', [
     .state('app.comunitainfo', {
         url: '/comunitainfo',
         cache: false,
+        params: {
+            'selectResults': {}
+        },
         views: {
             'menuContent': {
-                templateUrl: 'templates/comunitainfo.html'
+                templateUrl: 'templates/comunitainfo.html',
+                controller: 'CommunityInfoCtrl'
             }
         }
     })
