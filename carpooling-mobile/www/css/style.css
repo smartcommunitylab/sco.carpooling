@@ -71,8 +71,9 @@
     background-color: #F0F0F0;
     border-width: 0px;
 }
-.carpooling-theme .card .item.unread{
-    background-color: #F7F7F7;/*#4EB0E6;*/
+.carpooling-theme .card .item.unread {
+    background-color: #F7F7F7;
+    /*#4EB0E6;*/
     border-width: 0px;
     font-weight: bold;
 }
@@ -385,51 +386,49 @@ placeautocomplete ul {
     font-weight: bold;
     line-height: 1em;
 }
-.requests {
-    margin: 8px 16px;
-    color: #3448A5;
-    padding-top: 16px;
-    border-top: 1px solid #f2f2f2;
+.carpooling-theme .trip-requests {
+    margin-top: 1em;
 }
-
-
+.carpooling-theme .trip-requests .list .item {
+    border: 0;
+}
+.carpooling-theme .trip-requests .list .item-button-right > .button {
+    right: 70.5px;
+}
+.carpooling-theme .trip-requests .list .item-button-right > .button:last-child {
+    right: 16px;
+}
 
 /* Community */
 
-.carpooling-theme .communities ul{
+.carpooling-theme .communities ul {
     width: 100%;
-    padding-top, padding-left, padding-right: 0;
+    padding-top,
+    padding-left,
+    padding-right: 0;
 }
-
-.carpooling-theme .communities ul li.padding.row{
+.carpooling-theme .communities ul li.padding.row {
     text-align: center;
 }
-
-.carpooling-theme .communities .item.row{
+.carpooling-theme .communities .item.row {
     padding: 0;
 }
-
-.carpooling-theme .communities ul li .first{
+.carpooling-theme .communities ul li .first {
     text-align: left !important;
 }
-
-.carpooling-theme .communities ul li .mid{
+.carpooling-theme .communities ul li .mid {
     text-align: center!important;
 }
-
-.carpooling-theme .communities ul li .last{
+.carpooling-theme .communities ul li .last {
     text-align: right !important;
 }
-
 .carpooling-theme .communities h1 {
     background-color: #009933;
 }
-
 .carpooling-theme .communities #custom-icons {
     color: #3448A5;
     font-size: 2em;
 }
-
 .carpooling-theme .communities span {
     color: #000000;
 }

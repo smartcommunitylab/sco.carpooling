@@ -120,6 +120,22 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
     };
 
+    userService.getCommunitiesDetails = function () {
+        var deferred = $q.defer();
+
+        $http.get(Config.getServerURL() + '/api/read/communities/details', Config.getHTTPConfig())
+
+        .success(function (data) {
+            deferred.resolve(data);
+        })
+
+        .error(function (err) {
+            deferred.reject(err);
+        });
+
+        return deferred.promise;
+    };
+
     userService.getDiscussion = function (travelId, targetUserId) {
         var deferred = $q.defer();
 

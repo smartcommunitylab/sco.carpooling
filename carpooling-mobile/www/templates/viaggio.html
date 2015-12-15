@@ -55,7 +55,7 @@
                     <i class="icons ion-person"></i>
                 </li>
                 <li class="trip-places-left">
-                    <span>+{{bookingCounters.available}}</span>
+                    <span>{{bookingCounters.available !== selectedTrip.places ? '+' : ''}}{{bookingCounters.available}}</span>
                     <div>{{'lbl_spaces_left' | translate | uppercase}}</div>
                 </li>
             </ul>
@@ -83,22 +83,22 @@
             </div>
         </div>
 
-        <div class="padding trip-requests" ng-if="isMine">
+        <div class="padding trip-requests" ng-if="isMine && $scope.selectedTrip.bookings.length > 0">
+        <!--<div class="trip-requests" ng-if="isMine">-->
             <h5>{{'lbl_requests' | translate}}</h5>
-            <ul>
+            <div class="list">
                 <!--<li ng-repeat="booking in $scope.selectedTrip.bookings">-->
-                <li>
-                    <div class="row">
-                        <div class="col">
-                            <i class="icons ion-person"></i>
-                        </div>
-                        <div class="col">
-                            <!--{{booking.traveller.userId}} {{booking.traveller.name}} {{booking.traveller.surname}}-->
-                            <p>Oscar Zambotti</p>
-                            <p><a>Vedi profilo</a></p>
-                        </div>
-                    </div>
-                </li>
+                <a class="item item-button-right">
+                    <!--<i class="icon ion-person"></i>-->
+                    <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
+                    <!--Name Surname-->
+                    <button class="button button-carpooling">
+                        <i class="icon ion-close-round"></i>
+                    </button>
+                    <button class="button button-carpooling">
+                        <i class="icon ion-checkmark-round"></i>
+                    </button>
+                </a>
             </ul>
         </div>
     </ion-content>

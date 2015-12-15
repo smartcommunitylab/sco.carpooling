@@ -64,8 +64,8 @@ angular.module('carpooling', [
 
     $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
 
-    $rootScope.getNumber = function () {
-        return Utils.getNumber();
+    $rootScope.getNumber = function (num) {
+        return Utils.getNumber(num);
     };
 
     $rootScope.login = function () {
