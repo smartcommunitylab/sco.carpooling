@@ -116,6 +116,13 @@ public class CarPoolingManager {
 
 		return searchTravels;
 	}
+	
+	public List<Travel> searchCommunityTravels(String communityId, Long timeInMillies) {
+
+		List<Travel> communityTravels = travelRepository.searchCommunityTravels(communityId, timeInMillies);
+
+		return communityTravels;
+	}
 
 	public Travel saveTravel(Travel travel, String userId) throws CarPoolingCustomException {
 

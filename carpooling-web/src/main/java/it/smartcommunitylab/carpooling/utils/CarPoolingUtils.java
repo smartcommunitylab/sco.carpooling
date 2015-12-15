@@ -32,7 +32,7 @@ import java.util.Map;
 public class CarPoolingUtils {
 
 	/** radius of circle. **/
-//	public static final double radius = 1;
+	//	public static final double radius = 1;
 	/** date format. **/
 	public static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	/** constants. **/
@@ -118,7 +118,27 @@ public class CarPoolingUtils {
 		return before;
 
 	}
-	
+
+	public static Date getEndOfDay(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 999);
+		return calendar.getTime();
+	}
+
+	public static Date getStartOfDay(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
+
 	public static boolean availableRecurrentTrip(Travel travel, TravelRequest travelRequest) {
 
 		int capacity = travel.getPlaces();
@@ -126,11 +146,11 @@ public class CarPoolingUtils {
 		for (Booking booking : travel.getBookings()) {
 
 			if (booking.isRecurrent()) { // recurrent booking.
-				
+
 				if (booking.getAccepted() != -1) {
 					capacity--;
 				}
-				
+
 			} else { // non recurrent booking.
 
 				// if booking has time before requested booking time - ignore.(just for performance since we only decrease
@@ -163,7 +183,7 @@ public class CarPoolingUtils {
 				continue;
 			}
 			// if it is not rejected, occupied.
-			if (!booking.isRecurrent() && booking.getAccepted() != -1) { 
+			if (!booking.isRecurrent() && booking.getAccepted() != -1) {
 				availability--;
 			}
 		}
@@ -172,16 +192,16 @@ public class CarPoolingUtils {
 	}
 
 	public static boolean ifBookable(Travel travel, Booking reqBooking, String userId) {
-		
+
 		boolean bookable = false;
 		int availability = travel.getPlaces();
 
 		if (travel.getBookings().isEmpty() && availability > 0) {
-			
+
 			bookable = true;
-			
+
 		} else {
-			
+
 			for (Booking booking : travel.getBookings()) {
 				// if booking has time before requested booking time - ignore.(just for performance, since we only decrease
 				// the counter if it is on same day as can be seen below.
@@ -190,7 +210,7 @@ public class CarPoolingUtils {
 					continue;
 				}
 				// if it is not rejected, occupied.
-				if (!booking.isRecurrent() && booking.getAccepted() != -1) { 
+				if (!booking.isRecurrent() && booking.getAccepted() != -1) {
 					availability--;
 				}
 			}
@@ -217,11 +237,11 @@ public class CarPoolingUtils {
 			for (Booking booking : travel.getBookings()) {
 				int occupied = 0;
 
-//				// this is the body of 'recurrent booking request' which has not date therefore no need to check if requested booking is non-recurrent.
-//				if (!booking.isRecurrent()
-//						&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
-//					continue;
-//				}
+				//				// this is the body of 'recurrent booking request' which has not date therefore no need to check if requested booking is non-recurrent.
+				//				if (!booking.isRecurrent()
+				//						&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), reqBooking.getDate().getTime())) {
+				//					continue;
+				//				}
 
 				if (!booking.isRecurrent() && booking.getAccepted() != -1) {
 					// increment occupied.
@@ -242,12 +262,12 @@ public class CarPoolingUtils {
 				bookable = true;
 			}
 
-//			for (Long day : dateNonReccBooked.keySet()) {
-//				int maxNonRecurr = dateNonReccBooked.get(day);
-//				if (maxNonRecurr + nrOfRecurr > capacity) {
-//					bookable = false;
-//				}
-//			}
+			//			for (Long day : dateNonReccBooked.keySet()) {
+			//				int maxNonRecurr = dateNonReccBooked.get(day);
+			//				if (maxNonRecurr + nrOfRecurr > capacity) {
+			//					bookable = false;
+			//				}
+			//			}
 
 		} else { // requested booking is non-recurrent.
 

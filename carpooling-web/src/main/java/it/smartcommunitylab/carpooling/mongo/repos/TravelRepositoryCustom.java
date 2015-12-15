@@ -32,5 +32,7 @@ public interface TravelRepositoryCustom {
 	List<Travel> getAllMatchedTimeTravels(TravelRequest travelRequest);
 
 	List<Travel> searchTravels(TravelRequest travelRequest);
+	
+	List<Travel> searchCommunityTravels(String communityId, Long timeInMillies);
 
 }
