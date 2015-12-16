@@ -62,9 +62,9 @@
         </div>
 
         <div class="padding trip-status" ng-if="!isMine && bookingState !== null">
-            <span ng-if="bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
+            <span ng-if="bookingState === -1" class="rejected">{{'lbl_trip_rejected' | translate}}</span>
             <span ng-if="bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
-            <span ng-if="bookingState === 1">{{'lbl_trip_accepted' | translate}}</span>
+            <span ng-if="bookingState === 1" class="accepted">{{'lbl_trip_accepted' | translate}}</span>
         </div>
 
         <div class="padding row trip-actions" ng-if="!isMine">
