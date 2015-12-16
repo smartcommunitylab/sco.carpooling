@@ -3,26 +3,26 @@
         <a href="#/app/cercacomunita" class="button button-icon ion-android-search padding-left"></a>
     </ion-nav-buttons>
     <ion-content>
-        <!--TODO: display the cards only if the user has 1 or more community. If not display "No communities"-->
+        <div ng-if="communities !== null && communities.length == 0">
+    <h4>{{'lbl_no_results' | translate}}</h4>
+</div>
         <div class="card card-trip" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
             <div class="item row">
-                    <ul class="padding-bottom">
-                        <li class="padding-bottom">
-                            <h1 class="padding">{{comm.name}}</h1>
-                        </li>
-                        <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
-                        <li class="padding">
-                            {{'lbl_tripzone'| translate}}: <span>Rovereto, Trento</span>
-                        </li>
-                        <li class="padding-bottom row">
-                            <!--TODO: change fake data (12,3,3) count with the real data-->
-                            <span class="col first" id="custom-icons"><i class="icons ion-android-people"></i> 12 </span>
-                            <span class="col mid" id="custom-icons"><i class="icons ion-model-s"></i> 3 </span>
-                            <span class="col last" id="custom-icons"><i class="icons ion-chatbox-working"></i> 3 </span>
-                        </li>
-                    </ul>
+                <ul class="padding-bottom">
+                    <li class="padding-bottom">
+                        <h1 class="padding" ng-style="{'background-color':'#{{comm.color}}'}">{{comm.name}}</h1>
+                    </li>
+                    <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
+                    <li class="padding">
+                        {{'lbl_tripzone'| translate}}: <span>{{comm.zone}}</span>
+                    </li>
+                    <li class="padding-bottom">
+                        <!--TODO: change fake data (12,3,3) count with the real data-->
+                        <span class="padding-left padding-right" id="custom-icons"><i class="icons ion-android-people"></i> {{comm.users.length}} </span>
+                        <span class="padding-left" id="custom-icons"><i class="icons ion-model-s"></i> {{comm.cars}} </span>
+                    </li>
+                </ul>
             </div>
-        </div>
         </div>
     </ion-content>
 </ion-view>

@@ -3,19 +3,7 @@ userCommunities:
   name: carpooling community 1
   color: FF0000
   zone: Trento, Rovereto
-  users:
-  - 52
-  - 54
-  - 53
-  - 14
-  - 73
 - id: cPCommunity2
   name: carpooling community 2
   color: 0000FF
   zone: Trento, Rovereto
-  users:
-  - 52
-  - 54
-  - 53
-  - 14
-  - 73

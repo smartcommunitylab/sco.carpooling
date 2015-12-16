@@ -417,24 +417,15 @@ placeautocomplete ul {
     padding-left,
     padding-right: 0;
 }
-.carpooling-theme .communities ul li.padding.row {
-    text-align: center;
+
+.carpooling-theme .communities h1{
+    color: #FFFFFF;
 }
+
 .carpooling-theme .communities .item.row {
     padding: 0;
 }
-.carpooling-theme .communities ul li .first {
-    text-align: left !important;
-}
-.carpooling-theme .communities ul li .mid {
-    text-align: center!important;
-}
-.carpooling-theme .communities ul li .last {
-    text-align: right !important;
-}
-.carpooling-theme .communities h1 {
-    background-color: #009933;
-}
+
 .carpooling-theme .communities #custom-icons {
     color: #3448A5;
     font-size: 2em;
