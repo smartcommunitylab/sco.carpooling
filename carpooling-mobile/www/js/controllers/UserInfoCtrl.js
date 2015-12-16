@@ -5,7 +5,6 @@ angular.module('carpooling.controllers.user', [])
         $scope.user = $stateParams['user'];
     } else {
         $scope.user = angular.copy(StorageSrv.getUser());
-        console.log("MyProfile");
     }
 
     $scope.itsMe = $scope.user['userId'] === StorageSrv.getUser()['userId'];
