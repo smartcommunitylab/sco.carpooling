@@ -73,33 +73,30 @@
                     {{'lbl_driver_contact' | translate | uppercase}}
                 </button>
             </div>
-            <div class="col">
+            <div class="col" ng-if="bookingState === null">
                 <button class="button button-carpooling" ng-click="bookingAction()">
-                    <span ng-if="bookingState === null">{{'lbl_trip_ask' | translate | uppercase}}</span>
-                    <span ng-if="bookingState === -1">{{'lbl_trip_rejected' | translate | uppercase}}</span>
-                    <span ng-if="bookingState === 0">{{'lbl_trip_requested' | translate | uppercase}}</span>
-                    <span ng-if="bookingState === 1">{{'lbl_trip_accepted' | translate | uppercase}}</span>
+                    <span>{{'lbl_trip_ask' | translate | uppercase}}</span>
                 </button>
             </div>
         </div>
 
-        <div class="padding trip-requests" ng-if="isMine && $scope.selectedTrip.bookings.length > 0">
-        <!--<div class="trip-requests" ng-if="isMine">-->
+        <!--<div class="padding trip-requests" ng-if="isMine && $scope.selectedTrip.bookings.length > 0">-->
+        <div class="trip-requests" ng-if="isMine">
             <h5>{{'lbl_requests' | translate}}</h5>
-            <div class="list">
-                <!--<li ng-repeat="booking in $scope.selectedTrip.bookings">-->
+            <!--<div class="list">-->
+            <div class="list" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted !== -1">
                 <a class="item item-button-right">
                     <!--<i class="icon ion-person"></i>-->
                     <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
                     <!--Name Surname-->
-                    <button class="button button-carpooling">
+                    <button class="button button-carpooling" ng-click="reject(booking)">
                         <i class="icon ion-close-round"></i>
                     </button>
-                    <button class="button button-carpooling">
-                        <i class="icon ion-checkmark-round"></i>
+                    <button class="button button-carpooling" ng-click="positiveAction(booking)">
+                        <i class="icon" ng-class="{'ion-checkmark-round': booking.accepted === 0, 'ion-chatboxes': booking.accepted === 1}"></i>
                     </button>
                 </a>
-            </ul>
+            </div>
         </div>
     </ion-content>
 </ion-view>
