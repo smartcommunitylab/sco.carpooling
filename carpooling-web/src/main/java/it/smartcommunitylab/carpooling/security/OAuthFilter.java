@@ -81,7 +81,9 @@ public class OAuthFilter extends GenericFilterBean {
 					Authentication authenticatedUser = authenticationManager.authenticate(token);
 					SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 					User user = User.fromUserProfile(basicProfile);
-					userManager.saveUser(user);
+					if (!userManager.exist(user)) {
+						userManager.saveUser(user);
+					}
 					SecurityContextHolder.getContext().setAuthentication(token);
 				}
 			} catch (Exception e) {
