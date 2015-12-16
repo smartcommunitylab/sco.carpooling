@@ -28,34 +28,12 @@ angular.module('carpooling', [
 .run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
     $rootScope.pushRegistration = function (userId) {
         try {
-            window.parsePlugin.initialize(Config.getAppId(), Config.getClientKey(),function() {
-                var channel = 'CarPooling_' + userId;
-                window.parsePlugin.subscribe(channel, function(){
-                    window.parsePlugin.getInstallationId(function(id){
-                        console.log('success created channel ' + channel);
-
-                        /*window.parsePlugin.registerCallback('onNotification', function() {
-                            window.onNotification = function(pnObj) {
-                                alert('We received this push notification: ' + JSON.stringify(pnObj));
-                                if (pnObj.receivedInForeground === false) {
-                                    // TODO: route the user to the uri in pnObj
-                                }
-                            };
-                        }, function(error) {
-                            console.error(error);
-                        });*/
-                    }, function(e) {
-                        console.log('Exception in parsepush getInstallationId ' + e.message);
-                    });
-                });
-
-            });
-            /* window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
+            window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
             window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
                 var channel = 'CarPooling_' + userId;
                 window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
-            //    console.log('successfully created channel ' + channel);
-            };*/
+                //console.log('successfully created channel ' + channel);
+            };
         } catch (ex) {
             console.log('Exception in parsepush registration ' + ex.message);
         }
