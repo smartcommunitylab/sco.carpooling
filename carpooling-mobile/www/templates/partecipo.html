@@ -25,6 +25,10 @@
                             <li>
                                 {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
                             </li>
+                            <li>
+                                <span class="trip-data-rejected" ng-if="trip.bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
+                                <span class="trip-data-requested" ng-if="trip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
+                            </li>
                         </ul>
                         <!-- TODO: define when the flag needs to be shown here -->
                         <div class="trip-flag" ng-if="false"></div>

@@ -81,7 +81,7 @@
         </div>
 
         <!--<div class="padding trip-requests" ng-if="isMine && $scope.selectedTrip.bookings.length > 0">-->
-        <div class="trip-requests" ng-if="isMine">
+        <div class="trip-requests" ng-if="isMine && !!selectedTrip.booking && selectedTrip.booking.lenght > 0">
             <h5>{{'lbl_requests' | translate}}</h5>
             <!--<div class="list">-->
             <div class="list" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted !== -1">

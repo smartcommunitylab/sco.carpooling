@@ -1,7 +1,14 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils) {
-    $scope.user = angular.copy(StorageSrv.getUser());
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParam, StorageSrv, UserSrv, Utils) {
+    if (!!$stateParam['user']) {
+        $scope.user = $stateParam['user'];
+    } else {
+        $scope.user = angular.copy(StorageSrv.getUser());
+    }
+
+    $scope.itsMe = $scope.user.userId === StorageSrv.getUser().userId;
+
     if(!$scope.user){
         $scope.user = {
             auto: null

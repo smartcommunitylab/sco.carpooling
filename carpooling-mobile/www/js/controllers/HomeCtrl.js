@@ -12,7 +12,7 @@ angular.module('carpooling.controllers.home', [])
     }
 })
 
-.controller('PartecipoCtrl', function ($scope, $state, UserSrv, PassengerSrv, Utils) {
+.controller('PartecipoCtrl', function ($scope, $state, StorageSrv, Utils, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
@@ -32,7 +32,16 @@ angular.module('carpooling.controllers.home', [])
         PassengerSrv.getPassengerTrips().then(
             function (trips) {
                 trips.forEach(function (trip) {
-                   trip.bookingCounters = Utils.getBookingCounters(trip);
+                    // booking counters
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
+
+                    // booking state
+                    trip.bookings.forEach(function (booking) {
+                        if (booking.traveller.userId === StorageSrv.getUserId()) {
+                            // my booking
+                            trip.bookingState = booking.accepted;
+                        }
+                    });
                 });
 
                 Utils.loaded();
@@ -65,7 +74,7 @@ angular.module('carpooling.controllers.home', [])
         DriverSrv.getDriverTrips().then(
             function (trips) {
                 trips.forEach(function (trip) {
-                   trip.bookingCounters = Utils.getBookingCounters(trip);
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
                 });
 
                 Utils.loaded();
