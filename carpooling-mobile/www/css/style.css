@@ -277,6 +277,12 @@ placeautocomplete ul {
 .card.card-trip .trip-data ul li span {
     color: #000000;
 }
+.card.card-trip .trip-data .trip-data-requested {
+    color: #4EB0E6;
+}
+.card.card-trip .trip-data .trip-data-rejected {
+    color: #FF0000;
+}
 .card.card-trip .trip-counter {
     margin: auto;
     text-align: center;
