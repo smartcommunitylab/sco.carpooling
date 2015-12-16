@@ -36,5 +36,9 @@ public class UserManager {
 	public void saveUser(User user) {
 		userRepository.save(user);
 	}
+	
+	public boolean exist(User user) {
+		return userRepository.exists(user.getUserId());
+	}
 
 }

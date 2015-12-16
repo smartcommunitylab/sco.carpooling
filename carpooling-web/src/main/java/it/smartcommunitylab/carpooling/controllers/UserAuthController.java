@@ -106,7 +106,9 @@ public class UserAuthController {
 			SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 
 			User user = User.fromUserProfile(basicProfile);
-			userManager.saveUser(user);
+			if (!userManager.exist(user)) {
+				userManager.saveUser(user);
+			}
 			
 			/** add user to community. **/
 			for (Community community : communityRepository.findAll()) {
