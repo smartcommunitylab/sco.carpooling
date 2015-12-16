@@ -388,6 +388,12 @@ placeautocomplete ul {
     font-weight: bold;
     font-size: larger;
 }
+.carpooling-theme .trip-status .rejected {
+    color: #FF0000;
+}
+.carpooling-theme .trip-status .accepted {
+    color: #00FF00;
+}
 .carpooling-theme .trip-actions {
     text-align: center;
 }
