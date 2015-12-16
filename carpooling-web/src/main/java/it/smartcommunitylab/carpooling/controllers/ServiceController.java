@@ -100,6 +100,12 @@ public class ServiceController {
 	Response<List<Travel>> searchTrips(@RequestBody TravelRequest travelRequest) throws CarPoolingCustomException {
 		return new Response<List<Travel>>(carPoolingManager.searchTravels(travelRequest, getUserId()));
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/community/{communityId}/{time}/travel")
+	public @ResponseBody
+	Response<List<Travel>> searchCommunityTravels(@PathVariable String communityId, @PathVariable Long time) throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.searchCommunityTravels(communityId, time));
+	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips")
 	public @ResponseBody
@@ -228,6 +234,12 @@ public class ServiceController {
 	public @ResponseBody
 	Response<List<Community>> readCommunities() throws CarPoolingCustomException {
 		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities/details")
+	public @ResponseBody
+	Response<List<Community>> readCommunitiesWithDetails() throws CarPoolingCustomException {
+		return new Response<List<Community>>(carPoolingManager.readCommunitiesWithDetails(getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo")

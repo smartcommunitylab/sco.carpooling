@@ -29,7 +29,11 @@ angular.module('carpooling.services.user', [])
                     userService.getCommunities().then(
                         function (data) {
                             data.data.forEach(function (community) {
+                                delete community['color'];
+                                delete community['zone'];
+                                delete community['cars'];
                                 delete community['users'];
+                                delete community['userObjs'];
                             });
                             StorageSrv.saveCommunities(data.data);
                             deferred.resolve(data.data);
@@ -108,6 +112,22 @@ angular.module('carpooling.services.user', [])
         var deferred = $q.defer();
 
         $http.get(Config.getServerURL() + '/api/read/communities', Config.getHTTPConfig())
+
+        .success(function (data) {
+            deferred.resolve(data);
+        })
+
+        .error(function (err) {
+            deferred.reject(err);
+        });
+
+        return deferred.promise;
+    };
+
+    userService.getCommunitiesDetails = function () {
+        var deferred = $q.defer();
+
+        $http.get(Config.getServerURL() + '/api/read/communities/details', Config.getHTTPConfig())
 
         .success(function (data) {
             deferred.resolve(data);

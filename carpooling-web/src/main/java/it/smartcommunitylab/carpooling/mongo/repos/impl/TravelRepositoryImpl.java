@@ -329,5 +329,89 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		return travels;
 	}
+	
+	@Override
+	public List<Travel> searchCommunityTravels(String communityId, Long timeInMillies) {
+
+		List<Travel> travels = new ArrayList<Travel>();
+
+		Criteria commonCriteria = new Criteria().where("active").is(true);
+		/** community. **/
+		Criteria communityCriteria = new Criteria().where("communityIds").in(communityId);
+		/** recurrent/non trip times. **/
+		Date reqDate = new Date(timeInMillies);
+		// start and end of day.
+		Date timeStartOfDay = CarPoolingUtils.getStartOfDay(reqDate);
+		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
+		// recurrent data.
+		int reqDOW = CarPoolingUtils.getDayOfWeek(reqDate);
+		int reqDOM = CarPoolingUtils.getDayOfMonth(reqDate);
+		// normal.
+		Criteria nonRecurr = new Criteria().where("when").gte(timeStartOfDay.getTime())
+				.lte(timeEndOfDay.getTime());
+		// recurr general.
+		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true);
+		// recurr dow.
+		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
+		// recurr dom.
+		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
+
+		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
+		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
+
+		Criteria timeCriteria = new Criteria().orOperator(nonRecurr, recurrDOW, recurrDOM);
+
+		Query query = new Query();
+		query.addCriteria(commonCriteria);
+		query.addCriteria(communityCriteria);
+		query.addCriteria(timeCriteria);
+		
+		/**
+		Query: {
+			"active": true,
+			"communityIds": {
+				"$in": ["cPCommunity1"]
+			},
+			"$or": [
+				{
+					"when": {
+						"$gte": 1449702000000,
+						"$lte": 1449788399999
+					}
+				},
+				{
+					"$and": [{
+						"when": 0,
+						"recurrency": {
+							"$exists": true
+						}
+					},
+					{
+						"recurrency.days": {
+							"$in": [5]
+						}
+					}]
+				},
+				{
+					"$and": [{
+						"when": 0,
+						"recurrency": {
+							"$exists": true
+						}
+					},
+					{
+						"recurrency.dates": {
+							"$in": [10]
+						}
+					}]
+				}
+			]
+		}
+		**/
+
+		travels = mongoTemplate.find(query, Travel.class);
+
+		return travels;
+	}
 
 }

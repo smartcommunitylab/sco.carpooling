@@ -22,6 +22,8 @@ angular.module('carpooling', [
     'carpooling.controllers.viaggio',
     'carpooling.controllers.notifications',
     'carpooling.controllers.user',
+    'carpooling.controllers.communities',
+    'carpooling.controllers.communityinfo',
     'leaflet-directive'
 ])
 
@@ -41,8 +43,8 @@ angular.module('carpooling', [
 
     $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
 
-    $rootScope.getNumber = function () {
-        return Utils.getNumber();
+    $rootScope.getNumber = function (num) {
+        return Utils.getNumber(num);
     };
 
     $rootScope.login = function () {
@@ -143,6 +145,7 @@ angular.module('carpooling', [
 
     .state('app.viaggio', {
         url: '/viaggio/:travelId',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/viaggio.html',
@@ -164,9 +167,13 @@ angular.module('carpooling', [
     .state('app.comunitainfo', {
         url: '/comunitainfo',
         cache: false,
+        params: {
+            'selectResults': {}
+        },
         views: {
             'menuContent': {
-                templateUrl: 'templates/comunitainfo.html'
+                templateUrl: 'templates/comunitainfo.html',
+                controller: 'CommunityInfoCtrl'
             }
         }
     })
@@ -176,7 +183,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-info': {
-                templateUrl: 'templates/info.html'
+                templateUrl: 'templates/info.html',
+                controller: 'CommInfoCtrl'
             }
         }
     })
@@ -186,7 +194,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-viaggi': {
-                templateUrl: 'templates/viaggi.html'
+                templateUrl: 'templates/viaggi.html',
+                controller: 'CommTripCtrl'
             }
         }
     })
@@ -196,7 +205,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-componenti': {
-                templateUrl: 'templates/componenti.html'
+                templateUrl: 'templates/componenti.html',
+                controller: 'CommComponentsCtrl'
             }
         }
     })
@@ -206,7 +216,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'menuContent': {
-                templateUrl: 'templates/comunita.html'
+                templateUrl: 'templates/comunita.html',
+                controller: 'CommunityCtrl'
             }
         }
     })

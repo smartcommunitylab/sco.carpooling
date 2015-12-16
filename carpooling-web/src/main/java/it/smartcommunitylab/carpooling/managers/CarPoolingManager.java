@@ -116,6 +116,13 @@ public class CarPoolingManager {
 
 		return searchTravels;
 	}
+	
+	public List<Travel> searchCommunityTravels(String communityId, Long timeInMillies) {
+
+		List<Travel> communityTravels = travelRepository.searchCommunityTravels(communityId, timeInMillies);
+
+		return communityTravels;
+	}
 
 	public Travel saveTravel(Travel travel, String userId) throws CarPoolingCustomException {
 
@@ -297,10 +304,41 @@ public class CarPoolingManager {
 
 	public List<Community> readCommunities(String userId) {
 
-		List<Community> communities = new ArrayList<Community>();
-		communities = communityRepository.findByUserId(userId);
+		List<Community> filteredCommunities = new ArrayList<Community>();
+		List<Community> communities = communityRepository.findByUserId(userId);
 
-		return communities;
+		for (Community community : communities) {
+			Community temp = new Community(community.getId(), community.getName(), community.getUsers());
+			filteredCommunities.add(temp);
+		}
+
+		return filteredCommunities;
+	}
+
+	public List<Community> readCommunitiesWithDetails(String userId) {
+		List<Community> detailedCommunities = new ArrayList<Community>();
+		List<Community> communities = communityRepository.findByUserId(userId);
+
+		for (Community community : communities) {
+
+			int nrOfCars = 0;
+
+			for (String id : community.getUsers()) {
+				User user = userRepository.findOne(id);
+				if (user != null) {
+					community.getUserObjs().add(user);
+					// incremet car total(if present).
+					if (user.getAuto() != null) {
+						nrOfCars = nrOfCars + 1;
+					}
+				}
+				
+			}
+			community.setCars(nrOfCars);
+			detailedCommunities.add(community);
+		}
+
+		return detailedCommunities;
 	}
 
 	public TravelProfile saveTravelProfile(TravelProfile travelProfile, String userId) {

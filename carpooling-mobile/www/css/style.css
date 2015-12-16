@@ -71,8 +71,9 @@
     background-color: #F0F0F0;
     border-width: 0px;
 }
-.carpooling-theme .card .item.unread{
-    background-color: #F7F7F7;/*#4EB0E6;*/
+.carpooling-theme .card .item.unread {
+    background-color: #F7F7F7;
+    /*#4EB0E6;*/
     border-width: 0px;
     font-weight: bold;
 }
@@ -276,6 +277,12 @@ placeautocomplete ul {
 .card.card-trip .trip-data ul li span {
     color: #000000;
 }
+.card.card-trip .trip-data .trip-data-requested {
+    color: #4EB0E6;
+}
+.card.card-trip .trip-data .trip-data-rejected {
+    color: #FF0000;
+}
 .card.card-trip .trip-counter {
     margin: auto;
     text-align: center;
@@ -379,15 +386,60 @@ placeautocomplete ul {
     text-align: center;
     color: #4EB0E6;
     font-weight: bold;
+    font-size: larger;
+}
+.carpooling-theme .trip-actions {
+    text-align: center;
 }
 .carpooling-theme .trip-actions button {
     font-size: 0.8em;
     font-weight: bold;
     line-height: 1em;
 }
-.requests {
-    margin: 8px 16px;
+.carpooling-theme .trip-requests {
+    margin-top: 1em;
+}
+.carpooling-theme .trip-requests .list .item {
+    border: 0;
+}
+.carpooling-theme .trip-requests .list .item-button-right > .button {
+    right: 70.5px;
+}
+.carpooling-theme .trip-requests .list .item-button-right > .button:last-child {
+    right: 16px;
+}
+
+/* Community */
+
+.carpooling-theme .communities ul {
+    width: 100%;
+    padding-top,
+    padding-left,
+    padding-right: 0;
+}
+
+.carpooling-theme .communities h1{
+    color: #FFFFFF;
+}
+
+.carpooling-theme .communities .item.row {
+    padding: 0;
+}
+
+.carpooling-theme .communities #custom-icons {
     color: #3448A5;
-    padding-top: 16px;
-    border-top: 1px solid #f2f2f2;
+    font-size: 2em;
+}
+.carpooling-theme .communities span {
+    color: #000000;
+}
+
+/* Components */
+
+.carpooling-theme .components .item{
+    color: #000000;
+}
+
+.carpooling-theme .components .item span i{
+    font-size: 2em;
 }
