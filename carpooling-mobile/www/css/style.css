@@ -414,7 +414,9 @@ placeautocomplete ul {
 .carpooling-theme .trip-requests .list .item-button-right > .button:last-child {
     right: 16px;
 }
-
+#trip-map-container {
+    height: 100%!important;
+}
 /* Community */
 
 .carpooling-theme .communities ul {

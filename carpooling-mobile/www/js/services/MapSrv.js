@@ -70,10 +70,9 @@ angular.module('carpooling.services.map', [])
             var listOfPoints = {};
             for (var k = 0; k < trip.leg.length; k++) {
                 listOfPoints["p" + k] = {
-                    color: getColorByType(trip.leg[k].transport),
+                    color: "#4EB0E6",
                     weight: 5,
-                    latlngs: mapService.decodePolyline(trip.leg[k].legGeometery.points),
-                    message: getPopUpMessage(trip, trip.leg[k], k),
+                    latlngs: mapService.decodePolyline(trip.leg[k].legGeometery.points)
                 }
             }
             return listOfPoints;
