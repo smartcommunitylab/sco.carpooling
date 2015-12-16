@@ -1,7 +1,7 @@
 <ion-view title="{{'menu_profile' | translate}}">
     <ion-nav-buttons side="right">
-        <a ng-if="editMode && !initialSetup" class="button button-icon ion-close-round" ng-click="cancelChanges()"></a>
-        <a class="button button-icon" ng-class="{'ion-edit': !editMode, 'ion-checkmark-round': editMode}" ng-click="editMode ? saveProfile() : toggleEditMode()"></a>
+        <a ng-if="itsMe && editMode && !initialSetup" class="button button-icon ion-close-round" ng-click="cancelChanges()"></a>
+        <a ng-if="itsMe" class="button button-icon" ng-class="{'ion-edit': !editMode, 'ion-checkmark-round': editMode}" ng-click="editMode ? saveProfile() : toggleEditMode()"></a>
     </ion-nav-buttons>
     <ion-content class="padding user-profile">
         <div class="user-data">

@@ -1,6 +1,14 @@
 angular.module('carpooling.controllers.home', [])
 
-.controller('AppCtrl', function ($scope) {})
+.controller('AppCtrl', function ($scope, $state) {
+    $scope.reloadProfile = function () {
+        $state.go('app.profilo.userinfo', {
+            'user': null
+        }, {
+            reload: true
+        });
+    };
+})
 
 .controller('HomeCtrl', function ($scope, $state, StorageSrv, UserSrv) {
     if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
@@ -12,42 +20,10 @@ angular.module('carpooling.controllers.home', [])
     }
 })
 
-.controller('PartecipoCtrl', function ($scope, $state, UserSrv, PassengerSrv, Utils) {
+.controller('PartecipoCtrl', function ($scope, $state, StorageSrv, Utils, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
-
-    /*Just for example*/
-    /*
-    $scope.passengerTrips = [
-        {
-            "from": {
-                "name": "Via Fiume",
-                "address": "Via Fiume",
-                "latitude": 46.065487,
-                "longitude": 11.131346,
-                "range": 1,
-                "coordinates": [
-                    46.065487,
-                    11.131346
-                ]
-            },
-            "to": {
-                "name": "Muse",
-                "address": "Muse",
-                "latitude": 46.063266,
-                "longitude": 11.113062,
-                "range": 1,
-                "coordinates": [
-                    46.063266,
-                    11.113062
-                ]
-            },
-            "when": 1443425400000,
-            "monitored": true
-        }
-    ];
-    */
 
     $scope.getTravelProfile = function () {
         Utils.loading();
@@ -63,6 +39,19 @@ angular.module('carpooling.controllers.home', [])
         Utils.loading();
         PassengerSrv.getPassengerTrips().then(
             function (trips) {
+                trips.forEach(function (trip) {
+                    // booking counters
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
+
+                    // booking state
+                    trip.bookings.forEach(function (booking) {
+                        if (booking.traveller.userId === StorageSrv.getUserId()) {
+                            // my booking
+                            trip.bookingState = booking.accepted;
+                        }
+                    });
+                });
+
                 Utils.loaded();
                 $scope.passengerTrips = trips;
             },
@@ -92,6 +81,10 @@ angular.module('carpooling.controllers.home', [])
         Utils.loading();
         DriverSrv.getDriverTrips().then(
             function (trips) {
+                trips.forEach(function (trip) {
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
+                });
+
                 Utils.loaded();
                 $scope.driverTrips = trips;
             },

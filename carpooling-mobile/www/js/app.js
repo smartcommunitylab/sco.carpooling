@@ -23,16 +23,17 @@ angular.module('carpooling', [
     'carpooling.controllers.notifications',
     'carpooling.controllers.user',
     'carpooling.controllers.communities',
+    'carpooling.controllers.communityinfo',
     'leaflet-directive'
 ])
 
 .run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
     $rootScope.pushRegistration = function (userId) {
         try {
-            window.parsePlugin.initialize(Config.getAppId(), Config.getClientKey(),function() {
+            window.parsePlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
                 var channel = 'CarPooling_' + userId;
-                window.parsePlugin.subscribe(channel, function(){
-                    window.parsePlugin.getInstallationId(function(id){
+                window.parsePlugin.subscribe(channel, function () {
+                    window.parsePlugin.getInstallationId(function (id) {
                         console.log('success created channel ' + channel);
 
                         /*window.parsePlugin.registerCallback('onNotification', function() {
@@ -45,7 +46,7 @@ angular.module('carpooling', [
                         }, function(error) {
                             console.error(error);
                         });*/
-                    }, function(e) {
+                    }, function (e) {
                         console.log('Exception in parsepush getInstallationId ' + e.message);
                     });
                 });
@@ -166,6 +167,7 @@ angular.module('carpooling', [
 
     .state('app.viaggio', {
         url: '/viaggio/:travelId',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/viaggio.html',
@@ -203,7 +205,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-info': {
-                templateUrl: 'templates/info.html'
+                templateUrl: 'templates/info.html',
+                controller: 'CommInfoCtrl'
             }
         }
     })
@@ -213,7 +216,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-viaggi': {
-                templateUrl: 'templates/viaggi.html'
+                templateUrl: 'templates/viaggi.html',
+                controller: 'CommTripCtrl'
             }
         }
     })
@@ -223,7 +227,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-componenti': {
-                templateUrl: 'templates/componenti.html'
+                templateUrl: 'templates/componenti.html',
+                controller: 'CommComponentsCtrl'
             }
         }
     })
@@ -318,6 +323,9 @@ angular.module('carpooling', [
     .state('app.profilo.userinfo', {
         url: '/userinfo',
         cache: false,
+        params: {
+            'user': null
+        },
         views: {
             'tab-userinfo': {
                 templateUrl: 'templates/userinfo.html',

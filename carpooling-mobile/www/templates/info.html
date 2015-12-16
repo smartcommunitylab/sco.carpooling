@@ -1,4 +1,4 @@
-<ion-view title="{{'lbl_communityname'| translate}}" class="info">
+<ion-view title="{{selCommunity.name}}" class="info">
     <ion-nav-buttons side="right">
         <a href="#" class="button button-icon ion-android-chat"></a>
         <a href="#" class="button button-icon ion-android-more-vertical padding-left"></a>
@@ -6,12 +6,11 @@
     <ion-content class="has-header padding">
         <div>
             <h5>{{'lbl_generalinformations'| translate}}</h5>
-            <p class="padding-top"><span>{{'lbl_start'| translate}}:: </span> Trento</p>
-            <p class="padding-top"><span>{{'lbl_tripzone'| translate}}:</span> Rovereto, Trento</p>
+            <p class="padding-top"><span>{{'lbl_tripzone'| translate}}:</span> {{selCommunity.zone}}</p>
         </div>
         <div class="padding-top padding-bottom">
             <h5>{{'lbl_numberauto'| translate}}</h5>
-            <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> 3 </span>
+            <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{selCommunity.cars}} </span>
         </div>
         <button class="button button-block button-positive">
             {{'lbl_addauto'| translate}}

@@ -1,7 +1,14 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils) {
-    $scope.user = angular.copy(StorageSrv.getUser());
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv, UserSrv, Utils) {
+    if (!!$stateParams['user']) {
+        $scope.user = $stateParams['user'];
+    } else {
+        $scope.user = angular.copy(StorageSrv.getUser());
+    }
+
+    $scope.itsMe = $scope.user['userId'] === StorageSrv.getUser()['userId'];
+
     if(!$scope.user){
         $scope.user = {
             auto: null
@@ -18,11 +25,12 @@ angular.module('carpooling.controllers.user', [])
         return false;
     };
 
-    $scope.editMode = false || $rootScope.initialSetup;
     $scope.edit = {
         hasAuto: hasAuto($scope.user.auto),
         postsAvailable: [1, 2, 3, 4, 5, 6, 7]
     };
+
+    $scope.editMode = false || $rootScope.initialSetup;
 
     $scope.toggleEditMode = function () {
         $scope.editMode = !$scope.editMode;

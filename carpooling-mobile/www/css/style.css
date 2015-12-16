@@ -277,6 +277,12 @@ placeautocomplete ul {
 .card.card-trip .trip-data ul li span {
     color: #000000;
 }
+.card.card-trip .trip-data .trip-data-requested {
+    color: #4EB0E6;
+}
+.card.card-trip .trip-data .trip-data-rejected {
+    color: #FF0000;
+}
 .card.card-trip .trip-counter {
     margin: auto;
     text-align: center;
@@ -380,6 +386,16 @@ placeautocomplete ul {
     text-align: center;
     color: #4EB0E6;
     font-weight: bold;
+    font-size: larger;
+}
+.carpooling-theme .trip-status .rejected {
+    color: #FF0000;
+}
+.carpooling-theme .trip-status .accepted {
+    color: #00FF00;
+}
+.carpooling-theme .trip-actions {
+    text-align: center;
 }
 .carpooling-theme .trip-actions button {
     font-size: 0.8em;
@@ -409,28 +425,29 @@ placeautocomplete ul {
     padding-left,
     padding-right: 0;
 }
-.carpooling-theme .communities ul li.padding.row {
-    text-align: center;
+
+.carpooling-theme .communities h1{
+    color: #FFFFFF;
 }
+
 .carpooling-theme .communities .item.row {
     padding: 0;
 }
-.carpooling-theme .communities ul li .first {
-    text-align: left !important;
-}
-.carpooling-theme .communities ul li .mid {
-    text-align: center!important;
-}
-.carpooling-theme .communities ul li .last {
-    text-align: right !important;
-}
-.carpooling-theme .communities h1 {
-    background-color: #009933;
-}
+
 .carpooling-theme .communities #custom-icons {
     color: #3448A5;
     font-size: 2em;
 }
 .carpooling-theme .communities span {
     color: #000000;
+}
+
+/* Components */
+
+.carpooling-theme .components .item{
+    color: #000000;
+}
+
+.carpooling-theme .components .item span i{
+    font-size: 2em;
 }

@@ -47,18 +47,18 @@ angular.module('carpooling.services.driver', [])
         return deferred.promise;
     };
 
-    driverService.acceptTrip = function (tripId, booking) {
+    driverService.decideTrip = function (tripId, booking) {
         var deferred = $q.defer();
 
         if (!tripId) {
             deferred.reject('Invalid tripId');
-        } else if (!booking || !booking.traveller || !booking.traveller.userId || !!booking.traveller.name || !booking.traveller.surname || !booking.traveller.email) {
+        } else if (!booking || !booking.traveller || !booking.traveller.userId || !booking.traveller.name || !booking.traveller.surname) {
             deferred.reject('Invalid travel');
         } else {
             $http.post(Config.getServerURL() + '/api/driver/trips/' + tripId + '/accept', booking, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                deferred.resolve(data.data);
             })
 
             .error(function (err) {
