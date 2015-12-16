@@ -23,9 +23,4 @@ angular.module('carpooling.controllers.communities', [])
         });
     };
 
-})
-
-.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams) {
-    $scope.selCommunity = $stateParams['selectResults'];
-    console.log($scope.selCommunity);
 });

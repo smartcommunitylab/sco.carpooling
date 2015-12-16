@@ -427,3 +427,13 @@ placeautocomplete ul {
 .carpooling-theme .communities span {
     color: #000000;
 }
+
+/* Components */
+
+.carpooling-theme .components .item{
+    color: #000000;
+}
+
+.carpooling-theme .components .item span i{
+    font-size: 2em;
+}
