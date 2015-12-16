@@ -166,6 +166,7 @@ angular.module('carpooling', [
 
     .state('app.viaggio', {
         url: '/viaggio/:travelId',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/viaggio.html',

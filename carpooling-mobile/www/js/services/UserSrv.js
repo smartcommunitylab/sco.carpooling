@@ -29,7 +29,11 @@ angular.module('carpooling.services.user', [])
                     userService.getCommunities().then(
                         function (data) {
                             data.data.forEach(function (community) {
+                                delete community['color'];
+                                delete community['zone'];
+                                delete community['cars'];
                                 delete community['users'];
+                                delete community['userObjs'];
                             });
                             StorageSrv.saveCommunities(data.data);
                             deferred.resolve(data.data);

@@ -18,11 +18,12 @@ angular.module('carpooling.controllers.user', [])
         return false;
     };
 
-    $scope.editMode = false || $rootScope.initialSetup;
     $scope.edit = {
         hasAuto: hasAuto($scope.user.auto),
         postsAvailable: [1, 2, 3, 4, 5, 6, 7]
     };
+
+    $scope.editMode = false || $rootScope.initialSetup;
 
     $scope.toggleEditMode = function () {
         $scope.editMode = !$scope.editMode;

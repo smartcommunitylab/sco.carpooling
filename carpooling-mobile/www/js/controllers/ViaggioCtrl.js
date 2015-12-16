@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, UserSrv, Utils, StorageSrv, PassengerSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
     $scope.driverInfo = {};
@@ -61,6 +61,42 @@ angular.module('carpooling.controllers.viaggio', [])
 
     init();
 
+    /*
+     * Driver
+     */
+    $scope.reject = function (booking) {
+        booking['accepted'] = -1;
+        DriverSrv.decideTrip($scope.selectedTrip.id, booking).then(
+            function (data) {
+                refreshTrip(data);
+            },
+            function (error) {
+                Utils.toast();
+            }
+        );
+    };
+
+    $scope.positiveAction = function (booking) {
+        // TODO accept booking or go to chat
+        if (booking['accepted'] === 0) {
+            booking['accepted'] = 1;
+            DriverSrv.decideTrip($scope.selectedTrip.id, booking).then(
+                function (data) {
+                    refreshTrip(data);
+                },
+                function (error) {
+                    Utils.toast();
+                }
+            );
+        } else if (booking.accepted === 1) {
+            // TODO go to chat
+            console.log('go to chat');
+        }
+    };
+
+    /*
+     * Passenger
+     */
     $scope.book = function () {
         var me = StorageSrv.getUser();
 

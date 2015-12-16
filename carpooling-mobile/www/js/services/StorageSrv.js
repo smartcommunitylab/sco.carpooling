@@ -83,7 +83,7 @@ angular.module('carpooling.services.storage', [])
         localStorage.removeItem('userId');
         localStorage.removeItem('user');
         localStorage.removeItem('profileComplete');
-        localStorage.removeItem('communityIds');
+        localStorage.removeItem('communities');
         deferred.resolve(true);
         return deferred.promise;
     };

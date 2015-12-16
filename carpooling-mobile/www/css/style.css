@@ -380,6 +380,10 @@ placeautocomplete ul {
     text-align: center;
     color: #4EB0E6;
     font-weight: bold;
+    font-size: larger;
+}
+.carpooling-theme .trip-actions {
+    text-align: center;
 }
 .carpooling-theme .trip-actions button {
     font-size: 0.8em;
