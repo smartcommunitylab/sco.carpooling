@@ -23,6 +23,7 @@ angular.module('carpooling', [
     'carpooling.controllers.notifications',
     'carpooling.controllers.user',
     'carpooling.controllers.communities',
+    'carpooling.controllers.communityinfo',
     'leaflet-directive'
 ])
 
@@ -204,7 +205,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-info': {
-                templateUrl: 'templates/info.html'
+                templateUrl: 'templates/info.html',
+                controller: 'CommInfoCtrl'
             }
         }
     })
@@ -214,7 +216,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-viaggi': {
-                templateUrl: 'templates/viaggi.html'
+                templateUrl: 'templates/viaggi.html',
+                controller: 'CommTripCtrl'
             }
         }
     })
@@ -224,7 +227,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-componenti': {
-                templateUrl: 'templates/componenti.html'
+                templateUrl: 'templates/componenti.html',
+                controller: 'CommComponentsCtrl'
             }
         }
     })
