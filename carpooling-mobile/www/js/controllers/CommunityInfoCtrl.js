@@ -5,14 +5,18 @@ angular.module('carpooling.controllers.communityinfo', [])
     console.log($scope.selCommunity);
 })
 
-.controller('CommComponentsCtrl', function ($scope, $rootScope, $state, $stateParams) {
+.controller('CommComponentsCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
     console.log('CommComponentsCtrl');
-    /*$scope.showUser = function (index) {
-        var selectUser = $scope.selCommunity.[index];
-        $state.go('app.profilo.userinfo', {
-            'selectResults': selectUser
-        });
-    };*/
+    $scope.showUser = function (index) {
+        var user = $scope.selCommunity.userObjs[index];
+        if (user.userId == StorageSrv.getUser().userId) {
+            $state.go('app.profilo.userinfo');
+        } else {
+            $state.go('app.profilo.userinfo', {
+                'user': user
+            });
+        }
+    };
 })
 
 .controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams) {
