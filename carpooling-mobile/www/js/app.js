@@ -217,11 +217,11 @@ angular.module('carpooling', [
         url: '/comunitainfo',
         cache: false,
         params: {
-            'selectResults': {}
+            'community': {}
         },
         views: {
             'menuContent': {
-                templateUrl: 'templates/comunitainfo.html',
+                templateUrl: 'templates/communityinfo.html',
                 controller: 'CommunityInfoCtrl'
             }
         }
@@ -232,7 +232,7 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-info': {
-                templateUrl: 'templates/info.html',
+                templateUrl: 'templates/communityinfo_info.html',
                 controller: 'CommInfoCtrl'
             }
         }
@@ -243,7 +243,7 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-viaggi': {
-                templateUrl: 'templates/viaggi.html',
+                templateUrl: 'templates/communityinfo_trips.html',
                 controller: 'CommTripCtrl'
             }
         }
@@ -254,7 +254,7 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-componenti': {
-                templateUrl: 'templates/componenti.html',
+                templateUrl: 'templates/communityinfo_components.html',
                 controller: 'CommComponentsCtrl'
             }
         }
@@ -350,6 +350,11 @@ angular.module('carpooling', [
     .state('app.profilo.userinfo', {
         url: '/userinfo',
         cache: false,
+        params: {
+            'user': null,
+            'communityFrom': null,
+            'editMode': null
+        },
         views: {
             'tab-userinfo': {
                 templateUrl: 'templates/userinfo.html',
@@ -416,6 +421,8 @@ angular.module('carpooling', [
         lbl_generalinformations: 'INFORMAZIONI GENERALI',
         lbl_numberauto: 'AUTO A DISPOSIZIONE',
         lbl_addauto: 'AGGIUNGI LA TUA AUTO',
+        lbl_addtrip: 'AGGIUNGI UN VIAGGIO',
+        lbl_editauto: 'MODIFICA LA TUA AUTO',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',
@@ -490,7 +497,9 @@ angular.module('carpooling', [
         notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
         notif_short_response_ok: 'Viaggio confermato',
         notif_short_response_ko: 'Viaggio rifiutato',
-        toast_error_generic: 'There was a problem...'
+        toast_error_generic: 'OPS! Problema...',
+        toast_booking_accepted: 'La prenotazione è stata accettata',
+        toast_booking_rejected: 'La prenotazione è stata rifiutata'
     });
 
     $translateProvider.preferredLanguage('it');

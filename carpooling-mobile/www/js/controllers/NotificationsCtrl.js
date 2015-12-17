@@ -51,10 +51,10 @@ angular.module('carpooling.controllers.notifications', [])
             var notifications = [];
             notifications = notifics ? notifics : [];
             if(notifics.length >= $scope.all){
-            notifications = correctNotificsShortText(notifications);
-            for(var i = 0; i < notifications.length; i++){
-               $scope.notifications.push(notifications[i]);
-            }
+                notifications = correctNotificsShortText(notifications);
+                for (var i = 0; i < notifications.length; i++) {
+                    $scope.notifications.push(notifications[i]);
+                }
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 $scope.start+=1;
                 $scope.end_reached = false;
@@ -71,15 +71,15 @@ angular.module('carpooling.controllers.notifications', [])
         return !$scope.end_reached;
     };
 
-    var correctNotificsShortText = function(list){
-        list.forEach(function(m) {
+    var correctNotificsShortText = function (list) {
+        list.forEach(function (m) {
             m.short_text = shortText(m);
         });
         return list;
     };
 
-    $scope.markANotification = function(id){
-       UserSrv.markNotification(id).then(function(){
+    $scope.markANotification = function (id) {
+        UserSrv.markNotification(id).then(function () {
             // TODO
             //console.log("notific marked " + id);
         }, function(err) {
@@ -88,8 +88,8 @@ angular.module('carpooling.controllers.notifications', [])
         });
     };
 
-    $scope.deleteANotification = function(id){
-       UserSrv.deleteNotification(id).then(function(){
+    $scope.deleteANotification = function (id) {
+        UserSrv.deleteNotification(id).then(function () {
             // TODO
             //console.log("notific deleted " + id);
         }, function(err) {
@@ -98,56 +98,60 @@ angular.module('carpooling.controllers.notifications', [])
         });
     };
 
-//    var notifications = [
-//        {
-//            id: '1',
-//            type: 'Chat',
-//            data: {
-//              senderId: '5',
-//              senderFullName: 'Mario Rossi',
-//              message: 'New test message'
-//            },
-//            travelId: '5669a7fce4b0c10934dc5389',
-//            timestamp: '1447865802692'
-//        },
-//        {
-//            id: '2',
-//            type: 'ParticipationRequest',
-////            short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
-//            data: {
-//              senderId: '54',
-//              senderFullName: 'Mario Rossi'
-//            },
-//            travelId: '5669a7fce4b0c10934dc5389',
-//            timestamp: '1447865802692'
-//        },
-//        {
-//            id: '3',
-//            type: 'TripAvailability',
-////            short_text: 'Trovato un viaggio Trento - Pergine',
-//            data: {
-//            },
-//            travelId: '5669a7fce4b0c10934dc5389',
-//            timestamp: '1447918789919'
-//        },
-//        {
-//            id: '4',
-//            type: 'ParticipationResponse',
-////            short_text: 'Viaggio confermato',
-//            data: {
-//              status: 'false'
-//            },
-//            travelId: '5669a7fce4b0c10934dc5389',
-//            timestamp: '1447918789919'
-//        }
-//    ];
+    //    var notifications = [
+    //        {
+    //            id: '1',
+    //            type: 'Chat',
+    //            data: {
+    //              senderId: '5',
+    //              senderFullName: 'Mario Rossi',
+    //              message: 'New test message'
+    //            },
+    //            travelId: '5669a7fce4b0c10934dc5389',
+    //            timestamp: '1447865802692'
+    //        },
+    //        {
+    //            id: '2',
+    //            type: 'ParticipationRequest',
+    ////            short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
+    //            data: {
+    //              senderId: '54',
+    //              senderFullName: 'Mario Rossi'
+    //            },
+    //            travelId: '5669a7fce4b0c10934dc5389',
+    //            timestamp: '1447865802692'
+    //        },
+    //        {
+    //            id: '3',
+    //            type: 'TripAvailability',
+    ////            short_text: 'Trovato un viaggio Trento - Pergine',
+    //            data: {
+    //            },
+    //            travelId: '5669a7fce4b0c10934dc5389',
+    //            timestamp: '1447918789919'
+    //        },
+    //        {
+    //            id: '4',
+    //            type: 'ParticipationResponse',
+    ////            short_text: 'Viaggio confermato',
+    //            data: {
+    //              status: 'false'
+    //            },
+    //            travelId: '5669a7fce4b0c10934dc5389',
+    //            timestamp: '1447918789919'
+    //        }
+    //    ];
+
     $scope.showNotification = function (notific) {
         switch (notific.type) {
             case 'Chat':
                 // messages - to chat
                 $scope.markANotification(notific.id);
                 //$scope.deleteANotification(notific.id);
-                $state.go('app.chat',{travelId:notific.travelId, personId: notific.data.senderId});
+                $state.go('app.chat', {
+                    travelId: notific.travelId,
+                    personId: notific.data.senderId
+                });
                 break;
             case 'TripAvailability':
                 // trip request - to mytrip
