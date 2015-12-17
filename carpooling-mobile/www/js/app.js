@@ -325,7 +325,8 @@ angular.module('carpooling', [
         cache: false,
         params: {
             'user': null,
-            'communityFrom': null
+            'communityFrom': null,
+            'editMode': null
         },
         views: {
             'tab-userinfo': {
@@ -393,6 +394,7 @@ angular.module('carpooling', [
         lbl_generalinformations: 'INFORMAZIONI GENERALI',
         lbl_numberauto: 'AUTO A DISPOSIZIONE',
         lbl_addauto: 'AGGIUNGI LA TUA AUTO',
+        lbl_editauto: 'MODIFICA LA TUA AUTO',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',

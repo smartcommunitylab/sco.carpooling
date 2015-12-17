@@ -130,7 +130,7 @@ angular.module('carpooling.services.user', [])
         $http.get(Config.getServerURL() + '/api/read/communities/details', Config.getHTTPConfig())
 
         .success(function (data) {
-            deferred.resolve(data);
+            deferred.resolve(data.data);
         })
 
         .error(function (err) {
