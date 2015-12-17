@@ -256,13 +256,16 @@ placeautocomplete ul {
     background-color: rgba(255, 255, 255, 0.8);
     z-index: 100;
 }
-.card.card-trip {
+.card.card-trip,
+.card.card-community {
     position: relative;
 }
-.card.card-trip:first-child {
+.card.card-trip:first-child,
+.card.card-community:first-child {
     margin-top: 10px;
 }
-.card.card-trip .row {
+.card.card-trip .row,
+.card.card-community .row {
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -302,6 +305,35 @@ placeautocomplete ul {
     border-style: solid;
     border-width: 0 1.5em 1.5em 0;
     border-color: #AAAAAA #AAAAAA transparent transparent;
+}
+.card.card-community .item {
+    padding: 10px;
+}
+.card.card-community .item .name {
+    color: #FFFFFF;
+    font-size: 1.5em;
+}
+.card.card-community .item ul li {
+    padding-top: 10px;
+}
+.card.card-community .item ul li span.lbl {
+    color: #000000;
+}
+.card.card-community .item ul li:first-child {
+    padding-top: 0;
+}
+.card.card-community .item ul li.community-numbers {
+    color: #3448A5;
+    font-size: 2em;
+}
+.card.card-community .item ul li.community-numbers .col {
+    text-align: center;
+}
+.card.card-community .item ul li.community-numbers .col:first-child {
+    text-align: left;
+}
+.card.card-community .item ul li.community-numbers .col:last-child {
+    text-align: right;
 }
 
 /* Other */
@@ -417,37 +449,12 @@ placeautocomplete ul {
 #trip-map-container {
     height: 100%!important;
 }
-/* Community */
-
-.carpooling-theme .communities ul {
-    width: 100%;
-    padding-top,
-    padding-left,
-    padding-right: 0;
-}
-
-.carpooling-theme .communities h1{
-    color: #FFFFFF;
-}
-
-.carpooling-theme .communities .item.row {
-    padding: 0;
-}
-
-.carpooling-theme .communities #custom-icons {
-    color: #3448A5;
-    font-size: 2em;
-}
-.carpooling-theme .communities span {
-    color: #000000;
-}
 
 /* Components */
 
-.carpooling-theme .components .item{
+.carpooling-theme .components .item {
     color: #000000;
 }
-
-.carpooling-theme .components .item span i{
+.carpooling-theme .components .item span i {
     font-size: 2em;
 }

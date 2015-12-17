@@ -469,7 +469,9 @@ angular.module('carpooling', [
         notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
         notif_short_response_ok: 'Viaggio confermato',
         notif_short_response_ko: 'Viaggio rifiutato',
-        toast_error_generic: 'There was a problem...'
+        toast_error_generic: 'OPS! Problema...',
+        toast_booking_accepted: 'La prenotazione è stata accettata',
+        toast_booking_rejected: 'La prenotazione è stata rifiutata'
     });
 
     $translateProvider.preferredLanguage('it');

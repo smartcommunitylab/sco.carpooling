@@ -11,40 +11,48 @@ angular.module('carpooling.controllers.viaggio', [])
     // -1 rejected, 0 requested, 1 accepted
     $scope.bookingState = null;
 
-    var addPath = function (selectedtrip) {
-                $scope.pathLine = MapSrv.getTripPolyline(selectedtrip.route);
-            $scope.markers ={
-                start: {lat:Number(selectedtrip.route.from.lat),lng:Number(selectedtrip.route.from.lon), icon: {
-                        iconUrl: 'img/ic_start.png',
-                        iconSize: [18, 25],
-                        iconAnchor: [9, 25 ]
-                    } },
-                stop: {lat:Number(selectedtrip.route.to.lat),lng:Number(selectedtrip.route.to.lon),icon: {
-                        iconUrl:'img/ic_flag.png',
-                        iconSize: [18,25],
-                        iconAnchor: [0, 25]
-                    } }
+    var addPathToMap = function (selectedTrip) {
+        $scope.pathLine = MapSrv.getTripPolyline(selectedTrip.route);
+        $scope.markers = {
+            start: {
+                lat: Number(selectedTrip.route.from.lat),
+                lng: Number(selectedTrip.route.from.lon),
+                icon: {
+                    iconUrl: 'img/ic_start.png',
+                    iconSize: [18, 25],
+                    iconAnchor: [9, 25]
+                }
+            },
+            stop: {
+                lat: Number(selectedTrip.route.to.lat),
+                lng: Number(selectedTrip.route.to.lon),
+                icon: {
+                    iconUrl: 'img/ic_flag.png',
+                    iconSize: [18, 25],
+                    iconAnchor: [0, 25]
+                }
             }
+        }
 
-            var boundsArray = [];
-            var boundstart = [$scope.markers.start.lat, $scope.markers.start.lng];
-            boundsArray.push(boundstart);
-            var boundstop = [$scope.markers.stop.lat, $scope.markers.stop.lng];
-            boundsArray.push(boundstop);
+        var boundsArray = [];
+        var boundstart = [$scope.markers.start.lat, $scope.markers.start.lng];
+        boundsArray.push(boundstart);
+        var boundstop = [$scope.markers.stop.lat, $scope.markers.stop.lng];
+        boundsArray.push(boundstop);
 
-            if (boundsArray.length > 0) {
-                var bounds = L.latLngBounds(boundsArray);
-                MapSrv.getMap('tripMap').then(function (map) {
-                    map.fitBounds(bounds);
-                });
-            }
+        if (boundsArray.length > 0) {
+            var bounds = L.latLngBounds(boundsArray);
+            MapSrv.getMap('tripMap').then(function (map) {
+                map.fitBounds(bounds);
+            });
+        }
     }
     var refreshTrip = function (trip) {
         $scope.selectedTrip = trip;
-        if ($scope.selectedTrip){
-addPath($scope.selectedTrip);
+
+        if (!!$scope.selectedTrip) {
+            addPathToMap($scope.selectedTrip);
         }
-        console.log($scope.selectedTrip);
 
         $scope.isMine = $scope.selectedTrip.userId === StorageSrv.getUserId();
         $scope.bookingCounters = Utils.getBookingCounters($scope.selectedTrip);
@@ -96,10 +104,12 @@ addPath($scope.selectedTrip);
      * Driver
      */
     $scope.reject = function (booking) {
-        booking['accepted'] = -1;
-        DriverSrv.decideTrip($scope.selectedTrip.id, booking).then(
+        var newBooking = angular.copy(booking);
+        newBooking['accepted'] = -1;
+        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
             function (data) {
                 refreshTrip(data);
+                Utils.toast(($filter('translate')('toast_booking_rejected')));
             },
             function (error) {
                 Utils.toast();
@@ -108,12 +118,15 @@ addPath($scope.selectedTrip);
     };
 
     $scope.positiveAction = function (booking) {
-        // TODO accept booking or go to chat
+        // NOTE accept booking or go to chat
+        var newBooking = angular.copy(booking);
+
         if (booking['accepted'] === 0) {
-            booking['accepted'] = 1;
-            DriverSrv.decideTrip($scope.selectedTrip.id, booking).then(
+            newBooking['accepted'] = 1;
+            DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
                 function (data) {
                     refreshTrip(data);
+                    Utils.toast(($filter('translate')('toast_booking_accepted')));
                 },
                 function (error) {
                     Utils.toast();
@@ -172,7 +185,7 @@ addPath($scope.selectedTrip);
         }
     };
 
-  $scope.initMap = function () {
+    $scope.initMap = function () {
         MapSrv.initMap('tripMap').then(function () {
             //add polyline
 
@@ -182,14 +195,14 @@ addPath($scope.selectedTrip);
 
 
 
-     angular.extend($scope, {
+    angular.extend($scope, {
         center: {
             lat: Config.getLat(),
             lng: Config.getLon(),
             zoom: Config.getZoom()
         },
         events: {},
-        markers:{},
-        pathLine:{}
+        markers: {},
+        pathLine: {}
     });
 });
