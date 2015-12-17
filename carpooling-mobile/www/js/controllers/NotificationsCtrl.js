@@ -34,7 +34,7 @@ angular.module('carpooling.controllers.notifications', [])
                     name: notific.data.senderFullName
                 });
             case 'ParticipationResponse':
-                return $filter('translate')(notific.data.status + '' == 'true' ? 'notif_short_response_ok' : 'notif_short_response_ko');
+                return $filter('translate')(notific.data.status + '' == '1' ? 'notif_short_response_ok' : 'notif_short_response_ko');
             default:
                 return '';
         };
