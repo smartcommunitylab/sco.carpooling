@@ -21,6 +21,9 @@ angular.module('carpooling.controllers.communityinfo', [])
 
 .controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams) {
     console.log('CommTripCtrl');
+    $scope.addTrip = function () {
+       $state.go('app.offri');
+    }
 })
 
 .controller('CommInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
