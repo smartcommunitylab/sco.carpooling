@@ -296,7 +296,10 @@ placeautocomplete ul {
     color: #3448A5;
 }
 .card.card-trip .trip-counter .trip-counter-text {
+    line-height: 1;
     font-size: smaller;
+    overflow: hidden;
+    white-space: normal;
 }
 .card.card-trip .trip-flag {
     position: absolute;
