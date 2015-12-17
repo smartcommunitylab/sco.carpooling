@@ -394,6 +394,7 @@ angular.module('carpooling', [
         lbl_generalinformations: 'INFORMAZIONI GENERALI',
         lbl_numberauto: 'AUTO A DISPOSIZIONE',
         lbl_addauto: 'AGGIUNGI LA TUA AUTO',
+        lbl_addtrip: 'AGGIUNGI UN VIAGGIO',
         lbl_editauto: 'MODIFICA LA TUA AUTO',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
