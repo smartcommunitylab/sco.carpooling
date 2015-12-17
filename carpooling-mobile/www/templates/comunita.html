@@ -4,22 +4,28 @@
     </ion-nav-buttons>
     <ion-content>
         <div ng-if="communities !== null && communities.length == 0">
-    <h4>{{'lbl_no_results' | translate}}</h4>
-</div>
-        <div class="card card-trip" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
-            <div class="item row">
-                <ul class="padding-bottom">
-                    <li class="padding-bottom">
-                        <h1 class="padding" ng-style="{'background-color':'#{{comm.color}}'}">{{comm.name}}</h1>
-                    </li>
+            <h4>{{'lbl_no_results' | translate}}</h4>
+        </div>
+        <div class="card card-community" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
+            <div class="item" ng-style="{'background-color':'#{{comm.color}}'}">
+                <h2 class="name">{{comm.name}}</h2>
+            </div>
+            <div class="item">
+                <ul>
                     <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
-                    <li class="padding">
-                        {{'lbl_tripzone'| translate}}: <span>{{comm.zone}}</span>
+                    <li>
+                        <span class="lbl">{{'lbl_tripzone'| translate}}:</span> {{comm.zone}}
                     </li>
-                    <li class="padding-bottom">
-                        <!--TODO: change fake data (12,3,3) count with the real data-->
-                        <span class="padding-left padding-right" id="custom-icons"><i class="icons ion-android-people"></i> {{comm.users.length}} </span>
-                        <span class="padding-left" id="custom-icons"><i class="icons ion-model-s"></i> {{comm.cars}} </span>
+                    <li class="community-numbers">
+                        <div class="row">
+                            <div class="col">
+                                <span id="custom-icons"><i class="icons ion-person-stalker"></i> {{comm.users.length}} </span>
+                            </div>
+                            <div class="col">
+                                <span id="custom-icons"><i class="icons ion-model-s"></i> {{comm.cars}} </span>
+                            </div>
+                            <div class="col"></div>
+                        </div>
                     </li>
                 </ul>
             </div>
