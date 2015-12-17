@@ -1,12 +1,12 @@
 angular.module('carpooling.controllers.communities', [])
 
 .controller('CommunityCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils) {
-
     $scope.communities = null;
     Utils.loading();
-    UserSrv.getCommunitiesDetails().then(function (data) {
+
+    UserSrv.getCommunitiesDetails().then(function (communities) {
             Utils.loaded();
-            $scope.communities = data.data;
+            $scope.communities = communities;
             console.log($scope.communities);
         },
         function (error) {
@@ -19,8 +19,7 @@ angular.module('carpooling.controllers.communities', [])
     $scope.selectCommunity = function (index) {
         var selectResults = $scope.communities[index];
         $state.go('app.comunitainfo', {
-            'selectResults': selectResults
+            'community': selectResults
         });
     };
-
 });
