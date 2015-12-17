@@ -190,7 +190,7 @@ angular.module('carpooling', [
         url: '/comunitainfo',
         cache: false,
         params: {
-            'selectResults': {}
+            'community': {}
         },
         views: {
             'menuContent': {
@@ -324,7 +324,8 @@ angular.module('carpooling', [
         url: '/userinfo',
         cache: false,
         params: {
-            'user': null
+            'user': null,
+            'communityFrom': null
         },
         views: {
             'tab-userinfo': {

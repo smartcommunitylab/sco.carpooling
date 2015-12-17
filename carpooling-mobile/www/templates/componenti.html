@@ -1,13 +1,15 @@
-<ion-view title="{{selCommunity.name}}">
+<ion-view title="{{community.name}}">
     <ion-nav-buttons side="right">
+        <!--
         <a href="#" class="button button-icon ion-android-chat"></a>
-<a href="#" class="button button-icon ion-android-more-vertical padding-left"></a>
+        <a href="#" class="button button-icon ion-android-more-vertical padding-left"></a>
+        -->
     </ion-nav-buttons>
     <ion-content class="has-header padding components">
-        <div ng-if="selCommunity.users.lenght == 0">
+        <div ng-if="community.users.lenght == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
-        <div class="card card-trip" ng-repeat="user in selCommunity.userObjs" ng-click="selectCommunity($index)">
+        <div class="card card-trip" ng-repeat="user in community.userObjs" ng-click="selectCommunity($index)">
             <div class="item row" ng-click="showUser($index)">
                 <ul class="padding-bottom">
                     <li class="padding">
