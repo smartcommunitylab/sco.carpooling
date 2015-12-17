@@ -4,9 +4,9 @@ angular.module('carpooling.controllers.communities', [])
     $scope.communities = null;
     Utils.loading();
 
-    UserSrv.getCommunitiesDetails().then(function (data) {
+    UserSrv.getCommunitiesDetails().then(function (communities) {
             Utils.loaded();
-            $scope.communities = data.data;
+            $scope.communities = communities;
             console.log($scope.communities);
         },
         function (error) {

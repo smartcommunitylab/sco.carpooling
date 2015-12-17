@@ -23,6 +23,18 @@ angular.module('carpooling.controllers.communityinfo', [])
     console.log('CommTripCtrl');
 })
 
-.controller('CommInfoCtrl', function ($scope, $rootScope, $state, $stateParams) {
+.controller('CommInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
     console.log('CommInfoCtrl');
+    var haveAuto = !!StorageSrv.getUser().auto;
+    if (!!haveAuto) {
+        $scope.btnAutoText = 'lbl_editauto';
+    } else {
+        $scope.btnAutoText = 'lbl_addauto';
+    }
+    $scope.changeAutoState = function () {
+        $state.go('app.profilo.userinfo', {
+            'communityFrom': $scope.community,
+            'editMode': true
+        });
+    };
 });

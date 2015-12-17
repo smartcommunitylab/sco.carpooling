@@ -167,6 +167,7 @@ angular.module('carpooling.services.user', [])
             } else {
                 deferred.resolve(data.data);
             }
+            deferred.resolve(data.data);
         })
 
         .error(function (err) {
