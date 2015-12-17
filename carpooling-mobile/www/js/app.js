@@ -339,7 +339,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-userstats': {
-                templateUrl: 'templates/userstats.html'
+                templateUrl: 'templates/userstats.html',
+                controller: 'UserStatsCtrl'
             }
         }
     })

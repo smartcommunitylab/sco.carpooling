@@ -97,4 +97,11 @@ angular.module('carpooling.controllers.user', [])
             $scope.user.auto = null;
         }
     });
+})
+.controller('UserStatsCtrl', function ($scope, $rootScope) {
+   $scope.numberOffer = 5;
+   $scope.numberAccepted= 6;
+   $scope.ratingOffer =4;
+   $scope.ratingAccepted=4.5;
+
 });
