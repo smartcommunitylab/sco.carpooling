@@ -81,7 +81,11 @@ angular.module('carpooling.services.user', [])
             $http.post(Config.getServerURL() + '/api/save/profile', travelProfile, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {
@@ -98,7 +102,11 @@ angular.module('carpooling.services.user', [])
         $http.post(Config.getServerURL() + '/api/save/autoInfo', auto, Config.getHTTPConfig())
 
         .success(function (data) {
-            deferred.resolve(data);
+            if (data[0] == '<') {
+                deferred.reject();
+            } else {
+                deferred.resolve(data);
+            }
         })
 
         .error(function (err) {
@@ -114,7 +122,11 @@ angular.module('carpooling.services.user', [])
         $http.get(Config.getServerURL() + '/api/read/communities', Config.getHTTPConfig())
 
         .success(function (data) {
-            deferred.resolve(data);
+            if (data[0] == '<') {
+                deferred.reject();
+            } else {
+                deferred.resolve(data);
+            }
         })
 
         .error(function (err) {
@@ -130,6 +142,31 @@ angular.module('carpooling.services.user', [])
         $http.get(Config.getServerURL() + '/api/read/communities/details', Config.getHTTPConfig())
 
         .success(function (data) {
+            if (data[0] == '<') {
+                deferred.reject();
+            } else {
+                deferred.resolve(data);
+            }
+        })
+
+        .error(function (err) {
+            deferred.reject(err);
+        });
+
+        return deferred.promise;
+    };
+
+    userService.getCommunityTravels = function (communityId, timeinmillis) {
+        var deferred = $q.defer();
+
+        $http.get(Config.getServerURL() + '/api/community/' + communityId + '/' + timeinmillis + '/travel', Config.getHTTPConfig())
+
+        .success(function (data) {
+            if (data[0] == '<') {
+                deferred.reject();
+            } else {
+                deferred.resolve(data.data);
+            }
             deferred.resolve(data.data);
         })
 
@@ -146,7 +183,11 @@ angular.module('carpooling.services.user', [])
         $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
 
         .success(function (data) {
-            deferred.resolve(data.data);
+            if (data[0] == '<') {
+                deferred.reject();
+            } else {
+                deferred.resolve(data);
+            }
         })
 
         .error(function (err) {
@@ -167,7 +208,11 @@ angular.module('carpooling.services.user', [])
             $http.post(Config.getServerURL() + '/api/message/' + travelId + '/send', message, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {
@@ -200,7 +245,11 @@ angular.module('carpooling.services.user', [])
             $http.get(Config.getServerURL() + '/api/read/notifications/' + start + '/' + count, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data.data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data.data);
+                }
             })
 
             .error(function (err) {
@@ -220,7 +269,11 @@ angular.module('carpooling.services.user', [])
             $http.post(Config.getServerURL() + '/api/mark/read/notification/' + id, id, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {
@@ -240,7 +293,11 @@ angular.module('carpooling.services.user', [])
             $http.delete(Config.getServerURL() + '/api/delete/notification/' + id, id, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {
