@@ -407,6 +407,7 @@ angular.module('carpooling', [
         lbl_mytrip: 'Mio viaggio',
         lbl_trip: 'Viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
+        lbl_old_chat: 'Carica vecchi messaggi',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
         lbl_passengervalutation: 'Valutazione del passeggero',
