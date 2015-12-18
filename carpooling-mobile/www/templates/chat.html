@@ -1,8 +1,13 @@
 <ion-view title="{{'menu_chat' | translate}}">
-    <ion-content ng-init="loadAllMsg()" delegate-handle="userMessageScroll">
+    <ion-content delegate-handle="userMessageScroll" overflow-scroll="true"><!-- ng-init="loadAllMsg()" -->
+        <button class="button button-full button-light" ng-click="loadOldChat()">
+            {{'lbl_old_chat' | translate}}
+        </button>
         <div class="chat-wrapper">
+<!--            <ion-refresher pulling-icon="ion-ios-arrow-thin-down" refreshing-text="loading messages" on-refresh="moreMessages()">
+            </ion-refresher>-->
             <div ng-repeat="ms in messages" ng-last-repeat="messages">
-                <div class="card card-chat" ng-class="{'card-chat-my': (isMe(ms.userId) && !chatExtraLength(ms.text)), 'card-chat-my-extra': (isMe(ms.userId) && chatExtraLength(ms.text))}">
+                <div id="{{ ms.timestamp }}" class="card card-chat" ng-class="{'card-chat-my': (isMe(ms.userId) && !chatExtraLength(ms.text)), 'card-chat-my-extra': (isMe(ms.userId) && chatExtraLength(ms.text))}">
                     <div ng-if="!isMe(ms.userId)" class="item item-divider">
                         <span>{{ personName }} {{'msg_talk' | translate}}</span>
                     </div>
