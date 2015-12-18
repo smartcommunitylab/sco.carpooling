@@ -487,6 +487,7 @@ placeautocomplete ul {
     width: 75px;
     bottom: 20px;
     font-size: 30px;
+    font-weight: bold;
 }
 
 .string {
