@@ -336,6 +336,55 @@ placeautocomplete ul {
 }
 .user-profile .user-options {}
 
+
+
+/* Stats*/
+.chart{
+  margin:0;
+  padding:0;
+  background: white;
+/*  border:1px solid #999;*/
+  overflow:hidden;
+  height:100px;
+  width:400px;
+  list-style:none;
+  position:relative;
+    border-top-left-radius, border-top-right-radius:25px;
+}
+.chart li{
+  height:100px;
+  list-style:none;
+  margin:10px;
+  padding:0;
+  float:left;
+  width:75px;
+  background:#c5cae9;
+    color: #3f51b5;
+  border-top:1px solid white;
+
+border-top-left-radius: 10px;
+    border-top-right-radius: 10px; /* future proofing */
+}
+.value{
+  position:absolute;
+        text-align: center;
+    width: 75px;
+    bottom:20px;
+}
+.string{
+    margin: 10px;
+    text-align: center;
+   width:75px;
+    display: inline-block;
+/*
+  position:absolute;
+    top:85px;
+*/
+}
+
+    .rating-avg {margin: 0 auto; width:400px}
+
+
 /* VIAGGIO */
 
 .carpooling-theme .trip-info {

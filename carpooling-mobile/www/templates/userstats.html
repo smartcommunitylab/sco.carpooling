@@ -1,8 +1,63 @@
-<ion-view title="{{'menu_profile'| translate}}">
-    <ion-content class="padding">
-        <h1>Viaggia offerti {{numberOffer}}</h1>
-        <h1>Viaggia partecipato {{numberAccepted}}</h1>
-        <h1>Voto medio viaggi offerti {{ratingOffer}}</h1>
-        <h1>Voto medio viaggi accettati {{ratingAccepted}}</h1>
-    </ion-content>
-</ion-view>
+    <ion-view title="{{'menu_profile'| translate}}">
+        <ion-content class="padding">
+    <!--
+            <h1>Viaggi offerti {{totalDriverTrips}}</h1>
+            <h1>Viaggi partecipato {{totalPassengerTrips}}</h1>
+    -->
+
+
+<!--
+            <div class="row">
+                <div class="col-20">
+                    </div>
+-->
+            <div style="margin: 0 auto; width:400px">
+    <ul class="chart col-60">
+      <li style="margin-top:0px">
+        <div class="value">{{totalDriverTrips}}</div>
+      </li>
+      <li style="margin-top:50px">
+        <div class="value">{{totalPassengerTrips}}</div>
+      </li>
+       </ul>
+<!--
+                            <div class="col-20">
+                    </div>
+-->
+            </div>
+<!--
+                    <div class="row">
+                <div class="col-20">
+                    </div>
+-->
+            <div style="margin: 0 auto; width:400px">
+         <div class="string">Viaggi offerti</div>
+        <div class="string">Viaggi partecipati</div>
+                </div>
+<!--
+     <div class="col-20">
+                    </div>
+    </div>
+-->
+
+                                                <div class="rating-avg col">
+                <span class="rating-avg-txt">Voto medio viaggi offerti </span>
+ </div>
+                                                <div class="rating-avg">
+                <span style="white-space: nowrap;">
+                <i ng-repeat="starType in getStars(driverRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}"></i>
+                </span>
+            </div>
+
+                                                <div class="rating-avg">
+                <span class="rating-avg-txt" >Voto medio viaggi accettati </span>
+                                </div>
+
+                                                <div class="rating-avg">
+                <span style="white-space: nowrap;">
+                <i ng-repeat="starType in getStars(passengerRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}" ></i>
+                </span>
+            </div>
+
+        </ion-content>
+    </ion-view>
