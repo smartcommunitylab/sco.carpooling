@@ -458,6 +458,8 @@ angular.module('carpooling', [
         lbl_trip_requested: 'Passaggio richiesto',
         lbl_trip_accepted: 'Passaggio accettato',
         lbl_requests: 'Richeste di partecipazione',
+        lbl_todaytrips: 'Viaggi di oggi',
+        lbl_components: 'Componenti',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrency: 'Imposta ricorrenza',

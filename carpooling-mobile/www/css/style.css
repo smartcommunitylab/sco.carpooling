@@ -461,3 +461,16 @@ placeautocomplete ul {
 .carpooling-theme .components .item span i {
     font-size: 2em;
 }
+.carpooling-theme .components h5 {
+    color: #3448A5;
+    padding-left: 1.5em;
+}
+
+/* Trips */
+
+.carpooling-theme .trips h5{
+    color: #3448A5 !important;
+    text-align: center;
+    padding-top: 2em;
+}
+

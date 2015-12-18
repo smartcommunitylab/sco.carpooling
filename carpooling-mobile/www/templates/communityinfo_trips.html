@@ -5,10 +5,11 @@
         <a href="#" class="button button-icon ion-android-more-vertical padding-left"></a>
         -->
     </ion-nav-buttons>
-    <ion-content class="has-header padding">
+    <ion-content class="has-header padding trips">
         <button class="button button-block button-carpooling" ng-click="addTrip()">
             {{'lbl_addtrip' | translate | uppercase}}
         </button>
+        <h5>{{'lbl_todaytrips'| translate | uppercase}}</h5>
         <div ng-if="communityList.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
