@@ -411,6 +411,7 @@ angular.module('carpooling', [
         lbl_mytrip: 'Mio viaggio',
         lbl_trip: 'Viaggio',
         lbl_notifications: 'Desidero ricevere notifiche per:',
+        lbl_old_chat: 'Carica vecchi messaggi',
         lbl_newmessage: 'Nuovo Messaggio',
         lbl_drivervalutation: 'Valutazione del conducente',
         lbl_passengervalutation: 'Valutazione del passeggero',
@@ -506,6 +507,8 @@ angular.module('carpooling', [
         notif_short_response_ok: 'Viaggio confermato',
         notif_short_response_ko: 'Viaggio rifiutato',
         toast_error_generic: 'OPS! Problema...',
+        toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
+        toast_trip_offered: 'Il tuo viaggio è stato offerto',
         toast_booking_accepted: 'La prenotazione è stata accettata',
         toast_booking_rejected: 'La prenotazione è stata rifiutata',
     });

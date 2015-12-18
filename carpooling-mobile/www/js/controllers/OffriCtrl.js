@@ -375,9 +375,8 @@ angular.module('carpooling.controllers.offri', [])
             DriverSrv.createTrip($scope.travel).then(
                 function (savedTravel) {
                     Utils.loaded();
-                    // TODO: handle createTrip success
-                    //console.log(savedTravel);
                     $state.go('app.home.offro');
+                    Utils.toast(($filter('translate')('toast_trip_offered')));
                 },
                 function (error) {
                     Utils.loaded();
@@ -385,6 +384,8 @@ angular.module('carpooling.controllers.offri', [])
                     console.log(error);
                 }
             );
+        } else {
+            Utils.toast(($filter('translate')('toast_auto_disabled')));
         }
     };
     $scope.$on('$ionicView.beforeEnter', function () {

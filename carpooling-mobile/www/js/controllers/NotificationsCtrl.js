@@ -177,7 +177,7 @@ angular.module('carpooling.controllers.notifications', [])
     };
 })
 
-.controller('ChatCtrl', function ($scope, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, Utils, UserSrv, StorageSrv) {
+.controller('ChatCtrl', function ($scope, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, $location, $anchorScroll, Utils, UserSrv, StorageSrv) {
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     $scope.messages = [];
     $scope.id = StorageSrv.getUserId();
@@ -190,6 +190,7 @@ angular.module('carpooling.controllers.notifications', [])
         UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.messages = discussion.messages ? discussion.messages : [];
             $scope.personName = discussion.personName;
+            viewScroll.scrollBottom();
             Utils.loaded();
         }, function (err) {
             Utils.loaded();
@@ -198,6 +199,34 @@ angular.module('carpooling.controllers.notifications', [])
 
     };
     init();
+
+    $scope.loadOldChat = function () {
+        Utils.loading();
+        var old_msg = [];
+        UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
+            old_msg = discussion.messages ? discussion.messages : [];
+            var last_msg = $scope.messages[0];
+            var pos = "" + last_msg.timestamp;
+            for (var i = old_msg.length - 1; i >= 0; i--) {
+                // --- for test, to be removed ---
+                old_msg[i].message = "old " + old_msg[i].message;
+                old_msg[i].timestamp = old_msg[i].timestamp + (1000*60*60*24);
+                // -------------------------------
+                $scope.messages.splice(0, 0, old_msg[i]);
+            }
+            $timeout(function () {
+                $location.hash(pos);
+                $anchorScroll();
+            }, 500);
+            Utils.loaded();
+            //var y_pos = viewScroll.getScrollPosition();
+            //alert("position " + JSON.stringify(y_pos));
+            //viewScroll.scrollTo(0, y_pos.top, false);
+        }, function (err) {
+            Utils.loaded();
+            // TODO: handle getDiscussion error
+        });
+    };
 
     //    $scope.messages = [
     //        {
@@ -244,9 +273,9 @@ angular.module('carpooling.controllers.notifications', [])
     //        }
     //    ];
 
-    $scope.loadAllMsg = function () {
+/*    $scope.loadAllMsg = function () {
         viewScroll.scrollBottom();
-    };
+    };*/
 
     $scope.isMe = function (id) {
         return id == $scope.id;
@@ -303,4 +332,5 @@ angular.module('carpooling.controllers.notifications', [])
         viewScroll.scrollBottom(true);
         $scope.new_message = '';
     };
+
 });
