@@ -28,39 +28,65 @@ angular.module('carpooling', [
 ])
 
 .run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
-    $rootScope.pushRegistration = function (userId) {
-        try {
-            window.parsePlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
-                var channel = 'CarPooling_' + userId;
-                window.parsePlugin.subscribe(channel, function () {
-                    window.parsePlugin.getInstallationId(function (id) {
-                        console.log('success created channel ' + channel);
+    $rootScope.manageLocalNotification = function(local_notification){
+        if (local_notification.alert) {
+            if (cordova && cordova.plugins && cordova.plugins.notification) {
+                try {
+                    //console.log('initializing notifications...');
+                    cordova.plugins.notification.local.cancelAll();
 
-                        /*window.parsePlugin.registerCallback('onNotification', function() {
-                            window.onNotification = function(pnObj) {
-                                alert('We received this push notification: ' + JSON.stringify(pnObj));
-                                if (pnObj.receivedInForeground === false) {
-                                    // TODO: route the user to the uri in pnObj
-                                }
-                            };
-                        }, function(error) {
-                            console.error(error);
-                        });*/
-                    }, function (e) {
-                        console.log('Exception in parsepush getInstallationId ' + e.message);
-                    });
-                });
-
-            });
-            /* window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
-            window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
-                var channel = 'CarPooling_' + userId;
-                window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
-            //    console.log('successfully created channel ' + channel);
-            };*/
-        } catch (ex) {
-            console.log('Exception in parsepush registration ' + ex.message);
+                    var notific = {
+                        id: local_notification.push_hash,
+                        title: "CarPooling",
+                        text: local_notification.alert,
+                        //autoCancel: true,
+                        //firstAt: monday_9_am,
+                        //every: "week",
+                        //sound: "file://sounds/reminder.mp3",
+                        //icon: "http://icons.com/?cal_id=1",
+                        data: {
+                           id: local_notification.push_hash
+                        }
+                    }
+                    if (notific) {
+                       cordova.plugins.notification.local.schedule(notific);
+                    }
+                } catch (ex){}
+            }
+            //alert('Reveived notification:' + JSON.stringify(pn));
         }
+    };
+
+    $rootScope.pushRegistration = function (userId) {
+        var channel = 'CarPooling_' + userId;
+        try {
+           if (window.ParsePushPlugin) {
+               window.ParsePushPlugin.subscribe(channel, function () {
+                   //console.log("Succes in channel " + channel + " creation");
+               });
+               window.ParsePushPlugin.on('openPN', function(pn){
+                   if(pn != null && pn.urlHash != null){
+                       window.location.hash = hash;
+                   }
+               });
+               window.ParsePushPlugin.on('receivePN', function (pn) {
+                   $rootScope.manageLocalNotification(pn);
+               });
+               //
+               //you can also listen to your own custom subevents
+               //
+               //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
+               //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
+           }
+           /*window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
+           window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
+               var channel = 'CarPooling_' + userId;
+               window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
+               //console.log('successfully created channel ' + channel);
+           };*/
+       } catch (ex) {
+           console.log('Exception in parsepush registration ' + ex.message);
+       }
     };
 
     $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
@@ -116,6 +142,7 @@ angular.module('carpooling', [
         } else {
             $rootScope.pushRegistration(StorageSrv.getUserId());
         }
+
     });
 })
 
@@ -190,11 +217,11 @@ angular.module('carpooling', [
         url: '/comunitainfo',
         cache: false,
         params: {
-            'selectResults': {}
+            'community': {}
         },
         views: {
             'menuContent': {
-                templateUrl: 'templates/comunitainfo.html',
+                templateUrl: 'templates/communityinfo.html',
                 controller: 'CommunityInfoCtrl'
             }
         }
@@ -205,7 +232,7 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-info': {
-                templateUrl: 'templates/info.html',
+                templateUrl: 'templates/communityinfo_info.html',
                 controller: 'CommInfoCtrl'
             }
         }
@@ -216,7 +243,7 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-viaggi': {
-                templateUrl: 'templates/viaggi.html',
+                templateUrl: 'templates/communityinfo_trips.html',
                 controller: 'CommTripCtrl'
             }
         }
@@ -227,7 +254,7 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-componenti': {
-                templateUrl: 'templates/componenti.html',
+                templateUrl: 'templates/communityinfo_components.html',
                 controller: 'CommComponentsCtrl'
             }
         }
@@ -247,9 +274,13 @@ angular.module('carpooling', [
     .state('app.cercacomunita', {
         url: '/cercacomunita',
         cache: false,
+        params: {
+            'myCommunities': {}
+        },
         views: {
             'menuContent': {
-                templateUrl: 'templates/cercacomunita.html'
+                templateUrl: 'templates/cercacomunita.html',
+                controller: 'FindCommunityCtrl'
             }
         }
     })
@@ -324,7 +355,9 @@ angular.module('carpooling', [
         url: '/userinfo',
         cache: false,
         params: {
-            'user': null
+            'user': null,
+            'communityFrom': null,
+            'editMode': null
         },
         views: {
             'tab-userinfo': {
@@ -393,6 +426,8 @@ angular.module('carpooling', [
         lbl_generalinformations: 'INFORMAZIONI GENERALI',
         lbl_numberauto: 'AUTO A DISPOSIZIONE',
         lbl_addauto: 'AGGIUNGI LA TUA AUTO',
+        lbl_addtrip: 'AGGIUNGI UN VIAGGIO',
+        lbl_editauto: 'MODIFICA LA TUA AUTO',
         lbl_search: 'Cerca viaggio',
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',
@@ -424,6 +459,8 @@ angular.module('carpooling', [
         lbl_trip_requested: 'Passaggio richiesto',
         lbl_trip_accepted: 'Passaggio accettato',
         lbl_requests: 'Richeste di partecipazione',
+        lbl_todaytrips: 'Viaggi di oggi',
+        lbl_components: 'Componenti',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrency: 'Imposta ricorrenza',
@@ -467,7 +504,9 @@ angular.module('carpooling', [
         notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
         notif_short_response_ok: 'Viaggio confermato',
         notif_short_response_ko: 'Viaggio rifiutato',
-        toast_error_generic: 'There was a problem...'
+        toast_error_generic: 'OPS! Problema...',
+        toast_booking_accepted: 'La prenotazione è stata accettata',
+        toast_booking_rejected: 'La prenotazione è stata rifiutata'
     });
 
     $translateProvider.preferredLanguage('it');

@@ -6,7 +6,7 @@
 -->
     <ion-content>
         <div ng-repeat="notific in notifications" ><!-- collection-repeat="notific in notifications" -->
-<!--        <ion-list>  -->
+        <!-- <ion-list> -->
             <div class="card">
                 <div class="item item-divider" ng-class="{'unread': !notific.status}" ng-click="showNotification(notific)">
                     {{ notific.timestamp | date:'dd MMMM yyyy - hh:mm' }}
@@ -18,16 +18,13 @@
                 <div class="item item-divider" ng-class="{'unread': !notific.status}" ng-click="showNotification(notific)">
                 </div>
             </div>
-<!--        </ion-list>    -->
-
-
-<!--
-            <ion-infinite-scroll
-                on-infinite="loadMoreNotifications()"
-                distance="5%">
-            </ion-infinite-scroll> ng-if="canWeLoadMoreNotifics()"
--->
+        <!-- </ion-list> -->
         </div>
+        <ion-infinite-scroll
+            ng-if="canWeLoadMoreNotifics()"
+            on-infinite="loadMoreNotifications()"
+            distance="5%">
+        </ion-infinite-scroll>
 
     </ion-content>
 </ion-view>

@@ -9,7 +9,7 @@ angular.module('carpooling.controllers.user', [])
 
     $scope.itsMe = $scope.user['userId'] === StorageSrv.getUser()['userId'];
 
-    if(!$scope.user){
+    if (!$scope.user) {
         $scope.user = {
             auto: null
         };
@@ -30,16 +30,42 @@ angular.module('carpooling.controllers.user', [])
         postsAvailable: [1, 2, 3, 4, 5, 6, 7]
     };
 
-    $scope.editMode = false || $rootScope.initialSetup;
+    $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
 
     $scope.toggleEditMode = function () {
         $scope.editMode = !$scope.editMode;
+    };
+
+    var goToCommunityInfo = function (saved) {
+        var communityToGo = null;
+        if (!!saved) {
+            UserSrv.getCommunitiesDetails().then(function (communities) {
+                for (var i = 0; i < communities.length; i++) {
+                    var c = communities[i];
+                    if (c.id === $stateParams['communityFrom'].id) {
+                        communityToGo = c;
+                        i = communities.length;
+                    }
+                    $state.go('app.comunitainfo', {
+                        'community': communityToGo
+                    });
+                }
+            });
+        } else {
+            communityToGo = $stateParams['communityFrom'];
+            $state.go('app.comunitainfo', {
+                'community': communityToGo
+            });
+        }
     };
 
     $scope.cancelChanges = function () {
         $scope.toggleEditMode();
         $scope.user = angular.copy(StorageSrv.getUser());
         $scope.edit.hasAuto = hasAuto($scope.user.auto);
+        if (!!$stateParams['communityFrom']) {
+            goToCommunityInfo(false);
+        }
     };
 
     $scope.saveProfile = function () {
@@ -70,6 +96,11 @@ angular.module('carpooling.controllers.user', [])
                         function () {
                             $scope.user = angular.copy(StorageSrv.getUser());
                             $scope.edit.hasAuto = hasAuto($scope.user.auto);
+
+                            console.log(!!$stateParams['communityFrom']);
+                            if (!!$stateParams['communityFrom']) {
+                                goToCommunityInfo(true);
+                            }
                         }
                     );
                 }
