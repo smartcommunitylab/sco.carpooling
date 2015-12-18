@@ -1,8 +1,13 @@
 angular.module('carpooling.controllers.communityinfo', [])
 
-.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams) {
+.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils) {
     $scope.community = $stateParams['community'];
     console.log($scope.community);
+    UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
+        function (todayCommunities) {
+            console.log(todayCommunities);
+            $scope.communityList = todayCommunities;
+        });
 })
 
 .controller('CommComponentsCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
@@ -19,30 +24,14 @@ angular.module('carpooling.controllers.communityinfo', [])
 })
 
 .controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams, Utils, UserSrv) {
-    Utils.loading();
-    UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
-        function (todayCommunities) {
-            Utils.loaded();
-            console.log(todayCommunities);
-            $scope.communityList = todayCommunities;
-            $scope.communityList.forEach(function (travel) {
-                travel.bookingCounters = Utils.getBookingCounters(travel);
-            });
-            $scope.selectTrip = function (index) {
-                $state.go('app.viaggio', {
-                    'travelId': $scope.communityList[index].id
-                });
-            };
-
-        },
-        function (error) {
-            Utils.loaded();
-            // TODO: handle searchTrip error
-            //console.log(error);
-            Utils.toast();
-        }
-    );
-
+    $scope.communityList.forEach(function (travel) {
+        travel.bookingCounters = Utils.getBookingCounters(travel);
+    });
+    $scope.selectTrip = function (index) {
+        $state.go('app.viaggio', {
+            'travelId': $scope.communityList[index].id
+        });
+    };
     $scope.addTrip = function () {
         $state.go('app.offri');
     }

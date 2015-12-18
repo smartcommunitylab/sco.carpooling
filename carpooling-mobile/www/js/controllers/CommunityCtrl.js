@@ -22,4 +22,23 @@ angular.module('carpooling.controllers.communities', [])
             'community': selectResults
         });
     };
+
+    $scope.searchCommunity = function () {
+        var myCommunities = $scope.communities;
+        $state.go('app.cercacomunita', {
+            'myCommunities': myCommunities
+        });
+    };
+})
+
+.controller('FindCommunityCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils, $stateParams) {
+    $scope.communitiesToFilter = $stateParams['myCommunities'];
+    var filteredCommunities = [];
+    /*$scope.findCommunity = function () {
+        for (var i = 0; i < $scope.communitiesToFilter.length; i++) {
+            if ($scope.communitiesToFilter[i].name == || ) {
+
+            }
+        }
+    }*/
 });

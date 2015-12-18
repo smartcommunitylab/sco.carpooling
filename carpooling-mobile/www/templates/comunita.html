@@ -1,6 +1,6 @@
 <ion-view title="{{'menu_community'| translate}}" class="communities">
     <ion-nav-buttons side="right">
-        <a href="#/app/cercacomunita" class="button button-icon ion-android-search padding-left"></a>
+        <a href="#" class="button button-icon ion-android-search padding-left" ng-click="searchCommunity()"></a>
     </ion-nav-buttons>
     <ion-content>
         <div ng-if="communities !== null && communities.length == 0">

@@ -274,9 +274,13 @@ angular.module('carpooling', [
     .state('app.cercacomunita', {
         url: '/cercacomunita',
         cache: false,
+        params: {
+            'myCommunities': {}
+        },
         views: {
             'menuContent': {
-                templateUrl: 'templates/cercacomunita.html'
+                templateUrl: 'templates/cercacomunita.html',
+                controller: 'FindCommunityCtrl'
             }
         }
     })
