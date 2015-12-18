@@ -15,7 +15,7 @@
             <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
         </div>
         <button class="button button-block button-carpooling" ng-click="changeAutoState()">
-            {{btnAutoText| translate}}
+            {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
         </button>
     </ion-content>
 </ion-view>

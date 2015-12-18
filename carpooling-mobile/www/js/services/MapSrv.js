@@ -3,27 +3,28 @@ angular.module('carpooling.services.map', [])
 .factory('MapSrv', function ($q, $http, leafletData, $ionicPlatform, GeoSrv) {
     var cachedMap = {};
     var myLocation = {};
-
     var mapService = {};
-
 
     mapService.getMap = function (mapId) {
         var deferred = $q.defer();
 
         if (cachedMap[mapId] == null) {
-            mapService.initMap(mapId).then(function () {
-                deferred.resolve(cachedMap[mapId]);
-            });
+            mapService.initMap(mapId).then(
+                function () {
+                    deferred.resolve(cachedMap[mapId]);
+                }
+            );
         } else {
             deferred.resolve(cachedMap[mapId]);
         }
 
         return deferred.promise;
-    }
+    };
 
     mapService.setMyLocation = function (myNewLocation) {
         myLocation = myNewLocation
     };
+
     mapService.getMyLocation = function () {
         return myLocation;
     };
@@ -41,11 +42,14 @@ angular.module('carpooling.services.map', [])
                     subdomains: '1234',
                     maxZoom: 18
                 }).addTo(map);
-//                $ionicPlatform.ready(function () {
-//                    GeoSrv.locate().then(function (e) {
-//                        L.marker(L.latLng(e[0], e[1])).addTo(map);
-//                    });
-//                });
+
+                /*
+                $ionicPlatform.ready(function () {
+                    GeoSrv.locate().then(function (e) {
+                        L.marker(L.latLng(e[0], e[1])).addTo(map);
+                    });
+                });
+                */
 
                 deferred.resolve(map);
             },
@@ -53,8 +57,10 @@ angular.module('carpooling.services.map', [])
                 console.log('error creation');
                 deferred.reject(error);
             });
+
         return deferred.promise;
-    }
+    };
+
     mapService.centerOnMe = function (mapId, zoom) {
         leafletData.getMap(mapId).then(function (map) {
             GeoSrv.locate().then(function (e) {
@@ -63,83 +69,85 @@ angular.module('carpooling.services.map', [])
                 });
             });
         });
-
     };
 
     mapService.getTripPolyline = function (trip) {
-            var listOfPoints = {};
-            for (var k = 0; k < trip.leg.length; k++) {
-                listOfPoints["p" + k] = {
-                    color: "#4EB0E6",
-                    weight: 5,
-                    latlngs: mapService.decodePolyline(trip.leg[k].legGeometery.points)
-                }
+        var listOfPoints = {};
+        for (var k = 0; k < trip.leg.length; k++) {
+            listOfPoints["p" + k] = {
+                color: "#4EB0E6",
+                weight: 5,
+                latlngs: mapService.decodePolyline(trip.leg[k].legGeometery.points)
             }
-            return listOfPoints;
         }
 
+        return listOfPoints;
+    };
+
     mapService.getTripPoints = function (trip) {
-        //manage park&walk
+        // manage park&walk
         var markers = [];
         for (i = 0; i < trip.leg.length; i++) {
             //if (!parkAndWalk(trip, i)) {
             markers.push({
-                    lat: parseFloat(trip.leg[i].from.lat),
-                    lng: parseFloat(trip.leg[i].from.lon),
+                lat: parseFloat(trip.leg[i].from.lat),
+                lng: parseFloat(trip.leg[i].from.lon),
 
-                    message: getPopUpMessage(trip, trip.leg[i], i),
-                    icon: {
-                        iconUrl: getIconByType(trip.leg[i].transport),
-                        iconSize: [36, 50],
-                        iconAnchor: [18, 50],
-                        popupAnchor: [-0, -50]
-                    },
-                    //                        focus: true
-                })
-                //            }
-                //        else {
-                //                markers.push(getMarkerParkAndWalk(trip.leg[i]));
-                //            }
+                message: getPopUpMessage(trip, trip.leg[i], i),
+                icon: {
+                    iconUrl: getIconByType(trip.leg[i].transport),
+                    iconSize: [36, 50],
+                    iconAnchor: [18, 50],
+                    popupAnchor: [-0, -50]
+                }
+                //, focus: true
+            });
+            //} else {
+            //    markers.push(getMarkerParkAndWalk(trip.leg[i]));
+            //}
+
             var bound = [trip.leg[i].from.lat, trip.leg[i].from.lon];
-
         }
+
         //add the arrival place
         markers.push({
             lat: parseFloat(trip.leg[trip.leg.length - 1].to.lat),
             lng: parseFloat(trip.leg[trip.leg.length - 1].to.lon),
-
             message: $filter('translate')('pop_up_arrival'),
             icon: {
                 iconUrl: "img/ic_arrival.png",
                 iconSize: [36, 50],
                 iconAnchor: [0, 50],
                 popupAnchor: [18, -50]
-            },
-            //                        focus: true
+            }
+            //, focus: true
         });
 
-
-
         return markers;
-    }
+    };
+
     mapService.encodePolyline = function (coordinate, factor) {
         coordinate = Math.round(coordinate * factor);
         coordinate <<= 1;
+
         if (coordinate < 0) {
             coordinate = ~coordinate;
         }
+
         var output = '';
         while (coordinate >= 0x20) {
             output += String.fromCharCode((0x20 | (coordinate & 0x1f)) + 63);
             coordinate >>= 5;
         }
+
         output += String.fromCharCode(coordinate + 63);
         return output;
-    }
+    };
 
     mapService.resizeElementHeight = function (element, mapId) {
         var height = 0;
         var body = window.document.body;
+
         if (window.innerHeight) {
             height = window.innerHeight;
         } else if (body.parentElement.clientHeight) {
@@ -147,17 +155,19 @@ angular.module('carpooling.services.map', [])
         } else if (body && body.clientHeight) {
             height = body.clientHeight;
         }
-        console.log('height' + height);
+
         element.style.height = (((height - element.offsetTop)) + "px");
         this.getMap(mapId).then(function (map) {
             map.invalidateSize();
-        })
-    }
+        });
+    };
+
     mapService.refresh = function (mapId) {
         this.getMap(mapId).then(function (map) {
             map.invalidateSize();
-        })
-    }
+        });
+    };
+
     mapService.decodePolyline = function (str, precision) {
         var index = 0,
             lat = 0,
@@ -174,7 +184,6 @@ angular.module('carpooling.services.map', [])
         // track of whether we've hit the end of the string. In each
         // loop iteration, a single coordinate is decoded.
         while (index < str.length) {
-
             // Reset shift, result, and byte
             byte = null;
             shift = 0;

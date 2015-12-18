@@ -110,12 +110,11 @@ angular.module('carpooling', [
                 ionic.Platform.exitApp();
             }
         );
-    }
+    };
 
     $rootScope.logout = function () {
         LoginSrv.logout().then(
             function (data) {
-                StorageSrv.reset();
                 ionic.Platform.exitApp();
             },
             function (error) {
@@ -274,9 +273,13 @@ angular.module('carpooling', [
     .state('app.cercacomunita', {
         url: '/cercacomunita',
         cache: false,
+        params: {
+            'myCommunities': {}
+        },
         views: {
             'menuContent': {
-                templateUrl: 'templates/cercacomunita.html'
+                templateUrl: 'templates/cercacomunita.html',
+                controller: 'FindCommunityCtrl'
             }
         }
     })
@@ -368,7 +371,8 @@ angular.module('carpooling', [
         cache: false,
         views: {
             'tab-userstats': {
-                templateUrl: 'templates/userstats.html'
+                templateUrl: 'templates/userstats.html',
+                controller: 'UserStatsCtrl'
             }
         }
     })
@@ -455,6 +459,8 @@ angular.module('carpooling', [
         lbl_trip_requested: 'Passaggio richiesto',
         lbl_trip_accepted: 'Passaggio accettato',
         lbl_requests: 'Richeste di partecipazione',
+        lbl_todaytrips: 'Viaggi di oggi',
+        lbl_components: 'Componenti',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrency: 'Imposta ricorrenza',
@@ -499,6 +505,8 @@ angular.module('carpooling', [
         notif_short_response_ok: 'Viaggio confermato',
         notif_short_response_ko: 'Viaggio rifiutato',
         toast_error_generic: 'OPS! Problema...',
+        toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
+        toast_trip_offered: 'Il tuo viaggio è stato offerto',
         toast_booking_accepted: 'La prenotazione è stata accettata',
         toast_booking_rejected: 'La prenotazione è stata rifiutata'
     });

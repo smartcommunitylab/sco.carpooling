@@ -65,12 +65,12 @@ angular.module('carpooling.services.login', [])
             function (data) {
                 //console.log('success: ' + data.userId);
                 StorageSrv.saveUserId(data.userId).then(function () {
-                    UserSrv.getUser(data.userId).then(function() {
-                      deferred.resolve(data);
-                    }, function(reason) {
-                      StorageSrv.saveUserId(null).then(function () {
-                          deferred.reject(reason);
-                      });
+                    UserSrv.getUser(data.userId).then(function () {
+                        deferred.resolve(data);
+                    }, function (reason) {
+                        StorageSrv.saveUserId(null).then(function () {
+                            deferred.reject(reason);
+                        });
                     });
                 });
             },
@@ -97,7 +97,12 @@ angular.module('carpooling.services.login', [])
 
         .success(function (data, status, headers, config) {
             StorageSrv.reset().then(function () {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(data);
+                }
             });
         })
 

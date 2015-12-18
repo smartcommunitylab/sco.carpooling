@@ -1,6 +1,6 @@
 angular.module('carpooling.services.user', [])
 
-.factory('UserSrv', function ($http, $q, Config, StorageSrv) {
+.factory('UserSrv', function ($rootScope, $http, $q, Config, StorageSrv) {
     var user = null;
 
     var userService = {};
@@ -13,6 +13,7 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 if (StorageSrv.getUserId() === userId) {
                     // It's-a-me!
@@ -60,6 +61,7 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data);
             }
@@ -83,6 +85,7 @@ angular.module('carpooling.services.user', [])
             .success(function (data) {
                 if (data[0] == '<') {
                     deferred.reject();
+                    $rootScope.login();
                 } else {
                     deferred.resolve(data);
                 }
@@ -104,6 +107,7 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data);
             }
@@ -124,6 +128,7 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data);
             }
@@ -144,6 +149,7 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data.data);
             }
@@ -164,10 +170,10 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data.data);
             }
-            deferred.resolve(data.data);
         })
 
         .error(function (err) {
@@ -185,6 +191,7 @@ angular.module('carpooling.services.user', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data.data);
             }
@@ -210,6 +217,7 @@ angular.module('carpooling.services.user', [])
             .success(function (data) {
                 if (data[0] == '<') {
                     deferred.reject();
+                    $rootScope.login();
                 } else {
                     deferred.resolve(data);
                 }
@@ -226,17 +234,20 @@ angular.module('carpooling.services.user', [])
     userService.readNotifications = function (start, count) {
         var deferred = $q.defer();
 
-        //        $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
-        //
-        //        .success(function (data) {
-        //            deferred.resolve(data.data);
-        //        })
-        //
-        //        .error(function (err) {
-        //            deferred.reject(err);
-        //        });
-        //
-        //        return deferred.promise;
+        /*
+        $http.get(Config.getServerURL() + '/api/read/' + travelId + '/' + targetUserId + '/discussion', Config.getHTTPConfig())
+
+        .success(function (data) {
+            deferred.resolve(data.data);
+        })
+
+        .error(function (err) {
+            deferred.reject(err);
+        });
+
+        return deferred.promise;
+        */
+
         if (start == null || start < 0) {
             deferred.reject('Invalid start position');
         } else if (!count) {
@@ -247,6 +258,7 @@ angular.module('carpooling.services.user', [])
             .success(function (data) {
                 if (data[0] == '<') {
                     deferred.reject();
+                    $rootScope.login();
                 } else {
                     deferred.resolve(data.data);
                 }
@@ -271,6 +283,7 @@ angular.module('carpooling.services.user', [])
             .success(function (data) {
                 if (data[0] == '<') {
                     deferred.reject();
+                    $rootScope.login();
                 } else {
                     deferred.resolve(data);
                 }
@@ -295,6 +308,7 @@ angular.module('carpooling.services.user', [])
             .success(function (data) {
                 if (data[0] == '<') {
                     deferred.reject();
+                    $rootScope.login();
                 } else {
                     deferred.resolve(data);
                 }
