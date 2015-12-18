@@ -1,6 +1,6 @@
 angular.module('carpooling.services.driver', [])
 
-.factory('DriverSrv', function ($http, $q, Config) {
+.factory('DriverSrv', function ($rootScope, $http, $q, Config) {
     var driverService = {};
 
     driverService.getDriverTrips = function () {
@@ -11,6 +11,7 @@ angular.module('carpooling.services.driver', [])
         .success(function (data) {
             if (data[0] == '<') {
                 deferred.reject();
+                $rootScope.login();
             } else {
                 deferred.resolve(data.data);
             }
@@ -34,6 +35,7 @@ angular.module('carpooling.services.driver', [])
             .success(function (data) {
                 if (data[0] == '<') {
                     deferred.reject();
+                    $rootScope.login();
                 } else {
                     deferred.resolve(data.data);
                 }
@@ -58,7 +60,12 @@ angular.module('carpooling.services.driver', [])
             $http.post(Config.getServerURL() + '/api/driver/trips/' + tripId + '/accept', booking, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data.data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(data.data);
+                }
             })
 
             .error(function (err) {
@@ -80,7 +87,12 @@ angular.module('carpooling.services.driver', [])
             $http.post(Config.getServerURL() + '/api/rate/passenger/' + passengerId + '/' + rating, booking, Config.getHTTPConfig())
 
             .success(function (data) {
-                deferred.resolve(data);
+                if (data[0] == '<') {
+                    deferred.reject();
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(data);
+                }
             })
 
             .error(function (err) {

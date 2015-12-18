@@ -5,7 +5,7 @@
     </ion-nav-buttons>
 
     <ion-content>
-        <div ng-if="!driverTrips || driverTrips.length == 0">
+        <div class="padding" ng-if="!driverTrips || driverTrips.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
         <div class="list" ng-if="driverTrips.length > 0">

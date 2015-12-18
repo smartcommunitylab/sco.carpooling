@@ -110,12 +110,11 @@ angular.module('carpooling', [
                 ionic.Platform.exitApp();
             }
         );
-    }
+    };
 
     $rootScope.logout = function () {
         LoginSrv.logout().then(
             function (data) {
-                StorageSrv.reset();
                 ionic.Platform.exitApp();
             },
             function (error) {

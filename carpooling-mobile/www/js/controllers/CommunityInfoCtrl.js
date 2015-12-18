@@ -2,12 +2,34 @@ angular.module('carpooling.controllers.communityinfo', [])
 
 .controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils) {
     $scope.community = $stateParams['community'];
-    console.log($scope.community);
-    UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
-        function (todayCommunities) {
-            console.log(todayCommunities);
-            $scope.communityList = todayCommunities;
+
+    if (!!$scope.community) {
+        Utils.loading();
+
+        UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
+            function (todayCommunities) {
+                $scope.communityList = todayCommunities;
+                Utils.loaded();
+            },
+            function (error) {
+                Utils.loaded();
+                Utils.toast();
+            }
+        );
+    } else {
+        Utils.toast();
+    }
+})
+
+.controller('CommInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
+    var hasAuto = !!StorageSrv.getUser().auto;
+
+    $scope.changeAutoState = function () {
+        $state.go('app.profilo.userinfo', {
+            'communityFrom': $scope.community,
+            'editMode': true
         });
+    };
 })
 
 .controller('CommComponentsCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
@@ -27,27 +49,14 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.communityList.forEach(function (travel) {
         travel.bookingCounters = Utils.getBookingCounters(travel);
     });
+
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.communityList[index].id
         });
     };
+
     $scope.addTrip = function () {
         $state.go('app.offri');
     }
-})
-
-.controller('CommInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
-    var haveAuto = !!StorageSrv.getUser().auto;
-    if (!!haveAuto) {
-        $scope.btnAutoText = 'lbl_editauto';
-    } else {
-        $scope.btnAutoText = 'lbl_addauto';
-    }
-    $scope.changeAutoState = function () {
-        $state.go('app.profilo.userinfo', {
-            'communityFrom': $scope.community,
-            'editMode': true
-        });
-    };
 });

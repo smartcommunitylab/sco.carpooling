@@ -4,10 +4,10 @@ angular.module('carpooling.controllers.communities', [])
     $scope.communities = null;
     Utils.loading();
 
-    UserSrv.getCommunitiesDetails().then(function (communities) {
+    UserSrv.getCommunitiesDetails().then(
+        function (communities) {
             Utils.loaded();
             $scope.communities = communities;
-            console.log($scope.communities);
         },
         function (error) {
             Utils.loaded();
@@ -17,9 +17,9 @@ angular.module('carpooling.controllers.communities', [])
     );
 
     $scope.selectCommunity = function (index) {
-        var selectResults = $scope.communities[index];
+        var community = $scope.communities[index];
         $state.go('app.comunitainfo', {
-            'community': selectResults
+            'community': community
         });
     };
 
@@ -32,13 +32,17 @@ angular.module('carpooling.controllers.communities', [])
 })
 
 .controller('FindCommunityCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils, $stateParams) {
+    // FUTURE use that if search communities will be implemented
     $scope.communitiesToFilter = $stateParams['myCommunities'];
     var filteredCommunities = [];
-    /*$scope.findCommunity = function () {
+
+    /*
+    $scope.findCommunity = function () {
         for (var i = 0; i < $scope.communitiesToFilter.length; i++) {
             if ($scope.communitiesToFilter[i].name == || ) {
 
             }
         }
-    }*/
+    }
+    */
 });

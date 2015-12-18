@@ -1,4 +1,4 @@
-<ion-view title="{{'lbl_communityname' | translate}}">
+<ion-view title="{{community.name}}">
     <ion-nav-buttons side="right">
         <!--
         <a href="#" class="button button-icon ion-android-chat"></a>
@@ -31,15 +31,15 @@
                                 {{'lbl_start_time' | translate}}: <span>{{trip.route.startime | date:travelTimeFormat}}</span>
                             </li>
                         </ul>
-                        <!-- TODO: define when the flag needs to be shown here -->
+                        <!-- TODO define when the flag needs to be shown here -->
                         <div class="trip-flag" ng-if="false"></div>
                     </div>
                     <div class="col-25 trip-counter">
-                        <!--TODO: bookingcounters-->
+                        <!--TODO bookingcounters-->
                         <p class="trip-counter-num">{{trip.bookingCounters.available}}</p>
                         <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                     </div>
-                    <!-- TODO: define when the flag needs to be shown here -->
+                    <!-- TODO define when the flag needs to be shown here -->
                     <div class="trip-flag" ng-if="false"></div>
                 </div>
             </div>

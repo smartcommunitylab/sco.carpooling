@@ -18,7 +18,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         'monitored': false
     };
 
-    // FIXME: communities are not used right now in client-side search
+    // FUTURE communities are not used right now in client-side search
     $scope.communities = {
         enabled: false,
         useMyCommunities: false
