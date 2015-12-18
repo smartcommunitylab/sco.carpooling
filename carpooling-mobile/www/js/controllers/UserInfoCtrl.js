@@ -128,4 +128,47 @@ angular.module('carpooling.controllers.user', [])
             $scope.user.auto = null;
         }
     });
+})
+.controller('UserStatsCtrl', function ($scope, $rootScope,DriverSrv,PassengerSrv,Utils,StorageSrv) {
+    var getStars = function (vote) {
+        var stars = [];
+
+            var fullStars = Math.floor(vote);
+            for (var i = 0; i < fullStars; i++) {
+                stars.push('full');
+            }
+
+            var halfStars = Math.ceil((vote % 1).toFixed(4));
+            for (var i = 0; i < halfStars; i++) {
+                stars.push('half');
+            }
+
+            var emptyStars = 5 - vote;
+            for (var i = 0; i < emptyStars; i++) {
+                stars.push('empty');
+            }
+
+
+        return stars;
+    };
+     $scope.getStars = function (vote) {
+        return getStars(vote);
+    };
+    $scope.user=StorageSrv.getUser();
+    $scope.driverRating = $scope.user.gameProfile.driverRating;
+    $scope.passengerRating = $scope.user.gameProfile.passengerRating;
+    Utils.loading();
+    DriverSrv.getDriverTrips().then(function(driverTrips) {
+        $scope.totalDriverTrips =driverTrips.length;
+        PassengerSrv.getPassengerTrips().then(function(passengerTrips) {
+        $scope.totalPassengerTrips =passengerTrips.length;
+                Utils.loaded();
+
+    });
+    });
+
+
+   $scope.ratingOffer =4;
+   $scope.ratingAccepted=4.5;
+
 });
