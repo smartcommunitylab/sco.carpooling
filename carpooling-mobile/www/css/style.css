@@ -458,8 +458,8 @@ placeautocomplete ul {
     background: white;
     /*  border:1px solid #999;*/
     overflow: hidden;
-    height: 100px;
-    width: 400px;
+    height: 150px;
+    width: 100%;
     list-style: none;
     position: relative;
     border-top-left-radius,
@@ -467,12 +467,12 @@ placeautocomplete ul {
 }
 
 .chart li {
-    height: 100px;
+    height: 150px;
     list-style: none;
     margin: 10px;
     padding: 0;
     float: left;
-    width: 75px;
+    width: 40%;
     background: #c5cae9;
     color: #3f51b5;
     border-top: 1px solid white;
@@ -484,7 +484,7 @@ placeautocomplete ul {
 .value {
     position: absolute;
     text-align: center;
-    width: 75px;
+    width: 40%;
     bottom: 20px;
     font-size: 30px;
     font-weight: bold;
@@ -493,7 +493,7 @@ placeautocomplete ul {
 .string {
     margin: 10px;
     text-align: center;
-    width: 75px;
+    width: 40%;
     display: inline-block;
     /*
   position:absolute;
@@ -502,13 +502,15 @@ placeautocomplete ul {
 }
 
 .rating-avg {
-    margin: 0 auto;
-    width: 400px;
+    margin: 8px;
+    width: 100%;
+    text-align: center;
 }
 
 .rating-avg-star {
-    margin: 0 auto;
-    width: 400px;
+    text-align: center;
+    margin: 8px;
+    width: 100%;
     font-size: xx-large;
     color: #3f51b5;
 }
