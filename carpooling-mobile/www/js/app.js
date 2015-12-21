@@ -508,7 +508,8 @@ angular.module('carpooling', [
         toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
         toast_trip_offered: 'Il tuo viaggio è stato offerto',
         toast_booking_accepted: 'La prenotazione è stata accettata',
-        toast_booking_rejected: 'La prenotazione è stata rifiutata'
+        toast_booking_rejected: 'La prenotazione è stata rifiutata',
+        toast_notification_deleted: 'La notifica è stata cancellata'
     });
 
     $translateProvider.preferredLanguage('it');

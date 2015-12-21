@@ -118,6 +118,32 @@ angular.module('carpooling.services.passenger', [])
         return deferred.promise;
     };
 
+    passengerService.deleteTripRequest = function (travelRequestId) {
+        var deferred = $q.defer();
+
+        if (!!travelRequestId) {
+            deferred.reject('Invalid tripId');
+        } else {
+            // /api/delete/tripRequest/{travelRequestId}
+            $http.delete(Config.getServerURL() + '/api/delete/tripRequest/' + travelRequestId, Config.getHTTPConfig())
+
+            .success(function (data) {
+                if (data[0] == '<') {
+                    deferred.reject();
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(data);
+                }
+            })
+
+            .error(function (err) {
+                deferred.reject(err);
+            });
+        }
+
+        return deferred.promise;
+    };
+
     passengerService.rateDriver = function (driverId, rating) {
         var deferred = $q.defer();
 

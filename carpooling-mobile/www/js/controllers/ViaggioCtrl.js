@@ -69,11 +69,11 @@ angular.module('carpooling.controllers.viaggio', [])
             UserSrv.getUser($scope.selectedTrip.userId).then(
                 function (userInfo) {
                     $scope.driverInfo = userInfo;
-                    //console.log('User found');
                     Utils.loaded();
                 },
                 function (error) {
                     Utils.loaded();
+                    console.error(error);
                     Utils.toast();
                 }
             );
