@@ -344,12 +344,13 @@ placeautocomplete ul {
 
 /* Other */
 
+#modalMap,
+#modal-map-container,
+#trip-map-container {
+    height: 100% !important;
+}
 #modalMap {
     width: 100%;
-    height: 100%;
-}
-#modal-map-container {
-    height: 100%!important;
 }
 
 /* USERINFO  */
@@ -499,7 +500,7 @@ placeautocomplete ul {
     line-height: 1em;
 }
 .carpooling-theme .trip-requests {
-    margin-top: 1em;
+    margin-top: 1.5em;
 }
 .carpooling-theme .trip-requests .list .item {
     border: 0;
@@ -509,9 +510,6 @@ placeautocomplete ul {
 }
 .carpooling-theme .trip-requests .list .item-button-right > .button:last-child {
     right: 16px;
-}
-#trip-map-container {
-    height: 100%!important;
 }
 
 /* Components */
