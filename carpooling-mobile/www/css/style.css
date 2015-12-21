@@ -3,11 +3,13 @@
 .carpooling {
     color: #4EB0E6;
 }
+
 .carpooling-theme .link-carpooling {
     color: #4EB0E6;
     text-decoration: underline;
     cursor: pointer;
 }
+
 
 /* Bar */
 
@@ -16,9 +18,11 @@
     border-color: #3448A5;
     color: #FFFFFF;
 }
+
 .carpooling-theme .bar .button {
     color: #FFFFFF;
 }
+
 
 /* Menu */
 
@@ -27,24 +31,29 @@
 .carpooling-theme .menu .item .item-content {
     background-color: #3448A5;
 }
+
 .carpooling-theme .menu .item {
     border-color: #3448A5;
     color: #FFFFFF;
 }
+
 .carpooling-theme .menu .item .item-content.activated {
     color: #BCC0E7;
 }
+
 .carpooling-theme .menu .item .item-content .icon:before {
     padding-right: 1em;
     font-size: 2em;
     vertical-align: middle;
 }
 
+
 /* Tabs */
 
 .carpooling-theme .tabs {
     background-color: #3448A5;
 }
+
 .carpooling-theme .tabs .tab-item {
     max-width: none;
     color: #FFFFFF;
@@ -53,17 +62,20 @@
     opacity: 1;
     text-transform: uppercase;
 }
+
 .carpooling-theme .tabs .tab-item.tab-item-active,
 .carpooling-theme .tabs .tab-item.active,
 .carpooling-theme .tabs .tab-item.activated {
     color: #4EB0E6;
     border: 0 solid #4EB0E6;
 }
+
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.tab-item-active,
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.active,
 .carpooling-theme .tabs-top.tabs-striped .rabs .tab-item.activated {
     border-width: 0px 0px 3px 0px !important;
 }
+
 
 /* Card */
 
@@ -71,35 +83,42 @@
     background-color: #F0F0F0;
     border-width: 0px;
 }
+
 .carpooling-theme .card .item.unread {
     background-color: #F7F7F7;
     /*#4EB0E6;*/
     border-width: 0px;
     font-weight: bold;
 }
+
 .carpooling-theme .card .item-divider {
     text-align: right;
     font-size: small;
     color: #A0A0A0;
 }
+
 .carpooling-theme .card .item-divider.unread {
     text-align: right;
     font-size: small;
     color: #000000;
 }
+
 .carpooling-theme .card .item-icon-left {
     white-space: normal;
     padding-top: 2px;
     padding-bottom: 2px;
     padding-right: 20px;
 }
+
 .carpooling-theme .card .item-icon-left span {
     font-size: large;
     color: #000000;
 }
+
 .carpooling-theme .card.card-chat {
     box-shadow: none;
 }
+
 .carpooling-theme .card.card-chat .item {
     background-color: #FFFFFF;
     border: 0;
@@ -107,38 +126,45 @@
     text-align: left;
     white-space: normal;
 }
+
 .carpooling-theme .card.card-chat .item-divider {
     text-align: left;
     font-size: small;
     color: #A0A0A0;
 }
+
 .carpooling-theme .card.card-chat .item-divider span {
     text-align: left;
     font-size: small;
     color: #4EB0E6;
 }
+
 .carpooling-theme .card.card-chat.card-chat-my .item {
     border: 0;
     text-align: right;
     margin-left: 50px;
     white-space: normal;
 }
+
 .carpooling-theme .card.card-chat.card-chat-my-extra .item {
     border: 0;
     text-align: left;
     margin-left: 50px;
     white-space: normal;
 }
+
 .carpooling-theme .card.card-chat.card-chat-my .item-divider {
     text-align: right;
     font-size: small;
     color: #A0A0A0;
 }
+
 .carpooling-theme .card.card-chat.card-chat-my-extra .item-divider {
     text-align: right;
     font-size: small;
     color: #A0A0A0;
 }
+
 
 /* Form components */
 
@@ -147,25 +173,31 @@
     background-color: #4EB0E6;
     color: #FFFFFF;
 }
+
 .carpooling-theme .button.button-icon.icon {
     color: #4EB0E6;
 }
+
 .carpooling-theme .toggle input:checked + .track {
     background-color: #4EB0E6;
     border-color: #4EB0E6;
 }
+
 .carpooling-theme .toggle-small input:checked + .track {
     background-color: rgba(78, 176, 230, 0.5);
     border-color: rgba(78, 176, 230, 0.5);
 }
+
 .carpooling-theme .toggle-small input:checked + .track .handle {
     background: #4EB0E6;
 }
+
 .carpooling-theme .checkbox input:checked:before,
 .carpooling-theme .checkbox input:checked + .checkbox-icon:before {
     border-color: #4EB0E6;
     background-color: #4EB0E6;
 }
+
 
 /* Others */
 
@@ -176,21 +208,26 @@
     border: 0;
     z-index: initial;
 }
+
 .carpooling-theme .list .item-checkbox {
     border: 0;
     padding-top: 15px;
     padding-bottom: 15px;
 }
+
 .carpooling-theme .chat-wrapper {
     margin: 30px 10px 50px 10px;
     overflow: auto;
 }
+
 .carpooling-theme .list .item-checkbox p {
     font-size: small;
 }
+
 .carpooling-theme .list .item-input input[type='text'] {
     border-bottom: 1px solid #ddd;
 }
+
 .carpooling-theme .input-chat {
     padding-right: 10px;
     border: 0;
@@ -200,10 +237,12 @@
     min-height: 60px;
     background-color: #fff;
 }
+
 .carpooling-theme .input-chat input[type='text'] {
     border-bottom: 1px solid #ddd;
     padding: 10px;
 }
+
 .carpooling-theme .input-chat button {
     padding: 0 0 0 0;
     min-height: 50px;
@@ -211,18 +250,22 @@
     margin-left: 5px;
 }
 
+
 /* Community infos */
 
 .carpooling-theme .info h5 {
     color: #3448A5;
 }
+
 .carpooling-theme .info span {
     color: lightgray;
 }
+
 .carpooling-theme .info #auto {
     color: #3448A5;
     font-size: 2em;
 }
+
 
 /* Custom */
 
@@ -231,6 +274,7 @@
     padding: 0;
     text-align: center;
 }
+
 .popup-offri-dow label.item-checkbox .checkbox {
     position: relative;
     top: auto;
@@ -239,68 +283,85 @@
     margin-top: auto;
     padding-bottom: 0;
 }
+
 .item-autocomplete {
     overflow: visible;
 }
+
 .item-autocomplete:first-child {
     z-index: 99;
 }
+
 .item-autocomplete:last-child {
     z-index: 98;
 }
+
 placeautocomplete {
     width: 100%;
 }
+
 placeautocomplete ul {
     position: absolute;
     background-color: rgba(255, 255, 255, 0.8);
     z-index: 100;
 }
+
 .card.card-trip,
 .card.card-community {
     position: relative;
 }
+
 .card.card-trip:first-child,
 .card.card-community:first-child {
     margin-top: 10px;
 }
+
 .card.card-trip .row,
 .card.card-community .row {
     padding-top: 0;
     padding-bottom: 0;
 }
+
 .card.card-trip .trip-data {
     position: relative;
     padding: 0.5em 1em 0.5em 0;
 }
+
 .card.card-trip .trip-data ul li {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
 .card.card-trip .trip-data ul li span {
     color: #000000;
 }
+
 .card.card-trip .trip-data .trip-data-requested {
     color: #4EB0E6;
 }
+
 .card.card-trip .trip-data .trip-data-rejected {
     color: #FF0000;
 }
+
 .card.card-trip .trip-counter {
     margin: auto;
     text-align: center;
 }
+
 .card.card-trip .trip-counter .trip-counter-num {
     line-height: 1em;
     font-size: 3em;
     color: #3448A5;
 }
+
 .card.card-trip .trip-counter .trip-counter-text {
     line-height: 1;
     font-size: smaller;
     overflow: hidden;
     white-space: normal;
 }
+
 .card.card-trip .trip-flag {
     position: absolute;
     top: 0;
@@ -309,35 +370,45 @@ placeautocomplete ul {
     border-width: 0 1.5em 1.5em 0;
     border-color: #AAAAAA #AAAAAA transparent transparent;
 }
+
 .card.card-community .item {
     padding: 10px;
 }
+
 .card.card-community .item .name {
     color: #FFFFFF;
     font-size: 1.5em;
 }
+
 .card.card-community .item ul li {
     padding-top: 10px;
 }
+
 .card.card-community .item ul li span.lbl {
     color: #000000;
 }
+
 .card.card-community .item ul li:first-child {
     padding-top: 0;
 }
+
 .card.card-community .item ul li.community-numbers {
     color: #3448A5;
     font-size: 2em;
 }
+
 .card.card-community .item ul li.community-numbers .col {
     text-align: center;
 }
+
 .card.card-community .item ul li.community-numbers .col:first-child {
     text-align: left;
 }
+
 .card.card-community .item ul li.community-numbers .col:last-child {
     text-align: right;
 }
+
 
 /* Other */
 
@@ -345,20 +416,11 @@ placeautocomplete ul {
     width: 100%;
     height: 100%;
 }
+
 #modal-map-container {
     height: 100%!important;
 }
 
-/* USERINFO  */
-
-.user-profile .user-data {
-    text-align: center;
-    border-bottom: 1px solid #A0A0A0;
-}
-.user-profile .user-image i {
-    font-size: 10em;
-}
-.user-profile .user-options {}
 
 /* USERINFO  */
 
@@ -366,58 +428,90 @@ placeautocomplete ul {
     text-align: center;
     border-bottom: 1px solid #A0A0A0;
 }
+
 .user-profile .user-image i {
     font-size: 10em;
 }
+
 .user-profile .user-options {}
 
+
+/* USERINFO  */
+
+.user-profile .user-data {
+    text-align: center;
+    border-bottom: 1px solid #A0A0A0;
+}
+
+.user-profile .user-image i {
+    font-size: 10em;
+}
+
+.user-profile .user-options {}
 
 
 /* Stats*/
-.chart{
-  margin:0;
-  padding:0;
-  background: white;
-/*  border:1px solid #999;*/
-  overflow:hidden;
-  height:100px;
-  width:400px;
-  list-style:none;
-  position:relative;
-    border-top-left-radius, border-top-right-radius:25px;
-}
-.chart li{
-  height:100px;
-  list-style:none;
-  margin:10px;
-  padding:0;
-  float:left;
-  width:75px;
-  background:#c5cae9;
-    color: #3f51b5;
-  border-top:1px solid white;
 
-border-top-left-radius: 10px;
-    border-top-right-radius: 10px; /* future proofing */
+.chart {
+    margin: 0;
+    padding: 0;
+    background: white;
+    /*  border:1px solid #999;*/
+    overflow: hidden;
+    height: 100px;
+    width: 400px;
+    list-style: none;
+    position: relative;
+    border-top-left-radius,
+    border-top-right-radius: 25px;
 }
-.value{
-  position:absolute;
-        text-align: center;
+
+.chart li {
+    height: 100px;
+    list-style: none;
+    margin: 10px;
+    padding: 0;
+    float: left;
     width: 75px;
-    bottom:20px;
+    background: #c5cae9;
+    color: #3f51b5;
+    border-top: 1px solid white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    /* future proofing */
 }
-.string{
+
+.value {
+    position: absolute;
+    text-align: center;
+    width: 75px;
+    bottom: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.string {
     margin: 10px;
     text-align: center;
-   width:75px;
+    width: 75px;
     display: inline-block;
-/*
+    /*
   position:absolute;
     top:85px;
 */
 }
 
-    .rating-avg {margin: 0 auto; width:400px}
+.rating-avg {
+    margin: 0 auto;
+    width: 400px;
+}
+
+.rating-avg-star {
+    margin: 0 auto;
+    width: 400px;
+    font-size: xx-large;
+    color: #3f51b5;
+}
 
 
 /* VIAGGIO */
@@ -425,31 +519,39 @@ border-top-left-radius: 10px;
 .carpooling-theme .trip-info {
     color: gray;
 }
+
 .carpooling-theme .trip-info span {
     color: #000000;
 }
+
 .carpooling-theme .trip-passengers h5 {
     color: #3448A5;
 }
+
 .carpooling-theme .trip-requests h5 {
     color: #3448A5;
     text-align: center;
 }
+
 .carpooling-theme .trip-passengers ul {
     font-size: 3em;
     text-align: center;
 }
+
 .carpooling-theme .trip-passengers ul li {
     display: inline-block;
     color: #000000;
     text-align: center;
 }
+
 .carpooling-theme .trip-passengers ul li.trip-places-booked {
     margin-right: 0.2em;
 }
+
 .carpooling-theme .trip-passengers ul li.trip-places-booked:last-child {
     margin-right: 0;
 }
+
 .carpooling-theme .trip-passengers ul li.trip-places-left {
     width: 2.5em;
     height: 2.5em;
@@ -458,68 +560,83 @@ border-top-left-radius: 10px;
     border-radius: 50%;
     color: #3448A5;
 }
+
 .carpooling-theme .trip-passengers ul li.trip-places-left span {
     line-height: 1.5em;
 }
+
 .carpooling-theme .trip-passengers ul li.trip-places-left div {
     font-size: 0.5em;
     line-height: 1em;
     margin: 0;
 }
+
 .carpooling-theme .trip-status {
     text-align: center;
     color: #4EB0E6;
     font-weight: bold;
     font-size: larger;
 }
+
 .carpooling-theme .trip-status .rejected {
     color: #FF0000;
 }
+
 .carpooling-theme .trip-status .accepted {
     color: #00FF00;
 }
+
 .carpooling-theme .trip-actions {
     text-align: center;
 }
+
 .carpooling-theme .trip-actions button {
     font-size: 0.8em;
     font-weight: bold;
     line-height: 1em;
 }
+
 .carpooling-theme .trip-requests {
     margin-top: 1em;
 }
+
 .carpooling-theme .trip-requests .list .item {
     border: 0;
 }
+
 .carpooling-theme .trip-requests .list .item-button-right > .button {
     right: 70.5px;
 }
+
 .carpooling-theme .trip-requests .list .item-button-right > .button:last-child {
     right: 16px;
 }
+
 #trip-map-container {
     height: 100%!important;
 }
+
 
 /* Components */
 
 .carpooling-theme .components .item {
     color: #000000;
 }
+
 .carpooling-theme .components .item span i {
     font-size: 2em;
 }
+
 .carpooling-theme .components h5 {
     color: #3448A5;
     padding-left: 1.5em;
 }
 
+
 /* Trips */
 
-.carpooling-theme .trips h5{
+.carpooling-theme .trips h5 {
     color: #3448A5 !important;
     text-align: center;
     padding-top: 2em;
 }
-
