@@ -50,11 +50,12 @@ angular.module('carpooling.controllers.notifications', [])
         UserSrv.readNotifications($scope.start, $scope.all).then(function (notifics) {
             var notifications = [];
             notifications = notifics ? notifics : [];
+            notifications = correctNotificsShortText(notifications);
+            for (var i = 0; i < notifications.length; i++) {
+                $scope.notifications.push(notifications[i]);
+            }
+
             if (notifics.length >= $scope.all) {
-                notifications = correctNotificsShortText(notifications);
-                for (var i = 0; i < notifications.length; i++) {
-                    $scope.notifications.push(notifications[i]);
-                }
                 $scope.$broadcast('scroll.infiniteScrollComplete');
                 $scope.start += 1;
                 $scope.end_reached = false;
@@ -145,10 +146,11 @@ angular.module('carpooling.controllers.notifications', [])
     //    ];
 
     $scope.showNotification = function (notific) {
+        $scope.markANotification(notific.id);
+
         switch (notific.type) {
             case 'Chat':
                 // messages - to chat
-                $scope.markANotification(notific.id);
                 //$scope.deleteANotification(notific.id);
                 $state.go('app.chat', {
                     travelId: notific.travelId,

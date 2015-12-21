@@ -122,7 +122,7 @@ angular.module('carpooling.services.passenger', [])
         var deferred = $q.defer();
 
         if (!!travelRequestId) {
-            deferred.reject('Invalid tripId');
+            deferred.reject('Invalid travelRequestId');
         } else {
             // /api/delete/tripRequest/{travelRequestId}
             $http.delete(Config.getServerURL() + '/api/delete/tripRequest/' + travelRequestId, Config.getHTTPConfig())
