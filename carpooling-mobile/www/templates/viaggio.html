@@ -68,14 +68,14 @@
         </div>
 
         <div class="padding row trip-actions" ng-if="!isMine">
-            <div class="col">
-                <button class="button button-carpooling">
-                    {{'lbl_driver_contact' | translate | uppercase}}
-                </button>
-            </div>
             <div class="col" ng-if="bookingState === null">
                 <button class="button button-carpooling" ng-click="bookingAction()">
                     <span>{{'lbl_trip_ask' | translate | uppercase}}</span>
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-carpooling" ng-click="chatWithDriver()">
+                    {{'lbl_driver_contact' | translate | uppercase}}
                 </button>
             </div>
         </div>
