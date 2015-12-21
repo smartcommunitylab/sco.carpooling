@@ -147,7 +147,6 @@ angular.module('carpooling.controllers.notifications', [])
 
     $scope.showNotification = function (notific) {
         $scope.markANotification(notific.id);
-
         switch (notific.type) {
             case 'Chat':
                 // messages - to chat
@@ -185,6 +184,7 @@ angular.module('carpooling.controllers.notifications', [])
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     $scope.messages = [];
     $scope.id = StorageSrv.getUserId();
+    $scope.oldMsgPresent = false;
 
     var init = function () {
         $scope.personId = $stateParams.personId;
@@ -193,6 +193,9 @@ angular.module('carpooling.controllers.notifications', [])
         Utils.loading();
         UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.messages = discussion.messages ? discussion.messages : [];
+            if($scope.messages.length > 10){
+                $scope.oldMsgPresent = true;
+            }
             $scope.personName = discussion.personName;
             viewScroll.scrollBottom();
             Utils.loaded();

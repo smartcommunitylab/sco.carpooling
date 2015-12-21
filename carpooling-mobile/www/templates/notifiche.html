@@ -13,7 +13,7 @@
             <!-- <ion-list> -->
             <div class="card card-notif" ng-class="{'unread': !notific.status}" ng-repeat="notific in notifications" ng-click="showNotification(notific)">
                 <div class="item item-divider">
-                    {{ notific.timestamp | date:'dd MMMM yyyy - hh:mm' }}
+                    {{ notific.timestamp | date:'dd MMMM yyyy - HH:mm' }}
                 </div>
                 <div class="item item-icon-left">
                     <i class="icon {{ notificationType[notific.type].image }}"></i>

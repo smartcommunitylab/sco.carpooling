@@ -1,6 +1,6 @@
 <ion-view title="{{'menu_chat' | translate}}">
     <ion-content delegate-handle="userMessageScroll" overflow-scroll="true"><!-- ng-init="loadAllMsg()" -->
-        <button class="button button-full button-light" ng-click="loadOldChat()">
+        <button ng-if="oldMsgPresent" class="button button-full button-light" ng-click="loadOldChat()">
             {{'lbl_old_chat' | translate}}
         </button>
         <div class="chat-wrapper">
