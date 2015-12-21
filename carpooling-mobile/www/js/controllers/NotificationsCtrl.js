@@ -1,6 +1,7 @@
 angular.module('carpooling.controllers.notifications', [])
 
 .controller('NotificationsCtrl', function ($scope, $filter, $state, $timeout, Utils, UserSrv, $ionicScrollDelegate) {
+    $scope.dateTimeMask = 'dd MMMM yyyy - HH:mm';
 
     $scope.notificationType = {
         Chat: {
@@ -211,10 +212,10 @@ angular.module('carpooling.controllers.notifications', [])
         UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
             old_msg = discussion.messages ? discussion.messages : [];
             var last_msg = $scope.messages[0];
-            var pos = "" + last_msg.timestamp;
+            var pos = '' + last_msg.timestamp;
             for (var i = old_msg.length - 1; i >= 0; i--) {
                 // --- for test, to be removed ---
-                old_msg[i].message = "old " + old_msg[i].message;
+                old_msg[i].message = 'old ' + old_msg[i].message;
                 old_msg[i].timestamp = old_msg[i].timestamp + (1000 * 60 * 60 * 24);
                 // -------------------------------
                 $scope.messages.splice(0, 0, old_msg[i]);
@@ -225,7 +226,7 @@ angular.module('carpooling.controllers.notifications', [])
             }, 500);
             Utils.loaded();
             //var y_pos = viewScroll.getScrollPosition();
-            //alert("position " + JSON.stringify(y_pos));
+            //alert('position ' + JSON.stringify(y_pos));
             //viewScroll.scrollTo(0, y_pos.top, false);
         }, function (err) {
             Utils.loaded();
@@ -312,7 +313,7 @@ angular.module('carpooling.controllers.notifications', [])
     };
 
     $scope.sendMessage = function (value) {
-        if (value != null && value != "") {
+        if (value != null && value != '') {
             var now = new Date();
             var msg_timestamp = now.getTime();
             var new_m = {
