@@ -68,14 +68,14 @@
         </div>
 
         <div class="padding row trip-actions" ng-if="!isMine">
-            <div class="col">
-                <button class="button button-carpooling">
-                    {{'lbl_driver_contact' | translate | uppercase}}
-                </button>
-            </div>
             <div class="col" ng-if="bookingState === null">
                 <button class="button button-carpooling" ng-click="bookingAction()">
                     <span>{{'lbl_trip_ask' | translate | uppercase}}</span>
+                </button>
+            </div>
+            <div class="col">
+                <button class="button button-carpooling" ng-click="chatWithDriver()">
+                    {{'lbl_driver_contact' | translate | uppercase}}
                 </button>
             </div>
         </div>
@@ -84,8 +84,8 @@
         <div class="trip-requests" ng-if="isMine && !!selectedTrip.bookings && selectedTrip.bookings.length > 0">
             <h5>{{'lbl_requests' | translate}}</h5>
             <!--<div class="list">-->
-            <div class="list" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted !== -1">
-                <a class="item item-button-right">
+            <div class="list">
+                <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted !== -1">
                     <!--<i class="icon ion-person"></i>-->
                     <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
                     <!--Name Surname-->

@@ -6,6 +6,7 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.driverInfo = {};
 
     $scope.selectedTrip = {};
+    $scope.travelId = null;
     $scope.bookingCounters = {};
 
     // -1 rejected, 0 requested, 1 accepted
@@ -133,8 +134,10 @@ angular.module('carpooling.controllers.viaggio', [])
                 }
             );
         } else if (booking.accepted === 1) {
-            // TODO go to chat
-            console.log('go to chat');
+            $state.go('app.chat', {
+                travelId: $scope.travelId,
+                personId: booking.traveller.userId
+            });
         }
     };
 
@@ -173,27 +176,26 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.bookingAction = function () {
         if ($scope.bookingState === null) {
             $scope.book();
-        } else if ($scope.bookingState === -1) {
-            // TODO rejected
-            console.log('rejected');
         } else if ($scope.bookingState === 0) {
-            // TODO requested
-            console.log('requested');
-        } else if ($scope.bookingState === 1) {
-            // TODO accepted
-            console.log('accepted');
+            // FUTURE the passenger can cancel the travelRequest
         }
     };
 
+    $scope.chatWithDriver = function () {
+        $state.go('app.chat', {
+            travelId: $scope.travelId,
+            personId: $scope.selectedTrip.userId
+        });
+    };
+
+    /*
+     * Map stuff
+     */
     $scope.initMap = function () {
         MapSrv.initMap('tripMap').then(function () {
             //add polyline
-
-        })
-    }
-
-
-
+        });
+    };
 
     angular.extend($scope, {
         center: {

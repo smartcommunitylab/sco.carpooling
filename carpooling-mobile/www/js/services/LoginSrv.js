@@ -3,6 +3,8 @@ angular.module('carpooling.services.login', [])
 .factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, UserSrv, Config) {
     var loginService = {};
 
+    var authWindow = null;
+
     loginService.userIsLogged = function () {
         return (StorageSrv.getUserId() != null && StorageSrv.getUser() != null);
     };
@@ -15,10 +17,15 @@ angular.module('carpooling.services.login', [])
             authorize: function (url) {
                 var deferred = $q.defer();
 
+                var processThat = false;
+
                 //Build the OAuth consent page URL
                 var authUrl = Config.getServerURL() + '/userlogin';
                 //Open the OAuth consent page in the InAppBrowser
-                var authWindow = window.open(authUrl, '_blank', 'location=no,toolbar=no');
+                if (!authWindow) {
+                    authWindow = window.open(authUrl, '_blank', 'location=no,toolbar=no');
+                    processThat = !!authWindow;
+                }
 
                 var processURL = function (url, deferred, w) {
                     var success = /userloginsuccess\?profile=(.+)$/.exec(url);
@@ -26,6 +33,7 @@ angular.module('carpooling.services.login', [])
                     if (w && (success || error)) {
                         //Always close the browser when match is found
                         w.close();
+                        authWindow = null;
                     }
 
                     if (success) {
@@ -44,11 +52,13 @@ angular.module('carpooling.services.login', [])
                 }
 
                 if (ionic.Platform.isWebView()) {
-                    authWindow.addEventListener('loadstart', function (e) {
-                        //console.log(e);
-                        var url = e.url;
-                        processURL(url, deferred, authWindow);
-                    });
+                    if (processThat) {
+                        authWindow.addEventListener('loadstart', function (e) {
+                            //console.log(e);
+                            var url = e.url;
+                            processURL(url, deferred, authWindow);
+                        });
+                    }
                 } else {
                     angular.element($window).bind('message', function (event) {
                         $rootScope.$apply(function () {
