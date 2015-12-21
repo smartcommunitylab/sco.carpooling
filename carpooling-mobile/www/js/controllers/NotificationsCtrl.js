@@ -46,28 +46,29 @@ angular.module('carpooling.controllers.notifications', [])
     $scope.all = 10;
     $scope.end_reached = false;
 
-    $scope.loadMoreNotifications = function(){
-        UserSrv.readNotifications($scope.start, $scope.all).then(function(notifics) {
+    $scope.loadMoreNotifications = function () {
+        UserSrv.readNotifications($scope.start, $scope.all).then(function (notifics) {
             var notifications = [];
             notifications = notifics ? notifics : [];
-            if(notifics.length >= $scope.all){
-                notifications = correctNotificsShortText(notifications);
-                for (var i = 0; i < notifications.length; i++) {
-                    $scope.notifications.push(notifications[i]);
-                }
+            notifications = correctNotificsShortText(notifications);
+            for (var i = 0; i < notifications.length; i++) {
+                $scope.notifications.push(notifications[i]);
+            }
+
+            if (notifics.length >= $scope.all) {
                 $scope.$broadcast('scroll.infiniteScrollComplete');
-                $scope.start+=1;
+                $scope.start += 1;
                 $scope.end_reached = false;
             } else {
                 $scope.end_reached = true;
             }
-        }, function(err) {
-            // TODO
+        }, function (err) {
+            console.error(err);
             $scope.$broadcast('scroll.infiniteScrollComplete');
         });
     };
 
-    $scope.canWeLoadMoreNotifics = function(){
+    $scope.canWeLoadMoreNotifics = function () {
         return !$scope.end_reached;
     };
 
@@ -79,23 +80,25 @@ angular.module('carpooling.controllers.notifications', [])
     };
 
     $scope.markANotification = function (id) {
-        UserSrv.markNotification(id).then(function () {
-            // TODO
-            //console.log("notific marked " + id);
-        }, function(err) {
-            // TODO
-            Utils.loaded();
-        });
+        UserSrv.markNotification(id).then(
+            function () {},
+            function (err) {
+                Utils.loaded();
+                Utils.toast();
+            }
+        );
     };
 
     $scope.deleteANotification = function (id) {
-        UserSrv.deleteNotification(id).then(function () {
-            // TODO
-            //console.log("notific deleted " + id);
-        }, function(err) {
-            // TODO
-            Utils.loaded();
-        });
+        UserSrv.deleteNotification(id).then(
+            function () {
+                Utils.toast(($filter('translate')('toast_notification_deleted')));
+            },
+            function (err) {
+                Utils.loaded();
+                Utils.toast();
+            }
+        );
     };
 
     //    var notifications = [
@@ -143,10 +146,11 @@ angular.module('carpooling.controllers.notifications', [])
     //    ];
 
     $scope.showNotification = function (notific) {
+        $scope.markANotification(notific.id);
+
         switch (notific.type) {
             case 'Chat':
                 // messages - to chat
-                $scope.markANotification(notific.id);
                 //$scope.deleteANotification(notific.id);
                 $state.go('app.chat', {
                     travelId: notific.travelId,
@@ -194,10 +198,11 @@ angular.module('carpooling.controllers.notifications', [])
             Utils.loaded();
         }, function (err) {
             Utils.loaded();
-            // TODO: handle getDiscussion error
+            console.error(err);
+            Utils.toast();
         });
-
     };
+
     init();
 
     $scope.loadOldChat = function () {
@@ -210,7 +215,7 @@ angular.module('carpooling.controllers.notifications', [])
             for (var i = old_msg.length - 1; i >= 0; i--) {
                 // --- for test, to be removed ---
                 old_msg[i].message = "old " + old_msg[i].message;
-                old_msg[i].timestamp = old_msg[i].timestamp + (1000*60*60*24);
+                old_msg[i].timestamp = old_msg[i].timestamp + (1000 * 60 * 60 * 24);
                 // -------------------------------
                 $scope.messages.splice(0, 0, old_msg[i]);
             }
@@ -224,7 +229,7 @@ angular.module('carpooling.controllers.notifications', [])
             //viewScroll.scrollTo(0, y_pos.top, false);
         }, function (err) {
             Utils.loaded();
-            // TODO: handle getDiscussion error
+            Utils.toast();
         });
     };
 
@@ -273,9 +278,9 @@ angular.module('carpooling.controllers.notifications', [])
     //        }
     //    ];
 
-/*    $scope.loadAllMsg = function () {
-        viewScroll.scrollBottom();
-    };*/
+    /*    $scope.loadAllMsg = function () {
+            viewScroll.scrollBottom();
+        };*/
 
     $scope.isMe = function (id) {
         return id == $scope.id;
@@ -324,7 +329,7 @@ angular.module('carpooling.controllers.notifications', [])
                 },
                 function (err) {
                     Utils.loaded();
-                    // TODO: handle sendMessage error
+                    Utils.toast();
                 }
             );
         }

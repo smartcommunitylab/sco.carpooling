@@ -143,6 +143,23 @@ angular.module('carpooling.controllers.user', [])
 })
 
 .controller('UserStatsCtrl', function ($scope, $rootScope, DriverSrv, PassengerSrv, Utils, StorageSrv) {
+    $scope.drivertripsheight = "";
+    $scope.passengertripsheight = "";
+    $scope.ratingOffer = 0;
+    $scope.ratingAccepted = 0;
+    var calculateHeight = function (driver, passenger) {
+        maxValue = Math.max(driver, passenger);
+        minValue = Math.min(driver, passenger);
+        maxHeight = 100;
+        minHight = (100 * minValue) / maxValue;
+        if (driver == maxValue) {
+            $scope.drivertripsheight = 100 - maxHeight + 'px';
+            $scope.passengertripsheight = 100 - minHight + 'px';
+        } else {
+            $scope.passengertripsheight = 100 - maxHeight + 'px';
+            $scope.drivertripsheight = 100 - minHight + 'px';
+        }
+    }
     var getStars = function (vote) {
         var stars = [];
 
@@ -156,7 +173,7 @@ angular.module('carpooling.controllers.user', [])
             stars.push('half');
         }
 
-        var emptyStars = 5 - vote;
+        var emptyStars = 4 - vote;
         for (var i = 0; i < emptyStars; i++) {
             stars.push('empty');
         }
@@ -175,10 +192,10 @@ angular.module('carpooling.controllers.user', [])
         $scope.totalDriverTrips = driverTrips.length;
         PassengerSrv.getPassengerTrips().then(function (passengerTrips) {
             $scope.totalPassengerTrips = passengerTrips.length;
+            calculateHeight($scope.totalDriverTrips, $scope.totalPassengerTrips);
             Utils.loaded();
         });
     });
 
-    $scope.ratingOffer = 4;
-    $scope.ratingAccepted = 4.5;
+
 });

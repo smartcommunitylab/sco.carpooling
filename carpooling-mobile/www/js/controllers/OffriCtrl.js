@@ -380,8 +380,7 @@ angular.module('carpooling.controllers.offri', [])
                 },
                 function (error) {
                     Utils.loaded();
-                    // TODO: handle createTrip error
-                    console.log(error);
+                    Utils.toast();
                 }
             );
         } else {

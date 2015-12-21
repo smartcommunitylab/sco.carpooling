@@ -253,8 +253,6 @@ angular.module('carpooling.controllers.cercaviaggi', [])
             },
             function (error) {
                 Utils.loaded();
-                // TODO: handle searchTrip error
-                //console.log(error);
                 Utils.toast();
             }
         );

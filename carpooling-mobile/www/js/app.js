@@ -32,7 +32,7 @@ angular.module('carpooling', [
     var isIOS = ionic.Platform.isIOS();
     var isAndroid = ionic.Platform.isAndroid();
 
-    $rootScope.manageLocalNotification = function(local_notification){
+    $rootScope.manageLocalNotification = function(local_notification) {
         if (local_notification.alert) {
             if (cordova && cordova.plugins && cordova.plugins.notification) {
                 try {
@@ -49,13 +49,13 @@ angular.module('carpooling', [
                         //sound: "file://sounds/reminder.mp3",
                         //icon: "http://icons.com/?cal_id=1",
                         data: {
-                           id: local_notification.push_hash
+                            id: local_notification.push_hash
                         }
                     }
                     if (notific) {
-                       cordova.plugins.notification.local.schedule(notific);
+                        cordova.plugins.notification.local.schedule(notific);
                     }
-                } catch (ex){}
+                } catch (ex) {}
             }
             //alert('Reveived notification:' + JSON.stringify(pn));
         }
@@ -478,6 +478,8 @@ angular.module('carpooling', [
         lbl_requests: 'Richeste di partecipazione',
         lbl_todaytrips: 'Viaggi di oggi',
         lbl_components: 'Componenti',
+        lbl_rating_pass_avg: 'Voto medio viaggi accettati',
+        lbl_rating_driver_avg: 'Voto medio viaggi offerti ',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         title_setrecurrency: 'Imposta ricorrenza',
@@ -525,7 +527,8 @@ angular.module('carpooling', [
         toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
         toast_trip_offered: 'Il tuo viaggio è stato offerto',
         toast_booking_accepted: 'La prenotazione è stata accettata',
-        toast_booking_rejected: 'La prenotazione è stata rifiutata'
+        toast_booking_rejected: 'La prenotazione è stata rifiutata',
+        toast_notification_deleted: 'La notifica è stata cancellata'
     });
 
     $translateProvider.preferredLanguage('it');
