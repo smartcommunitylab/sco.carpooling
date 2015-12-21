@@ -28,6 +28,10 @@ angular.module('carpooling', [
 ])
 
 .run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
+
+    var isIOS = ionic.Platform.isIOS();
+    var isAndroid = ionic.Platform.isAndroid();
+
     $rootScope.manageLocalNotification = function(local_notification){
         if (local_notification.alert) {
             if (cordova && cordova.plugins && cordova.plugins.notification) {
@@ -60,33 +64,46 @@ angular.module('carpooling', [
     $rootScope.pushRegistration = function (userId) {
         var channel = 'CarPooling_' + userId;
         try {
-           if (window.ParsePushPlugin) {
-               window.ParsePushPlugin.subscribe(channel, function () {
-                   //console.log("Succes in channel " + channel + " creation");
-               });
-               window.ParsePushPlugin.on('openPN', function(pn){
-                   if(pn != null && pn.urlHash != null){
-                       window.location.hash = hash;
-                   }
-               });
-               window.ParsePushPlugin.on('receivePN', function (pn) {
-                   $rootScope.manageLocalNotification(pn);
-               });
-               //
-               //you can also listen to your own custom subevents
-               //
-               //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
-               //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
-           }
-           /*window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
-           window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
-               var channel = 'CarPooling_' + userId;
-               window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
-               //console.log('successfully created channel ' + channel);
-           };*/
-       } catch (ex) {
-           console.log('Exception in parsepush registration ' + ex.message);
-       }
+            if (isAndroid) {
+                if (window.ParsePushPlugin) {
+                    window.ParsePushPlugin.subscribe(channel, function () {
+                        //console.log("Succes in channel " + channel + " creation");
+                    });
+                    window.ParsePushPlugin.on('openPN', function (pn) {
+                        if (pn != null && pn.urlHash != null) {
+                            window.location.hash = hash;
+                        }
+                    });
+                    window.ParsePushPlugin.on('receivePN', function (pn) {
+                        $rootScope.manageLocalNotification(pn);
+                    });
+                    //
+                    //you can also listen to your own custom subevents
+                    //
+                    //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
+                    //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
+                }
+            } else if (isIOS) {
+                //window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
+                //window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
+                //var channel = 'CarPooling_' + userId;
+                //    window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
+                //    //console.log('successfully created channel ' + channel);
+                //};
+                if (window.ParsePushPlugin) {
+                    windows.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function() {
+                        window.ParsePushPlugin.subscribe(channel, function () {
+                            //console.log("Succes in channel " + channel + " creation");
+                        });
+                    }, function(e) {
+                       console.log("Error in parse initialize");
+                    });
+
+                }
+            }
+        } catch (ex) {
+            //console.log('Exception in parsepush registration ' + ex.message);
+        }
     };
 
     $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
