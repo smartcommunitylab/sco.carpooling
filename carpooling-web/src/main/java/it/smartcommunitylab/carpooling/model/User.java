@@ -137,6 +137,7 @@ public class User {
 			if (res.length() > 0) res += " "; 
 			res += surname.trim();
 		}
+		if (StringUtils.isEmpty(res)) return "Anonymous"+userId;
 		return res;
 	}
 

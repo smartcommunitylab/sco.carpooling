@@ -92,26 +92,17 @@ public class SendPushNotification {
 			return  n.getData().get("status").equals("true") ?  "Viaggio confermato": "Viaggio rifiutato";
 		}
 		if (CarPoolingUtils.NOTIFICATION_CHAT.equals(n.getType())) {
-			return  "Nuovo messaggio da "+getName(n.getData().get("senderFullName"), n.getData().get("senderId"));
+			return  "Nuovo messaggio da "+ n.getData().get("senderFullName");
 		}
 		if (CarPoolingUtils.NOTIFICATION_AVALIABILITY.equals(n.getType())) {
 			return  "Trovato un viaggio";
 		}
 		if (CarPoolingUtils.NOTIFICATION_BOOKING.equals(n.getType())) {
-			return getName(n.getData().get("senderFullName"), n.getData().get("senderId")) + " chiede di partecipare al tuo viaggio";
+			return n.getData().get("senderFullName") + " chiede di partecipare al tuo viaggio";
 		}
 		return null;
 	}
 
-	/**
-	 * @param string
-	 * @param string2
-	 * @return
-	 */
-	private String getName(String name, String id) {
-		if (name != null) return name;
-		return "Anonymous"+id;
-	}
 
 }
 
