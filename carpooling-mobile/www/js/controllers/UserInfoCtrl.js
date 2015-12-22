@@ -161,6 +161,10 @@ angular.module('carpooling.controllers.user', [])
         }
     }
     var getStars = function (vote) {
+        if (!vote) {
+            vote = 0;
+        }
+
         var stars = [];
 
         var fullStars = Math.floor(vote);
@@ -173,11 +177,10 @@ angular.module('carpooling.controllers.user', [])
             stars.push('half');
         }
 
-        var emptyStars = 4 - vote;
+        var emptyStars = 5 - vote;
         for (var i = 0; i < emptyStars; i++) {
             stars.push('empty');
         }
-
 
         return stars;
     };
