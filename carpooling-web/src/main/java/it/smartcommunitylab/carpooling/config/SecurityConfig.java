@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		 TokenBasedRememberMeServices service = new TokenBasedRememberMeServices(env.getProperty("rememberme.key"), userDetailsServiceImpl);
 		 service.setAlwaysRemember(true);
 		 service.setCookieName("rememberme");
-		 service.setTokenValiditySeconds(3600*24*365*100);
+		 service.setTokenValiditySeconds(3600*24*365*1);
 		 return service;
 	}
 	@Bean
