@@ -3,6 +3,8 @@ angular.module('carpooling.controllers.viaggio', [])
 .controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
+
+    $scope.isMine = null;
     $scope.driverInfo = {};
 
     $scope.selectedTrip = {};
@@ -79,6 +81,7 @@ angular.module('carpooling.controllers.viaggio', [])
                 }
             );
         } else {
+            $scope.initMap();
             Utils.loaded();
         }
     };
@@ -192,9 +195,11 @@ angular.module('carpooling.controllers.viaggio', [])
      * Map stuff
      */
     $scope.initMap = function () {
-        MapSrv.initMap('tripMap').then(function () {
-            //add polyline
-        });
+        if ($scope.isMine === false) {
+            MapSrv.initMap('tripMap').then(function () {
+                //add polyline
+            });
+        }
     };
 
     angular.extend($scope, {
