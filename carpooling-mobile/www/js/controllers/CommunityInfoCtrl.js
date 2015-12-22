@@ -9,6 +9,9 @@ angular.module('carpooling.controllers.communityinfo', [])
         UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
             function (todayCommunities) {
                 $scope.communityList = todayCommunities;
+                $scope.communityList.forEach(function (travel) {
+                    travel.bookingCounters = Utils.getBookingCounters(travel);
+                });
                 Utils.loaded();
             },
             function (error) {
@@ -46,12 +49,6 @@ angular.module('carpooling.controllers.communityinfo', [])
 })
 
 .controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams, Utils, UserSrv) {
-    if (!!$scope.communityList) {
-        $scope.communityList.forEach(function (travel) {
-            travel.bookingCounters = Utils.getBookingCounters(travel);
-        });
-    }
-
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.communityList[index].id
