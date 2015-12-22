@@ -207,4 +207,15 @@ angular.module('carpooling.controllers.viaggio', [])
         markers: {},
         pathLine: {}
     });
+
+    /* Show User */
+    $scope.showUser = function (index) {
+        console.log($scope.driverInfo);
+        console.log($scope.selectedTrip);
+        $state.go('app.profilo.userinfo', {
+            'user': $scope.driverInfo
+        });
+
+    };
+
 });
