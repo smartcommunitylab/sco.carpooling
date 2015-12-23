@@ -20,7 +20,7 @@ angular.module('carpooling.controllers.home', [])
     }
 })
 
-.controller('PartecipoCtrl', function ($scope, $state, StorageSrv, Utils, UserSrv, PassengerSrv) {
+.controller('PartecipoCtrl', function ($scope, $state, Config, StorageSrv, Utils, UserSrv, PassengerSrv) {
     $scope.travelProfile = 'empty';
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
@@ -33,7 +33,7 @@ angular.module('carpooling.controllers.home', [])
         });
     };
 
-    $scope.passengerTrips = [];
+    $scope.passengerTrips = null;
 
     var init = function () {
         Utils.loading();
@@ -57,7 +57,9 @@ angular.module('carpooling.controllers.home', [])
             },
             function (error) {
                 Utils.loaded();
-                Utils.toast();
+                if (error !== Config.LOGIN_EXPIRED) {
+                    Utils.toast();
+                }
             }
         );
     };
@@ -75,7 +77,7 @@ angular.module('carpooling.controllers.home', [])
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.driverTrips = [];
+    $scope.driverTrips = null;
 
     var init = function () {
         Utils.loading();

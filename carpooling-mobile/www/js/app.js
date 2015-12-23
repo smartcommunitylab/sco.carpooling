@@ -190,6 +190,7 @@ angular.module('carpooling', [
 
     .state('app.home.partecipo', {
         url: '/partecipo',
+        cache: false,
         views: {
             'tab-partecipo': {
                 templateUrl: 'templates/partecipo.html',

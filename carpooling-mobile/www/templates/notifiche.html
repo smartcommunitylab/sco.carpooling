@@ -5,10 +5,10 @@
     </ion-nav-buttons>
 -->
     <ion-content>
-        <div class="padding" ng-if="!notifications || notifications.length == 0">
+        <div class="padding" ng-if="!!notifications && notifications.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
-        <div class="list">
+        <div class="list" ng-if="!!notifications && notifications.length > 0">
             <!-- collection-repeat="notific in notifications" -->
             <!-- <ion-list> -->
             <div class="card card-notif" ng-class="{'unread': !notific.status}" ng-repeat="notific in notifications" ng-click="showNotification(notific)">

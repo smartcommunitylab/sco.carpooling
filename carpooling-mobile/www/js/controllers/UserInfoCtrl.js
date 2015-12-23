@@ -109,7 +109,6 @@ angular.module('carpooling.controllers.user', [])
                             $scope.user = angular.copy(StorageSrv.getUser());
                             $scope.edit.hasAuto = hasAuto($scope.user.auto);
 
-                            console.log(!!$stateParams['communityFrom']);
                             if (!!$stateParams['communityFrom']) {
                                 goToCommunityInfo(true);
                             }

@@ -8,18 +8,19 @@ angular.module('carpooling.services.driver', [])
 
         $http.get(Config.getServerURL() + '/api/driver/trips', Config.getHTTPConfig())
 
-        .success(function (data) {
-            if (data[0] == '<') {
-                deferred.reject();
-                $rootScope.login();
-            } else {
-                deferred.resolve(data.data);
+        .then(
+            function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
             }
-        })
-
-        .error(function (err) {
-            deferred.reject(err);
-        });
+        );
 
         return deferred.promise;
     };
@@ -32,18 +33,19 @@ angular.module('carpooling.services.driver', [])
         } else {
             $http.post(Config.getServerURL() + '/api/driver/trips', travel, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data.data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;
@@ -59,24 +61,25 @@ angular.module('carpooling.services.driver', [])
         } else {
             $http.post(Config.getServerURL() + '/api/driver/trips/' + tripId + '/accept', booking, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data.data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;
     };
 
-    driverService.ratePassenger = function (passengerId, rating) {
+    driverService.ratePassenger = function (passengerId, rating, booking) {
         var deferred = $q.defer();
 
         if (!passengerId) {
@@ -86,18 +89,19 @@ angular.module('carpooling.services.driver', [])
         } else {
             $http.post(Config.getServerURL() + '/api/rate/passenger/' + passengerId + '/' + rating, booking, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;

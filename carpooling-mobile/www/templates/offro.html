@@ -5,10 +5,10 @@
     </ion-nav-buttons>
 
     <ion-content>
-        <div class="padding" ng-if="!driverTrips || driverTrips.length == 0">
+        <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
-        <div class="list" ng-if="driverTrips.length > 0">
+        <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
             <div class="card card-trip" ng-repeat="trip in driverTrips" ng-click="selectTrip($index)">
                 <div class="item row">
                     <div class="col-75 trip-data">

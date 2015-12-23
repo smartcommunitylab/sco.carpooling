@@ -10,7 +10,7 @@ angular.module('carpooling.services.plan', [])
     var fromOrTo = "";
     var tripId = null;
     var getNameFromComplex = function (data) {
-        name = '';
+        var name = '';
         if (data) {
             if (data.name) {
                 name = name + data.name;
@@ -32,7 +32,7 @@ angular.module('carpooling.services.plan', [])
             }
             return name;
         }
-    }
+    };
 
     planService.setFromOrTo = function (value) {
         fromOrTo = value;

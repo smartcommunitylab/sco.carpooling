@@ -306,8 +306,6 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     ];
     */
 
-    console.log($scope.passengerTripsFound);
-
     $scope.passengerTripsFound.forEach(function (travel) {
         travel.bookingCounters = Utils.getBookingCounters(travel);
     });
