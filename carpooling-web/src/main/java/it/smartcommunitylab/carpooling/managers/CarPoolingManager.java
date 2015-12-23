@@ -164,11 +164,14 @@ public class CarPoolingManager {
 					.getTo().getRange());
 			travel.setTo(updateTo);
 			
-			for (Community community : communityRepository.findByUserId(userId)) {
-				if (!travel.getCommunityIds().contains(community.getId())) {
-					travel.getCommunityIds().add(community.getId());
+			if (travel.getCommunityIds().isEmpty()) {
+				for (Community community : communityRepository.findByUserId(userId)) {
+					if (!travel.getCommunityIds().contains(community.getId())) {
+						travel.getCommunityIds().add(community.getId());
+					}
 				}
 			}
+			
 			travelRepository.save(travel);
 
 			// loop on all trip request and check if this new travel matches any of those.
