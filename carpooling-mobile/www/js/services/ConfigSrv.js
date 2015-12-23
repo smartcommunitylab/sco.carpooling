@@ -17,6 +17,8 @@ angular.module('carpooling.services.config', [])
     var LON = 11.121270;
     var ZOOM = 15;
 
+    var LOGIN_EXPIRED = 'LOGIN_EXPIRED';
+
     return {
         getServerURL: function () {
             return SERVER_URL;
@@ -48,6 +50,7 @@ angular.module('carpooling.services.config', [])
         getClientKey: function () {
             return CLIENTKEY;
         },
+        LOGIN_EXPIRED: LOGIN_EXPIRED,
         init: function () {
             /*
             var deferred = $q.defer();

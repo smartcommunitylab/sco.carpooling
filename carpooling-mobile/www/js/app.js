@@ -32,7 +32,7 @@ angular.module('carpooling', [
     var isIOS = ionic.Platform.isIOS();
     var isAndroid = ionic.Platform.isAndroid();
 
-    $rootScope.manageLocalNotification = function(local_notification) {
+    $rootScope.manageLocalNotification = function (local_notification) {
         if (local_notification.alert) {
             if (cordova && cordova.plugins && cordova.plugins.notification) {
                 try {
@@ -164,12 +164,12 @@ angular.module('carpooling', [
                 //    //console.log('successfully created channel ' + channel);
                 //};
                 if (window.ParsePushPlugin) {
-                    windows.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function() {
+                    windows.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
                         window.ParsePushPlugin.subscribe(channel, function () {
                             //console.log("Succes in channel " + channel + " creation");
                         });
-                    }, function(e) {
-                       console.log("Error in parse initialize");
+                    }, function (e) {
+                        console.log("Error in parse initialize");
                     });
 
                 }
@@ -263,6 +263,7 @@ angular.module('carpooling', [
 
     .state('app.home.partecipo', {
         url: '/partecipo',
+        cache: false,
         views: {
             'tab-partecipo': {
                 templateUrl: 'templates/partecipo.html',
@@ -401,6 +402,9 @@ angular.module('carpooling', [
     .state('app.offri', {
         url: '/offri',
         cache: false,
+        params: {
+            'communityId': null
+        },
         views: {
             'menuContent': {
                 templateUrl: 'templates/offri.html',

@@ -443,12 +443,12 @@ placeautocomplete ul {
 .carpooling-theme .trip-info span {
     color: #000000;
 }
+.carpooling-theme .trip-requests h5 {
+    text-align: center;
+}
+.carpooling-theme .trip-requests h5,
 .carpooling-theme .trip-passengers h5 {
     color: #3448A5;
-}
-.carpooling-theme .trip-requests h5 {
-    color: #3448A5;
-    text-align: center;
 }
 .carpooling-theme .trip-passengers ul {
     font-size: 3em;
@@ -529,8 +529,8 @@ placeautocomplete ul {
 
 /* Trips */
 
-.carpooling-theme .trips h5 {
-    color: #3448A5 !important;
+.carpooling-theme .community-trips h5 {
+    color: #3448A5;
     text-align: center;
-    padding-top: 2em;
+    padding-top: 1em;
 }

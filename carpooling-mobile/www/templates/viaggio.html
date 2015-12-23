@@ -4,7 +4,7 @@
      <div id="trip-map-container" data-tap-disabled="true">
             <leaflet event-broadcast="events" center="center" markers="markers" paths="pathLine" style="width: 100%; height: 200px;" ng-init="initMap()" id="tripMap"></leaflet>
         </div>
-            <a class="button button-full" ng-if="!isMine">
+            <a class="button button-full" ng-if="!isMine" ng-click="showUser()">
                 <i class="icons ion-person"></i>
                 <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span>
             </a>

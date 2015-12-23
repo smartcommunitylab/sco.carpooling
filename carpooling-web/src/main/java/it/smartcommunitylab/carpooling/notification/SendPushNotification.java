@@ -1,6 +1,7 @@
 package it.smartcommunitylab.carpooling.notification;
 
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,9 +56,13 @@ public class SendPushNotification {
 		whereClause.put("channels", channels);
 
 		JSONObject dataClause = new JSONObject();
+		whereClause.put("channels", channels);
 		dataClause.put("cp_type", n.getType());
 		dataClause.put("cp_travelId", n.getTravelId());
-		
+
+		String title = constructTitle(n);
+		dataClause.put("alert", title);
+
 		if (n.getData() != null) {
 			for (String key : n.getData().keySet()) {
 				dataClause.put("cp_"+key, n.getData().get(key));
@@ -75,6 +81,36 @@ public class SendPushNotification {
 
 		return result;
 
+	}
+
+	/**
+	 * @param n
+	 * @return
+	 */
+	private String constructTitle(Notification n) {
+		if (CarPoolingUtils.NOTIFICATION_CONFIRM.equals(n.getType())) {
+			return  n.getData().get("status").equals("true") ?  "Viaggio confermato": "Viaggio rifiutato";
+		}
+		if (CarPoolingUtils.NOTIFICATION_CHAT.equals(n.getType())) {
+			return  "Nuovo messaggio da "+getName(n.getData().get("senderFullName"), n.getData().get("senderId"));
+		}
+		if (CarPoolingUtils.NOTIFICATION_AVALIABILITY.equals(n.getType())) {
+			return  "Trovato un viaggio";
+		}
+		if (CarPoolingUtils.NOTIFICATION_BOOKING.equals(n.getType())) {
+			return getName(n.getData().get("senderFullName"), n.getData().get("senderId")) + " chiede di partecipare al tuo viaggio";
+		}
+		return null;
+	}
+
+	/**
+	 * @param string
+	 * @param string2
+	 * @return
+	 */
+	private String getName(String name, String id) {
+		if (name != null) return name;
+		return "Anonymous"+id;
 	}
 
 }

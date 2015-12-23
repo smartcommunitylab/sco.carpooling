@@ -105,20 +105,21 @@ angular.module('carpooling.services.login', [])
             }
         })
 
-        .success(function (data, status, headers, config) {
-            StorageSrv.reset().then(function () {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data);
-                }
-            });
-        })
-
-        .error(function (data, status, headers, config) {
-            deferred.reject(data);
-        });
+        .then(
+            function (response) {
+                StorageSrv.reset().then(function () {
+                    //if (response.data[0] == '<') {
+                    //    deferred.reject();
+                    //    $rootScope.login();
+                    //} else {
+                        deferred.resolve(response.data);
+                    //}
+                });
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
+            }
+        );
 
         return deferred.promise;
     };

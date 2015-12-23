@@ -8,18 +8,19 @@ angular.module('carpooling.services.passenger', [])
 
         $http.get(Config.getServerURL() + '/api/passenger/trips/' + travelId, Config.getHTTPConfig())
 
-        .success(function (data) {
-            if (data[0] == '<') {
-                deferred.reject();
-                $rootScope.login();
-            } else {
-                deferred.resolve(data.data);
+        .then(
+            function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
             }
-        })
-
-        .error(function (err) {
-            deferred.reject(err);
-        });
+        );
 
         return deferred.promise;
     };
@@ -29,18 +30,18 @@ angular.module('carpooling.services.passenger', [])
 
         $http.get(Config.getServerURL() + '/api/passenger/trips', Config.getHTTPConfig())
 
-        .success(function (data) {
-            if (data[0] == '<') {
-                deferred.reject();
-                $rootScope.login();
-            } else {
-                deferred.resolve(data.data);
+        .then(function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
             }
-        })
-
-        .error(function (err) {
-            deferred.reject(err);
-        });
+        );
 
         return deferred.promise;
     };
@@ -50,18 +51,19 @@ angular.module('carpooling.services.passenger', [])
 
         $http.get(Config.getServerURL() + '/api/passenger/monitored', Config.getHTTPConfig())
 
-        .success(function (data) {
-            if (data[0] == '<') {
-                deferred.reject();
-                $rootScope.login();
-            } else {
-                deferred.resolve(data.data);
+        .then(
+            function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
             }
-        })
-
-        .error(function (err) {
-            deferred.reject(err);
-        });
+        );
 
         return deferred.promise;
     };
@@ -74,18 +76,19 @@ angular.module('carpooling.services.passenger', [])
         } else {
             $http.post(Config.getServerURL() + '/api/passenger/trips', travelRequest, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data.data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;
@@ -101,18 +104,19 @@ angular.module('carpooling.services.passenger', [])
         } else {
             $http.post(Config.getServerURL() + '/api/passenger/trips/' + tripId + '/book', booking, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data.data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;
@@ -127,24 +131,25 @@ angular.module('carpooling.services.passenger', [])
             // /api/delete/tripRequest/{travelRequestId}
             $http.delete(Config.getServerURL() + '/api/delete/tripRequest/' + travelRequestId, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;
     };
 
-    passengerService.rateDriver = function (driverId, rating) {
+    passengerService.rateDriver = function (driverId, rating, booking) {
         var deferred = $q.defer();
 
         if (!driverId) {
@@ -154,18 +159,19 @@ angular.module('carpooling.services.passenger', [])
         } else {
             $http.post(Config.getServerURL() + '/api/rate/driver/' + driverId + '/' + rating, booking, Config.getHTTPConfig())
 
-            .success(function (data) {
-                if (data[0] == '<') {
-                    deferred.reject();
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            })
-
-            .error(function (err) {
-                deferred.reject(err);
-            });
+            );
         }
 
         return deferred.promise;
