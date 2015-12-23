@@ -182,13 +182,20 @@ placeautocomplete ul {
     z-index: 100;
 }
 .card.card-trip,
-.card.card-community {
+.card.card-community,
+.card.card-notif {
     position: relative;
+    background-color: #F0F0F0;
 }
 .card.card-trip:first-child,
 .card.card-community:first-child,
 .card.card-notif:first-child {
     margin-top: 10px;
+}
+.card.card-trip .item,
+.card.card-community .item,
+.card.card-notif .item {
+    background-color: transparent;
 }
 .card.card-trip .row,
 .card.card-community .row {
@@ -272,7 +279,6 @@ placeautocomplete ul {
     background-color: #F7F7F7;
 }
 .card.card-notif .item {
-    background-color: transparent;
     border-width: 0px;
 }
 .card.card-notif.unread .item {

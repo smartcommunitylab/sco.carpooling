@@ -39,7 +39,7 @@
                         <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                     </div>
                     <!-- TODO define when the flag needs to be shown here -->
-                    <div class="trip-flag" ng-if="!!community.color" style="border-color:#{{community.color}}"></div>
+                    <div class="trip-flag" ng-if="!!communityStyle" ng-style="communityStyle"></div>
                 </div>
             </div>
         </div>
