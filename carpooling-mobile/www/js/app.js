@@ -119,7 +119,7 @@ angular.module('carpooling', [
                             //window.location.reload(true);
                             $state.go(s_path);
                         } else {
-                            alert("in open notific" + JSON.stringify(pn));
+                            // urlHash not present. I open the app in the last page/view
                         }
                     });
                     window.ParsePushPlugin.on('receivePN', function (pn) {
