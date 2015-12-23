@@ -3,6 +3,7 @@ angular.module('carpooling.controllers.communityinfo', [])
 .controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils) {
     $scope.community = $stateParams['community'];
     $scope.communityTrips = null;
+    $scope.communityStyle = null;
 
     if (!!$scope.community) {
         Utils.loading();
@@ -11,7 +12,7 @@ angular.module('carpooling.controllers.communityinfo', [])
             function (todayCommunityTrips) {
                 $scope.communityTrips = todayCommunityTrips;
                 $scope.communityTrips.forEach(function (trip) {
-                    travel.bookingCounters = Utils.getBookingCounters(trip);
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
                 });
                 Utils.loaded();
             },
@@ -49,6 +50,10 @@ angular.module('carpooling.controllers.communityinfo', [])
 })
 
 .controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams, Utils, UserSrv) {
+    $scope.communityStyle = {
+        'border-color': '#' + $scope.community.color + ' #' + $scope.community.color + ' transparent transparent'
+    }
+
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.communityTrips[index].id
