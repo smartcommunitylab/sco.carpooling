@@ -32,33 +32,74 @@ angular.module('carpooling', [
     var isIOS = ionic.Platform.isIOS();
     var isAndroid = ionic.Platform.isAndroid();
 
-    $rootScope.manageLocalNotification = function(local_notification) {
+    $rootScope.manageLocalNotification = function (local_notification) {
         if (local_notification.alert) {
             if (cordova && cordova.plugins && cordova.plugins.notification) {
                 try {
                     //console.log('initializing notifications...');
-                    cordova.plugins.notification.local.cancelAll();
-
+                    //cordova.plugins.notification.local.cancelAll();
                     var notific = {
                         id: local_notification.push_hash,
                         title: "CarPooling",
                         text: local_notification.alert,
-                        //autoCancel: true,
+                        autoCancel: true,
                         //firstAt: monday_9_am,
                         //every: "week",
                         //sound: "file://sounds/reminder.mp3",
                         //icon: "http://icons.com/?cal_id=1",
                         data: {
-                            id: local_notification.push_hash
-                        }
+                            id: local_notification.push_hash,
+                            urlHash: local_notification.urlHash
+                        },
                     }
                     if (notific) {
                         cordova.plugins.notification.local.schedule(notific);
                     }
+                    cordova.plugins.notification.local.on("click", function (notification) {
+                        var notific_data = JSON.parse(notification.data);
+                        if (notific_data.urlHash) {
+                            var s_path = notific_data.urlHash.replace(new RegExp("/", 'g'), ".");
+                            s_path = s_path.substring(2, s_path.length);
+                            $state.go(s_path);
+                        } else {
+                            alert("in open local notific" + JSON.stringify(notific_data));
+                        }
+                    });
                 } catch (ex) {}
             }
             //alert('Reveived notification:' + JSON.stringify(pn));
         }
+    };
+
+    $rootScope.isChat = function (location_hash) {
+        var params_chat = [];
+        var loc_hash = location_hash + "";
+        if(loc_hash.indexOf("#") > -1){
+            var curr_view_path = loc_hash.split("#");
+            var curr_path = curr_view_path[1] + "";
+            if(curr_path.indexOf("/chat/") > -1){
+                var params = curr_path.split("/chat/");
+                params_chat = params[1].split("/");
+            }
+        }
+        return params_chat;
+    };
+
+    $rootScope.updateMyNotification = function(travelId, senderId) {
+       UserSrv.readNotifications(0, 10).then(function (notifics) {
+            var notifications = [];
+            notifications = notifics ? notifics : [];
+            for (var i = 0; i < notifications.length; i++) {
+                if(notifications[i].travelId == travelId && notifications[i].data.senderId == senderId){
+                    UserSrv.markNotification(notifications[i].id).then(
+                        function () {},
+                        function (err) {}
+                    );
+                }
+            }
+        }, function (err) {
+            console.error(err);
+        });
     };
 
     $rootScope.pushRegistration = function (userId) {
@@ -70,12 +111,44 @@ angular.module('carpooling', [
                         //console.log("Succes in channel " + channel + " creation");
                     });
                     window.ParsePushPlugin.on('openPN', function (pn) {
-                        if (pn != null && pn.urlHash != null) {
-                            window.location.hash = hash;
+                        //alert("in open notific" + JSON.stringify(pn));
+                        if (pn.urlHash) {
+                            var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
+                            s_path = s_path.substring(2, s_path.length);
+                            //window.location.path = "/notifiche";
+                            //window.location.reload(true);
+                            $state.go(s_path);
+                        } else {
+                            // urlHash not present. I open the app in the last page/view
                         }
                     });
                     window.ParsePushPlugin.on('receivePN', function (pn) {
-                        $rootScope.manageLocalNotification(pn);
+                        var chat_parameters = $rootScope.isChat(window.location);
+                        if(chat_parameters.length > 0){
+                            var travelId = chat_parameters[0];
+                            var senderId = chat_parameters[1];
+                            if(pn.cp_senderId && pn.cp_travelId){
+                                if(pn.cp_senderId == senderId && pn.cp_travelId == travelId){
+                                    $state.go('app.chat', { //transitionTo
+                                        travelId: travelId,
+                                        personId: senderId
+                                    }, {
+                                        reload: true
+                                    });
+                                    $rootScope.updateMyNotification(travelId, senderId);
+                                    /*$state.go('app.chat', {
+                                        travelId: travelId,
+                                        personId: senderId
+                                    });*/
+                                } else {
+                                    $rootScope.manageLocalNotification(pn);
+                                }
+                            } else {
+                                $rootScope.manageLocalNotification(pn);
+                            }
+                        } else {
+                            $rootScope.manageLocalNotification(pn);
+                        }
                     });
                     //
                     //you can also listen to your own custom subevents
@@ -91,12 +164,12 @@ angular.module('carpooling', [
                 //    //console.log('successfully created channel ' + channel);
                 //};
                 if (window.ParsePushPlugin) {
-                    windows.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function() {
+                    windows.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
                         window.ParsePushPlugin.subscribe(channel, function () {
                             //console.log("Succes in channel " + channel + " creation");
                         });
-                    }, function(e) {
-                       console.log("Error in parse initialize");
+                    }, function (e) {
+                        console.log("Error in parse initialize");
                     });
 
                 }
@@ -190,6 +263,7 @@ angular.module('carpooling', [
 
     .state('app.home.partecipo', {
         url: '/partecipo',
+        cache: false,
         views: {
             'tab-partecipo': {
                 templateUrl: 'templates/partecipo.html',
@@ -328,6 +402,9 @@ angular.module('carpooling', [
     .state('app.offri', {
         url: '/offri',
         cache: false,
+        params: {
+            'communityId': null
+        },
         views: {
             'menuContent': {
                 templateUrl: 'templates/offri.html',

@@ -2,15 +2,17 @@ angular.module('carpooling.controllers.communityinfo', [])
 
 .controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils) {
     $scope.community = $stateParams['community'];
+    $scope.communityTrips = null;
+    $scope.communityStyle = null;
 
     if (!!$scope.community) {
         Utils.loading();
 
         UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
-            function (todayCommunities) {
-                $scope.communityList = todayCommunities;
-                $scope.communityList.forEach(function (travel) {
-                    travel.bookingCounters = Utils.getBookingCounters(travel);
+            function (todayCommunityTrips) {
+                $scope.communityTrips = todayCommunityTrips;
+                $scope.communityTrips.forEach(function (trip) {
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
                 });
                 Utils.loaded();
             },
@@ -38,24 +40,29 @@ angular.module('carpooling.controllers.communityinfo', [])
 .controller('CommComponentsCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
     $scope.showUser = function (index) {
         var user = $scope.community.userObjs[index];
-        if (user.userId == StorageSrv.getUser().userId) {
-            $state.go('app.profilo.userinfo');
-        } else {
-            $state.go('app.profilo.userinfo', {
-                'user': user
-            });
+        var params = {};
+        if (user.userId !== StorageSrv.getUser().userId) {
+            // it's-a-not-me
+            params.user = user;
         }
+        $state.go('app.profilo.userinfo', params);
     };
 })
 
 .controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams, Utils, UserSrv) {
+    $scope.communityStyle = {
+        'border-color': '#' + $scope.community.color + ' #' + $scope.community.color + ' transparent transparent'
+    }
+
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
-            'travelId': $scope.communityList[index].id
+            'travelId': $scope.communityTrips[index].id
         });
     };
 
     $scope.addTrip = function () {
-        $state.go('app.offri');
+        $state.go('app.offri', {
+            'communityId': $scope.community.id
+        });
     }
 });

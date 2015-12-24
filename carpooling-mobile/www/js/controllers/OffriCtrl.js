@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.offri', [])
 
-.controller('OffriCtrl', function ($scope, $state, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+.controller('OffriCtrl', function ($scope, $state, $stateParams, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
     // 'from' and 'to' are 'zone' objects
     $scope.travel = {
         'from': {
@@ -19,6 +19,10 @@ angular.module('carpooling.controllers.offri', [])
         'places': 0,
         'intermediateStops': false
     };
+
+    if (!!$stateParams['communityId']) {
+        $scope.travel['communityIds'] = [$stateParams['communityId']];
+    }
 
     /*
      * Autocompletion stuff

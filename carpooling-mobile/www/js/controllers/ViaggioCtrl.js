@@ -195,11 +195,11 @@ angular.module('carpooling.controllers.viaggio', [])
      * Map stuff
      */
     $scope.initMap = function () {
-        if ($scope.isMine === false) {
-            MapSrv.initMap('tripMap').then(function () {
-                //add polyline
-            });
-        }
+        //if ($scope.isMine === false) {
+        MapSrv.initMap('tripMap').then(function () {
+            //add polyline
+        });
+        //}
     };
 
     angular.extend($scope, {
@@ -215,12 +215,8 @@ angular.module('carpooling.controllers.viaggio', [])
 
     /* Show User */
     $scope.showUser = function (index) {
-        console.log($scope.driverInfo);
-        console.log($scope.selectedTrip);
         $state.go('app.profilo.userinfo', {
             'user': $scope.driverInfo
         });
-
     };
-
 });

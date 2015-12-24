@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.notifications', [])
 
-.controller('NotificationsCtrl', function ($scope, $filter, $state, $timeout, Utils, UserSrv, $ionicScrollDelegate) {
+.controller('NotificationsCtrl', function ($scope, $filter, $state, $timeout, $location, Utils, UserSrv, $ionicScrollDelegate) {
     $scope.dateTimeMask = 'dd MMMM yyyy - HH:mm';
 
     $scope.notificationType = {
@@ -63,6 +63,7 @@ angular.module('carpooling.controllers.notifications', [])
             } else {
                 $scope.end_reached = true;
             }
+            //alert('location object ' + JSON.stringify($location));
         }, function (err) {
             console.error(err);
             $scope.$broadcast('scroll.infiniteScrollComplete');

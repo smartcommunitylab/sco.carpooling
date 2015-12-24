@@ -5,7 +5,6 @@ angular.module('carpooling.services.config', [])
     var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
     var APPID = 'QZByJ7flOj4rmtN3gpyBhMyw7jONUU3sgzJJT3pL';
     var CLIENTKEY = 'mTCHyDLCaogDtE5IA7g3xM0J0o400j4a8u9Nnc8N';
-
     var RECURRENCY = false;
 
     var HTTP_CONFIG = {
@@ -17,6 +16,8 @@ angular.module('carpooling.services.config', [])
     var LAT = 46.069672;
     var LON = 11.121270;
     var ZOOM = 15;
+
+    var LOGIN_EXPIRED = 'LOGIN_EXPIRED';
 
     return {
         getServerURL: function () {
@@ -49,6 +50,7 @@ angular.module('carpooling.services.config', [])
         getClientKey: function () {
             return CLIENTKEY;
         },
+        LOGIN_EXPIRED: LOGIN_EXPIRED,
         init: function () {
             /*
             var deferred = $q.defer();

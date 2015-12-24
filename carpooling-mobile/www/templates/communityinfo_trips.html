@@ -5,16 +5,16 @@
         <a href="#" class="button button-icon ion-android-more-vertical padding-left"></a>
         -->
     </ion-nav-buttons>
-    <ion-content class="has-header padding trips">
+    <ion-content class="has-header padding community-trips">
         <button class="button button-block button-carpooling" ng-click="addTrip()">
             {{'lbl_addtrip' | translate | uppercase}}
         </button>
         <h5>{{'lbl_todaytrips'| translate | uppercase}}</h5>
-        <div ng-if="communityList.length == 0">
+        <div ng-if="!!communityTrips && communityTrips.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
-        <div class="list" ng-if="communityList.length > 0">
-            <div class="card card-trip" ng-repeat="trip in communityList" ng-click="selectTrip($index)">
+        <div class="list" ng-if="!!communityTrips && communityTrips.length > 0">
+            <div class="card card-trip" ng-repeat="trip in communityTrips" ng-click="selectTrip($index)">
                 <div class="item row">
                     <div class="col-75 trip-data">
                         <ul>
@@ -35,12 +35,11 @@
                         <div class="trip-flag" ng-if="false"></div>
                     </div>
                     <div class="col-25 trip-counter">
-                        <!--TODO bookingcounters-->
                         <p class="trip-counter-num">{{trip.bookingCounters.available}}</p>
                         <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                     </div>
                     <!-- TODO define when the flag needs to be shown here -->
-                    <div class="trip-flag" ng-if="false"></div>
+                    <div class="trip-flag" ng-if="!!communityStyle" ng-style="communityStyle"></div>
                 </div>
             </div>
         </div>
