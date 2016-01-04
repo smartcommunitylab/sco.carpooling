@@ -1,7 +1,5 @@
 package it.smartcommunitylab.carpooling.exceptions;
 
-import javax.servlet.http.HttpServletResponse;
-
 import it.smartcommunitylab.carpooling.model.Response;
 
 public class CarPoolingCustomException extends Exception {
