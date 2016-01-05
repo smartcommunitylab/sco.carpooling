@@ -44,7 +44,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public List<Travel> findTravelByPassengerId(String userId) {
+	public List<Travel> findTravelByPassengerId(String userId, int start, int count) {
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
 		// check if bookings within travel has travellers with userId

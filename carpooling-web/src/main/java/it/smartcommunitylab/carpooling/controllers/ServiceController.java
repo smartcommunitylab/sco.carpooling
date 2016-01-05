@@ -80,8 +80,10 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
 	public @ResponseBody
-	Response<List<Travel>> readPassengerTrips() throws CarPoolingCustomException {
-		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId()));
+	Response<List<Travel>> readPassengerTrips(@RequestParam(required = false) int start,
+			@RequestParam(required = false) int count) throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId(), (start <= 0 ? 0
+				: start), (count <= 0 ? 20 : count)));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/monitored")
@@ -92,8 +94,10 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")
 	public @ResponseBody
-	Response<List<Travel>> readDriverTrips() throws CarPoolingCustomException {
-		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId()));
+	Response<List<Travel>> readDriverTrips(@RequestParam(required = false) int start,
+			@RequestParam(required = false) int count) throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId(), (start <= 0 ? 0 : start),
+				(count <= 0 ? 20 : count)));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips")

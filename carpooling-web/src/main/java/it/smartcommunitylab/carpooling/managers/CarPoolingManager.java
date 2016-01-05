@@ -90,12 +90,17 @@ public class CarPoolingManager {
 		travelRequestRepository.save(travelRequest);
 	}
 
-	public List<Travel> getPassengerTrips(String passengerId) {
-		return travelRepository.findTravelByPassengerId(passengerId);
+	public List<Travel> getPassengerTrips(String passengerId, int start, int count) {
+		return travelRepository.findTravelByPassengerId(passengerId, start, count);
 	}
 
-	public List<Travel> getDriverTrips(String userId) {
-		return travelRepository.findTravelByDriverId(userId);
+	public List<Travel> getDriverTrips(String userId, int start, int count) {
+		
+		Page<Travel> travels = travelRepository.findTravelByDriverId(userId, new PageRequest(start,
+				count, Direction.DESC, "route.startime"));
+
+		return travels.getContent();
+//		return travelRepository.findTravelByDriverId(userId, start, count);
 	}
 
 	public List<Travel> searchTravels(TravelRequest travelRequest, String userId) {

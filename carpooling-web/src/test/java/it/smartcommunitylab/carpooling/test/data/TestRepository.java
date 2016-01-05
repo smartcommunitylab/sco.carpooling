@@ -35,9 +35,13 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -60,6 +64,19 @@ public class TestRepository {
 
 	private static Travel refTravel;
 
+	
+	@Before
+	public void init() throws JsonProcessingException, IOException {
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("reccNonReccTravel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+		for (JsonNode node : arrayNode) {
+			refTravel = mapper.convertValue(node, Travel.class);
+			// save.
+			travelRepository.save(refTravel);
+		}
+	}
+	
 	@After
 	public void after() {
 		travelRepository.deleteAll();
@@ -73,9 +90,20 @@ public class TestRepository {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testTravelRepoByPassengerId() {
-		for (Travel travel : travelRepository.findTravelByPassengerId("54")) {
+		for (Travel travel : travelRepository.findTravelByPassengerId("53", 0, 20)) {
+			System.out.println(travel.getId());
+		}
+	}
+	
+	@Test
+	public void testTravelRepoByDriverId() {
+
+		Page<Travel> travels = travelRepository.findTravelByDriverId("53", new PageRequest(0, 20, Direction.DESC,
+				"route.startime"));
+		
+		for (Travel travel : travels.getContent()) {
 			System.out.println(travel.getId());
 		}
 	}

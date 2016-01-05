@@ -128,7 +128,7 @@ public class TestUser {
 		reccBooking.setRecurrent(true);
 		reccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
 
-		List<Travel> userTravels = travelRepository.findTravelByPassengerId("52");
+		List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20);
 		Assert.assertFalse(userTravels.isEmpty());
 		Travel existingTravelForUser = userTravels.get(0);
 
@@ -153,14 +153,14 @@ public class TestUser {
 			nonReccBooking.setRecurrent(false);
 			nonReccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
 
-			List<Travel> userTravels = travelRepository.findTravelByPassengerId("52");
+			List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20);
 			List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "52");
 			List<Booking> nonReccBookingsForUser = CarPoolingUtils
 					.getAllNonReccBookingForUserTravels(userTravels, "52");
 
 			Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonReccBooking, "52");
 
-			List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("52");
+			List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("52", 0, 20);
 			List<Booking> postBookingReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
 					postBookingTravels, "52");
 			List<Booking> postBookingnonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
@@ -192,13 +192,13 @@ public class TestUser {
 		reccBooking.setRecurrent(true);
 		reccBooking.setTraveller(new Traveller("53", "User Non recurrent", "User Non recurrent", null));
 
-		List<Travel> userTravels = travelRepository.findTravelByPassengerId("53");
+		List<Travel> userTravels = travelRepository.findTravelByPassengerId("53", 0, 20);
 		List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "53");
 		List<Booking> nonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(userTravels, "53");
 
 		Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", reccBooking, "53");
 
-		List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("53");
+		List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("53", 0, 20);
 		List<Booking> postBookingReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
 				postBookingTravels, "53");
 		List<Booking> postBookingNonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
@@ -227,7 +227,7 @@ public class TestUser {
 			nonRecc1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
 			nonRecc1.setTraveller(new Traveller("53", "User Non recurrent", "User Non recurrent", null));
 
-			List<Travel> userTravels = travelRepository.findTravelByPassengerId("53");
+			List<Travel> userTravels = travelRepository.findTravelByPassengerId("53", 0, 20);
 			List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "53");
 			List<Booking> nonReccBookingsForUser = CarPoolingUtils
 					.getAllNonReccBookingForUserTravels(userTravels, "53");
@@ -237,7 +237,7 @@ public class TestUser {
 
 			Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonRecc1, "53");
 
-			List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("53");
+			List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("53", 0, 20);
 			List<Booking> postBookingReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
 					postBookingTravels, "53");
 			List<Booking> postBookingNonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
@@ -248,7 +248,7 @@ public class TestUser {
 
 			travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonRecc1, "53");
 
-			List<Travel> postBooking2Travels = travelRepository.findTravelByPassengerId("53");
+			List<Travel> postBooking2Travels = travelRepository.findTravelByPassengerId("53", 0, 20);
 			List<Booking> postBooking2ReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
 					postBookingTravels, "53");
 			List<Booking> postBooking2NonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
