@@ -49,6 +49,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -281,11 +282,13 @@ public class ServiceController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/api/read/notifications/{start}/{count}")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/notifications")
 	public @ResponseBody
-	Response<List<Notification>> readNotifications(@PathVariable int start, @PathVariable int count)
-			throws CarPoolingCustomException {
-		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), start, count));
+	Response<List<Notification>> readNotifications(@RequestParam(required = false) int start,
+			@RequestParam(required = false) int count) throws CarPoolingCustomException {
+
+		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), (start <= 0 ? 0
+				: start), (count <= 0 ? 20 : count)));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/mark/read/notification/{notificationId}")
