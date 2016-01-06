@@ -1,6 +1,10 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv, UserSrv, Utils) {
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
+
+    $rootScope.initialSetup = !StorageSrv.isProfileComplete();
+    $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
+
     var hasAuto = function (auto) {
         // return !!$scope.user.auto
         if (!!auto && !!auto.description && auto.posts !== 0) {
@@ -39,10 +43,6 @@ angular.module('carpooling.controllers.user', [])
             }
         );
     }
-
-    $rootScope.initialSetup = !StorageSrv.isProfileComplete();
-
-    $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
 
     $scope.toggleEditMode = function () {
         $scope.editMode = !$scope.editMode;
@@ -139,9 +139,7 @@ angular.module('carpooling.controllers.user', [])
             $scope.user.auto = null;
         }
     });
-})
 
-.controller('UserStatsCtrl', function ($scope, $rootScope, DriverSrv, PassengerSrv, Utils, StorageSrv) {
     $scope.drivertripsheight = "";
     $scope.passengertripsheight = "";
     $scope.ratingOffer = 0;
@@ -186,18 +184,18 @@ angular.module('carpooling.controllers.user', [])
     $scope.getStars = function (vote) {
         return getStars(vote);
     };
-    $scope.user = StorageSrv.getUser();
-    $scope.driverRating = $scope.user.gameProfile.driverRating;
-    $scope.passengerRating = $scope.user.gameProfile.passengerRating;
-    Utils.loading();
-    DriverSrv.getDriverTrips().then(function (driverTrips) {
-        $scope.totalDriverTrips = driverTrips.length;
-        PassengerSrv.getPassengerTrips().then(function (passengerTrips) {
-            $scope.totalPassengerTrips = passengerTrips.length;
-            calculateHeight($scope.totalDriverTrips, $scope.totalPassengerTrips);
-            Utils.loaded();
-        });
-    });
 
-
+    $scope.initStats = function() {
+      $scope.driverRating = $scope.user.gameProfile.driverRating;
+      $scope.passengerRating = $scope.user.gameProfile.passengerRating;
+      Utils.loading();
+      DriverSrv.getDriverTrips().then(function (driverTrips) {
+          $scope.totalDriverTrips = driverTrips.length;
+          PassengerSrv.getPassengerTrips().then(function (passengerTrips) {
+              $scope.totalPassengerTrips = passengerTrips.length;
+              calculateHeight($scope.totalDriverTrips, $scope.totalPassengerTrips);
+              Utils.loaded();
+          });
+      });
+    }
 });

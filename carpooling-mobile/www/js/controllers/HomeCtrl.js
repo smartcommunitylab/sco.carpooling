@@ -10,32 +10,31 @@ angular.module('carpooling.controllers.home', [])
     };
 })
 
-.controller('HomeCtrl', function ($scope, $state, StorageSrv, UserSrv) {
+.controller('HomeCtrl', function ($scope, $state, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
     if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
         UserSrv.getUser(StorageSrv.getUserId()).then(
             function () {
                 $state.go('app.profilo');
             }
         );
+        return;
     }
-})
 
-.controller('PartecipoCtrl', function ($scope, $state, Config, StorageSrv, Utils, UserSrv, PassengerSrv) {
-    $scope.travelProfile = 'empty';
+    $scope.tab = 0;
+
+    $scope.selectTab = function(idx) {
+      if (idx == $scope.tab) return;
+      $scope.tab = idx;
+      $ionicTabsDelegate.select(idx);
+    }
+
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.getTravelProfile = function () {
-        Utils.loading();
-        UserSrv.getTravelProfile().then(function (data) {
-            $scope.travelProfile = data;
-            Utils.loaded();
-        });
-    };
-
+    $scope.driverTrips = null;
     $scope.passengerTrips = null;
 
-    var init = function () {
+    $scope.initParticipated = function () {
         Utils.loading();
         PassengerSrv.getPassengerTrips().then(
             function (trips) {
@@ -64,22 +63,13 @@ angular.module('carpooling.controllers.home', [])
         );
     };
 
-    init();
-
-    $scope.selectTrip = function (index) {
+    $scope.selectParticipatedTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.passengerTrips[index].id
         });
     };
-})
 
-.controller('OffroCtrl', function ($scope, $state, DriverSrv, Utils) {
-    $scope.travelDateFormat = 'dd MMMM yyyy';
-    $scope.travelTimeFormat = 'HH:mm';
-
-    $scope.driverTrips = null;
-
-    var init = function () {
+    $scope.initOffered = function () {
         Utils.loading();
         DriverSrv.getDriverTrips().then(
             function (trips) {
@@ -97,9 +87,9 @@ angular.module('carpooling.controllers.home', [])
         );
     };
 
-    init();
+    $scope.initParticipated();
 
-    $scope.selectTrip = function (index) {
+    $scope.selectOfferedTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.driverTrips[index].id
         });

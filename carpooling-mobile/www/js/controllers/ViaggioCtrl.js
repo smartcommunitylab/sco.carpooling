@@ -1,7 +1,7 @@
 angular.module('carpooling.controllers.viaggio', [])
 
 .controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
-    $scope.travelDateFormat = 'dd MMMM yyyy';
+  $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
     $scope.isMine = null;

@@ -252,32 +252,10 @@ angular.module('carpooling', [
 
     .state('app.home', {
         url: '/home',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/home.html',
                 controller: 'HomeCtrl'
-            }
-        }
-    })
-
-    .state('app.home.partecipo', {
-        url: '/partecipo',
-        cache: false,
-        views: {
-            'tab-partecipo': {
-                templateUrl: 'templates/partecipo.html',
-                controller: 'PartecipoCtrl'
-            }
-        }
-    })
-
-    .state('app.home.offro', {
-        url: '/offro',
-        views: {
-            'tab-offro': {
-                templateUrl: 'templates/offro.html',
-                controller: 'OffroCtrl'
             }
         }
     })
@@ -437,9 +415,15 @@ angular.module('carpooling', [
     .state('app.profilo', {
         url: '/profilo',
         cache: false,
+        params: {
+            'user': null,
+            'communityFrom': null,
+            'editMode': null
+        },
         views: {
             'menuContent': {
-                templateUrl: 'templates/profilo.html'
+                templateUrl: 'templates/profilo.html',
+                controller: 'UserInfoCtrl'
             }
         }
     })
