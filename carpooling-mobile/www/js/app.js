@@ -334,39 +334,6 @@ angular.module('carpooling', [
         }
     })
 
-    .state('app.comunitainfo.info', {
-        url: '/info',
-        cache: false,
-        views: {
-            'tab-info': {
-                templateUrl: 'templates/communityinfo_info.html',
-                controller: 'CommInfoCtrl'
-            }
-        }
-    })
-
-    .state('app.comunitainfo.viaggi', {
-        url: '/viaggi',
-        cache: false,
-        views: {
-            'tab-viaggi': {
-                templateUrl: 'templates/communityinfo_trips.html',
-                controller: 'CommTripCtrl'
-            }
-        }
-    })
-
-    .state('app.comunitainfo.componenti', {
-        url: '/componenti',
-        cache: false,
-        views: {
-            'tab-componenti': {
-                templateUrl: 'templates/communityinfo_components.html',
-                controller: 'CommComponentsCtrl'
-            }
-        }
-    })
-
     .state('app.comunita', {
         url: '/comunita',
         cache: false,
@@ -463,33 +430,6 @@ angular.module('carpooling', [
             'menuContent': {
                 templateUrl: 'templates/profilo.html',
                 controller: 'UserInfoCtrl'
-            }
-        }
-    })
-
-    .state('app.profilo.userinfo', {
-        url: '/userinfo',
-        cache: false,
-        params: {
-            'user': null,
-            'communityFrom': null,
-            'editMode': null
-        },
-        views: {
-            'tab-userinfo': {
-                templateUrl: 'templates/userinfo.html',
-                controller: 'UserInfoCtrl'
-            }
-        }
-    })
-
-    .state('app.profilo.userstats', {
-        url: '/userstats',
-        cache: false,
-        views: {
-            'tab-userstats': {
-                templateUrl: 'templates/userstats.html',
-                controller: 'UserStatsCtrl'
             }
         }
     })
