@@ -110,12 +110,43 @@ public class CarPoolingManager {
 		searchTravels = travelRepository.searchTravels(travelRequest);
 
 		if (travelRequest.isMonitored()) {
+			
+			String fromName = "";
+			String toName = "";
+			String fromAddr = "";
+			String toAddr = "";
 			// make sure if its the logged in user.
 			travelRequest.setUserId(userId);
+
 			if (travelRequest.getCommunityIds().isEmpty()) {
 				List<String> communityIds = communityRepository.getCommunityIdsForUser(userId);
 				travelRequest.setCommunityIds(communityIds);
 			}
+
+			if (travelRequest.getFrom().getName() != null && !travelRequest.getFrom().getName().isEmpty()) {
+				fromName = travelRequest.getFrom().getName();
+			}
+
+			if (travelRequest.getFrom().getAddress() != null && !travelRequest.getFrom().getAddress().isEmpty()) {
+				fromAddr = travelRequest.getFrom().getAddress();
+			}
+
+			if (travelRequest.getTo().getName() != null && !travelRequest.getTo().getName().isEmpty()) {
+				toName = travelRequest.getTo().getName();
+			}
+
+			if (travelRequest.getTo().getAddress() != null && !travelRequest.getTo().getAddress().isEmpty()) {
+				toAddr = travelRequest.getTo().getAddress();
+			}
+			// from.
+			Zone updateFrom = new Zone(fromName, fromAddr, travelRequest.getFrom().getLatitude(), travelRequest
+					.getFrom().getLongitude(), travelRequest.getFrom().getRange());
+			travelRequest.setFrom(updateFrom);
+			// to
+			Zone updateTo = new Zone(toName, toAddr, travelRequest.getTo().getLatitude(), travelRequest.getTo()
+					.getLongitude(), travelRequest.getTo().getRange());
+			travelRequest.setTo(updateTo);
+
 			travelRequestRepository.save(travelRequest);
 		}
 
