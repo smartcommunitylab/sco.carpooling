@@ -414,4 +414,27 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		return travels;
 	}
 
+	@Override
+	public List<Travel> findTravelByPassengerId(String userId) {
+		List<Travel> travelsForPassenger = new ArrayList<Travel>();
+
+		// check if bookings within travel has travellers with userId
+		// Criteria criteria = new Criteria();
+		// Query query = new Query();
+		// criteria.where("booking.traveller.userId").is(userId);
+		// query.addCriteria(criteria);
+		// travelsForPassenger = mongoTemplate.find(query, Travel.class);
+
+		for (Travel travel : travelRepository.findAll()) {
+			for (Booking booking : travel.getBookings()) {
+				if (booking.getTraveller().getUserId().equals(userId)) {
+					travelsForPassenger.add(travel);
+					break;
+				}
+			}
+		}
+
+		return travelsForPassenger;
+	}
+
 }

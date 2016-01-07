@@ -585,6 +585,12 @@ public class CarPoolingManager {
 	 */
 	public User readUser(String userId) {
 		User user = userRepository.findOne(userId);
+		if (user != null) {
+			// get count of user offered travels(as driver).
+			user.setOfferedTravels(travelRepository.findTravelByDriverId(userId).size());
+			// get count user participated travel(as passenger)
+			user.setPartificpatedTravels(travelRepository.findTravelByPassengerId(userId).size());
+		}
 		return user;
 	}
 
