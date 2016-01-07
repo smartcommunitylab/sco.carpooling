@@ -16,7 +16,6 @@
 
 package it.smartcommunitylab.carpooling.mongo.repos.impl;
 
-import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
@@ -28,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -44,24 +44,39 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public List<Travel> findTravelByPassengerId(String userId, int start, int count) {
+	public List<Travel> findTravelByPassengerId(String userId, int pageNum, int pageSize) {
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
+		
 		// check if bookings within travel has travellers with userId
-		// Criteria criteria = new Criteria();
-		// Query query = new Query();
-		// criteria.where("booking.traveller.userId").is(userId);
-		// query.addCriteria(criteria);
-		// travelsForPassenger = mongoTemplate.find(query, Travel.class);
+		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
+		/**
+		 Query:{
+			"bookings": {
+				"$elemMatch": {
+					"traveller.userId": "52"
+				}
+			}
+		}
+		**/
+		Query query = new Query();
+		query.addCriteria(criteria);
+		// pagination.
+		query.skip((pageNum - 1 ) * pageSize);
+		query.limit(pageSize);
+		query.with(new Sort(Sort.Direction.DESC, "route.startime"));
+		
+		
+		travelsForPassenger = mongoTemplate.find(query, Travel.class);
 
-		for (Travel travel : travelRepository.findAll()) {
+		/**for (Travel travel : travelRepository.findAll()) {
 			for (Booking booking : travel.getBookings()) {
 				if (booking.getTraveller().getUserId().equals(userId)) {
 					travelsForPassenger.add(travel);
 					break;
 				}
 			}
-		}
+		}**/
 
 		return travelsForPassenger;
 	}
@@ -419,20 +434,22 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
 		// check if bookings within travel has travellers with userId
-		// Criteria criteria = new Criteria();
-		// Query query = new Query();
-		// criteria.where("booking.traveller.userId").is(userId);
-		// query.addCriteria(criteria);
-		// travelsForPassenger = mongoTemplate.find(query, Travel.class);
+		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
 
-		for (Travel travel : travelRepository.findAll()) {
-			for (Booking booking : travel.getBookings()) {
-				if (booking.getTraveller().getUserId().equals(userId)) {
-					travelsForPassenger.add(travel);
-					break;
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		/**
+		 Query:{
+			"bookings": {
+				"$elemMatch": {
+					"traveller.userId": "52"
 				}
 			}
 		}
+		**/
+
+		travelsForPassenger = mongoTemplate.find(query, Travel.class);
 
 		return travelsForPassenger;
 	}

@@ -80,10 +80,10 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
 	public @ResponseBody
-	Response<List<Travel>> readPassengerTrips(@RequestParam(required = false) int start,
-			@RequestParam(required = false) int count) throws CarPoolingCustomException {
-		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId(), (start <= 0 ? 0
-				: start), (count <= 0 ? 20 : count)));
+	Response<List<Travel>> readPassengerTrips(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer count) throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId(), (start == null ? 0 : start),
+				(count == null ? 20 : count)));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/monitored")
@@ -94,10 +94,10 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")
 	public @ResponseBody
-	Response<List<Travel>> readDriverTrips(@RequestParam(required = false) int start,
-			@RequestParam(required = false) int count) throws CarPoolingCustomException {
-		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId(), (start <= 0 ? 0 : start),
-				(count <= 0 ? 20 : count)));
+	Response<List<Travel>> readDriverTrips(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer count) throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.getDriverTrips(getUserId(), (start == null ? 0 : start),
+				(count == null ? 20 : count)));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips")
@@ -288,11 +288,11 @@ public class ServiceController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/notifications")
 	public @ResponseBody
-	Response<List<Notification>> readNotifications(@RequestParam(required = false) int start,
-			@RequestParam(required = false) int count) throws CarPoolingCustomException {
+	Response<List<Notification>> readNotifications(@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer count) throws CarPoolingCustomException {
 
-		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), (start <= 0 ? 0
-				: start), (count <= 0 ? 20 : count)));
+		return new Response<List<Notification>>(carPoolingManager.readNotifications(getUserId(), (start == null ? 0
+				: start), (count == null ? 20 : count)));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/mark/read/notification/{notificationId}")

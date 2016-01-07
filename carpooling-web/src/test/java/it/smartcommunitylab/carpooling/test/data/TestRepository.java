@@ -92,7 +92,7 @@ public class TestRepository {
 
 	@Test
 	public void testTravelRepoByPassengerId() {
-		for (Travel travel : travelRepository.findTravelByPassengerId("53", 0, 20)) {
+		for (Travel travel : travelRepository.findTravelByPassengerId("52",3,1)) {
 			System.out.println(travel.getId());
 		}
 	}
