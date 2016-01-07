@@ -29,12 +29,19 @@ angular.module('carpooling.controllers.offri', [])
      */
     // names: array with the names of the places
     // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
+    $scope.afterMapSelection = false;
+
     $scope.places = {
         'names': [],
         'coordinates': {}
     };
 
     $scope.typing = function (typedthings) {
+        if ($scope.afterMapSelection) {
+            $scope.afterMapSelection = false;
+            return;
+        }
+
         var result = typedthings;
         var newPlaces = PlanSrv.getTypedPlaces(typedthings);
         newPlaces.then(function (data) {
@@ -124,6 +131,7 @@ angular.module('carpooling.controllers.offri', [])
                             var splittedCoords = coordinates.split(',');
                             $scope.travel[selectedField].latitude = parseFloat(splittedCoords[0]);
                             $scope.travel[selectedField].longitude = parseFloat(splittedCoords[1]);
+                            $scope.afterMapSelection = true;
                         }
                         $scope.hideModalMap();
                     };
@@ -243,6 +251,11 @@ angular.module('carpooling.controllers.offri', [])
      */
     $scope.hideModalMap = function () {
         $scope.modalMap.hide();
+
+        $scope.places = {
+            'names': [],
+            'coordinates': {}
+        };
     };
 
     $scope.getDoW = function () {
