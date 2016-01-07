@@ -299,6 +299,7 @@ angular.module('carpooling', [
 
     .state('app.home', {
         url: '/home',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/home.html',
