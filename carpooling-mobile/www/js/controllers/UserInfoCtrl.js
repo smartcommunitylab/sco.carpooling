@@ -182,9 +182,19 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.initStats = function() {
-      $scope.driverRating = $scope.user.gameProfile.driverRating;
-      $scope.passengerRating = $scope.user.gameProfile.passengerRating;
-      $scope.totalDriverTrips = $scope.user.offeredTrips;
-      $scope.totalPassengerTrips = $scope.user.participatedTrips;
+      $scope.totalDriverTrips = 0;
+      $scope.totalPassengerTrips = 0;
+      Utils.loading();
+
+      UserSrv.getUser($scope.user.userId).then(function(user){
+        $scope.driverRating = user.gameProfile.driverRating;
+        $scope.passengerRating = user.gameProfile.passengerRating;
+        $scope.totalDriverTrips = user.offeredTravels;
+        $scope.totalPassengerTrips = user.participatedTravels;
+        Utils.loaded();
+      }, function(err) {
+        Utils.loaded();
+      });
+
     }
 });
