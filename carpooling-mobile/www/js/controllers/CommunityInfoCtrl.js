@@ -1,9 +1,12 @@
 angular.module('carpooling.controllers.communityinfo', [])
 
-.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils) {
+.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils, StorageSrv) {
     $scope.community = $stateParams['community'];
     $scope.communityTrips = null;
     $scope.communityStyle = null;
+
+    $scope.hasAuto = !!StorageSrv.getUser().auto;
+
 
     if (!!$scope.community) {
         Utils.loading();
@@ -21,23 +24,19 @@ angular.module('carpooling.controllers.communityinfo', [])
                 Utils.toast();
             }
         );
+        $scope.communityStyle = {
+            'border-color': '#' + $scope.community.color + ' #' + $scope.community.color + ' transparent transparent'
+        }
     } else {
         Utils.toast();
     }
-})
-
-.controller('CommInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
-    var hasAuto = !!StorageSrv.getUser().auto;
-
     $scope.changeAutoState = function () {
         $state.go('app.profilo.userinfo', {
             'communityFrom': $scope.community,
             'editMode': true
         });
     };
-})
 
-.controller('CommComponentsCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv) {
     $scope.showUser = function (index) {
         var user = $scope.community.userObjs[index];
         var params = {};
@@ -45,14 +44,8 @@ angular.module('carpooling.controllers.communityinfo', [])
             // it's-a-not-me
             params.user = user;
         }
-        $state.go('app.profilo.userinfo', params);
+        $state.go('app.profilo', params);
     };
-})
-
-.controller('CommTripCtrl', function ($scope, $rootScope, $state, $stateParams, Utils, UserSrv) {
-    $scope.communityStyle = {
-        'border-color': '#' + $scope.community.color + ' #' + $scope.community.color + ' transparent transparent'
-    }
 
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {

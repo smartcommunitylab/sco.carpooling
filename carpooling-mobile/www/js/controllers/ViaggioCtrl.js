@@ -215,7 +215,7 @@ angular.module('carpooling.controllers.viaggio', [])
 
     /* Show User */
     $scope.showUser = function (index) {
-        $state.go('app.profilo.userinfo', {
+        $state.go('app.profilo', {
             'user': $scope.driverInfo
         });
     };
