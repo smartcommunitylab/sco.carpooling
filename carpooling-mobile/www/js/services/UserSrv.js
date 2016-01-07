@@ -280,7 +280,7 @@ angular.module('carpooling.services.user', [])
             }
         }
 
-        $http.get(Config.getServerURL() + '/api/read/notifications/' + start + '/' + count, httpConfig)
+        $http.get(Config.getServerURL() + '/api/read/notifications', httpConfig)
 
         .then(function (response) {
                 if (response.data[0] == '<') {
