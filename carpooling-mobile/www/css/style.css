@@ -93,24 +93,15 @@
 }
 
 /* Others */
-.carpooling-theme .list .toggle-text{
-    position: relative;
-}
-.carpooling-theme .list .toggle-text span{
-    position: relative;
-    top: 14px;
-}
-.carpooling-theme .list .item-input{
+
+.carpooling-theme .list .item-input {
     padding-right: 0;
     padding-left: 0;
     border: 0;
     z-index: initial;
 }
-
 .carpooling-theme .list .item-toggle {
-    position: relative;
-    height: 46px;
-    padding: 0;
+    padding-right: 80px;
     border: 0;
     z-index: initial;
 }

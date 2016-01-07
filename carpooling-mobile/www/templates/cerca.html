@@ -33,15 +33,8 @@
                 <ion-radio ng-model="communities.useMyCommunities" ng-value="false" ng-disabled="!communities.enabled">{{'lbl_allcommunity' | translate}}</ion-radio>
             </div>
 
-            <div class="list">
-                <div class="row toggle-text">
-                    <div class="col-75">
-                        <span>{{'lbl_allsearchnotifications' | translate}}</span>
-                    </div>
-                    <div class="col-25">
-                        <ion-toggle ng-model="travelRequest.monitored"></ion-toggle>
-                    </div>
-                </div>
+            <div class="list item-text-wrap padding-bottom">
+                <ion-toggle ng-model="travelRequest.monitored">{{'lbl_allsearchnotifications' | translate}}</ion-toggle>
             </div>
 
             <div class="row">
