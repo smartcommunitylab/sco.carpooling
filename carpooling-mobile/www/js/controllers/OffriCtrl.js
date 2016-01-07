@@ -379,7 +379,9 @@ angular.module('carpooling.controllers.offri', [])
             DriverSrv.createTrip($scope.travel).then(
                 function (savedTravel) {
                     Utils.loaded();
-                    $state.go('app.home');
+                    $state.go('app.home', {}, {
+                        reload: true
+                    });
                     Utils.toast(($filter('translate')('toast_trip_offered')));
                 },
                 function (error) {
@@ -391,8 +393,8 @@ angular.module('carpooling.controllers.offri', [])
             Utils.toast(($filter('translate')('toast_auto_disabled')));
         }
     };
+
     $scope.$on('$ionicView.beforeEnter', function () {
         MapSrv.refresh('modalMap');
     });
-
 });
