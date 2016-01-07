@@ -50,7 +50,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author nawazk
  *
  */
-@org.junit.Ignore
+//@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestRepository {
@@ -92,6 +92,10 @@ public class TestRepository {
 
 	@Test
 	public void testTravelRepoByPassengerId() {
+		for (Travel travel : travelRepository.findTravelByPassengerId("52")) {
+			System.out.println(travel.getId());
+		}
+		// pagination.
 		for (Travel travel : travelRepository.findTravelByPassengerId("52",3,1)) {
 			System.out.println(travel.getId());
 		}
