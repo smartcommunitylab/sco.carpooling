@@ -256,26 +256,45 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
         */
 
-        if (start == null || start < 0) {
-            deferred.reject('Invalid start position');
-        } else if (!count) {
-            deferred.reject('Invalid count');
-        } else {
-            $http.get(Config.getServerURL() + '/api/read/notifications/' + start + '/' + count, Config.getHTTPConfig())
+        var httpConfig = Config.getHTTPConfig();
 
-            .then(function (response) {
-                    if (response.data[0] == '<') {
-                        deferred.reject(Config.LOGIN_EXPIRED);
-                        $rootScope.login();
-                    } else {
-                        deferred.resolve(response.data.data);
-                    }
-                },
-                function (responseError) {
-                    deferred.reject(responseError.data.error);
+        if (!!start || !!count) {
+            httpConfig.params = {};
+
+            if (!!start) {
+                if (Number.isInteger(start) && start >= 0) {
+                    httpConfig.params['start'] = start;
+                } else {
+                    deferred.reject('Invalid "start" value');
+                    return deferred.promise;
                 }
-            );
+            }
+
+            if (!!count) {
+                if (Number.isInteger(count) && count > 0) {
+                    httpConfig.params['count'] = count;
+                } else {
+                    deferred.reject('Invalid "count" value');
+                    return deferred.promise;
+                }
+            }
         }
+
+        $http.get(Config.getServerURL() + '/api/read/notifications/' + start + '/' + count, httpConfig)
+
+        .then(function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
+            }
+        );
+
 
         return deferred.promise;
     }

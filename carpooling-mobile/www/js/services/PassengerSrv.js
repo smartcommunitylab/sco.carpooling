@@ -25,10 +25,34 @@ angular.module('carpooling.services.passenger', [])
         return deferred.promise;
     };
 
-    passengerService.getPassengerTrips = function () {
+    passengerService.getPassengerTrips = function (start, count) {
         var deferred = $q.defer();
 
-        $http.get(Config.getServerURL() + '/api/passenger/trips', Config.getHTTPConfig())
+        var httpConfig = Config.getHTTPConfig();
+
+        if (!!start || !!count) {
+            httpConfig.params = {};
+
+            if (!!start) {
+                if (Number.isInteger(start) && start >= 0) {
+                    httpConfig.params['start'] = start;
+                } else {
+                    deferred.reject('Invalid "start" value');
+                    return deferred.promise;
+                }
+            }
+
+            if (!!count) {
+                if (Number.isInteger(count) && count > 0) {
+                    httpConfig.params['count'] = count;
+                } else {
+                    deferred.reject('Invalid "count" value');
+                    return deferred.promise;
+                }
+            }
+        }
+
+        $http.get(Config.getServerURL() + '/api/passenger/trips', httpConfig)
 
         .then(function (response) {
                 if (response.data[0] == '<') {
