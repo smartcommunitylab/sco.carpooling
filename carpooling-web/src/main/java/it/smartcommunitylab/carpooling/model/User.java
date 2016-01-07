@@ -39,6 +39,10 @@ public class User {
 	private GameProfile gameProfile;
 	/** description of car(if any).**/
 	private Auto auto;
+	/** number of offered travels. **/
+	private int offeredTravels;
+	/** number of participated travels. **/
+	private int partificpatedTravels;
 
 	public User() {
 		super();
@@ -111,6 +115,22 @@ public class User {
 
 	public void setAuto(Auto auto) {
 		this.auto = auto;
+	}
+	
+	public int getOfferedTravels() {
+		return offeredTravels;
+	}
+
+	public void setOfferedTravels(int offeredTravels) {
+		this.offeredTravels = offeredTravels;
+	}
+
+	public int getPartificpatedTravels() {
+		return partificpatedTravels;
+	}
+
+	public void setPartificpatedTravels(int partificpatedTravels) {
+		this.partificpatedTravels = partificpatedTravels;
 	}
 
 	/**

@@ -54,7 +54,7 @@
         "lon": "11.115000659666784",
         "lat": "46.070119106960526"
       },
-      "startime": 1442959200000,
+      "startime": 1474581600000,
       "endtime": 1442959860000,
       "duration": 660000,
       "walkingDuration": 660,
@@ -122,6 +122,13 @@
       {
         "traveller": {
           "userId": "u2"
+        },
+        "recurrent": true,
+        "accepted": -1
+      },
+       {
+        "traveller": {
+          "userId": "52"
         },
         "recurrent": true,
         "accepted": -1
