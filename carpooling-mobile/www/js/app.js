@@ -265,13 +265,21 @@ angular.module('carpooling', [
             StatusBar.styleDefault();
         }
 
-        if (!LoginSrv.userIsLogged()) {
-            $rootScope.login();
-        } else {
+        if (LoginSrv.userIsLogged()) {
             $rootScope.pushRegistration(StorageSrv.getUserId());
         }
-
     });
+
+    $rootScope.$on('$stateChangeStart',
+      function(event, toState, toParams, fromState, fromParams){
+        if (toState.name=='app.home' && !LoginSrv.userIsLogged()) {
+          event.preventDefault();
+          $rootScope.login();
+        } else if (toState.name=='app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+          event.preventDefault();
+          $state.go('app.profilo');
+        }
+      });
 })
 
 .config(function ($httpProvider, $ionicConfigProvider) {
