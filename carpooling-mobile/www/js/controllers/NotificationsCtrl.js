@@ -67,6 +67,7 @@ angular.module('carpooling.controllers.notifications', [])
         }, function (err) {
             console.error(err);
             $scope.$broadcast('scroll.infiniteScrollComplete');
+            $scope.end_reached = true;
         });
     };
 

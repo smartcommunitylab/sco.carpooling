@@ -163,16 +163,55 @@ angular.module('carpooling', [
                 //    window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
                 //    //console.log('successfully created channel ' + channel);
                 //};
-                if (window.ParsePushPlugin) {
-                    windows.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
+                if (window.parsePlugin) {
+                    window.parsePlugin.register({appId:Config.getAppId(), clientKey:Config.getClientKey(), ecb:"onNotification"},function() {
+                            window.parsePlugin.subscribe(channel, function () {
+                            //console.log("Succes in channel " + channel + " creation");
+                            });
+                        }, function (e) {
+                            console.log("Error in parse initialize");
+                        }
+                    );
+
+                    function onNotification(pn){
+                        alert("received pn: " + JSON.stringify(pnObj));
+                        var chat_parameters = $rootScope.isChat(window.location);
+                        if(chat_parameters.length > 0){
+                            var travelId = chat_parameters[0];
+                            var senderId = chat_parameters[1];
+                            if(pn.cp_senderId && pn.cp_travelId){
+                                if(pn.cp_senderId == senderId && pn.cp_travelId == travelId){
+                                    $state.go('app.chat', { //transitionTo
+                                        travelId: travelId,
+                                        personId: senderId
+                                    }, {
+                                        reload: true
+                                    });
+                                    $rootScope.updateMyNotification(travelId, senderId);
+                                    /*$state.go('app.chat', {
+                                        travelId: travelId,
+                                        personId: senderId
+                                    });*/
+                                } else {
+                                    //$rootScope.manageLocalNotification(pn);
+                                }
+                            } else {
+                                //$rootScope.manageLocalNotification(pn);
+                            }
+                        } else {
+                            //$rootScope.manageLocalNotification(pn);
+                        }
+                    }
+                }
+                /*if (window.ParsePushPlugin) {
+                    window.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
                         window.ParsePushPlugin.subscribe(channel, function () {
                             //console.log("Succes in channel " + channel + " creation");
                         });
                     }, function (e) {
                         console.log("Error in parse initialize");
                     });
-
-                }
+                }*/
             }
         } catch (ex) {
             //console.log('Exception in parsepush registration ' + ex.message);
