@@ -589,7 +589,7 @@ public class CarPoolingManager {
 			// get count of user offered travels(as driver).
 			user.setOfferedTravels(travelRepository.findTravelByDriverId(userId).size());
 			// get count user participated travel(as passenger)
-			user.setPartificpatedTravels(travelRepository.findTravelByPassengerId(userId).size());
+			user.setParticipatedTravels(travelRepository.findTravelByPassengerId(userId).size());
 		}
 		return user;
 	}

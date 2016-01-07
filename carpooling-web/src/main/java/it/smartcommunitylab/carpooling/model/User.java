@@ -42,7 +42,7 @@ public class User {
 	/** number of offered travels. **/
 	private int offeredTravels;
 	/** number of participated travels. **/
-	private int partificpatedTravels;
+	private int participatedTravels;
 
 	public User() {
 		super();
@@ -125,12 +125,12 @@ public class User {
 		this.offeredTravels = offeredTravels;
 	}
 
-	public int getPartificpatedTravels() {
-		return partificpatedTravels;
+	public int getParticipatedTravels() {
+		return participatedTravels;
 	}
 
-	public void setPartificpatedTravels(int partificpatedTravels) {
-		this.partificpatedTravels = partificpatedTravels;
+	public void setParticipatedTravels(int participatedTravels) {
+		this.participatedTravels = participatedTravels;
 	}
 
 	/**
