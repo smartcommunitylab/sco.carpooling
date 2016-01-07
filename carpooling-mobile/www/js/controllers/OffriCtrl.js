@@ -379,7 +379,7 @@ angular.module('carpooling.controllers.offri', [])
             DriverSrv.createTrip($scope.travel).then(
                 function (savedTravel) {
                     Utils.loaded();
-                    $state.go('app.home.offro');
+                    $state.go('app.home',{}, {reload:true});
                     Utils.toast(($filter('translate')('toast_trip_offered')));
                 },
                 function (error) {
