@@ -1,7 +1,6 @@
 angular.module('carpooling.controllers.home', [])
 
-.controller('AppCtrl', function ($scope, $state) {
-})
+.controller('AppCtrl', function ($scope, $state) {})
 
 .controller('HomeCtrl', function ($scope, $state, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
     if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
@@ -15,21 +14,33 @@ angular.module('carpooling.controllers.home', [])
 
     $scope.tab = 0;
 
-    $scope.selectTab = function(idx) {
-      if (idx == $scope.tab) return;
-      $scope.tab = idx;
-      $ionicTabsDelegate.select(idx);
+    $scope.selectTab = function (idx) {
+        //if (idx == $scope.tab) return;
+        if (idx !== $scope.tab) {
+            $scope.tab = idx;
+            $ionicTabsDelegate.select(idx);
+        }
     }
 
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.driverTrips = null;
     $scope.passengerTrips = null;
+    $scope.driverTrips = null;
 
-    $scope.initParticipated = function () {
-        Utils.loading();
-        PassengerSrv.getPassengerTrips().then(
+    /*
+     * Partecipo
+     */
+    var passengerTripsStart = 0;
+    var passengerTripsCount = 20; // default
+    $scope.passengerTripsCanHaveMore = false;
+
+    $scope.loadMorePassengerTrips = function () {
+        if (passengerTripsStart === 0) {
+            Utils.loading();
+        }
+
+        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount).then(
             function (trips) {
                 trips.forEach(function (trip) {
                     // booking counters
@@ -44,11 +55,33 @@ angular.module('carpooling.controllers.home', [])
                     });
                 });
 
-                Utils.loaded();
-                $scope.passengerTrips = trips;
+                if (passengerTripsStart === 0) {
+                    Utils.loaded();
+                } else {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+
+                for (var i = 0; i < trips.length; i++) {
+                    if (!$scope.passengerTrips) {
+                        $scope.passengerTrips = [];
+                    }
+                    $scope.passengerTrips.push(trips[i]);
+                }
+
+                if (trips.length === passengerTripsCount) {
+                    $scope.passengerTripsCanHaveMore = true;
+                    passengerTripsStart++;
+                } else {
+                    $scope.passengerTripsCanHaveMore = false;
+                }
             },
             function (error) {
-                Utils.loaded();
+                if (passengerTripsStart === 0) {
+                    Utils.loaded();
+                } else {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+
                 if (error !== Config.LOGIN_EXPIRED) {
                     Utils.toast();
                 }
@@ -62,29 +95,66 @@ angular.module('carpooling.controllers.home', [])
         });
     };
 
-    $scope.initOffered = function () {
-        Utils.loading();
-        DriverSrv.getDriverTrips().then(
+    /*
+     * Offro
+     */
+    var driverTripsStart = 0;
+    var driverTripsCount = 20; // default
+    $scope.driverTripsCanHaveMore = false;
+
+    $scope.loadMoreDriverTrips = function () {
+        if (driverTripsStart === 0) {
+            Utils.loading();
+        }
+
+        DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount).then(
             function (trips) {
                 trips.forEach(function (trip) {
                     trip.bookingCounters = Utils.getBookingCounters(trip);
                 });
 
-                Utils.loaded();
-                $scope.driverTrips = trips;
+                if (driverTripsStart === 0) {
+                    Utils.loaded();
+                } else {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+
+                for (var i = 0; i < trips.length; i++) {
+                    if (!$scope.driverTrips) {
+                        $scope.driverTrips = [];
+                    }
+                    $scope.driverTrips.push(trips[i]);
+                }
+
+                if (trips.length === driverTripsCount) {
+                    $scope.driverTripsCanHaveMore = true;
+                    driverTripsStart++;
+                } else {
+                    $scope.driverTripsCanHaveMore = false;
+                }
             },
             function (error) {
-                Utils.loaded();
-                Utils.toast();
+                if (driverTripsStart === 0) {
+                    Utils.loaded();
+                } else {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+
+                if (error !== Config.LOGIN_EXPIRED) {
+                    Utils.toast();
+                }
             }
         );
     };
-
-    $scope.initParticipated();
 
     $scope.selectOfferedTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.driverTrips[index].id
         });
     };
+
+    /*
+     * init
+     */
+    $scope.loadMorePassengerTrips();
 });
