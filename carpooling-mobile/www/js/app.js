@@ -173,8 +173,8 @@ angular.module('carpooling', [
                         }
                     );
 
-                    function onNotification(pn){
-                        alert("received pn: " + JSON.stringify(pnObj));
+                    onNotification = function(pn){
+                        alert("received pn: " + JSON.stringify(pn));
                         var chat_parameters = $rootScope.isChat(window.location);
                         if(chat_parameters.length > 0){
                             var travelId = chat_parameters[0];
