@@ -1,13 +1,6 @@
 angular.module('carpooling.controllers.home', [])
 
 .controller('AppCtrl', function ($scope, $state) {
-    $scope.reloadProfile = function () {
-        $state.go('app.profilo.userinfo', {
-            'user': null
-        }, {
-            reload: true
-        });
-    };
 })
 
 .controller('HomeCtrl', function ($scope, $state, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {

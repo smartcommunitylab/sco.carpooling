@@ -5,3 +5,4 @@ carpooling-web/.classpath
 carpooling-web/.project
 carpooling-web/.settings/*
 carpooling-web/target/*
+/carpooling-mobile/.brackets.json

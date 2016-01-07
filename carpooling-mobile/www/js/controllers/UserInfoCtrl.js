@@ -98,7 +98,7 @@ angular.module('carpooling.controllers.user', [])
                             Utils.loaded();
                             StorageSrv.setProfileComplete();
                             $rootScope.initialSetup = false;
-                            $state.go('app.home');
+                            $state.go('app.home',{},{reload:true});
                         }
                     );
                 } else {
@@ -123,22 +123,18 @@ angular.module('carpooling.controllers.user', [])
         );
     };
 
-    $scope.$watch('edit.hasAuto', function (newValue, oldValue) {
-        if (newValue === oldValue) {
-            return;
+    $scope.toggleHasAuto = function() {
+      if ($scope.edit.hasAuto) {
+        if (!$scope.user.auto) {
+          $scope.user.auto = {
+              posts: 4,
+              description: ''
+          };
         }
-
-        if (newValue) {
-            // true
-            $scope.user.auto = {
-                posts: 4,
-                description: '...'
-            };
-        } else {
-            // false
+      } else {
             $scope.user.auto = null;
-        }
-    });
+      }
+    }
 
     $scope.drivertripsheight = "";
     $scope.passengertripsheight = "";
@@ -188,14 +184,7 @@ angular.module('carpooling.controllers.user', [])
     $scope.initStats = function() {
       $scope.driverRating = $scope.user.gameProfile.driverRating;
       $scope.passengerRating = $scope.user.gameProfile.passengerRating;
-      Utils.loading();
-      DriverSrv.getDriverTrips().then(function (driverTrips) {
-          $scope.totalDriverTrips = driverTrips.length;
-          PassengerSrv.getPassengerTrips().then(function (passengerTrips) {
-              $scope.totalPassengerTrips = passengerTrips.length;
-              calculateHeight($scope.totalDriverTrips, $scope.totalPassengerTrips);
-              Utils.loaded();
-          });
-      });
+      $scope.totalDriverTrips = $scope.user.offeredTrips;
+      $scope.totalPassengerTrips = $scope.user.participatedTrips;
     }
 });
