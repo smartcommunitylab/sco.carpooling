@@ -62,6 +62,9 @@ public class SendPushNotification {
 		String title = constructTitle(n);
 		dataClause.put("alert", title);
 
+		dataClause.put("urlHash", "#/app/notifiche");
+		dataClause.put("url", "#/app/notifiche");
+
 		if (n.getData() != null) {
 			for (String key : n.getData().keySet()) {
 				dataClause.put("cp_"+key, n.getData().get(key));
