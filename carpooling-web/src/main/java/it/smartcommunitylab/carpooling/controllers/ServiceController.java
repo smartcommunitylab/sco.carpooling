@@ -70,10 +70,10 @@ public class ServiceController {
 	@PostConstruct
 	private void init() {
 		for (Community community : userCommunitiesSetup.getUserCommunities()) {
-			//Community existing = communityRepository.findByIdAndName(community.getId(), community.getName());
-			//if (existing == null) {
-			communityRepository.save(community);
-			//}
+			Community existing = communityRepository.findByIdAndName(community.getId(), community.getName());
+			if (existing == null) {
+				communityRepository.save(community);
+			}
 		}
 
 	}
