@@ -31,7 +31,7 @@ angular.module('carpooling.services.user', [])
                         userService.getCommunities().then(
                             function (communities) {
                                 communities.forEach(function (community) {
-                                    delete community['color'];
+                                    //delete community['color'];
                                     delete community['zone'];
                                     delete community['cars'];
                                     delete community['users'];

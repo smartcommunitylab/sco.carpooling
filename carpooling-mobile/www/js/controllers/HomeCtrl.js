@@ -45,6 +45,8 @@ angular.module('carpooling.controllers.home', [])
                             trip.bookingState = booking.accepted;
                         }
                     });
+
+                    trip.style = Utils.getTripStyle(trip);
                 });
 
                 if (passengerTripsStart === 0) {
@@ -102,6 +104,7 @@ angular.module('carpooling.controllers.home', [])
             function (trips) {
                 trips.forEach(function (trip) {
                     trip.bookingCounters = Utils.getBookingCounters(trip);
+                    trip.style = Utils.getTripStyle(trip);
                 });
 
                 if (driverTripsStart === 0) {

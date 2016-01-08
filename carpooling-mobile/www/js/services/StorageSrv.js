@@ -72,6 +72,20 @@ angular.module('carpooling.services.storage', [])
         return communityIds;
     };
 
+    storageService.getCommunityById = function (communityId) {
+        var community = null;
+        var communities = storageService.getCommunities();
+
+        for (var i = 0; i < communities.length; i++) {
+            if (communities[i].id === communityId) {
+                community = communities[i];
+                i = communities.length;
+            }
+        }
+
+        return community;
+    };
+
     storageService.saveCommunities = function (communities) {
         if (!!communities) {
             localStorage['communities'] = JSON.stringify(communities);
