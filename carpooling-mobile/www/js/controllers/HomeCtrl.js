@@ -53,12 +53,7 @@ angular.module('carpooling.controllers.home', [])
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                 }
 
-                for (var i = 0; i < trips.length; i++) {
-                    if (!$scope.passengerTrips) {
-                        $scope.passengerTrips = [];
-                    }
-                    $scope.passengerTrips.push(trips[i]);
-                }
+                $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
 
                 if (trips.length === passengerTripsCount) {
                     $scope.passengerTripsCanHaveMore = true;
@@ -76,6 +71,10 @@ angular.module('carpooling.controllers.home', [])
 
                 if (error !== Config.LOGIN_EXPIRED) {
                     Utils.toast();
+                }
+
+                if ($scope.passengerTrips === null) {
+                    $scope.passengerTrips = [];
                 }
             }
         );
@@ -111,12 +110,7 @@ angular.module('carpooling.controllers.home', [])
                     $scope.$broadcast('scroll.infiniteScrollComplete');
                 }
 
-                for (var i = 0; i < trips.length; i++) {
-                    if (!$scope.driverTrips) {
-                        $scope.driverTrips = [];
-                    }
-                    $scope.driverTrips.push(trips[i]);
-                }
+                $scope.driverTrips = !!$scope.driverTrips ? $scope.driverTrips.concat(trips) : trips;
 
                 if (trips.length === driverTripsCount) {
                     $scope.driverTripsCanHaveMore = true;
@@ -134,6 +128,10 @@ angular.module('carpooling.controllers.home', [])
 
                 if (error !== Config.LOGIN_EXPIRED) {
                     Utils.toast();
+                }
+
+                if ($scope.driverTrips === null) {
+                    $scope.driverTrips = [];
                 }
             }
         );

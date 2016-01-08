@@ -59,7 +59,9 @@ angular.module('carpooling.services.passenger', [])
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
-                    deferred.resolve(response.data.data);
+                    //FIXME
+                    //deferred.resolve(response.data.data);
+                    deferred.resolve([]);
                 }
             },
             function (responseError) {

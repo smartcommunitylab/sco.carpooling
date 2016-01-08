@@ -28,7 +28,6 @@ angular.module('carpooling', [
 ])
 
 .run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
-
     var isIOS = ionic.Platform.isIOS();
     var isAndroid = ionic.Platform.isAndroid();
 
@@ -74,10 +73,10 @@ angular.module('carpooling', [
     $rootScope.isChat = function (location_hash) {
         var params_chat = [];
         var loc_hash = location_hash + "";
-        if(loc_hash.indexOf("#") > -1){
+        if (loc_hash.indexOf("#") > -1) {
             var curr_view_path = loc_hash.split("#");
             var curr_path = curr_view_path[1] + "";
-            if(curr_path.indexOf("/chat/") > -1){
+            if (curr_path.indexOf("/chat/") > -1) {
                 var params = curr_path.split("/chat/");
                 params_chat = params[1].split("/");
             }
@@ -85,21 +84,24 @@ angular.module('carpooling', [
         return params_chat;
     };
 
-    $rootScope.updateMyNotification = function(travelId, senderId) {
-       UserSrv.readNotifications(0, 10).then(function (notifics) {
-            var notifications = [];
-            notifications = notifics ? notifics : [];
-            for (var i = 0; i < notifications.length; i++) {
-                if(notifications[i].travelId == travelId && notifications[i].data.senderId == senderId){
-                    UserSrv.markNotification(notifications[i].id).then(
-                        function () {},
-                        function (err) {}
-                    );
+    $rootScope.updateMyNotification = function (travelId, senderId) {
+        UserSrv.readNotifications(0, 10).then(
+            function (notifics) {
+                var notifications = [];
+                notifications = notifics ? notifics : [];
+                for (var i = 0; i < notifications.length; i++) {
+                    if (notifications[i].travelId == travelId && notifications[i].data.senderId == senderId) {
+                        UserSrv.markNotification(notifications[i].id).then(
+                            function () {},
+                            function (err) {}
+                        );
+                    }
                 }
+            },
+            function (err) {
+                console.error(err);
             }
-        }, function (err) {
-            console.error(err);
-        });
+        );
     };
 
     $rootScope.pushRegistration = function (userId) {
@@ -124,11 +126,11 @@ angular.module('carpooling', [
                     });
                     window.ParsePushPlugin.on('receivePN', function (pn) {
                         var chat_parameters = $rootScope.isChat(window.location);
-                        if(chat_parameters.length > 0){
+                        if (chat_parameters.length > 0) {
                             var travelId = chat_parameters[0];
                             var senderId = chat_parameters[1];
-                            if(pn.cp_senderId && pn.cp_travelId){
-                                if(pn.cp_senderId == senderId && pn.cp_travelId == travelId){
+                            if (pn.cp_senderId && pn.cp_travelId) {
+                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
                                     $state.go('app.chat', { //transitionTo
                                         travelId: travelId,
                                         personId: senderId
@@ -164,23 +166,26 @@ angular.module('carpooling', [
                 //    //console.log('successfully created channel ' + channel);
                 //};
                 if (window.parsePlugin) {
-                    window.parsePlugin.register({appId:Config.getAppId(), clientKey:Config.getClientKey(), ecb:"onNotification"},function() {
-                            window.parsePlugin.subscribe(channel, function () {
+                    window.parsePlugin.register({
+                        appId: Config.getAppId(),
+                        clientKey: Config.getClientKey(),
+                        ecb: "onNotification"
+                    }, function () {
+                        window.parsePlugin.subscribe(channel, function () {
                             //console.log("Succes in channel " + channel + " creation");
-                            });
-                        }, function (e) {
-                            console.log("Error in parse initialize");
-                        }
-                    );
+                        });
+                    }, function (e) {
+                        console.log("Error in parse initialize");
+                    });
 
-                    onNotification = function(pn){
+                    onNotification = function (pn) {
                         alert("received pn: " + JSON.stringify(pn));
                         var chat_parameters = $rootScope.isChat(window.location);
-                        if(chat_parameters.length > 0){
+                        if (chat_parameters.length > 0) {
                             var travelId = chat_parameters[0];
                             var senderId = chat_parameters[1];
-                            if(pn.cp_senderId && pn.cp_travelId){
-                                if(pn.cp_senderId == senderId && pn.cp_travelId == travelId){
+                            if (pn.cp_senderId && pn.cp_travelId) {
+                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
                                     $state.go('app.chat', { //transitionTo
                                         travelId: travelId,
                                         personId: senderId
@@ -271,15 +276,16 @@ angular.module('carpooling', [
     });
 
     $rootScope.$on('$stateChangeStart',
-      function(event, toState, toParams, fromState, fromParams){
-        if (toState.name=='app.home' && !LoginSrv.userIsLogged()) {
-          event.preventDefault();
-          $rootScope.login();
-        } else if (toState.name=='app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
-          event.preventDefault();
-          $state.go('app.profilo');
+        function (event, toState, toParams, fromState, fromParams) {
+            if (toState.name == 'app.home' && !LoginSrv.userIsLogged()) {
+                event.preventDefault();
+                $rootScope.login();
+            } else if (toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+                event.preventDefault();
+                $state.go('app.profilo');
+            }
         }
-      });
+    );
 })
 
 .config(function ($httpProvider, $ionicConfigProvider) {
@@ -289,7 +295,6 @@ angular.module('carpooling', [
 })
 
 .config(function ($stateProvider, $urlRouterProvider) {
-
     $stateProvider.state('app', {
         url: '/app',
         abstract: true,
