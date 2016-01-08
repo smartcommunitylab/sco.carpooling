@@ -146,6 +146,7 @@ angular.module('carpooling.controllers.viaggio', [])
 
     $scope.rate = function (booking) {
         // TODO implement $scope.rate
+        Utils.toast('OMG I HAVE TO RATE! ENABLE THIS!!!');
         return true;
     };
 

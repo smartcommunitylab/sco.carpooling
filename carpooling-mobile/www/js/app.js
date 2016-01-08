@@ -237,10 +237,11 @@ angular.module('carpooling', [
         LoginSrv.login().then(
             function (data) {
                 $rootScope.loginStarted = false;
-                UserSrv.getUser(data.userId);
-                $rootScope.pushRegistration(data.userId);
-                $state.go('app.home', {}, {
-                    reload: true
+                UserSrv.getUser(data.userId).then(function() {
+                  $rootScope.pushRegistration(data.userId);
+                  $state.go('app.home', {}, {
+                      reload: true
+                  });
                 });
             },
             function (error) {
@@ -278,6 +279,8 @@ angular.module('carpooling', [
 
         if (LoginSrv.userIsLogged()) {
             $rootScope.pushRegistration(StorageSrv.getUserId());
+        } else {
+          $rootScope.login();
         }
     });
 
@@ -466,7 +469,6 @@ angular.module('carpooling', [
     $urlRouterProvider.otherwise(function($injector){
       var logged = $injector.get('LoginSrv').userIsLogged();
       if (!logged) {
-          $injector.get('$rootScope').login();
           return '/';
       }
       return '/app/home';
