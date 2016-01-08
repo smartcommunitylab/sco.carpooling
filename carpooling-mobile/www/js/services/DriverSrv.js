@@ -8,11 +8,11 @@ angular.module('carpooling.services.driver', [])
 
         var httpConfig = Config.getHTTPConfig();
 
-        if (!!start || !!count) {
+        if (start != null || count != null) {
             httpConfig.params = {};
 
-            if (!!start) {
-                if (Number.isInteger(start) && start >= 0) {
+            if (start != null) {
+                if (start >= 0) {
                     httpConfig.params['start'] = start;
                 } else {
                     deferred.reject('Invalid "start" value');
@@ -20,8 +20,8 @@ angular.module('carpooling.services.driver', [])
                 }
             }
 
-            if (!!count) {
-                if (Number.isInteger(count) && count > 0) {
+            if (count != null) {
+                if (count > 0) {
                     httpConfig.params['count'] = count;
                 } else {
                     deferred.reject('Invalid "count" value');

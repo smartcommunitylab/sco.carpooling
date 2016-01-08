@@ -2,7 +2,6 @@ angular.module('carpooling.controllers.user', [])
 
 .controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicHistory, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
 
-    $rootScope.initialSetup = !StorageSrv.isProfileComplete();
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
 
     var hasAuto = function (auto) {
@@ -81,7 +80,6 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.saveProfile = function () {
-        Utils.loading();
         var auto = $scope.user.auto;
         if (!auto) {
             auto = {
@@ -89,7 +87,6 @@ angular.module('carpooling.controllers.user', [])
                 posts: -1
             };
         }
-        // UserSrv.saveAuto(!!$scope.user.auto ? $scope.user.auto : {}).then(
         UserSrv.saveAuto(auto).then(
             function (data) {
                 if ($rootScope.initialSetup) {
