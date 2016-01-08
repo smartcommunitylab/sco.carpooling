@@ -286,7 +286,8 @@ angular.module('carpooling', [
 
     $rootScope.$on('$stateChangeStart',
         function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+            if (!$rootScope.initialSetup && toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+                $rootScope.initialSetup = !StorageSrv.isProfileComplete();
                 event.preventDefault();
                 $state.go('app.profilo');
             }

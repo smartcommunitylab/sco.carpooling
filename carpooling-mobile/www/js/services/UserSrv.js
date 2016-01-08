@@ -20,25 +20,26 @@ angular.module('carpooling.services.user', [])
                         // It's-a-me!
                         StorageSrv.saveUser(response.data.data).then(
                             function (user) {
-                                deferred.resolve(user);
+                              // My communities
+                              userService.getCommunities().then(
+                                  function (communities) {
+                                      communities.forEach(function (community) {
+                                          //delete community['color'];
+                                          delete community['zone'];
+                                          delete community['cars'];
+                                          delete community['users'];
+                                          delete community['userObjs'];
+                                      });
+                                      StorageSrv.saveCommunities(communities);
+                                      deferred.resolve(user);
+                                  },
+                                  function (err) {
+                                      deferred.reject(err);
+                                  }
+                              );
                             },
                             function (err) {
                                 deferred.reject(err);
-                            }
-                        );
-
-                        // My communities
-                        userService.getCommunities().then(
-                            function (communities) {
-                                communities.forEach(function (community) {
-                                    //delete community['color'];
-                                    delete community['zone'];
-                                    delete community['cars'];
-                                    delete community['users'];
-                                    delete community['userObjs'];
-                                });
-                                StorageSrv.saveCommunities(communities);
-                                deferred.resolve(communities);
                             }
                         );
                     } else {
@@ -258,11 +259,11 @@ angular.module('carpooling.services.user', [])
 
         var httpConfig = Config.getHTTPConfig();
 
-        if (!!start || !!count) {
+        if (start != null || count != null) {
             httpConfig.params = {};
 
-            if (!!start) {
-                if (Number.isInteger(start) && start >= 0) {
+            if (start != null) {
+                if (start >= 0) {
                     httpConfig.params['start'] = start;
                 } else {
                     deferred.reject('Invalid "start" value');
@@ -270,8 +271,8 @@ angular.module('carpooling.services.user', [])
                 }
             }
 
-            if (!!count) {
-                if (Number.isInteger(count) && count > 0) {
+            if (count != null) {
+                if (count > 0) {
                     httpConfig.params['count'] = count;
                 } else {
                     deferred.reject('Invalid "count" value');

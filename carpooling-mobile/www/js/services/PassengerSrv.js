@@ -27,14 +27,13 @@ angular.module('carpooling.services.passenger', [])
 
     passengerService.getPassengerTrips = function (start, count) {
         var deferred = $q.defer();
-
         var httpConfig = Config.getHTTPConfig();
 
-        if (!!start || !!count) {
+        if (start != null || count != null) {
             httpConfig.params = {};
 
-            if (!!start) {
-                if (Number.isInteger(start) && start >= 0) {
+            if (start != null) {
+                if (start >= 0) {
                     httpConfig.params['start'] = start;
                 } else {
                     deferred.reject('Invalid "start" value');
@@ -42,8 +41,8 @@ angular.module('carpooling.services.passenger', [])
                 }
             }
 
-            if (!!count) {
-                if (Number.isInteger(count) && count > 0) {
+            if (count != null) {
+                if (count > 0) {
                     httpConfig.params['count'] = count;
                 } else {
                     deferred.reject('Invalid "count" value');
@@ -55,6 +54,7 @@ angular.module('carpooling.services.passenger', [])
         $http.get(Config.getServerURL() + '/api/passenger/trips', httpConfig)
 
         .then(function (response) {
+
                 if (response.data[0] == '<') {
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
