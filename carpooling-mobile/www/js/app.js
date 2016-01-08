@@ -237,10 +237,11 @@ angular.module('carpooling', [
         LoginSrv.login().then(
             function (data) {
                 $rootScope.loginStarted = false;
-                UserSrv.getUser(data.userId);
-                $rootScope.pushRegistration(data.userId);
-                $state.go('app.home', {}, {
-                    reload: true
+                UserSrv.getUser(data.userId).then(function() {
+                  $rootScope.pushRegistration(data.userId);
+                  $state.go('app.home', {}, {
+                      reload: true
+                  });
                 });
             },
             function (error) {
