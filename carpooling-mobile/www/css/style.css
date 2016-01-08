@@ -72,6 +72,11 @@
     background-color: #4EB0E6;
     color: #FFFFFF;
 }
+.carpooling-theme .button-carpooling-inverse {
+    border-color: transparent;
+    background-color: transparent;
+    color: #4EB0E6;
+}
 .carpooling-theme .button.button-icon.icon {
     color: #4EB0E6;
 }
@@ -139,7 +144,11 @@
     min-width: 65px;
     margin-left: 5px;
 }
-
+.carpooling-theme .action-sheet-group .action-sheet-option.button,
+.carpooling-theme .action-sheet-group .action-sheet-destructive.button {
+    text-align: left;
+    padding-left: 50px;
+}
 /* Community infos */
 
 .carpooling-theme .info h5 {

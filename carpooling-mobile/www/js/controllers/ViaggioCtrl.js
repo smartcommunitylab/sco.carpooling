@@ -1,7 +1,7 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
-  $scope.travelDateFormat = 'dd MMMM yyyy';
+.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+    $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
     $scope.isMine = null;
@@ -110,6 +110,7 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.reject = function (booking) {
         var newBooking = angular.copy(booking);
         newBooking['accepted'] = -1;
+
         DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
             function (data) {
                 refreshTrip(data);
@@ -121,26 +122,74 @@ angular.module('carpooling.controllers.viaggio', [])
         );
     };
 
-    $scope.positiveAction = function (booking) {
-        // NOTE accept booking or go to chat
+    $scope.accept = function (booking) {
         var newBooking = angular.copy(booking);
+        newBooking['accepted'] = 1;
 
-        if (booking['accepted'] === 0) {
-            newBooking['accepted'] = 1;
-            DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
-                function (data) {
-                    refreshTrip(data);
-                    Utils.toast(($filter('translate')('toast_booking_accepted')));
+        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
+            function (data) {
+                refreshTrip(data);
+                Utils.toast(($filter('translate')('toast_booking_accepted')));
+            },
+            function (error) {
+                Utils.toast();
+            }
+        );
+    };
+
+    $scope.chat = function (booking) {
+        $state.go('app.chat', {
+            travelId: $scope.travelId,
+            personId: booking.traveller.userId
+        });
+    };
+
+    $scope.rate = function (booking) {
+        // TODO implement $scope.rate
+        Utils.toast('OMG I HAVE TO RATE! ENABLE THIS!!!');
+        return true;
+    };
+
+    $scope.showActions = function (booking) {
+        $ionicActionSheet.show({
+            titleText: booking.traveller.name + ' ' + booking.traveller.surname,
+            buttons: [
+                {
+                    text: '<i class="icon ion-chatboxes"></i> ' + $filter('translate')('action_chat')
                 },
-                function (error) {
-                    Utils.toast();
+                {
+                    text: '<i class="icon ion-star"></i> ' + $filter('translate')('action_rate_passenger')
                 }
-            );
+            ],
+            buttonClicked: function (index) {
+                switch (index) {
+                    case 0:
+                        $scope.chat(booking);
+                        return true;
+                        break;
+                    case 1:
+                        $scope.rate(booking);
+                        return true;
+                        break;
+                    default:
+                        return false;
+                }
+            },
+            destructiveText: '<i class="icon ion-close-round"></i> ' + $filter('translate')('action_reject'),
+            destructiveButtonClicked: function () {
+                $scope.reject(booking);
+            },
+            cancelText: $filter('translate')('cancel')
+        });
+    };
+
+    $scope.positiveAction = function (booking) {
+        // NOTE accept booking or show all the actions
+        if (booking['accepted'] === 0) {
+            $scope.accept(booking);
         } else if (booking.accepted === 1) {
-            $state.go('app.chat', {
-                travelId: $scope.travelId,
-                personId: booking.traveller.userId
-            });
+            //$scope.chat(booking);
+            $scope.showActions(booking);
         }
     };
 
@@ -160,7 +209,7 @@ angular.module('carpooling.controllers.viaggio', [])
         };
 
         if ($rootScope.isRecurrencyEnabled()) {
-            // TODO handle recurrency ('recurrent' and 'date' field, TBD)
+            // FUTURE handle recurrency ('recurrent' and 'date' field, TBD)
         } else {
             booking.recurrent = false;
             booking.date = new Date($scope.selectedTrip.when);
