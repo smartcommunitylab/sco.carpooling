@@ -3,14 +3,6 @@ angular.module('carpooling.controllers.home', [])
 .controller('AppCtrl', function ($scope, $state) {})
 
 .controller('HomeCtrl', function ($scope, $state, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
-    if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
-        UserSrv.getUser(StorageSrv.getUserId()).then(
-            function () {
-                $state.go('app.profilo');
-            }
-        );
-        return;
-    }
 
     $scope.tab = 0;
 

@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicHistory, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
 
     $rootScope.initialSetup = !StorageSrv.isProfileComplete();
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
@@ -98,7 +98,11 @@ angular.module('carpooling.controllers.user', [])
                             Utils.loaded();
                             StorageSrv.setProfileComplete();
                             $rootScope.initialSetup = false;
-                            $state.go('app.home',{},{reload:true});
+                            $ionicHistory.nextViewOptions({
+                              historyRoot: true,
+                              disableBack: true
+                            });
+                            $state.go('app.home');
                         }
                     );
                 } else {
