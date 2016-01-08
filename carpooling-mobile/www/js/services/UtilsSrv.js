@@ -1,6 +1,6 @@
 angular.module('carpooling.services.utils', [])
 
-.factory('Utils', function ($rootScope, $q, $filter, $ionicLoading, $ionicPopup, $timeout) {
+.factory('Utils', function ($rootScope, $q, $filter, $ionicLoading, $ionicPopup, $timeout, StorageSrv) {
     var utilsService = {};
 
     var monthList = [
@@ -67,6 +67,17 @@ angular.module('carpooling.services.utils', [])
             });
 
             return bookingCounters;
+        }
+    };
+
+    utilsService.getTripStyle = function (trip) {
+        if (!!trip.communityIds && trip.communityIds.length === 1) {
+            var community = StorageSrv.getCommunityById(trip.communityIds[0]);
+            if (!!community) {
+                return {
+                    'border-color': '#' + community.color + ' #' + community.color + ' transparent transparent'
+                };
+            }
         }
     };
 

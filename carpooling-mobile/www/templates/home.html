@@ -34,16 +34,13 @@
                                             <span class="trip-data-requested" ng-if="trip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
                                         </li>
                                     </ul>
-                                    <!-- TODO: define when the flag needs to be shown here -->
-                                    <div class="trip-flag" ng-if="false"></div>
+                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
                                 </div>
                                 <div class="col-25 trip-counter">
-                                    <!-- TODO: define when to show description or confirmation button -->
                                     <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
                                     <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                                 </div>
-                                <!-- TODO: define when the flag needs to be shown here -->
-                                <div class="trip-flag" ng-if="false"></div>
+                                <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                             </div>
                         </div>
                     </div>
@@ -78,16 +75,13 @@
                                             {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
                                         </li>
                                     </ul>
-                                    <!-- TODO: define when the flag needs to be shown here -->
-                                    <div class="trip-flag" ng-if="false"></div>
+                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
                                 </div>
                                 <div class="col-25 trip-counter">
-                                    <!-- TODO: define when to show description or confirmation button -->
                                     <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
                                     <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                                 </div>
-                                <!-- TODO: define when the flag needs to be shown here -->
-                                <div class="trip-flag" ng-if="false"></div>
+                                <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                             </div>
                         </div>
                     </div>
