@@ -229,9 +229,14 @@ angular.module('carpooling', [
         return Utils.getNumber(num);
     };
 
+    $rootScope.loginStarted = false;
     $rootScope.login = function () {
+        if ($rootScope.loginStarted) return;
+
+        $rootScope.loginStarted = true;
         LoginSrv.login().then(
             function (data) {
+                $rootScope.loginStarted = false;
                 UserSrv.getUser(data.userId);
                 $rootScope.pushRegistration(data.userId);
                 $state.go('app.home', {}, {
@@ -239,6 +244,7 @@ angular.module('carpooling', [
                 });
             },
             function (error) {
+                $rootScope.loginStarted = false;
                 Utils.toast();
                 StorageSrv.saveUser(null);
                 ionic.Platform.exitApp();
@@ -277,10 +283,7 @@ angular.module('carpooling', [
 
     $rootScope.$on('$stateChangeStart',
         function (event, toState, toParams, fromState, fromParams) {
-            if (toState.name == 'app.home' && !LoginSrv.userIsLogged()) {
-                event.preventDefault();
-                $rootScope.login();
-            } else if (toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+            if (toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
                 event.preventDefault();
                 $state.go('app.profilo');
             }
@@ -460,7 +463,14 @@ angular.module('carpooling', [
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/home');
+    $urlRouterProvider.otherwise(function($injector){
+      var logged = $injector.get('LoginSrv').userIsLogged();
+      if (!logged) {
+          $injector.get('$rootScope').login();
+          return '/';
+      }
+      return '/app/home';
+    });
 })
 
 .config(function ($translateProvider) {
