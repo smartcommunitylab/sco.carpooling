@@ -279,6 +279,8 @@ angular.module('carpooling', [
 
         if (LoginSrv.userIsLogged()) {
             $rootScope.pushRegistration(StorageSrv.getUserId());
+        } else {
+          $rootScope.login();
         }
     });
 
@@ -467,7 +469,6 @@ angular.module('carpooling', [
     $urlRouterProvider.otherwise(function($injector){
       var logged = $injector.get('LoginSrv').userIsLogged();
       if (!logged) {
-          $injector.get('$rootScope').login();
           return '/';
       }
       return '/app/home';
