@@ -348,6 +348,7 @@ public class CarPoolingManager {
 
 		for (Community community : communities) {
 			Community temp = new Community(community.getId(), community.getName(), community.getUsers());
+			temp.setColor(community.getColor());
 			filteredCommunities.add(temp);
 		}
 
