@@ -47,14 +47,17 @@ angular.module('carpooling.controllers.notifications', [])
     $scope.all = 10;
     $scope.end_reached = false;
 
+    var correctNotificsShortText = function (list) {
+        list.forEach(function (m) {
+            m.short_text = shortText(m);
+        });
+        return list;
+    };
+
     $scope.loadMoreNotifications = function () {
         UserSrv.readNotifications($scope.start, $scope.all).then(function (notifics) {
-            var notifications = [];
-            notifications = notifics ? notifics : [];
-            notifications = correctNotificsShortText(notifications);
-            for (var i = 0; i < notifications.length; i++) {
-                $scope.notifications.push(notifications[i]);
-            }
+            notifics = correctNotificsShortText(notifics);
+            $scope.notifications = !!$scope.notifications ? $scope.notifications.concat(notifics) : notifics;
 
             if (notifics.length >= $scope.all) {
                 $scope.$broadcast('scroll.infiniteScrollComplete');
@@ -73,13 +76,6 @@ angular.module('carpooling.controllers.notifications', [])
 
     $scope.canWeLoadMoreNotifics = function () {
         return !$scope.end_reached;
-    };
-
-    var correctNotificsShortText = function (list) {
-        list.forEach(function (m) {
-            m.short_text = shortText(m);
-        });
-        return list;
     };
 
     $scope.markANotification = function (id) {
