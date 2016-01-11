@@ -50,6 +50,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -380,6 +381,31 @@ public class CarPoolingManager {
 
 		return detailedCommunities;
 	}
+	
+	public Community readCommunity(String communityId) {
+
+		Community community = communityRepository.findOne(communityId);
+
+		if (community != null) {
+
+			int nrOfCars = 0;
+
+			for (String id : community.getUsers()) {
+				User user = userRepository.findOne(id);
+				if (user != null) {
+					community.getUserObjs().add(user);
+					// incremet car total(if present).
+					if (user.getAuto() != null) {
+						nrOfCars = nrOfCars + 1;
+					}
+				}
+
+			}
+			community.setCars(nrOfCars);
+		}
+
+		return community;
+	}
 
 	public TravelProfile saveTravelProfile(TravelProfile travelProfile, String userId) {
 
@@ -708,6 +734,58 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
+	
+	
+	@Scheduled(cron = "0 0 0/1 * * ?")
+	public void autoSendEvaluationNotification() throws CarPoolingCustomException {
+		System.out.println("/**** Firing Rating Notifications****/ ");
 
+		// search for travels that are completed at this time.
+		for (Travel travel : travelRepository.searchCompletedTravels(System.currentTimeMillis())) {
 
+			// check if travel is already rated, look in notification.
+			List<Notification> travelRatingNotifications = notificationRepository.findByTravelIdAndNotificationType(
+					travel.getId(), CarPoolingUtils.NOTIFICATION_RATING);
+
+			if (travelRatingNotifications != null && travelRatingNotifications.size() > 0) {
+				continue;
+			} else {
+				try {
+
+					String travelId = travel.getId();
+					Long timestamp = System.currentTimeMillis();
+
+					// create notification for driver.
+					String driverId = travel.getUserId();
+					Map<String, String> dataDriverNotification = new HashMap<String, String>();
+					dataDriverNotification.put("message", "Si prega di valutare i passeggeri del suo viaggio completato");
+					dataDriverNotification.put("travelId", travelId);
+
+					Notification driverRatingNotification = new Notification(driverId,
+							CarPoolingUtils.NOTIFICATION_RATING, dataDriverNotification, false, travelId, timestamp);
+					notificationRepository.save(driverRatingNotification);
+					sendPushNotification.sendNotification(driverId, driverRatingNotification);
+
+					// create notifications for passengers.
+					Map<String, String> dataPassengerNotification = new HashMap<String, String>();
+					dataPassengerNotification.put("message", "Si prega di valutare il conducente di viaggio completato");
+					dataPassengerNotification.put("travelId", travelId);
+
+					for (Booking booking : travel.getBookings()) {
+						if (booking.getAccepted() == 1) {
+							String passengerId = booking.getTraveller().getUserId();
+							Notification passengerRatingNotification = new Notification(passengerId,
+									CarPoolingUtils.NOTIFICATION_RATING, dataPassengerNotification, false, travelId,
+									timestamp);
+							notificationRepository.save(passengerRatingNotification);
+							sendPushNotification.sendNotification(passengerId, passengerRatingNotification);
+						}
+					}
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			}
+		}
+	}
+	
 }

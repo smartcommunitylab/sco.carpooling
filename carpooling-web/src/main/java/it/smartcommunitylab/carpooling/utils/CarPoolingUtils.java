@@ -43,6 +43,7 @@ public class CarPoolingUtils {
 	public static final String NOTIFICATION_BOOKING = "ParticipationRequest";
 	public static final String NOTIFICATION_CONFIRM = "ParticipationResponse";
 	public static final String NOTIFICATION_CHAT = "Chat";
+	public static final String NOTIFICATION_RATING = "RatingRequest";
 
 	public static Date getTimeByOffset(Date reqDate, int offset) {
 		Date result;

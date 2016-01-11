@@ -112,6 +112,14 @@ public class TestRepository {
 		}
 	}
 	
+	@Test
+	public void testCompletedTravels() {
+		
+		for (Travel travel: travelRepository.searchCompletedTravels(System.currentTimeMillis())) {
+			System.out.println(travel.getId());
+		}
+	}
+	
 //	@Test
 	public void testTravelRepoById() {
 		Travel travel = travelRepository.findOne("560263eed1f1f802c2a83efg");

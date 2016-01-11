@@ -246,6 +246,20 @@ public class ServiceController {
 	Response<List<Community>> readCommunitiesWithDetails() throws CarPoolingCustomException {
 		return new Response<List<Community>>(carPoolingManager.readCommunitiesWithDetails(getUserId()));
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/community/{communityId}")
+	public @ResponseBody
+	Response<Community> readCommunity(@PathVariable String communityId) throws CarPoolingCustomException {
+
+		Community community = carPoolingManager.readCommunity(communityId);
+
+		if (community != null) {
+			return new Response<Community>(community);
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "community not found");
+		}
+
+	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/autoInfo")
 	public @ResponseBody
