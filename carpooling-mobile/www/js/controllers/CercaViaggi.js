@@ -226,8 +226,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     /* Time Picker */
     var now = new Date();
     $scope.timepickerObj = {
-        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
-        step: 1,
+        inputEpochTime: (now.getHours() * 60 * 60) + ((now.getMinutes() - (now.getMinutes() % Config.getClockStep()) + Config.getClockStep()) * 60),
+        step: Config.getClockStep(),
         format: 24,
         titleLabel: $filter('translate')('popup_timepicker_title'),
         setLabel: $filter('translate')('ok'),
@@ -249,8 +249,6 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
         selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
         $scope.travelRequest['when'] = selectedDateTime.getTime();
-
-        //console.log($scope.travelRequest);
 
         Utils.loading();
         PassengerSrv.searchTrip($scope.travelRequest).then(

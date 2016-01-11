@@ -17,6 +17,8 @@ angular.module('carpooling.services.config', [])
     var LON = 11.121270;
     var ZOOM = 15;
 
+    var CLOCK_STEP = 5;
+
     var RATING_MAX = 5;
 
     var LOGIN_EXPIRED = 'LOGIN_EXPIRED';
@@ -42,6 +44,9 @@ angular.module('carpooling.services.config', [])
         },
         getZoom: function () {
             return ZOOM;
+        },
+        getClockStep: function () {
+            return CLOCK_STEP;
         },
         getRatingMax: function () {
             return RATING_MAX;

@@ -224,8 +224,8 @@ angular.module('carpooling.controllers.offri', [])
     /* Time Picker */
     var now = new Date();
     $scope.timepickerObj = {
-        inputEpochTime: (now.getHours() * 60 * 60) + (now.getMinutes() * 60),
-        step: 1,
+        inputEpochTime: (now.getHours() * 60 * 60) + ((now.getMinutes() - (now.getMinutes() % Config.getClockStep()) + Config.getClockStep()) * 60),
+        step: Config.getClockStep(),
         format: 24,
         titleLabel: $filter('translate')('popup_timepicker_title'),
         setLabel: $filter('translate')('ok'),
