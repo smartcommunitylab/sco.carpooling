@@ -99,7 +99,7 @@
                     <!--<i class="icon ion-person"></i>-->
                     <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
                     <!--Name Surname-->
-                    <button class="button button-carpooling" ng-click="reject(booking)">
+                    <button class="button button-carpooling" ng-if="booking.accepted === 0" ng-click="reject(booking)">
                         <i class="icon ion-close-round"></i>
                     </button>
                     <button class="button button-carpooling-inverse" ng-click="positiveAction(booking)">
