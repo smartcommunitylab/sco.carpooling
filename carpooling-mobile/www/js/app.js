@@ -620,6 +620,7 @@ angular.module('carpooling', [
         notif_short_request: '{{name}} chiede di partecipare al tuo viaggio',
         notif_short_response_ok: 'Viaggio confermato',
         notif_short_response_ko: 'Viaggio rifiutato',
+        notif_short_eval: 'Valuta il tuo viaggio',
         toast_error_generic: 'OPS! Problema...',
         toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
         toast_trip_offered: 'Il tuo viaggio è stato offerto',
