@@ -44,6 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,6 +63,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CarPoolingManager {
 
+	private static final transient Log logger = LogFactory.getLog(CarPoolingManager.class);
+	
 	@Autowired
 	private TravelRequestRepository travelRequestRepository;
 	@Autowired
@@ -738,7 +742,7 @@ public class CarPoolingManager {
 
 	@Scheduled(cron = "0 0 0/1 * * ?")
 	public void autoSendEvaluationNotification() throws CarPoolingCustomException {
-		System.out.println("/**** Firing Rating Notifications****/ ");
+		logger.info("/**** Firing Rating Notifications****/ ");
 
 		// search for travels that are completed at this time.
 		for (Travel travel : travelRepository.searchCompletedTravels(System.currentTimeMillis())) {
