@@ -139,6 +139,7 @@ angular.module('carpooling.controllers.user', [])
 
     $scope.drivertripsheight = "";
     $scope.passengertripsheight = "";
+
     $scope.ratingOffer = 0;
     $scope.ratingAccepted = 0;
 
@@ -195,6 +196,7 @@ angular.module('carpooling.controllers.user', [])
             $scope.passengerRating = user.gameProfile.passengerRating;
             $scope.totalDriverTrips = user.offeredTravels;
             $scope.totalPassengerTrips = user.participatedTravels;
+            calculateHeight($scope.totalDriverTrips, $scope.totalPassengerTrips);
             Utils.loaded();
         }, function (err) {
             Utils.loaded();

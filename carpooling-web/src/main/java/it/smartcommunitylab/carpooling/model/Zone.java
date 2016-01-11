@@ -34,7 +34,7 @@ public class Zone {
 	/** longitude (reqd).**/
 	private double longitude;
 	/** zone radius(default value to understand).**/
-	private double range = 1;
+	private double range = 5;
 //	@GeoSpatialIndexed
 	private double[] coordinates;
 

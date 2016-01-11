@@ -167,7 +167,27 @@ angular.module('carpooling.services.user', [])
 
         return deferred.promise;
     };
+    userService.getCommunityDetails = function (communityId) {
+        var deferred = $q.defer();
 
+        $http.get(Config.getServerURL() + '/api/read/community/'+communityId, Config.getHTTPConfig())
+
+        .then(
+            function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
+            }
+        );
+
+        return deferred.promise;
+    };
     userService.getCommunityTravels = function (communityId, timeinmillis) {
         var deferred = $q.defer();
 

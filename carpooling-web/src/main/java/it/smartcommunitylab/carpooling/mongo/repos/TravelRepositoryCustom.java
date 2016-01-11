@@ -37,4 +37,6 @@ public interface TravelRepositoryCustom {
 	
 	List<Travel> searchCommunityTravels(String communityId, Long timeInMillies);
 
+	List<Travel> searchCompletedTravels(Long timeInMillies);
+
 }

@@ -16,9 +16,12 @@
 
 package it.smartcommunitylab.carpooling.test.managers;
 
+import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.mongo.repos.NotificationRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
 
 import java.io.IOException;
@@ -45,6 +48,8 @@ public class TestNotifications {
 
 	@Autowired
 	NotificationRepository notificationRepository;
+	@Autowired
+	private TravelRepository travelRepository;
 
 	@Autowired
 	CarPoolingManager carPoolingManager;
@@ -54,15 +59,19 @@ public class TestNotifications {
 	@After
 	public void after() {
 		notificationRepository.deleteAll();
+		travelRepository.deleteAll();
 	}
 
 	@Before
 	public void before() {
 
 		notificationRepository.deleteAll();
+		travelRepository.deleteAll();
 
 		InputStream notificationJson = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("notification.json");
+
+		InputStream travelJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("travel.json");
 
 		try {
 			JsonNode notificationsRootNode = mapper.readTree(notificationJson);
@@ -71,6 +80,15 @@ public class TestNotifications {
 			for (JsonNode node : notificationsArrayNode) {
 				Notification notification = mapper.convertValue(node, Notification.class);
 				notificationRepository.save(notification);
+
+			}
+
+			JsonNode travelRootNode = mapper.readTree(travelJson);
+			ArrayNode travelArrayNode = (ArrayNode) travelRootNode;
+
+			for (JsonNode node : travelArrayNode) {
+				Travel refTravel = mapper.convertValue(node, Travel.class);
+				travelRepository.save(refTravel);
 
 			}
 
@@ -135,6 +153,13 @@ public class TestNotifications {
 		List<Notification> nonReadNotification = notificationRepository.findUnReadNotifications("53");
 		// total = read + non read.
 		Assert.assertEquals(all.size(), (readNotification.size() + nonReadNotification.size()));
+
+	}
+
+	@Test
+	public void testNotificationRating() throws CarPoolingCustomException {
+
+		carPoolingManager.autoSendEvaluationNotification();
 
 	}
 

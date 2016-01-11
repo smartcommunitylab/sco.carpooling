@@ -454,4 +454,18 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		return travelsForPassenger;
 	}
 
+	@Override
+	public List<Travel> searchCompletedTravels(Long timeInMillies) {
+		List<Travel> completedTravels = new ArrayList<Travel>();
+
+		Criteria criteria = new Criteria().where("route.endtime").lte(timeInMillies);
+
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		completedTravels = mongoTemplate.find(query, Travel.class);
+
+		return completedTravels;
+	}
+
 }

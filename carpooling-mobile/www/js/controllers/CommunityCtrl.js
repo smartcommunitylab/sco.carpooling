@@ -19,7 +19,7 @@ angular.module('carpooling.controllers.communities', [])
     $scope.selectCommunity = function (index) {
         var community = $scope.communities[index];
         $state.go('app.comunitainfo', {
-            'community': community
+            'communityId': community.id
         });
     };
 

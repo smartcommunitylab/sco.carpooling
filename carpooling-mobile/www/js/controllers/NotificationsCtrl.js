@@ -19,6 +19,10 @@ angular.module('carpooling.controllers.notifications', [])
         ParticipationResponse: {
             label: 'notif_participate_response',
             image: 'ion-android-car'
+        },
+        RatingRequest: {
+            label: 'notif_eval',
+            image: 'ion-android-star'
         }
     };
 
@@ -36,6 +40,8 @@ angular.module('carpooling.controllers.notifications', [])
                 });
             case 'ParticipationResponse':
                 return $filter('translate')(notific.data.status + '' == '1' ? 'notif_short_response_ok' : 'notif_short_response_ko');
+            case 'RatingRequest':
+                return $filter('translate')('notif_short_eval');
             default:
                 return '';
         };
@@ -169,6 +175,11 @@ angular.module('carpooling.controllers.notifications', [])
                 break;
             case 'ParticipationResponse':
                 // driver rating - to driver profile (trip data)
+                $state.go('app.viaggio', {
+                    travelId: notific.travelId
+                });
+                break;
+            case 'RatingRequest':
                 $state.go('app.viaggio', {
                     travelId: notific.travelId
                 });
