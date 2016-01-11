@@ -755,24 +755,17 @@ public class CarPoolingManager {
 					String travelId = travel.getId();
 					Long timestamp = System.currentTimeMillis();
 
-					// create notification for driver.
-					String driverId = travel.getUserId();
-					Map<String, String> dataDriverNotification = new HashMap<String, String>();
-					dataDriverNotification.put("message", "Si prega di valutare i passeggeri del suo viaggio completato");
-					dataDriverNotification.put("travelId", travelId);
-
-					Notification driverRatingNotification = new Notification(driverId,
-							CarPoolingUtils.NOTIFICATION_RATING, dataDriverNotification, false, travelId, timestamp);
-					notificationRepository.save(driverRatingNotification);
-					sendPushNotification.sendNotification(driverId, driverRatingNotification);
-
 					// create notifications for passengers.
 					Map<String, String> dataPassengerNotification = new HashMap<String, String>();
-					dataPassengerNotification.put("message", "Si prega di valutare il conducente di viaggio completato");
+					dataPassengerNotification
+							.put("message", "Si prega di valutare il conducente di viaggio completato");
 					dataPassengerNotification.put("travelId", travelId);
+
+					boolean nofityDriver = false;
 
 					for (Booking booking : travel.getBookings()) {
 						if (booking.getAccepted() == 1) {
+							nofityDriver = true;
 							String passengerId = booking.getTraveller().getUserId();
 							Notification passengerRatingNotification = new Notification(passengerId,
 									CarPoolingUtils.NOTIFICATION_RATING, dataPassengerNotification, false, travelId,
@@ -780,6 +773,22 @@ public class CarPoolingManager {
 							notificationRepository.save(passengerRatingNotification);
 							sendPushNotification.sendNotification(passengerId, passengerRatingNotification);
 						}
+					}
+
+					if (nofityDriver) {
+
+						// create notification for driver only if there is atleast a passenger accepted.
+						String driverId = travel.getUserId();
+						Map<String, String> dataDriverNotification = new HashMap<String, String>();
+						dataDriverNotification.put("message",
+								"Si prega di valutare i passeggeri del suo viaggio completato");
+						dataDriverNotification.put("travelId", travelId);
+
+						Notification driverRatingNotification = new Notification(driverId,
+								CarPoolingUtils.NOTIFICATION_RATING, dataDriverNotification, false, travelId, timestamp);
+						notificationRepository.save(driverRatingNotification);
+						sendPushNotification.sendNotification(driverId, driverRatingNotification);
+
 					}
 				} catch (JSONException e) {
 					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
