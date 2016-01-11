@@ -31,7 +31,6 @@ public class MainActivity extends CordovaActivity
         super.onCreate(savedInstanceState);
         // Set by <content src="index.html" /> in config.xml
         Intent intent = getIntent();
-        // Set by <content src="index.html" /> in config.xml
         String urlHash = intent.hasExtra("urlHash") ? intent.getStringExtra("urlHash") : "";
         loadUrl(launchUrl + urlHash);
         //loadUrl(launchUrl);

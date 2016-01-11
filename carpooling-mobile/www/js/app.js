@@ -61,12 +61,16 @@ angular.module('carpooling', [
                             s_path = s_path.substring(2, s_path.length);
                             $state.go(s_path);
                         } else {
-                            alert("in open local notific" + JSON.stringify(notific_data));
+                            // notific without a urlHash attribute but with a url attribute
+                            if(notific_data.url){
+                                var s_path = notific_data.url.replace(new RegExp("/", 'g'), ".");
+                                s_path = s_path.substring(2, s_path.length);
+                                $state.go(s_path);
+                            } else {}
                         }
                     });
                 } catch (ex) {}
             }
-            //alert('Reveived notification:' + JSON.stringify(pn));
         }
     };
 
@@ -105,156 +109,144 @@ angular.module('carpooling', [
     };
 
     $rootScope.pushRegistration = function (userId) {
-        var channel = 'CarPooling_' + userId;
-        try {
-            if (isAndroid) {
-                if(window.parsePlugin){
-                    window.parsePlugin.register({appId:Config.getAppId(), clientKey:Config.getClientKey(), ecb:"onNotification"},function() {
-                            window.parsePlugin.subscribe(channel, function () {
-                                //console.log("Succes in channel " + channel + " creation");
-                            });
-                        }, function (e) {
-                            console.log("Error in parse initialize");
-                        }
-                    );
+       var channel = 'CarPooling_' + userId;
+       try {
+           if (window.ParsePushPlugin) {
+               if (isAndroid) {
+                   window.ParsePushPlugin.subscribe(channel, function () {
+                       //console.log("Succes in channel " + channel + " creation");
+                   });
 
-                    onNotification = function(pn){
-                        //alert("received pn: " + JSON.stringify(pn));
-                        var chat_parameters = $rootScope.isChat(window.location);
-                        if(chat_parameters.length > 0){
-                            var travelId = chat_parameters[0];
-                            var senderId = chat_parameters[1];
-                            if(pn.cp_senderId && pn.cp_travelId){
-                                if(pn.cp_senderId == senderId && pn.cp_travelId == travelId){
-                                    $state.go('app.chat', { //transitionTo
-                                        travelId: travelId,
-                                        personId: senderId
-                                    }, {
-                                        reload: true
-                                    });
-                                    $rootScope.updateMyNotification(travelId, senderId);
-                                } else {
-                                    $rootScope.manageLocalNotification(pn);
-                                }
-                            } else {
-                                $rootScope.manageLocalNotification(pn);
-                            }
-                        } else {
-                            $rootScope.manageLocalNotification(pn);
-                        }
-                    }
+                   window.ParsePushPlugin.on('openPN', function (pn) {
+                       //alert("in open notific" + JSON.stringify(pn));
+                       if (pn.urlHash) {
+                           var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
+                           s_path = s_path.substring(2, s_path.length);
+                           //window.location.path = "/notifiche";
+                           //window.location.reload(true);
+                           $state.go(s_path);
+                       } else {
+                           // urlHash not present. I open the app in the last page/view
+                       }
+                   });
+                   window.ParsePushPlugin.on('receivePN', function (pn) {
+                       var chat_parameters = $rootScope.isChat(window.location);
+                       if (chat_parameters.length > 0) {
+                           var travelId = chat_parameters[0];
+                           var senderId = chat_parameters[1];
+                           if (pn.cp_senderId && pn.cp_travelId) {
+                               if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
+                                   $state.go('app.chat', { //transitionTo
+                                       travelId: travelId,
+                                       personId: senderId
+                                   }, {
+                                       reload: true
+                                   });
+                                   $rootScope.updateMyNotification(travelId, senderId);
+                               } else {
+                                   $rootScope.manageLocalNotification(pn);
+                               }
+                           } else {
+                               $rootScope.manageLocalNotification(pn);
+                           }
+                       } else {
+                           $rootScope.manageLocalNotification(pn);
+                       }
+                   });
+               } else if (isIOS) {
+                   window.ParsePushPlugin.register({
+                       appId: Config.getAppId(),
+                       clientKey: Config.getClientKey(),
+                       ecb: "onNotification"
+                   }, function () {
+                       window.ParsePushPlugin.subscribe(channel, function () {
+                           //console.log("Succes in channel " + channel + " creation");
+                       });
+                   }, function (e) {
+                       console.log("Error in parse initialize");
+                   });
 
+                   onNotification = function (pn) {
+                       alert("received pn: " + JSON.stringify(pn));
+                       var chat_parameters = $rootScope.isChat(window.location);
+                       if (chat_parameters.length > 0) {
+                           var travelId = chat_parameters[0];
+                           var senderId = chat_parameters[1];
+                           if (pn.cp_senderId && pn.cp_travelId) {
+                               if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
+                                   $state.go('app.chat', { //transitionTo
+                                       travelId: travelId,
+                                       personId: senderId
+                                   }, {
+                                       reload: true
+                                   });
+                                   $rootScope.updateMyNotification(travelId, senderId);
+                                   /*$state.go('app.chat', {
+                                       travelId: travelId,
+                                       personId: senderId
+                                   });*/
+                               } else {
+                                   $rootScope.manageLocalNotification(pn);
+                               }
+                           } else {
+                               $rootScope.manageLocalNotification(pn);
+                           }
+                       } else {
+                           $rootScope.manageLocalNotification(pn);
+                       }
+                   }
+               }
 
-                /*if (window.ParsePushPlugin) {
-                    window.ParsePushPlugin.subscribe(channel, function () {
-                        //console.log("Succes in channel " + channel + " creation");
-                    });
-                    window.ParsePushPlugin.on('openPN', function (pn) {
-                        //alert("in open notific" + JSON.stringify(pn));
-                        if (pn.urlHash) {
-                            var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
-                            s_path = s_path.substring(2, s_path.length);
-                            //window.location.path = "/notifiche";
-                            //window.location.reload(true);
-                            $state.go(s_path);
-                        } else {
-                            // urlHash not present. I open the app in the last page/view
-                        }
-                    });
-                    window.ParsePushPlugin.on('receivePN', function (pn) {
-                        var chat_parameters = $rootScope.isChat(window.location);
-                        if (chat_parameters.length > 0) {
-                            var travelId = chat_parameters[0];
-                            var senderId = chat_parameters[1];
-                            if (pn.cp_senderId && pn.cp_travelId) {
-                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
-                                    $state.go('app.chat', { //transitionTo
-                                        travelId: travelId,
-                                        personId: senderId
-                                    }, {
-                                        reload: true
-                                    });
-                                    $rootScope.updateMyNotification(travelId, senderId);
-                                } else {
-                                    $rootScope.manageLocalNotification(pn);
-                                }
-                            } else {
-                                $rootScope.manageLocalNotification(pn);
-                            }
-                        } else {
-                            $rootScope.manageLocalNotification(pn);
-                        }
-                    });*/
-                    //
-                    //you can also listen to your own custom subevents
-                    //
-                    //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
-                    //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
-                }
-            } else if (isIOS) {
-                //window.parsepushnotification.setUp(Config.getAppId(), Config.getClientKey());
-                //window.parsepushnotification.onRegisterAsPushNotificationClientSucceeded = function() {
-                //var channel = 'CarPooling_' + userId;
-                //    window.parsepushnotification.subscribeToChannel(channel); //parameter: channel
-                //    //console.log('successfully created channel ' + channel);
-                //};
-                if (window.parsePlugin) {
-                    window.parsePlugin.register({
-                        appId: Config.getAppId(),
-                        clientKey: Config.getClientKey(),
-                        ecb: "onNotification"
-                    }, function () {
-                        window.parsePlugin.subscribe(channel, function () {
-                            //console.log("Succes in channel " + channel + " creation");
-                        });
-                    }, function (e) {
-                        console.log("Error in parse initialize");
-                    });
-
-                    onNotification = function (pn) {
-                        alert("received pn: " + JSON.stringify(pn));
-                        var chat_parameters = $rootScope.isChat(window.location);
-                        if (chat_parameters.length > 0) {
-                            var travelId = chat_parameters[0];
-                            var senderId = chat_parameters[1];
-                            if (pn.cp_senderId && pn.cp_travelId) {
-                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
-                                    $state.go('app.chat', { //transitionTo
-                                        travelId: travelId,
-                                        personId: senderId
-                                    }, {
-                                        reload: true
-                                    });
-                                    $rootScope.updateMyNotification(travelId, senderId);
-                                    /*$state.go('app.chat', {
-                                        travelId: travelId,
-                                        personId: senderId
-                                    });*/
-                                } else {
-                                    //$rootScope.manageLocalNotification(pn);
-                                }
-                            } else {
-                                //$rootScope.manageLocalNotification(pn);
-                            }
-                        } else {
-                            //$rootScope.manageLocalNotification(pn);
-                        }
-                    }
-                }
-                /*if (window.ParsePushPlugin) {
-                    window.ParsePushPlugin.initialize(Config.getAppId(), Config.getClientKey(), function () {
-                        window.ParsePushPlugin.subscribe(channel, function () {
-                            //console.log("Succes in channel " + channel + " creation");
-                        });
-                    }, function (e) {
-                        console.log("Error in parse initialize");
-                    });
-                }*/
-            }
-        } catch (ex) {
-            //console.log('Exception in parsepush registration ' + ex.message);
-        }
-    };
+               /*if (window.ParsePushPlugin) {
+                   window.ParsePushPlugin.subscribe(channel, function () {
+                       //console.log("Succes in channel " + channel + " creation");
+                   });
+                   window.ParsePushPlugin.on('openPN', function (pn) {
+                       //alert("in open notific" + JSON.stringify(pn));
+                       if (pn.urlHash) {
+                           var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
+                           s_path = s_path.substring(2, s_path.length);
+                           //window.location.path = "/notifiche";
+                           //window.location.reload(true);
+                           $state.go(s_path);
+                       } else {
+                           // urlHash not present. I open the app in the last page/view
+                       }
+                   });
+                   window.ParsePushPlugin.on('receivePN', function (pn) {
+                       var chat_parameters = $rootScope.isChat(window.location);
+                       if (chat_parameters.length > 0) {
+                           var travelId = chat_parameters[0];
+                           var senderId = chat_parameters[1];
+                           if (pn.cp_senderId && pn.cp_travelId) {
+                               if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
+                                   $state.go('app.chat', { //transitionTo
+                                       travelId: travelId,
+                                       personId: senderId
+                                   }, {
+                                       reload: true
+                                   });
+                                   $rootScope.updateMyNotification(travelId, senderId);
+                               } else {
+                                   $rootScope.manageLocalNotification(pn);
+                               }
+                           } else {
+                               $rootScope.manageLocalNotification(pn);
+                           }
+                       } else {
+                           $rootScope.manageLocalNotification(pn);
+                       }
+                   });*/
+               //
+               //you can also listen to your own custom subevents
+               //
+               //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
+               //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
+           }
+       } catch (ex) {
+           //console.log('Exception in parsepush registration ' + ex.message);
+       }
+   };
 
     $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
 
@@ -309,6 +301,8 @@ angular.module('carpooling', [
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
+
+        //alert("Path app " + JSON.stringify(window.location));
 
         if (LoginSrv.userIsLogged()) {
             $rootScope.pushRegistration(StorageSrv.getUserId());
