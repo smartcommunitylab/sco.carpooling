@@ -285,9 +285,9 @@ angular.module('carpooling.controllers.viaggio', [])
         }
         return null;
     };
-//    $scope.showCommunity = function() {
-//        $state.go('app.comunitainfo', {
-//            'community': $scope.mainCommunity
-//        });
-//    }
+    $scope.showCommunity = function() {
+        $state.go('app.comunitainfo', {
+            'communityId': $scope.mainCommunity.id
+        });
+    }
 });

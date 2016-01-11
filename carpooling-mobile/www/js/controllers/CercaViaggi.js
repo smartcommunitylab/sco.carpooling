@@ -6,13 +6,15 @@ angular.module('carpooling.controllers.cercaviaggi', [])
             'name': '',
             'address': '',
             'latitude': 0,
-            'longitude': 0
+            'longitude': 0,
+            'range': 5
         },
         'to': {
             'name': '',
             'address': '',
             'latitude': 0,
-            'longitude': 0
+            'longitude': 0,
+            'range': 5
         },
         'when': 0,
         'monitored': false
