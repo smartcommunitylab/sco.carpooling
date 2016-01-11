@@ -70,16 +70,17 @@
             </ul>
         </div>
 
-        <div class="padding trip-status" ng-if="!isMine && bookingState !== null">
-            <span ng-if="bookingState === -1" class="rejected">{{'lbl_trip_rejected' | translate}}</span>
-            <span ng-if="bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
-            <span ng-if="bookingState === 1" class="accepted">{{'lbl_trip_accepted' | translate}}</span>
+        <div class="padding trip-status" ng-if="!isMine && myBooking.accepted !== null">
+            <span ng-if="myBooking.accepted === -1" class="rejected">{{'lbl_trip_rejected' | translate}}</span>
+            <span ng-if="myBooking.accepted === 0">{{'lbl_trip_requested' | translate}}</span>
+            <span ng-if="myBooking.accepted === 1" class="accepted">{{'lbl_trip_accepted' | translate}}</span>
         </div>
 
         <div class="padding row trip-actions" ng-if="!isMine">
-            <div class="col" ng-if="bookingState === null">
-                <button class="button button-carpooling" ng-click="bookingAction()">
-                    <span>{{'lbl_trip_ask' | translate | uppercase}}</span>
+            <div class="col" ng-if="myBooking.accepted === null || myBooking.accepted !== -1">
+                <button class="button button-carpooling" ng-click="bookingAction()" ng-disabled="myBooking.accepted === 0">
+                    <span ng-if="myBooking.accepted === null">{{'lbl_trip_ask' | translate | uppercase}}</span>
+                    <span ng-if="myBooking.accepted === 0 || myBooking.accepted === 1">{{'lbl_trip_rate' | translate | uppercase}}</span>
                 </button>
             </div>
             <div class="col">
@@ -94,14 +95,14 @@
             <h5>{{'lbl_requests' | translate}}</h5>
             <!--<div class="list">-->
             <ion-list>
-                <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted !== -1">
+                <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted === 0 || booking.accepted === 1">
                     <!--<i class="icon ion-person"></i>-->
                     <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
                     <!--Name Surname-->
-                    <button class="button button-carpooling" ng-if="booking.accepted === 0" ng-click="reject(booking)">
+                    <button class="button button-carpooling" ng-click="reject(booking)">
                         <i class="icon ion-close-round"></i>
                     </button>
-                    <button class="button button-carpooling-inverse" ng-if="booking.accepted === 1" ng-click="positiveAction(booking)">
+                    <button class="button button-carpooling-inverse" ng-click="positiveAction(booking)">
                         <i class="icon" ng-class="{'ion-checkmark-round': booking.accepted === 0, 'ion-more': booking.accepted === 1}"></i>
                     </button>
                 </a>

@@ -574,6 +574,7 @@ angular.module('carpooling', [
         lbl_trip_rejected: 'Passaggio rifiutato',
         lbl_trip_requested: 'Passaggio richiesto',
         lbl_trip_accepted: 'Passaggio accettato',
+        lbl_trip_rate: 'Valuta conducente',
         lbl_requests: 'Richeste di partecipazione',
         lbl_todaytrips: 'Viaggi di oggi',
         lbl_components: 'Componenti',
@@ -627,11 +628,11 @@ angular.module('carpooling', [
         notif_short_eval: 'Valuta il tuo viaggio',
         toast_error_generic: 'OPS! Problema...',
         toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
-        toast_trip_offered: 'Il tuo viaggio &egrave; stato offerto',
-        toast_booking_accepted: 'La prenotazione &egrave; stata accettata',
-        toast_booking_rejected: 'La prenotazione &egrave; stata rifiutata',
-        toast_notification_deleted: 'La notifica &egrave; stata cancellata',
-        toast_rating_success: 'La valutazione &egrave; stata inviata'
+        toast_trip_offered: 'Il tuo viaggio è stato offerto',
+        toast_booking_accepted: 'La prenotazione è stata accettata',
+        toast_booking_rejected: 'La prenotazione è stata rifiutata',
+        toast_notification_deleted: 'La notifica è stata cancellata',
+        toast_rating_success: 'La valutazione è stata inviata'
     });
 
     $translateProvider.preferredLanguage('it');

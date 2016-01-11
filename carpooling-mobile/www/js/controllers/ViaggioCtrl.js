@@ -11,8 +11,10 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.travelId = null;
     $scope.bookingCounters = {};
 
-    // -1 rejected, 0 requested, 1 accepted
-    $scope.bookingState = null;
+    // myBooking.accepted values: -1 rejected, 0 requested, 1 accepted
+    $scope.myBooking = {
+        accepted: null
+    };
 
     var addPathToMap = function (selectedTrip) {
         $scope.pathLine = MapSrv.getTripPolyline(selectedTrip.route);
@@ -49,7 +51,8 @@ angular.module('carpooling.controllers.viaggio', [])
                 map.fitBounds(bounds);
             });
         }
-    }
+    };
+
     var refreshTrip = function (trip) {
         $scope.selectedTrip = trip;
         $scope.mainCommunity = mainCommunity();
@@ -66,7 +69,7 @@ angular.module('carpooling.controllers.viaggio', [])
             $scope.selectedTrip.bookings.forEach(function (booking) {
                 if (booking.traveller.userId === StorageSrv.getUserId()) {
                     // my booking
-                    $scope.bookingState = booking.accepted;
+                    $scope.myBooking = booking;
                 }
             });
 
@@ -285,10 +288,12 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.bookingAction = function () {
-        if ($scope.bookingState === null) {
+        if ($scope.myBooking.accepted === null) {
             $scope.book();
-        } else if ($scope.bookingState === 0) {
+        } else if ($scope.myBooking.accepted === 0) {
             // FUTURE the passenger can cancel the travelRequest
+        } else if ($scope.myBooking.accepted === 1) {
+            $scope.rate($scope.myBooking);
         }
     };
 
