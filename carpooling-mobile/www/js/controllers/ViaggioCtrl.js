@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -105,6 +105,67 @@ angular.module('carpooling.controllers.viaggio', [])
     init();
 
     /*
+     * Rating
+     */
+    $scope.rate = function (booking) {
+        $scope.ratingMax = Config.getRatingMax();
+        $scope.rating = 0;
+        $scope.setRating = function (rating) {
+            $scope.rating = rating;
+        };
+
+        var rateUserParams = {
+            username: $scope.isMine ? booking.traveller.name + ' ' + booking.traveller.surname : $scope.driverInfo.name + ' ' + $scope.driverInfo.surname,
+            role: $scope.isMine ? $filter('translate')('lbl_passenger') : $filter('translate')('lbl_driver')
+        };
+
+        // TODO show popup, choose rating and send it
+        var ratingPopup = $ionicPopup.confirm({
+            scope: $scope,
+            title: $filter('translate')('lbl_rate_user', rateUserParams),
+            templateUrl: 'templates/popup_rate.html',
+            cancelText: $filter('translate')('cancel'),
+            okText: $filter('translate')('action_rate'),
+            okType: 'button-carpooling'
+        });
+
+        ratingPopup.then(
+            function (action) {
+                if (action === true) {
+                    // OK
+                    if ($scope.rating > 0) {
+                        var success = function () {
+                            // TODO rating successful feedback
+                            ratingPopup.close();
+                            Utils.toast('Rated!');
+                        };
+
+                        var failure = function (error) {
+                            // TODO handle rating error
+                            ratingPopup.close();
+                            Utils.toast(error);
+                        };
+
+                        if ($scope.isMine) {
+                            // Driver
+                            DriverSrv.rateDriver($scope.driverInfo.userId, $scope.rating, booking).then(success, failure);
+                        } else {
+                            // Passenger
+                            PassengerSrv.rateDriver(booking.traveller.userId, $scope.rating, booking).then(success, failure);
+                        }
+                    } else {
+                        // TODO handle 'Vote' with value 0
+                        Utils.toast('ZERO?!?');
+                    }
+                } else {
+                    // cancel
+                    ratingPopup.close();
+                }
+            }
+        );
+    };
+
+    /*
      * Driver
      */
     $scope.reject = function (booking) {
@@ -142,12 +203,6 @@ angular.module('carpooling.controllers.viaggio', [])
             travelId: $scope.travelId,
             personId: booking.traveller.userId
         });
-    };
-
-    $scope.rate = function (booking) {
-        // TODO implement $scope.rate
-        Utils.toast('OMG I HAVE TO RATE! ENABLE THIS!!!');
-        return true;
     };
 
     $scope.showActions = function (booking) {

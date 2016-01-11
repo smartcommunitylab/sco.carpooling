@@ -453,6 +453,9 @@ placeautocomplete ul {
     font-size: xx-large;
     color: #3f51b5;
 }
+.rating-avg-star span {
+    white-space: nowrap;
+}
 
 /* VIAGGIO */
 

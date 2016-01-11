@@ -17,6 +17,8 @@ angular.module('carpooling.services.config', [])
     var LON = 11.121270;
     var ZOOM = 15;
 
+    var RATING_MAX = 5;
+
     var LOGIN_EXPIRED = 'LOGIN_EXPIRED';
 
     return {
@@ -40,6 +42,9 @@ angular.module('carpooling.services.config', [])
         },
         getZoom: function () {
             return ZOOM;
+        },
+        getRatingMax: function () {
+            return RATING_MAX;
         },
         getDistanceForAutocomplete: function () {
             return DISTANCE_AUTOCOMPLETE;

@@ -96,8 +96,8 @@ angular.module('carpooling.controllers.user', [])
                             StorageSrv.setProfileComplete();
                             $rootScope.initialSetup = false;
                             $ionicHistory.nextViewOptions({
-                              historyRoot: true,
-                              disableBack: true
+                                historyRoot: true,
+                                disableBack: true
                             });
                             $state.go('app.home');
                         }
@@ -124,23 +124,24 @@ angular.module('carpooling.controllers.user', [])
         );
     };
 
-    $scope.toggleHasAuto = function() {
-      if ($scope.edit.hasAuto) {
-        if (!$scope.user.auto) {
-          $scope.user.auto = {
-              posts: 4,
-              description: ''
-          };
-        }
-      } else {
+    $scope.toggleHasAuto = function () {
+        if ($scope.edit.hasAuto) {
+            if (!$scope.user.auto) {
+                $scope.user.auto = {
+                    posts: 4,
+                    description: ''
+                };
+            }
+        } else {
             $scope.user.auto = null;
-      }
+        }
     }
 
     $scope.drivertripsheight = "";
     $scope.passengertripsheight = "";
     $scope.ratingOffer = 0;
     $scope.ratingAccepted = 0;
+
     var calculateHeight = function (driver, passenger) {
         maxValue = Math.max(driver, passenger);
         minValue = Math.min(driver, passenger);
@@ -153,7 +154,8 @@ angular.module('carpooling.controllers.user', [])
             $scope.passengertripsheight = 100 - maxHeight + 'px';
             $scope.drivertripsheight = 100 - minHight + 'px';
         }
-    }
+    };
+
     var getStars = function (vote) {
         if (!vote) {
             vote = 0;
@@ -178,24 +180,24 @@ angular.module('carpooling.controllers.user', [])
 
         return stars;
     };
+
     $scope.getStars = function (vote) {
         return getStars(vote);
     };
 
-    $scope.initStats = function() {
-      $scope.totalDriverTrips = 0;
-      $scope.totalPassengerTrips = 0;
-      Utils.loading();
+    $scope.initStats = function () {
+        $scope.totalDriverTrips = 0;
+        $scope.totalPassengerTrips = 0;
+        Utils.loading();
 
-      UserSrv.getUser($scope.user.userId).then(function(user){
-        $scope.driverRating = user.gameProfile.driverRating;
-        $scope.passengerRating = user.gameProfile.passengerRating;
-        $scope.totalDriverTrips = user.offeredTravels;
-        $scope.totalPassengerTrips = user.participatedTravels;
-        Utils.loaded();
-      }, function(err) {
-        Utils.loaded();
-      });
-
-    }
+        UserSrv.getUser($scope.user.userId).then(function (user) {
+            $scope.driverRating = user.gameProfile.driverRating;
+            $scope.passengerRating = user.gameProfile.passengerRating;
+            $scope.totalDriverTrips = user.offeredTravels;
+            $scope.totalPassengerTrips = user.participatedTravels;
+            Utils.loaded();
+        }, function (err) {
+            Utils.loaded();
+        });
+    };
 });

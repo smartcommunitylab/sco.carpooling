@@ -1,83 +1,82 @@
 <ion-view title="{{'menu_profile' | translate}}">
-      <ion-nav-buttons side="right">
+    <ion-nav-buttons side="right">
         <a ng-if="itsMe && editMode && !initialSetup" class="button button-icon ion-close-round" ng-click="cancelChanges()"></a>
         <a ng-if="itsMe" class="button button-icon" ng-class="{'ion-edit': !editMode, 'ion-checkmark-round': editMode}" ng-click="editMode ? saveProfile() : toggleEditMode()"></a>
-      </ion-nav-buttons>
-<ion-tabs class="tabs-top">
-  <!-- User Info Tab -->
-  <ion-tab icon="ion-ios-information">
-    <!--        <ion-nav-view name="tab-userinfo"></ion-nav-view>-->
-    <ion-view>
-      <ion-content class="padding user-profile">
-        <div class="user-data">
-          <div class="user-image">
-            <i class="icons ion-person"></i>
-          </div>
-          <h4 class="user-name">{{user.name}} {{user.surname}}</h4>
-        </div>
+    </ion-nav-buttons>
 
-        <div class="list user-options">
-          <ion-toggle ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}</ion-toggle>
+    <ion-tabs class="tabs-top">
+        <!-- User Info Tab -->
+        <ion-tab icon="ion-ios-information">
+            <!--        <ion-nav-view name="tab-userinfo"></ion-nav-view>-->
+            <ion-view>
+                <ion-content class="padding user-profile">
+                    <div class="user-data">
+                        <div class="user-image">
+                            <i class="icons ion-person"></i>
+                        </div>
+                        <h4 class="user-name">{{user.name}} {{user.surname}}</h4>
+                    </div>
 
-          <label class="item item-input">
-            <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
-            <input type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
-          </label>
+                    <div class="list user-options">
+                        <ion-toggle ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}</ion-toggle>
 
-          <label class="item item-input item-select">
-            <div class="input-label">
-              {{'lbl_user_car_seats' | translate}}
-            </div>
-            <select ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!editMode || !user.auto"></select>
-          </label>
-        </div>
-      </ion-content>
-    </ion-view>
-  </ion-tab>
-  <!-- User Stats Tab -->
-  <ion-tab icon="ion-stats-bars">
-    <!--    <ion-nav-view name="tab-userstats"></ion-nav-view>-->
-    <ion-view>
-      <ion-content class="padding" ng-init="initStats()">
+                        <label class="item item-input">
+                            <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
+                            <input type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
+                        </label>
 
-        <div>
-          <ul class="chart">
-            <li style="margin-top:{{drivertripsheight}}">
-              <div class="value">{{totalDriverTrips}}</div>
-            </li>
-            <li style="margin-top:{{passengertripsheight}}">
-              <div class="value">{{totalPassengerTrips}}</div>
-            </li>
-          </ul>
+                        <label class="item item-input item-select">
+                            <div class="input-label">
+                                {{'lbl_user_car_seats' | translate}}
+                            </div>
+                            <select ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!editMode || !user.auto"></select>
+                        </label>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
 
-        </div>
+        <!-- User Stats Tab -->
+        <ion-tab icon="ion-stats-bars">
+            <!--    <ion-nav-view name="tab-userstats"></ion-nav-view>-->
+            <ion-view>
+                <ion-content class="padding" ng-init="initStats()">
 
-        <div>
-          <div class="string">{{'lbl_number_driver_avg'|translate}}</div>
-          <div class="string">{{'lbl_number_pass_avg'|translate}}</div>
-        </div>
+                    <div>
+                        <ul class="chart">
+                            <li style="margin-top:{{drivertripsheight}};">
+                                <div class="value">{{totalDriverTrips}}</div>
+                            </li>
+                            <li style="margin-top:{{passengertripsheight}};">
+                                <div class="value">{{totalPassengerTrips}}</div>
+                            </li>
+                        </ul>
+                    </div>
 
+                    <div>
+                        <div class="string">{{'lbl_number_driver_avg'|translate}}</div>
+                        <div class="string">{{'lbl_number_pass_avg'|translate}}</div>
+                    </div>
 
-        <div class="rating-avg col">
-          <span class="rating-avg-txt">{{'lbl_rating_driver_avg'|translate}}</span>
-        </div>
-        <div class="rating-avg-star">
-          <span style="white-space: nowrap;">
-                <i ng-repeat="starType in getStars(driverRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}"></i>
-                </span>
-        </div>
-        <div class="rating-avg">
-          <span class="rating-avg-txt">{{'lbl_rating_pass_avg'|translate}}</span>
-        </div>
+                    <div class="rating-avg col">
+                        <span class="rating-avg-txt">{{'lbl_rating_driver_avg'|translate}}</span>
+                    </div>
+                    <div class="rating-avg-star">
+                        <span>
+                            <i ng-repeat="starType in getStars(driverRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}"></i>
+                        </span>
+                    </div>
+                    <div class="rating-avg">
+                        <span class="rating-avg-txt">{{'lbl_rating_pass_avg'|translate}}</span>
+                    </div>
 
-        <div class="rating-avg-star">
-          <span style="white-space: nowrap;">
-                <i ng-repeat="starType in getStars(passengerRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}" ></i>
-                </span>
-        </div>
-
-      </ion-content>
-    </ion-view>
-  </ion-tab>
-</ion-tabs>
+                    <div class="rating-avg-star">
+                        <span>
+                            <i ng-repeat="starType in getStars(passengerRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}" ></i>
+                        </span>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+    </ion-tabs>
 </ion-view>
