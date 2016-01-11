@@ -1,19 +1,28 @@
 <ion-view title="{{isMine ? 'lbl_mytrip': 'lbl_trip'| translate}}">
     <ion-content>
         <div ng-if="!isMine">
-     <div id="trip-map-container" data-tap-disabled="true">
-            <leaflet event-broadcast="events" center="center" markers="markers" paths="pathLine" style="width: 100%; height: 200px;" ng-init="initMap()" id="tripMap"></leaflet>
-        </div>
-            <a class="button button-full" ng-if="!isMine" ng-click="showUser()">
+          <div id="trip-map-container" data-tap-disabled="true">
+              <leaflet event-broadcast="events" center="center" markers="markers" paths="pathLine" style="width: 100%; height: 200px;" ng-init="initMap()" id="tripMap"></leaflet>
+          </div>
+          <div class="row trip-owner">
+            <div class="col" ng-click="showUser()">
                 <i class="icons ion-person"></i>
                 <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span>
-            </a>
-            <!-- hide temporary
-            <a class="button">
+            </div>
+            <div class="col" ng-if="mainCommunity != null" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
                 <i class="icons ion-ios-people"></i>
-                <span>{{selectedTrip.communityIds[0]}}</span>
-            </a>
-            -->
+                <span>{{mainCommunity.name}}</span>
+            </div>
+          </div>
+        </div>
+        <div ng-if="isMine && mainCommunity != null">
+          <div class="row trip-owner">
+            <div class="col" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
+                <i class="icons ion-ios-people"></i>
+                <span>{{mainCommunity.name}}</span>
+            </div>
+          </div>
+        </div>
         </div>
 
         <div class="padding trip-info">
