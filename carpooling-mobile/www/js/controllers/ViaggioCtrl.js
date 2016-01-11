@@ -108,30 +108,36 @@ angular.module('carpooling.controllers.viaggio', [])
      * Driver
      */
     $scope.reject = function (booking) {
+        Utils.loading();
         var newBooking = angular.copy(booking);
         newBooking['accepted'] = -1;
 
         DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
             function (data) {
+                Utils.loaded();
                 refreshTrip(data);
                 Utils.toast(($filter('translate')('toast_booking_rejected')));
             },
             function (error) {
+                Utils.loaded();
                 Utils.toast();
             }
         );
     };
 
     $scope.accept = function (booking) {
+        Utils.loading();
         var newBooking = angular.copy(booking);
         newBooking['accepted'] = 1;
 
         DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
             function (data) {
+                Utils.loaded();
                 refreshTrip(data);
                 Utils.toast(($filter('translate')('toast_booking_accepted')));
             },
             function (error) {
+                Utils.loaded();
                 Utils.toast();
             }
         );
@@ -197,6 +203,7 @@ angular.module('carpooling.controllers.viaggio', [])
      * Passenger
      */
     $scope.book = function () {
+        Utils.loading();
         var me = StorageSrv.getUser();
 
         var booking = {
@@ -217,9 +224,11 @@ angular.module('carpooling.controllers.viaggio', [])
 
         PassengerSrv.bookTrip($scope.travelId, booking).then(
             function (updatedTrip) {
+                Utils.loaded();
                 refreshTrip(updatedTrip);
             },
             function (error) {
+                Utils.loaded();
                 Utils.toast();
             }
         );
