@@ -32,7 +32,9 @@ angular.module('carpooling', [
     var isAndroid = ionic.Platform.isAndroid();
 
     $rootScope.manageLocalNotification = function (local_notification) {
-        if (local_notification.alert) {
+        var txt = local_notification.alert ?
+            local_notification.alert : local_notification.aps && local_notification.aps.alert ? local_notification.aps.alert : null;
+        if (txt) {
             if (cordova && cordova.plugins && cordova.plugins.notification) {
                 try {
                     //console.log('initializing notifications...');
@@ -40,7 +42,7 @@ angular.module('carpooling', [
                     var notific = {
                         id: local_notification.push_hash,
                         title: "CarPooling",
-                        text: local_notification.alert,
+                        text: txt,
                         autoCancel: true,
                         //firstAt: monday_9_am,
                         //every: "week",
@@ -186,7 +188,6 @@ angular.module('carpooling', [
                    });
 
                    onNotification = function (pn) {
-                       alert("received pn: " + JSON.stringify(pn));
                        var chat_parameters = $rootScope.isChat(window.location);
                        if (chat_parameters.length > 0) {
                            var travelId = chat_parameters[0];
@@ -529,6 +530,8 @@ angular.module('carpooling', [
         ok: 'OK',
         action_chat: 'Chat',
         action_rate: 'Valuta',
+        action_rejectbtn: 'Rifiuta',
+        action_acceptbtn: 'Accetta',
         action_rate_passenger: 'Valuta passeggero',
         action_rate_driver: 'Valuta guidatore',
         action_reject: 'Rifiuta richiesta',
@@ -541,7 +544,6 @@ angular.module('carpooling', [
         modal_map: 'Scegli da mappa',
         modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
-        lbl_rate_user: 'Valuta {{username}} come {{role}}',
         lbl_driver: 'guidatore',
         lbl_passenger: 'passeggero',
         lbl_no_results: 'Nessun risultato.',
@@ -641,6 +643,9 @@ angular.module('carpooling', [
         popup_timepicker_title: 'Selezionare l\'ora',
         popup_datepicker_title: 'Selezionare il giorno',
         popup_datepicker_today: 'Oggi',
+        popup_rate_user: 'Valuta {{username}} come {{role}}',
+        popup_confirm_accept: 'Vuoi davvero accettare la richiesta di {{username}}?',
+        popup_confirm_reject: 'Vuoi davvero rifiutare la richiesta di {{username}}?',
         send_msg_placeholder: 'Scrivi un messaggio',
         notif_short_chat: 'Nuovo messaggio da {{name}}',
         notif_short_avail: 'Trovato un viaggio',

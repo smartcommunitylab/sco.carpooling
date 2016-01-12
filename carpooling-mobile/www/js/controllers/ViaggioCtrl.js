@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -123,10 +123,9 @@ angular.module('carpooling.controllers.viaggio', [])
             role: $scope.isMine ? $filter('translate')('lbl_passenger') : $filter('translate')('lbl_driver')
         };
 
-        // TODO show popup, choose rating and send it
         var showRatingPopup = $ionicPopup.show({
             scope: $scope,
-            title: $filter('translate')('lbl_rate_user', rateUserParams),
+            title: $filter('translate')('popup_rate_user', rateUserParams),
             templateUrl: 'templates/popup_rate.html',
             buttons: [
                 {
@@ -167,37 +166,71 @@ angular.module('carpooling.controllers.viaggio', [])
      * Driver
      */
     $scope.reject = function (booking) {
-        Utils.loading();
-        var newBooking = angular.copy(booking);
-        newBooking['accepted'] = -1;
+        var deferred = $q.defer();
 
-        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
-            function (data) {
-                Utils.loaded();
-                refreshTrip(data);
-                Utils.toast(($filter('translate')('toast_booking_rejected')));
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast();
+        // TODO create a confirmation popup for reject
+        $ionicPopup.confirm({
+            title: $filter('translate')('popup_confirm_reject', {
+                username: booking.traveller.name + ' ' + booking.traveller.surname
+            }),
+            cancelText: $filter('translate')('cancel'),
+            okText: $filter('translate')('action_rejectbtn'),
+            okType: 'button-carpooling'
+        }).then(
+            function (ok) {
+                if (ok) {
+                    Utils.loading();
+                    var newBooking = angular.copy(booking);
+                    newBooking['accepted'] = -1;
+
+                    DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
+                        function (data) {
+                            Utils.loaded();
+                            refreshTrip(data);
+                            Utils.toast(($filter('translate')('toast_booking_rejected')));
+                            deferred.resolve();
+                        },
+                        function (error) {
+                            Utils.loaded();
+                            Utils.toast();
+                            deferred.reject();
+                        }
+                    );
+                }
             }
         );
+
+        return deferred.promise;
     };
 
     $scope.accept = function (booking) {
-        Utils.loading();
-        var newBooking = angular.copy(booking);
-        newBooking['accepted'] = 1;
+        // TODO create a confirmation popup for accept
+        $ionicPopup.confirm({
+            title: $filter('translate')('popup_confirm_accept', {
+                username: booking.traveller.name + ' ' + booking.traveller.surname
+            }),
+            cancelText: $filter('translate')('cancel'),
+            okText: $filter('translate')('action_acceptbtn'),
+            okType: 'button-carpooling'
+        }).then(
+            function (ok) {
+                if (ok) {
+                    Utils.loading();
+                    var newBooking = angular.copy(booking);
+                    newBooking['accepted'] = 1;
 
-        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
-            function (data) {
-                Utils.loaded();
-                refreshTrip(data);
-                Utils.toast(($filter('translate')('toast_booking_accepted')));
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast();
+                    DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
+                        function (data) {
+                            Utils.loaded();
+                            refreshTrip(data);
+                            Utils.toast(($filter('translate')('toast_booking_accepted')));
+                        },
+                        function (error) {
+                            Utils.loaded();
+                            Utils.toast();
+                        }
+                    );
+                }
             }
         );
     };
@@ -210,7 +243,7 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.showActions = function (booking) {
-        $ionicActionSheet.show({
+        var hideActionSheet = $ionicActionSheet.show({
             titleText: booking.traveller.name + ' ' + booking.traveller.surname,
             buttons: [
                 {
@@ -236,7 +269,12 @@ angular.module('carpooling.controllers.viaggio', [])
             },
             destructiveText: '<i class="icon ion-close-round"></i> ' + $filter('translate')('action_reject'),
             destructiveButtonClicked: function () {
-                $scope.reject(booking);
+                $scope.reject(booking).then(
+                    function () {
+                        hideActionSheet();
+                    }
+                );
+                return false;
             },
             cancelText: $filter('translate')('cancel')
         });
