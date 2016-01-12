@@ -47,7 +47,7 @@ angular.module('carpooling', [
                         //firstAt: monday_9_am,
                         //every: "week",
                         //sound: "file://sounds/reminder.mp3",
-                        //icon: "http://icons.com/?cal_id=1",
+                        icon: "file://resources/icon.png",
                         data: {
                             id: local_notification.push_hash,
                             urlHash: local_notification.urlHash
@@ -165,10 +165,12 @@ angular.module('carpooling', [
                            }
                        } else {
                            if($rootScope.isNotification(window.location)){
-                               // case app opened in notification list
-                               $state.go('app.notifiche', {
-                                       reload: true
-                                   });
+                                // case app opened in notification list
+                                //alert("In notification page update");
+                                $state.go('app.notifiche', {}, {
+                                   reload: true
+                                });
+                               //window.location.reload(true)
                            } else {
                                $rootScope.manageLocalNotification(pn);
                            }
@@ -209,10 +211,11 @@ angular.module('carpooling', [
                            }
                        } else {
                            if($rootScope.isNotification(window.location)){
-                               // case app opened in notification list
-                               $state.go('app.notifiche', {
+                                // case app opened in notification list
+                                $state.go('app.notifiche', {}, {
                                        reload: true
                                    });
+                                //window.location.reload(true)
                            } else {
                                $rootScope.manageLocalNotification(pn);
                            }
