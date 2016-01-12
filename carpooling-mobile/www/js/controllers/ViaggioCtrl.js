@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -215,7 +215,7 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.showActions = function (booking) {
-        var actionSheet = $ionicActionSheet.show({
+        var hideActionSheet = $ionicActionSheet.show({
             titleText: booking.traveller.name + ' ' + booking.traveller.surname,
             buttons: [
                 {
@@ -243,7 +243,7 @@ angular.module('carpooling.controllers.viaggio', [])
             destructiveButtonClicked: function () {
                 $scope.reject(booking).then(
                     function () {
-                        actionSheet.hideSheet();
+                        hideActionSheet();
                     }
                 );
                 return false;
