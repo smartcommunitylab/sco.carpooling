@@ -91,10 +91,13 @@
         </div>
 
         <!--<div class="padding trip-requests" ng-if="isMine && $scope.selectedTrip.bookings.length > 0">-->
-        <div class="trip-requests" ng-if="isMine && !!selectedTrip.bookings && selectedTrip.bookings.length > 0">
+        <div class="trip-requests" ng-if="isMine && !!selectedTrip.bookings && bookingCounters.booked > 0">
             <h5>{{'lbl_requests' | translate}}</h5>
+            <!--<div class="padding" ng-if="bookingCounters.booked == 0">
+                <h4>{{'lbl_no_results' | translate}}</h4>
+            </div>-->
             <!--<div class="list">-->
-            <ion-list>
+            <ion-list ng-if="bookingCounters.booked > 0">
                 <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted === 0 || booking.accepted === 1">
                     <!--<i class="icon ion-person"></i>-->
                     <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
@@ -102,7 +105,7 @@
                     <button class="button button-carpooling" ng-if="booking.accepted === 0" ng-click="reject(booking)">
                         <i class="icon ion-close-round"></i>
                     </button>
-                    <button class="button button-carpooling-inverse" ng-click="positiveAction(booking)">
+                    <button class="button" ng-class="{'button-carpooling': booking.accepted === 0, 'button-carpooling-inverse': booking.accepted === 1}" ng-click="positiveAction(booking)">
                         <i class="icon" ng-class="{'ion-checkmark-round': booking.accepted === 0, 'ion-more': booking.accepted === 1}"></i>
                     </button>
                 </a>

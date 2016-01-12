@@ -125,7 +125,7 @@ angular.module('carpooling.controllers.viaggio', [])
 
         var showRatingPopup = $ionicPopup.show({
             scope: $scope,
-            title: $filter('translate')('lbl_rate_user', rateUserParams),
+            title: $filter('translate')('popup_rate_user', rateUserParams),
             templateUrl: 'templates/popup_rate.html',
             buttons: [
                 {
@@ -168,21 +168,35 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.reject = function (booking) {
         var deferred = $q.defer();
 
-        Utils.loading();
-        var newBooking = angular.copy(booking);
-        newBooking['accepted'] = -1;
+        // TODO create a confirmation popup for reject
+        $ionicPopup.confirm({
+            title: $filter('translate')('popup_confirm_reject', {
+                username: booking.traveller.name + ' ' + booking.traveller.surname
+            }),
+            cancelText: $filter('translate')('cancel'),
+            okText: $filter('translate')('action_rejectbtn'),
+            okType: 'button-carpooling'
+        }).then(
+            function (ok) {
+                if (ok) {
+                    Utils.loading();
+                    var newBooking = angular.copy(booking);
+                    newBooking['accepted'] = -1;
 
-        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
-            function (data) {
-                Utils.loaded();
-                refreshTrip(data);
-                Utils.toast(($filter('translate')('toast_booking_rejected')));
-                deferred.resolve();
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast();
-                deferred.reject();
+                    DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
+                        function (data) {
+                            Utils.loaded();
+                            refreshTrip(data);
+                            Utils.toast(($filter('translate')('toast_booking_rejected')));
+                            deferred.resolve();
+                        },
+                        function (error) {
+                            Utils.loaded();
+                            Utils.toast();
+                            deferred.reject();
+                        }
+                    );
+                }
             }
         );
 
@@ -190,19 +204,33 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.accept = function (booking) {
-        Utils.loading();
-        var newBooking = angular.copy(booking);
-        newBooking['accepted'] = 1;
+        // TODO create a confirmation popup for accept
+        $ionicPopup.confirm({
+            title: $filter('translate')('popup_confirm_accept', {
+                username: booking.traveller.name + ' ' + booking.traveller.surname
+            }),
+            cancelText: $filter('translate')('cancel'),
+            okText: $filter('translate')('action_acceptbtn'),
+            okType: 'button-carpooling'
+        }).then(
+            function (ok) {
+                if (ok) {
+                    Utils.loading();
+                    var newBooking = angular.copy(booking);
+                    newBooking['accepted'] = 1;
 
-        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
-            function (data) {
-                Utils.loaded();
-                refreshTrip(data);
-                Utils.toast(($filter('translate')('toast_booking_accepted')));
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast();
+                    DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
+                        function (data) {
+                            Utils.loaded();
+                            refreshTrip(data);
+                            Utils.toast(($filter('translate')('toast_booking_accepted')));
+                        },
+                        function (error) {
+                            Utils.loaded();
+                            Utils.toast();
+                        }
+                    );
+                }
             }
         );
     };
