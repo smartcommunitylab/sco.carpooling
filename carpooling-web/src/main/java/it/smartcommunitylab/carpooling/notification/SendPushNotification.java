@@ -91,7 +91,7 @@ public class SendPushNotification {
 	 */
 	private String constructTitle(Notification n) {
 		if (CarPoolingUtils.NOTIFICATION_CONFIRM.equals(n.getType())) {
-			return  n.getData().get("status").equals("true") ?  "Viaggio confermato": "Viaggio rifiutato";
+			return  n.getData().get("status").equals("1") ?  "Viaggio confermato": "Viaggio rifiutato";
 		}
 		if (CarPoolingUtils.NOTIFICATION_CHAT.equals(n.getType())) {
 			return  "Nuovo messaggio da "+ n.getData().get("senderFullName");
