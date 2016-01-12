@@ -480,6 +480,32 @@ public class CarPoolingManager {
 		return errorMap;
 
 	}
+	
+	public Integer getMyRatingForPassenger(String userId, String passengerId) throws CarPoolingCustomException {
+
+		Integer rating = null;
+
+		User passenger = userRepository.findOne(passengerId);
+
+		if (passenger != null) {
+
+			GameProfile gameProfile = passenger.getGameProfile();
+
+			if (gameProfile != null && gameProfile.getPassengerRatings().containsKey(userId)) {
+
+				rating = gameProfile.getPassengerRatings().get(userId);
+
+			} else {
+
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "passenger rating not found");
+			}
+		} else {
+
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "passenger not found");
+		}
+
+		return rating;
+	}
 
 	public void recalculateRatings(User user) {
 
@@ -550,6 +576,38 @@ public class CarPoolingManager {
 		}
 
 		return errorMap;
+	}
+	
+	/**
+	 * Get My Rating For Driver.
+	 * @param userId
+	 * @param driverId
+	 * @return
+	 * @throws CarPoolingCustomException 
+	 */
+	public Integer getMyRatingForDriver(String userId, String driverId) throws CarPoolingCustomException {
+
+		Integer rating = null;
+
+		User driver = userRepository.findOne(driverId);
+
+		if (driver != null) {
+			
+			GameProfile gameProfile = driver.getGameProfile();
+
+			if (gameProfile != null && gameProfile.getDriverRatings().containsKey(userId)) {
+
+				rating = gameProfile.getDriverRatings().get(userId);
+
+			} else {
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "driver rating not found");
+			}
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "driver not found");
+
+		}
+
+		return rating;
 	}
 
 	public Map<String, String> updateAutoInfo(String userId, Auto auto) {
@@ -799,6 +857,6 @@ public class CarPoolingManager {
 				}
 			}
 		}
-	}
+	}	
 
 }

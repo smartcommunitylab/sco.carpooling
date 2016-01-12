@@ -201,6 +201,18 @@ public class ServiceController {
 
 		return response;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/rating/driver/{driverId}")
+	public @ResponseBody
+	Response<Integer> readDriverRating(@PathVariable String driverId) throws CarPoolingCustomException {
+
+		Response<Integer> response = new Response<Integer>();
+
+		response.setData(carPoolingManager.getMyRatingForDriver(getUserId(), driverId));
+
+		return response;
+
+	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/rate/passenger/{passengerId}/{rating}")
 	public @ResponseBody
@@ -219,6 +231,18 @@ public class ServiceController {
 		}
 
 		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/api/read/rating/passenger/{passengerId}")
+	public @ResponseBody
+	Response<Integer> readPassengerRating(@PathVariable String passengerId) throws CarPoolingCustomException {
+
+		Response<Integer> response = new Response<Integer>();
+
+		response.setData(carPoolingManager.getMyRatingForPassenger(getUserId(), passengerId));
+
+		return response;
+
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/save/profile")
