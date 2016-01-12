@@ -32,7 +32,9 @@ angular.module('carpooling', [
     var isAndroid = ionic.Platform.isAndroid();
 
     $rootScope.manageLocalNotification = function (local_notification) {
-        if (local_notification.alert) {
+        var txt = local_notification.alert ?
+            local_notification.alert : local_notification.aps && local_notification.aps.alert ? local_notification.aps.alert : null;
+        if (txt) {
             if (cordova && cordova.plugins && cordova.plugins.notification) {
                 try {
                     //console.log('initializing notifications...');
@@ -40,7 +42,7 @@ angular.module('carpooling', [
                     var notific = {
                         id: local_notification.push_hash,
                         title: "CarPooling",
-                        text: local_notification.alert,
+                        text: txt,
                         autoCancel: true,
                         //firstAt: monday_9_am,
                         //every: "week",
@@ -167,7 +169,6 @@ angular.module('carpooling', [
                    });
 
                    onNotification = function (pn) {
-                       alert("received pn: " + JSON.stringify(pn));
                        var chat_parameters = $rootScope.isChat(window.location);
                        if (chat_parameters.length > 0) {
                            var travelId = chat_parameters[0];
