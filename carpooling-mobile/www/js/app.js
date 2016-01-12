@@ -88,6 +88,19 @@ angular.module('carpooling', [
         return params_chat;
     };
 
+    $rootScope.isNotification = function (location_hash) {
+        var corrPath = false;
+        var loc_hash = location_hash + "";
+        if (loc_hash.indexOf("#") > -1) {
+            var curr_view_path = loc_hash.split("#");
+            var curr_path = curr_view_path[1] + "";
+            if (curr_path.indexOf("notifiche") > -1) {
+                corrPath = true;
+            }
+        }
+        return corrPath;
+    };
+
     $rootScope.updateMyNotification = function (travelId, senderId) {
         UserSrv.readNotifications(0, 10).then(
             function (notifics) {
@@ -118,7 +131,6 @@ angular.module('carpooling', [
                    });
 
                    window.ParsePushPlugin.on('openPN', function (pn) {
-                       //alert("in open notific" + JSON.stringify(pn));
                        if (pn.urlHash) {
                            var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
                            s_path = s_path.substring(2, s_path.length);
@@ -150,7 +162,14 @@ angular.module('carpooling', [
                                $rootScope.manageLocalNotification(pn);
                            }
                        } else {
-                           $rootScope.manageLocalNotification(pn);
+                           if($rootScope.isNotification(window.location)){
+                               // case app opened in notification list
+                               $state.go('app.notifiche', {
+                                       reload: true
+                                   });
+                           } else {
+                               $rootScope.manageLocalNotification(pn);
+                           }
                        }
                    });
                } else if (isIOS) {
@@ -181,10 +200,6 @@ angular.module('carpooling', [
                                        reload: true
                                    });
                                    $rootScope.updateMyNotification(travelId, senderId);
-                                   /*$state.go('app.chat', {
-                                       travelId: travelId,
-                                       personId: senderId
-                                   });*/
                                } else {
                                    $rootScope.manageLocalNotification(pn);
                                }
@@ -192,7 +207,14 @@ angular.module('carpooling', [
                                $rootScope.manageLocalNotification(pn);
                            }
                        } else {
-                           $rootScope.manageLocalNotification(pn);
+                           if($rootScope.isNotification(window.location)){
+                               // case app opened in notification list
+                               $state.go('app.notifiche', {
+                                       reload: true
+                                   });
+                           } else {
+                               $rootScope.manageLocalNotification(pn);
+                           }
                        }
                    }
                }
