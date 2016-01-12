@@ -123,7 +123,6 @@ angular.module('carpooling.controllers.viaggio', [])
             role: $scope.isMine ? $filter('translate')('lbl_passenger') : $filter('translate')('lbl_driver')
         };
 
-        // TODO show popup, choose rating and send it
         var showRatingPopup = $ionicPopup.show({
             scope: $scope,
             title: $filter('translate')('lbl_rate_user', rateUserParams),
@@ -167,6 +166,8 @@ angular.module('carpooling.controllers.viaggio', [])
      * Driver
      */
     $scope.reject = function (booking) {
+        var deferred = $q.defer();
+
         Utils.loading();
         var newBooking = angular.copy(booking);
         newBooking['accepted'] = -1;
@@ -176,12 +177,16 @@ angular.module('carpooling.controllers.viaggio', [])
                 Utils.loaded();
                 refreshTrip(data);
                 Utils.toast(($filter('translate')('toast_booking_rejected')));
+                deferred.resolve();
             },
             function (error) {
                 Utils.loaded();
                 Utils.toast();
+                deferred.reject();
             }
         );
+
+        return deferred.promise;
     };
 
     $scope.accept = function (booking) {
@@ -210,7 +215,7 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.showActions = function (booking) {
-        $ionicActionSheet.show({
+        var actionSheet = $ionicActionSheet.show({
             titleText: booking.traveller.name + ' ' + booking.traveller.surname,
             buttons: [
                 {
@@ -236,7 +241,12 @@ angular.module('carpooling.controllers.viaggio', [])
             },
             destructiveText: '<i class="icon ion-close-round"></i> ' + $filter('translate')('action_reject'),
             destructiveButtonClicked: function () {
-                $scope.reject(booking);
+                $scope.reject(booking).then(
+                    function () {
+                        actionSheet.hideSheet();
+                    }
+                );
+                return false;
             },
             cancelText: $filter('translate')('cancel')
         });
