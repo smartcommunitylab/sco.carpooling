@@ -581,6 +581,7 @@ angular.module('carpooling', [
         lbl_halfwaystops_onrequest: 'Su richiesta',
         lbl_date: 'Data',
         lbl_time: 'Ora',
+        lbl_time_departure: 'Ora di partenza',
         lbl_recurrenttrip: 'Viaggio ricorrente',
         lbl_recurrency_none: 'Nessuna',
         lbl_offri: 'Pubblica',
