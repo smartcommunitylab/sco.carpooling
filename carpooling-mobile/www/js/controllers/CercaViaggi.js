@@ -1,23 +1,30 @@
 angular.module('carpooling.controllers.cercaviaggi', [])
 
 .controller('CercaViaggioCtrl', function ($scope, $q, $http, $ionicModal, $ionicLoading, $filter, $state, $window, Config, Utils, PlanSrv, GeoSrv, MapSrv, $ionicPopup, PassengerSrv) {
-    $scope.travelRequest = {
+    $scope.formTravelRequest = {
         'from': {
             'name': '',
             'address': '',
-            'latitude': 0,
-            'longitude': 0,
+            'latitude': null,
+            'longitude': null,
             'range': 5
         },
         'to': {
             'name': '',
             'address': '',
-            'latitude': 0,
-            'longitude': 0,
+            'latitude': null,
+            'longitude': null,
             'range': 5
         },
         'when': 0,
         'monitored': false
+    };
+
+    $scope.travelRequest = angular.copy($scope.formTravelRequest);
+
+    $scope.equalFormAndTravelRequestFields = {
+        'from': false,
+        'to': false
     };
 
     // FUTURE communities are not used right now in client-side search
@@ -38,35 +45,64 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         'coordinates': {}
     };
 
-    $scope.typing = function (typedthings) {
+    var typing = function (field, typedthings) {
         if ($scope.afterMapSelection) {
             $scope.afterMapSelection = false;
             return;
         }
 
-        var result = typedthings;
+        $scope.equalFormAndTravelRequestFields[field] = Utils.fastCompareObjects($scope.formTravelRequest[field], $scope.travelRequest[field]);
+        if ($scope.equalFormAndTravelRequestFields[field]) {
+            return;
+        } else {
+            if (!!$scope.formTravelRequest[field]['address']) {
+                $scope.formTravelRequest[field]['address'] = '';
+            }
+            if (!!$scope.formTravelRequest[field]['latitude']) {
+                $scope.formTravelRequest[field]['latitude'] = null;
+            }
+            if (!!$scope.formTravelRequest[field]['longitude']) {
+                $scope.formTravelRequest[field]['longitude'] = null;
+            }
+        }
+
         var newPlaces = PlanSrv.getTypedPlaces(typedthings);
         newPlaces.then(function (data) {
-            //merge with favorites and check no double values
+            // merge with favorites and check no double values
             $scope.places.names = data;
             $scope.places.coordinates = PlanSrv.getNames();
         });
     };
 
-    $scope.setLocationFrom = function (name) {
-        $scope.travelRequest['from'].name = name;
-        $scope.travelRequest['from'].address = name;
+    $scope.typingFrom = function (typedthings) {
+        typing('from', typedthings);
+    };
+
+    $scope.typingTo = function (typedthings) {
+        typing('to', typedthings);
+    };
+
+    var setLocation = function (field, name) {
+        $scope.formTravelRequest[field].name = name;
+        $scope.formTravelRequest[field].address = name;
         var coordinates = $scope.places.coordinates[name].latlng.split(',');
-        $scope.travelRequest['from'].latitude = parseFloat(coordinates[0]);
-        $scope.travelRequest['from'].longitude = parseFloat(coordinates[1]);
+        $scope.formTravelRequest[field].latitude = parseFloat(coordinates[0]);
+        $scope.formTravelRequest[field].longitude = parseFloat(coordinates[1]);
+
+        $scope.travelRequest = angular.copy($scope.formTravelRequest);
+
+        $scope.places = {
+            'names': [],
+            'coordinates': {}
+        };
+    };
+
+    $scope.setLocationFrom = function (name) {
+        setLocation('from', name);
     };
 
     $scope.setLocationTo = function (name) {
-        $scope.travelRequest['to'].name = name;
-        $scope.travelRequest['to'].address = name;
-        var coordinates = $scope.places.coordinates[name].latlng.split(',');
-        $scope.travelRequest['to'].latitude = parseFloat(coordinates[0]);
-        $scope.travelRequest['to'].longitude = parseFloat(coordinates[1]);
+        setLocation('to', name);
     };
 
     /*
@@ -102,7 +138,6 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     $scope.initMap = function () {
         MapSrv.initMap(mapId).then(function () {
             $scope.$on('leafletDirectiveMap.' + mapId + '.click', function (event, args) {
-
                 $ionicLoading.show();
 
                 var confirmPopup = null;
@@ -245,7 +280,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
 
     /* Search Trip */
     $scope.searchTravel = function () {
-        // NOTE: 'from', 'to' and 'monitored' is updated directly on $scope.travelRequest
+        // NOTE: 'from', 'to' and 'monitored' are already on $scope.travelRequest
         var selectedDateTime = angular.copy($scope.datepickerObj.inputDate);
         selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
         $scope.travelRequest['when'] = selectedDateTime.getTime();

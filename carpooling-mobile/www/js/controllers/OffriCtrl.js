@@ -2,7 +2,7 @@ angular.module('carpooling.controllers.offri', [])
 
 .controller('OffriCtrl', function ($scope, $state, $stateParams, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
     // 'from' and 'to' are 'zone' objects
-    $scope.travel = {
+    $scope.formTravel = {
         'from': {
             'name': '',
             'address': '',
@@ -18,6 +18,13 @@ angular.module('carpooling.controllers.offri', [])
         'when': 0,
         'places': 0,
         'intermediateStops': false
+    };
+
+    $scope.travel = angular.copy($scope.formTravel);
+
+    $scope.equalFormAndTravelFields = {
+        'from': false,
+        'to': false
     };
 
     if (!!$stateParams['communityId']) {
@@ -36,13 +43,27 @@ angular.module('carpooling.controllers.offri', [])
         'coordinates': {}
     };
 
-    $scope.typing = function (typedthings) {
+    var typing = function (field, typedthings) {
         if ($scope.afterMapSelection) {
             $scope.afterMapSelection = false;
             return;
         }
 
-        var result = typedthings;
+                $scope.equalFormAndTravelFields[field] = Utils.fastCompareObjects($scope.formTravel[field], $scope.travel[field]);
+        if ($scope.equalFormAndTravelFields[field]) {
+            return;
+        } else {
+            if (!!$scope.formTravel[field]['address']) {
+                $scope.formTravel[field]['address'] = '';
+            }
+            if (!!$scope.formTravel[field]['latitude']) {
+                $scope.formTravel[field]['latitude'] = null;
+            }
+            if (!!$scope.formTravel[field]['longitude']) {
+                $scope.formTravel[field]['longitude'] = null;
+            }
+        }
+
         var newPlaces = PlanSrv.getTypedPlaces(typedthings);
         newPlaces.then(function (data) {
             //merge with favorites and check no double values
@@ -51,20 +72,35 @@ angular.module('carpooling.controllers.offri', [])
         });
     };
 
-    $scope.setLocationFrom = function (name) {
-        $scope.travel['from'].name = name;
-        $scope.travel['from'].address = name;
+    $scope.typingFrom = function (typedthings) {
+        typing('from', typedthings);
+    };
+
+    $scope.typingTo = function (typedthings) {
+        typing('to', typedthings);
+    };
+
+    var setLocation = function (field, name) {
+        $scope.formTravel[field].name = name;
+        $scope.formTravel[field].address = name;
         var coordinates = $scope.places.coordinates[name].latlng.split(',');
-        $scope.travel['from'].latitude = parseFloat(coordinates[0]);
-        $scope.travel['from'].longitude = parseFloat(coordinates[1]);
+        $scope.formTravel[field].latitude = parseFloat(coordinates[0]);
+        $scope.formTravel[field].longitude = parseFloat(coordinates[1]);
+
+        $scope.travel = angular.copy($scope.formTravel);
+
+        $scope.places = {
+            'names': [],
+            'coordinates': {}
+        };
+    };
+
+    $scope.setLocationFrom = function (name) {
+        setLocation('from', name);
     };
 
     $scope.setLocationTo = function (name) {
-        $scope.travel['to'].name = name;
-        $scope.travel['to'].address = name;
-        var coordinates = $scope.places.coordinates[name].latlng.split(',');
-        $scope.travel['to'].latitude = parseFloat(coordinates[0]);
-        $scope.travel['to'].longitude = parseFloat(coordinates[1]);
+        setLocation('to', name);
     };
 
     /*
@@ -372,7 +408,7 @@ angular.module('carpooling.controllers.offri', [])
     });
 
     $scope.offer = function () {
-        // NOTE: 'from', 'to' and 'intermediateStops' is updated directly on $scope.travel
+        // NOTE: 'from', 'to' and 'intermediateStops' are already on $scope.travel
         var auto = StorageSrv.getUser().auto;
 
         if (!!auto && auto.posts > 0) {

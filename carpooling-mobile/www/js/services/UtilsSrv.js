@@ -143,6 +143,10 @@ angular.module('carpooling.services.utils', [])
         return new Array(num);
     };
 
+    utilsService.fastCompareObjects = function (obj1, obj2) {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
+    };
+
     utilsService.loading = function () {
         $ionicLoading.show();
     };

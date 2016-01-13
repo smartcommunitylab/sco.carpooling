@@ -3,14 +3,14 @@
         <form novalidate class="simple-form search-form">
             <div class="list">
                 <!--AUTOCOMPLETE-->
-                <div class="item item-input item-autocomplete">
-                    <placeautocomplete ng-model="travelRequest['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
+                <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelRequestFields['from']}">
+                    <placeautocomplete ng-model="formTravelRequest['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typingFrom" on-select="setLocationFrom"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
-                <div class="item item-input item-autocomplete">
-                    <placeautocomplete ng-model="travelRequest['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
+                <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelRequestFields['to']}">
+                    <placeautocomplete ng-model="formTravelRequest['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typingTo" on-select="setLocationTo"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
                 </div>
@@ -34,12 +34,12 @@
             </div>
 
             <div class="list item-text-wrap padding-bottom">
-                <ion-toggle ng-model="travelRequest.monitored">{{'lbl_allsearchnotifications' | translate}}</ion-toggle>
+                <ion-toggle ng-model="formTravelRequest.monitored">{{'lbl_allsearchnotifications' | translate}}</ion-toggle>
             </div>
 
             <div class="row">
                 <div class="col text-center">
-                    <button class="button button-carpooling" ng-click="searchTravel()">
+                    <button class="button button-carpooling" ng-click="searchTravel()" ng-disabled="!equalFormAndTravelRequestFields['from'] || !equalFormAndTravelRequestFields['to']">
                         {{'lbl_cerca' | translate}}
                     </button>
                 </div>

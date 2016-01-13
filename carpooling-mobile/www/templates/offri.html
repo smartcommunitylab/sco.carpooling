@@ -1,14 +1,14 @@
 <ion-view title="{{'lbl_offer' | translate}}">
     <ion-content class="padding">
         <div class="list">
-            <div class="item item-input item-autocomplete">
+            <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelFields['from']}">
                 <!--<input type="text" placeholder="{{'lbl_from' | translate}}" ng-model="locations['from'].name">-->
-                <placeautocomplete ng-model="travel['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationFrom"></placeautocomplete>
+                <placeautocomplete ng-model="formTravel['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typingFrom" on-select="setLocationFrom"></placeautocomplete>
                 <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
             </div>
-            <div class="item item-input item-autocomplete">
+            <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelFields['to']}">
                 <!--<input type="text" placeholder="{{'lbl_to' | translate}}" ng-model="locations['to'].name">-->
-                <placeautocomplete ng-model="travel['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocationTo"></placeautocomplete>
+                <placeautocomplete ng-model="formTravel['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typingTo" on-select="setLocationTo"></placeautocomplete>
                 <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
             </div>
         </div>
@@ -42,7 +42,7 @@
 
         <div class="row">
             <div class="col text-center">
-                <button class="button button-carpooling" ng-click="offer()">
+                <button class="button button-carpooling" ng-click="offer()" ng-disabled="!equalFormAndTravelFields['from'] || !equalFormAndTravelFields['to']">
                     {{'lbl_offri' | translate}}
                 </button>
             </div>
