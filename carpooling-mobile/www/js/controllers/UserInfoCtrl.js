@@ -1,8 +1,18 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicHistory, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
 
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
+
+    $scope.tab = 0;
+
+    $scope.selectTab = function (idx) {
+        //if (idx == $scope.tab) return;
+        if (idx !== $scope.tab) {
+            $scope.tab = idx;
+            $ionicTabsDelegate.select(idx);
+        }
+    }
 
     var hasAuto = function (auto) {
         // return !!$scope.user.auto
@@ -80,6 +90,10 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.saveProfile = function () {
+        if ($scope.edit.hasAuto && ($scope.user.auto.posts <=0 || !$scope.user.auto.description || !$scope.user.auto.description.trim())) {
+          Utils.toast($filter('translate')('toast_err_empty_autodescription'));
+          return;
+        }
         var auto = angular.copy($scope.user.auto);
         if (!auto) {
             auto = {

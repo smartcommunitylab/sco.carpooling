@@ -1,12 +1,12 @@
 <ion-view title="{{'menu_profile' | translate}}">
     <ion-nav-buttons side="right">
-        <a ng-if="itsMe && editMode && !initialSetup" class="button button-icon ion-close-round" ng-click="cancelChanges()"></a>
-        <a ng-if="itsMe" class="button button-icon" ng-class="{'ion-edit': !editMode, 'ion-checkmark-round': editMode}" ng-click="editMode ? saveProfile() : toggleEditMode()"></a>
+        <a ng-if="tab == 0 && itsMe && editMode && !initialSetup" class="button button-icon ion-close-round" ng-click="cancelChanges()"></a>
+        <a ng-if="tab == 0 && itsMe" class="button button-icon" ng-class="{'ion-edit': !editMode, 'ion-checkmark-round': editMode}" ng-click="editMode ? saveProfile() : toggleEditMode()"></a>
     </ion-nav-buttons>
 
     <ion-tabs class="tabs-top">
         <!-- User Info Tab -->
-        <ion-tab icon="ion-ios-information">
+        <ion-tab icon="ion-ios-information"  ng-click="selectTab(0)">
             <!--<ion-nav-view name="tab-userinfo"></ion-nav-view>-->
             <ion-view>
                 <ion-content class="padding user-profile">
@@ -39,7 +39,7 @@
         </ion-tab>
 
         <!-- User Stats Tab -->
-        <ion-tab icon="ion-stats-bars">
+        <ion-tab icon="ion-stats-bars"  ng-click="selectTab(1)">
             <!--    <ion-nav-view name="tab-userstats"></ion-nav-view>-->
             <ion-view>
                 <ion-content class="padding" ng-init="initStats()">
