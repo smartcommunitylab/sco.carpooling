@@ -592,7 +592,7 @@ angular.module('carpooling', [
         lbl_start_time: 'Orario di partenza',
         lbl_user_car_owner: 'Automunito',
         lbl_user_car_info: 'Note auto',
-        lbl_user_car_seats: 'Posti disponibili',
+        lbl_user_car_seats: 'Posti disponibili ai passeggeri',
         lbl_end_time: 'Orario di arrivo',
         lbl_recurrency: 'Ricorrenza',
         lbl_passengers: 'Passeggeri',

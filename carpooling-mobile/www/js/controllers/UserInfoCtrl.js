@@ -80,7 +80,7 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.saveProfile = function () {
-        var auto = $scope.user.auto;
+        var auto = angular.copy($scope.user.auto);
         if (!auto) {
             auto = {
                 description: '',
@@ -137,23 +137,24 @@ angular.module('carpooling.controllers.user', [])
         }
     }
 
-    $scope.drivertripsheight = "";
-    $scope.passengertripsheight = "";
+    $scope.driverStyle = {};
+    $scope.passengerStyle = {};
 
     $scope.ratingOffer = 0;
     $scope.ratingAccepted = 0;
 
     var calculateHeight = function (driver, passenger) {
-        maxValue = Math.max(driver, passenger);
-        minValue = Math.min(driver, passenger);
-        maxHeight = 100;
-        minHight = (100 * minValue) / maxValue;
+        var maxValue = Math.max(driver, passenger);
+        var minValue = Math.min(driver, passenger);
+        var minPercentage = (100 * minValue) / maxValue;
+        var style = {
+            'height': minPercentage + '%'
+        };
+
         if (driver == maxValue) {
-            $scope.drivertripsheight = 100 - maxHeight + 'px';
-            $scope.passengertripsheight = 100 - minHight + 'px';
+            $scope.passengerStyle = style;
         } else {
-            $scope.passengertripsheight = 100 - maxHeight + 'px';
-            $scope.drivertripsheight = 100 - minHight + 'px';
+            $scope.driverStyle = style;
         }
     };
 
@@ -192,8 +193,8 @@ angular.module('carpooling.controllers.user', [])
         Utils.loading();
 
         UserSrv.getUser($scope.user.userId).then(function (user) {
-            $scope.driverRating = user.gameProfile.driverRating;
-            $scope.passengerRating = user.gameProfile.passengerRating;
+            $scope.driverRating = isNaN(user.gameProfile.driverRating) ? 0 : user.gameProfile.driverRating;
+            $scope.passengerRating = isNaN(user.gameProfile.passengerRating) ? 0 : user.gameProfile.passengerRating;
             $scope.totalDriverTrips = user.offeredTravels;
             $scope.totalPassengerTrips = user.participatedTravels;
             calculateHeight($scope.totalDriverTrips, $scope.totalPassengerTrips);

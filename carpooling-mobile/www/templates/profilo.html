@@ -7,7 +7,7 @@
     <ion-tabs class="tabs-top">
         <!-- User Info Tab -->
         <ion-tab icon="ion-ios-information">
-            <!--        <ion-nav-view name="tab-userinfo"></ion-nav-view>-->
+            <!--<ion-nav-view name="tab-userinfo"></ion-nav-view>-->
             <ion-view>
                 <ion-content class="padding user-profile">
                     <div class="user-data">
@@ -20,17 +20,19 @@
                     <div class="list user-options">
                         <ion-toggle ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}</ion-toggle>
 
-                        <label class="item item-input">
-                            <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
-                            <input type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
-                        </label>
+                        <div ng-if="!!user.auto">
+                            <label class="item item-input">
+                                <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
+                                <input type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
+                            </label>
 
-                        <label class="item item-input item-select">
-                            <div class="input-label">
-                                {{'lbl_user_car_seats' | translate}}
-                            </div>
-                            <select ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!editMode || !user.auto"></select>
-                        </label>
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    {{'lbl_user_car_seats' | translate}}
+                                </div>
+                                <select ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!editMode || !user.auto"></select>
+                            </label>
+                        </div>
                     </div>
                 </ion-content>
             </ion-view>
@@ -41,24 +43,50 @@
             <!--    <ion-nav-view name="tab-userstats"></ion-nav-view>-->
             <ion-view>
                 <ion-content class="padding" ng-init="initStats()">
+                    <table class="chart">
+                        <tr class="toes" style="display:none;">
+                            <td>
+                                <div class="toe">
+                                    <span class="valuestring">{{totalDriverTrips}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="toe">
+                                    <span class="valuestring">{{totalPassengerTrips}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="values">
+                            <td>
+                                <div class="value" ng-style="driverStyle">
+                                    <span class="valuestring">{{totalDriverTrips}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="value" ng-style="passengerStyle">
+                                    <span class="valuestring">{{totalPassengerTrips}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="toes">
+                            <td>
+                                <div class="toe">
+                                    <span class="valuestring">{{totalDriverTrips}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="toe">
+                                    <span class="valuestring">{{totalPassengerTrips}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="labels">
+                            <th>{{'lbl_number_driver_avg' | translate}}</th>
+                            <th>{{'lbl_number_pass_avg' | translate}}</th>
+                        </tr>
+                    </table>
 
-                    <div>
-                        <ul class="chart">
-                            <li style="margin-top:{{drivertripsheight}};">
-                                <div class="value">{{totalDriverTrips}}</div>
-                            </li>
-                            <li style="margin-top:{{passengertripsheight}};">
-                                <div class="value">{{totalPassengerTrips}}</div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <div class="string">{{'lbl_number_driver_avg'|translate}}</div>
-                        <div class="string">{{'lbl_number_pass_avg'|translate}}</div>
-                    </div>
-
-                    <div class="rating-avg col">
+                    <div class="rating-avg">
                         <span class="rating-avg-txt">{{'lbl_rating_driver_avg'|translate}}</span>
                     </div>
                     <div class="rating-avg-star">
@@ -66,10 +94,10 @@
                             <i ng-repeat="starType in getStars(driverRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}"></i>
                         </span>
                     </div>
+
                     <div class="rating-avg">
                         <span class="rating-avg-txt">{{'lbl_rating_pass_avg'|translate}}</span>
                     </div>
-
                     <div class="rating-avg-star">
                         <span>
                             <i ng-repeat="starType in getStars(passengerRating) track by $index" class="icon icon-rating" ng-class="{'ion-android-star': starType == 'full', 'ion-android-star-half': starType == 'half', 'ion-android-star-outline': starType == 'empty'}" ></i>

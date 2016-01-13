@@ -403,62 +403,64 @@ placeautocomplete ul li {
 .user-profile .user-options {}
 
 /* Stats*/
-
-.chart {
-    margin: 0;
-    padding: 0;
-    background: white;
-    /*  border:1px solid #999;*/
-    overflow: hidden;
-    height: 150px;
+table.chart {
     width: 100%;
-    list-style: none;
+    height: 180px;
+}
+table.chart tr td {
+    width: 50%;
+}
+table.chart .values {
+    height: 100%;
+}
+table.chart .values td {
+    padding: 0 0.5em;
+}
+table.chart .values .value {
     position: relative;
-    border-top-left-radius,
-    border-top-right-radius: 25px;
-}
-.chart li {
-    height: 150px;
-    list-style: none;
-    margin: 10px;
-    padding: 0;
-    float: left;
-    width: 40%;
+    height: 100%;
     background: #c5cae9;
-    color: #3f51b5;
-    border-top: 1px solid white;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    /* future proofing */
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
 }
-.value {
+table.chart .values .value .valuestring {
+    display: none;
+    width: 100%;
     position: absolute;
+    bottom: 0.5em;
+    color: #3f51b5;
     text-align: center;
-    width: 40%;
-    bottom: 20px;
-    font-size: 30px;
+    font-size: xx-large;
     font-weight: bold;
 }
-.string {
-    margin: 10px;
-    text-align: center;
-    width: 40%;
-    display: inline-block;
-    /*
-  position:absolute;
-    top:85px;
-*/
+table.chart .toes {
+
 }
+table.chart .toes td {
+    line-height: 2em;
+    padding: 0 0.5em;
+}
+table.chart .toes .toe {
+    background: #c5cae9; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#c5cae9, white); /* For Safari 5.1 to 6.0 */
+    background: -moz-linear-gradient(#c5cae9, white); /* For Firefox 3.6 to 15 */
+    background: -o-linear-gradient(#c5cae9, white); /* For Opera 11.1 to 12.0 */
+    background: linear-gradient(#c5cae9, white); /* Standard syntax */
+    color: #3f51b5;
+    text-align: center;
+    font-size: xx-large;
+    font-weight: bold;
+}
+table.chart .labels {}
 .rating-avg {
-    margin: 8px;
+    margin-top: 2em;
     width: 100%;
     text-align: center;
 }
 .rating-avg-star {
     text-align: center;
-    margin: 8px;
     width: 100%;
-    font-size: xx-large;
+    font-size: 40px;
     color: #3f51b5;
 }
 .rating-avg-star span {
