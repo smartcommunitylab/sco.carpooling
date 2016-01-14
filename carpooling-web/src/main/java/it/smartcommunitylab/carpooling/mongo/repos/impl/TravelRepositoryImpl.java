@@ -49,12 +49,16 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		
 		// check if bookings within travel has travellers with userId
-		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
+		Criteria criteria = new Criteria().where("bookings").elemMatch(
+				Criteria.where("traveller.userId").is(userId).and("accepted").is(1));
 		/**
 		 Query:{
+			{
 			"bookings": {
 				"$elemMatch": {
-					"traveller.userId": "52"
+					"traveller.userId": "53",
+					"accepted": 1
+					}
 				}
 			}
 		}
@@ -434,16 +438,20 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
 		// check if bookings within travel has travellers with userId
-		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
+		Criteria criteria = new Criteria().where("bookings").elemMatch(
+				Criteria.where("traveller.userId").is(userId).and("accepted").is(1));
 
 		Query query = new Query();
 		query.addCriteria(criteria);
 
 		/**
 		 Query:{
+			{
 			"bookings": {
 				"$elemMatch": {
-					"traveller.userId": "52"
+					"traveller.userId": "53",
+					"accepted": 1
+					}
 				}
 			}
 		}
