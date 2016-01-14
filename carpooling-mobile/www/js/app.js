@@ -64,7 +64,7 @@ angular.module('carpooling', [
                             $state.go(s_path);
                         } else {
                             // notific without a urlHash attribute but with a url attribute
-                            if(notific_data.url){
+                            if (notific_data.url) {
                                 var s_path = notific_data.url.replace(new RegExp("/", 'g'), ".");
                                 s_path = s_path.substring(2, s_path.length);
                                 $state.go(s_path);
@@ -124,155 +124,155 @@ angular.module('carpooling', [
     };
 
     $rootScope.pushRegistration = function (userId) {
-       var channel = 'CarPooling_' + userId;
-       try {
-           if (window.ParsePushPlugin) {
-               if (isAndroid) {
-                   window.ParsePushPlugin.subscribe(channel, function () {
-                       //console.log("Succes in channel " + channel + " creation");
-                   });
+        var channel = 'CarPooling_' + userId;
+        try {
+            if (window.ParsePushPlugin) {
+                if (isAndroid) {
+                    window.ParsePushPlugin.subscribe(channel, function () {
+                        //console.log("Succes in channel " + channel + " creation");
+                    });
 
-                   window.ParsePushPlugin.on('openPN', function (pn) {
-                       if (pn.urlHash) {
-                           var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
-                           s_path = s_path.substring(2, s_path.length);
-                           //window.location.path = "/notifiche";
-                           //window.location.reload(true);
-                           $state.go(s_path);
-                       } else {
-                           // urlHash not present. I open the app in the last page/view
-                       }
-                   });
-                   window.ParsePushPlugin.on('receivePN', function (pn) {
-                       var chat_parameters = $rootScope.isChat(window.location);
-                       if (chat_parameters.length > 0) {
-                           var travelId = chat_parameters[0];
-                           var senderId = chat_parameters[1];
-                           if (pn.cp_senderId && pn.cp_travelId) {
-                               if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
-                                   $state.go('app.chat', { //transitionTo
-                                       travelId: travelId,
-                                       personId: senderId
-                                   }, {
-                                       reload: true
-                                   });
-                                   $rootScope.updateMyNotification(travelId, senderId);
-                               } else {
-                                   $rootScope.manageLocalNotification(pn);
-                               }
-                           } else {
-                               $rootScope.manageLocalNotification(pn);
-                           }
-                       } else {
-                           if($rootScope.isNotification(window.location)){
+                    window.ParsePushPlugin.on('openPN', function (pn) {
+                        if (pn.urlHash) {
+                            var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
+                            s_path = s_path.substring(2, s_path.length);
+                            //window.location.path = "/notifiche";
+                            //window.location.reload(true);
+                            $state.go(s_path);
+                        } else {
+                            // urlHash not present. I open the app in the last page/view
+                        }
+                    });
+                    window.ParsePushPlugin.on('receivePN', function (pn) {
+                        var chat_parameters = $rootScope.isChat(window.location);
+                        if (chat_parameters.length > 0) {
+                            var travelId = chat_parameters[0];
+                            var senderId = chat_parameters[1];
+                            if (pn.cp_senderId && pn.cp_travelId) {
+                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
+                                    $state.go('app.chat', { //transitionTo
+                                        travelId: travelId,
+                                        personId: senderId
+                                    }, {
+                                        reload: true
+                                    });
+                                    $rootScope.updateMyNotification(travelId, senderId);
+                                } else {
+                                    $rootScope.manageLocalNotification(pn);
+                                }
+                            } else {
+                                $rootScope.manageLocalNotification(pn);
+                            }
+                        } else {
+                            if ($rootScope.isNotification(window.location)) {
                                 // case app opened in notification list
                                 //alert("In notification page update");
                                 $state.go('app.notifiche', {}, {
-                                   reload: true
+                                    reload: true
                                 });
-                               //window.location.reload(true)
-                           } else {
-                               $rootScope.manageLocalNotification(pn);
-                           }
-                       }
-                   });
-               } else if (isIOS) {
-                   window.ParsePushPlugin.register({
-                       appId: Config.getAppId(),
-                       clientKey: Config.getClientKey(),
-                       ecb: "onNotification"
-                   }, function () {
-                       window.ParsePushPlugin.subscribe(channel, function () {
-                           //console.log("Succes in channel " + channel + " creation");
-                       });
-                   }, function (e) {
-                       console.log("Error in parse initialize");
-                   });
+                                //window.location.reload(true)
+                            } else {
+                                $rootScope.manageLocalNotification(pn);
+                            }
+                        }
+                    });
+                } else if (isIOS) {
+                    window.ParsePushPlugin.register({
+                        appId: Config.getAppId(),
+                        clientKey: Config.getClientKey(),
+                        ecb: "onNotification"
+                    }, function () {
+                        window.ParsePushPlugin.subscribe(channel, function () {
+                            //console.log("Succes in channel " + channel + " creation");
+                        });
+                    }, function (e) {
+                        console.log("Error in parse initialize");
+                    });
 
-                   onNotification = function (pn) {
-                       var chat_parameters = $rootScope.isChat(window.location);
-                       if (chat_parameters.length > 0) {
-                           var travelId = chat_parameters[0];
-                           var senderId = chat_parameters[1];
-                           if (pn.cp_senderId && pn.cp_travelId) {
-                               if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
-                                   $state.go('app.chat', { //transitionTo
-                                       travelId: travelId,
-                                       personId: senderId
-                                   }, {
-                                       reload: true
-                                   });
-                                   $rootScope.updateMyNotification(travelId, senderId);
-                               } else {
-                                   $rootScope.manageLocalNotification(pn);
-                               }
-                           } else {
-                               $rootScope.manageLocalNotification(pn);
-                           }
-                       } else {
-                           if($rootScope.isNotification(window.location)){
+                    onNotification = function (pn) {
+                        var chat_parameters = $rootScope.isChat(window.location);
+                        if (chat_parameters.length > 0) {
+                            var travelId = chat_parameters[0];
+                            var senderId = chat_parameters[1];
+                            if (pn.cp_senderId && pn.cp_travelId) {
+                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
+                                    $state.go('app.chat', { //transitionTo
+                                        travelId: travelId,
+                                        personId: senderId
+                                    }, {
+                                        reload: true
+                                    });
+                                    $rootScope.updateMyNotification(travelId, senderId);
+                                } else {
+                                    $rootScope.manageLocalNotification(pn);
+                                }
+                            } else {
+                                $rootScope.manageLocalNotification(pn);
+                            }
+                        } else {
+                            if ($rootScope.isNotification(window.location)) {
                                 // case app opened in notification list
                                 $state.go('app.notifiche', {}, {
-                                       reload: true
-                                   });
+                                    reload: true
+                                });
                                 //window.location.reload(true)
-                           } else {
-                               $rootScope.manageLocalNotification(pn);
-                           }
-                       }
-                   }
-               }
+                            } else {
+                                $rootScope.manageLocalNotification(pn);
+                            }
+                        }
+                    }
+                }
 
-               /*if (window.ParsePushPlugin) {
-                   window.ParsePushPlugin.subscribe(channel, function () {
-                       //console.log("Succes in channel " + channel + " creation");
-                   });
-                   window.ParsePushPlugin.on('openPN', function (pn) {
-                       //alert("in open notific" + JSON.stringify(pn));
-                       if (pn.urlHash) {
-                           var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
-                           s_path = s_path.substring(2, s_path.length);
-                           //window.location.path = "/notifiche";
-                           //window.location.reload(true);
-                           $state.go(s_path);
-                       } else {
-                           // urlHash not present. I open the app in the last page/view
-                       }
-                   });
-                   window.ParsePushPlugin.on('receivePN', function (pn) {
-                       var chat_parameters = $rootScope.isChat(window.location);
-                       if (chat_parameters.length > 0) {
-                           var travelId = chat_parameters[0];
-                           var senderId = chat_parameters[1];
-                           if (pn.cp_senderId && pn.cp_travelId) {
-                               if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
-                                   $state.go('app.chat', { //transitionTo
-                                       travelId: travelId,
-                                       personId: senderId
-                                   }, {
-                                       reload: true
-                                   });
-                                   $rootScope.updateMyNotification(travelId, senderId);
-                               } else {
-                                   $rootScope.manageLocalNotification(pn);
-                               }
-                           } else {
-                               $rootScope.manageLocalNotification(pn);
-                           }
-                       } else {
-                           $rootScope.manageLocalNotification(pn);
-                       }
-                   });*/
-               //
-               //you can also listen to your own custom subevents
-               //
-               //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
-               //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
-           }
-       } catch (ex) {
-           //console.log('Exception in parsepush registration ' + ex.message);
-       }
-   };
+                /*if (window.ParsePushPlugin) {
+                    window.ParsePushPlugin.subscribe(channel, function () {
+                        //console.log("Succes in channel " + channel + " creation");
+                    });
+                    window.ParsePushPlugin.on('openPN', function (pn) {
+                        //alert("in open notific" + JSON.stringify(pn));
+                        if (pn.urlHash) {
+                            var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
+                            s_path = s_path.substring(2, s_path.length);
+                            //window.location.path = "/notifiche";
+                            //window.location.reload(true);
+                            $state.go(s_path);
+                        } else {
+                            // urlHash not present. I open the app in the last page/view
+                        }
+                    });
+                    window.ParsePushPlugin.on('receivePN', function (pn) {
+                        var chat_parameters = $rootScope.isChat(window.location);
+                        if (chat_parameters.length > 0) {
+                            var travelId = chat_parameters[0];
+                            var senderId = chat_parameters[1];
+                            if (pn.cp_senderId && pn.cp_travelId) {
+                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
+                                    $state.go('app.chat', { //transitionTo
+                                        travelId: travelId,
+                                        personId: senderId
+                                    }, {
+                                        reload: true
+                                    });
+                                    $rootScope.updateMyNotification(travelId, senderId);
+                                } else {
+                                    $rootScope.manageLocalNotification(pn);
+                                }
+                            } else {
+                                $rootScope.manageLocalNotification(pn);
+                            }
+                        } else {
+                            $rootScope.manageLocalNotification(pn);
+                        }
+                    });*/
+                //
+                //you can also listen to your own custom subevents
+                //
+                //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
+                //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
+            }
+        } catch (ex) {
+            //console.log('Exception in parsepush registration ' + ex.message);
+        }
+    };
 
     $rootScope.isRecurrencyEnabled = Config.isRecurrencyEnabled;
 
@@ -288,11 +288,11 @@ angular.module('carpooling', [
         LoginSrv.login().then(
             function (data) {
                 $rootScope.loginStarted = false;
-                UserSrv.getUser(data.userId).then(function() {
-                  $rootScope.pushRegistration(data.userId);
-                  $state.go('app.home', {}, {
-                      reload: true
-                  });
+                UserSrv.getUser(data.userId).then(function () {
+                    $rootScope.pushRegistration(data.userId);
+                    $state.go('app.home', {}, {
+                        reload: true
+                    });
                 });
             },
             function (error) {
@@ -333,7 +333,7 @@ angular.module('carpooling', [
         if (LoginSrv.userIsLogged()) {
             $rootScope.pushRegistration(StorageSrv.getUserId());
         } else {
-          $rootScope.login();
+            $rootScope.login();
         }
     });
 
@@ -395,8 +395,11 @@ angular.module('carpooling', [
     })
 
     .state('app.comunitainfo', {
-      url: '/comunita/:communityId',
-      cache: false,
+        url: '/comunita/:communityId',
+        cache: false,
+        params: {
+            'community': {}
+        },
         views: {
             'menuContent': {
                 templateUrl: 'templates/communityinfo.html',
@@ -517,12 +520,12 @@ angular.module('carpooling', [
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise(function($injector){
-      var logged = $injector.get('LoginSrv').userIsLogged();
-      if (!logged) {
-          return '/';
-      }
-      return '/app/home';
+    $urlRouterProvider.otherwise(function ($injector) {
+        var logged = $injector.get('LoginSrv').userIsLogged();
+        if (!logged) {
+            return '/';
+        }
+        return '/app/home';
     });
 })
 
@@ -590,6 +593,7 @@ angular.module('carpooling', [
         lbl_allcommunity: 'In tutte le community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         lbl_start_time: 'Orario di partenza',
+        lbl_user_anonymous: 'Anonimo',
         lbl_user_car_owner: 'Automunito',
         lbl_user_car_info: 'Note auto',
         lbl_user_car_seats: 'Posti disponibili',

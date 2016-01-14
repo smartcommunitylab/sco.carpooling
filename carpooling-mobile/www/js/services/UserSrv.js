@@ -170,7 +170,7 @@ angular.module('carpooling.services.user', [])
     userService.getCommunityDetails = function (communityId) {
         var deferred = $q.defer();
 
-        $http.get(Config.getServerURL() + '/api/read/community/'+communityId, Config.getHTTPConfig())
+        $http.get(Config.getServerURL() + '/api/read/community/' + communityId, Config.getHTTPConfig())
 
         .then(
             function (response) {

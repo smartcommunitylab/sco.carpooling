@@ -379,7 +379,7 @@ angular.module('carpooling.controllers.viaggio', [])
     };
     $scope.showCommunity = function () {
         $state.go('app.comunitainfo', {
-            'communityId': $scope.mainCommunity.id
+            'community': $scope.mainCommunity
         });
     }
 });
