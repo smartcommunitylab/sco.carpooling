@@ -10,7 +10,7 @@ angular.module('carpooling.controllers.communityinfo', [])
 
     var init = function() {
       Utils.loading();
-      UserSrv.getCommunityDetails($stateParams.communityId).then(function(community) {
+      UserSrv.getCommunityDetails($stateParams.community.id).then(function(community) {
         $scope.community = community;
         UserSrv.getCommunityTravels($scope.community.id, Date.now()).then(
             function (todayCommunityTrips) {
@@ -39,7 +39,7 @@ angular.module('carpooling.controllers.communityinfo', [])
     init();
 
     $scope.changeAutoState = function () {
-        $state.go('app.profilo.userinfo', {
+        $state.go('app.profilo', {
             'communityFrom': $scope.community,
             'editMode': true
         });
