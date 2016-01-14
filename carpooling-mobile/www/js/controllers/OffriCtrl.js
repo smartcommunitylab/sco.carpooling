@@ -49,7 +49,7 @@ angular.module('carpooling.controllers.offri', [])
             return;
         }
 
-                $scope.equalFormAndTravelFields[field] = Utils.fastCompareObjects($scope.formTravel[field], $scope.travel[field]);
+        $scope.equalFormAndTravelFields[field] = Utils.fastCompareObjects($scope.formTravel[field], $scope.travel[field]);
         if ($scope.equalFormAndTravelFields[field]) {
             return;
         } else {
@@ -162,12 +162,16 @@ angular.module('carpooling.controllers.offri', [])
                     confirmPopupOptions.template = name;
                     confirmPopupOptions.buttons[1].onTap = function () {
                         if (!!selectedField) {
-                            $scope.travel[selectedField].name = name;
-                            $scope.travel[selectedField].address = name;
+                            $scope.formTravel[selectedField].name = name;
+                            $scope.formTravel[selectedField].address = name;
                             var splittedCoords = coordinates.split(',');
-                            $scope.travel[selectedField].latitude = parseFloat(splittedCoords[0]);
-                            $scope.travel[selectedField].longitude = parseFloat(splittedCoords[1]);
+                            $scope.formTravel[selectedField].latitude = parseFloat(splittedCoords[0]);
+                            $scope.formTravel[selectedField].longitude = parseFloat(splittedCoords[1]);
                             $scope.afterMapSelection = true;
+
+                            $scope.travel = angular.copy($scope.formTravel);
+
+                            $scope.equalFormAndTravelFields[selectedField] = Utils.fastCompareObjects($scope.formTravel[selectedField], $scope.travel[selectedField]);
                         }
                         $scope.hideModalMap();
                     };

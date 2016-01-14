@@ -160,12 +160,16 @@ angular.module('carpooling.controllers.cercaviaggi', [])
                     confirmPopupOptions.template = name;
                     confirmPopupOptions.buttons[1].onTap = function () {
                         if (!!selectedField) {
-                            $scope.travelRequest[selectedField].name = name;
-                            $scope.travelRequest[selectedField].address = name;
+                            $scope.formTravelRequest[selectedField].name = name;
+                            $scope.formTravelRequest[selectedField].address = name;
                             var splittedCoords = coordinates.split(',');
-                            $scope.travelRequest[selectedField].latitude = parseFloat(splittedCoords[0]);
-                            $scope.travelRequest[selectedField].longitude = parseFloat(splittedCoords[1]);
+                            $scope.formTravelRequest[selectedField].latitude = parseFloat(splittedCoords[0]);
+                            $scope.formTravelRequest[selectedField].longitude = parseFloat(splittedCoords[1]);
                             $scope.afterMapSelection = true;
+
+                            $scope.travelRequest = angular.copy($scope.formTravelRequest);
+
+                            $scope.equalFormAndTravelRequestFields[selectedField] = Utils.fastCompareObjects($scope.formTravelRequest[selectedField], $scope.travelRequest[selectedField]);
                         }
                         $scope.hideModalMap();
                     };
