@@ -1,5 +1,12 @@
-<div class="row trip-rating">
+<!--<div class="row trip-rating">
     <div class="col-20" ng-repeat="value in getNumber(ratingMax) track by $index">
+        <i class="icon icon-rating" ng-class="{'ion-android-star': (($index + 1) <= rating), 'ion-android-star-outline': (($index + 1) > rating)}" ng-click="setRating($index + 1)"></i>
+    </div>
+</div>-->
+
+<!--without flex-->
+<div class="trip-rating">
+    <div ng-repeat="value in getNumber(ratingMax) track by $index">
         <i class="icon icon-rating" ng-class="{'ion-android-star': (($index + 1) <= rating), 'ion-android-star-outline': (($index + 1) > rating)}" ng-click="setRating($index + 1)"></i>
     </div>
 </div>
