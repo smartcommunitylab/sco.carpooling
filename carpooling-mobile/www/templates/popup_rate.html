@@ -1,4 +1,4 @@
-<div class="row trip-rating">
+<div class="trip-rating">
     <div class="star" ng-repeat="value in getNumber(ratingMax) track by $index" ng-click="setRating($index + 1)">
         <i class="icon icon-rating" ng-class="{'ion-android-star': (($index + 1) <= rating), 'ion-android-star-outline': (($index + 1) > rating)}"></i>
     </div>
