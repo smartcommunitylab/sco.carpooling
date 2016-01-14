@@ -96,7 +96,7 @@ public class TestRepository {
 			System.out.println(travel.getId());
 		}
 		// pagination.
-		for (Travel travel : travelRepository.findTravelByPassengerId("52",3,1)) {
+		for (Travel travel : travelRepository.findTravelByPassengerId("52",1,3)) {
 			System.out.println(travel.getId());
 		}
 	}
