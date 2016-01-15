@@ -177,8 +177,6 @@ angular.module('carpooling.controllers.user', [])
             vote = 0;
         }
 
-        vote = 4.5;
-
         var stars = [];
 
         var fullStars = Math.floor(vote);
