@@ -63,7 +63,11 @@ angular.module('carpooling.services.passenger', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data.error);
+                if (!!responseError.data.error) {
+                    deferred.reject(responseError.data.error);
+                } else {
+                    deferred.reject(responseError.data);
+                }
             }
         );
 

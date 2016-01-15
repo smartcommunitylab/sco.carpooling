@@ -1,6 +1,8 @@
 angular.module('carpooling.controllers.communityinfo', [])
 
 .controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, UserSrv, Utils, StorageSrv) {
+    $scope.travelDateFormat = 'dd MMMM yyyy';
+    $scope.travelTimeFormat = 'HH:mm';
 
     $scope.communityTrips = null;
     $scope.communityStyle = null;

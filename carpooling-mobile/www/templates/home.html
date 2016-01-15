@@ -27,7 +27,7 @@
                                             {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
                                         </li>
                                         <li>
-                                            {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
+                                            {{'lbl_start_time' | translate}}: <span>{{trip.when | date: travelTimeFormat}}</span>
                                         </li>
                                         <li>
                                             <span class="trip-data-rejected" ng-if="trip.bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>

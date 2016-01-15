@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.offri', [])
 
-.controller('OffriCtrl', function ($scope, $state, $stateParams, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+.controller('OffriCtrl', function ($scope, $state, $stateParams, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, CacheSrv, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
     // 'from' and 'to' are 'zone' objects
     $scope.formTravel = {
         'from': {
@@ -434,9 +434,8 @@ angular.module('carpooling.controllers.offri', [])
             DriverSrv.createTrip($scope.travel).then(
                 function (savedTravel) {
                     Utils.loaded();
-                    $state.go('app.home', {}, {
-                        reload: true
-                    });
+                    CacheSrv.setReloadDriverTrips(true);
+                    $state.go('app.home');
                     Utils.toast(($filter('translate')('toast_trip_offered')));
                 },
                 function (error) {

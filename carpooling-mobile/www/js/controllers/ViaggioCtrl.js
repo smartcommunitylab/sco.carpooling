@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, $filter, MapSrv, Config, CacheSrv, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -187,6 +187,7 @@ angular.module('carpooling.controllers.viaggio', [])
                         function (data) {
                             Utils.loaded();
                             refreshTrip(data);
+                            CacheSrv.setReloadDriverTrip($scope.selectedTrip.id);
                             Utils.toast(($filter('translate')('toast_booking_rejected')));
                             deferred.resolve();
                         },
@@ -223,6 +224,7 @@ angular.module('carpooling.controllers.viaggio', [])
                         function (data) {
                             Utils.loaded();
                             refreshTrip(data);
+                            CacheSrv.setReloadDriverTrip($scope.selectedTrip.id);
                             Utils.toast(($filter('translate')('toast_booking_accepted')));
                         },
                         function (error) {
@@ -317,6 +319,7 @@ angular.module('carpooling.controllers.viaggio', [])
             function (updatedTrip) {
                 Utils.loaded();
                 refreshTrip(updatedTrip);
+                CacheSrv.setReloadPassengerTrips(true);
             },
             function (error) {
                 Utils.loaded();

@@ -2,7 +2,7 @@ angular.module('carpooling.controllers.home', [])
 
 .controller('AppCtrl', function ($scope, $state) {})
 
-.controller('HomeCtrl', function ($scope, $state, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('HomeCtrl', function ($scope, $state, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
 
     $scope.tab = 0;
 
@@ -27,13 +27,19 @@ angular.module('carpooling.controllers.home', [])
     var passengerTripsCount = 20; // default
     $scope.passengerTripsCanHaveMore = false;
 
-    $scope.loadMorePassengerTrips = function () {
+    $scope.loadMorePassengerTrips = function (reset) {
         if (passengerTripsStart === 0) {
             Utils.loading();
         }
 
+        if (reset) {
+            $scope.passengerTrips = null;
+        }
+
         PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount).then(
             function (trips) {
+                CacheSrv.setReloadPassengerTrips(false);
+
                 trips.forEach(function (trip) {
                     // booking counters
                     trip.bookingCounters = Utils.getBookingCounters(trip);
@@ -95,13 +101,19 @@ angular.module('carpooling.controllers.home', [])
     var driverTripsCount = 20; // default
     $scope.driverTripsCanHaveMore = false;
 
-    $scope.loadMoreDriverTrips = function () {
+    $scope.loadMoreDriverTrips = function (reset) {
         if (driverTripsStart === 0) {
             Utils.loading();
         }
 
+        if (reset) {
+            $scope.driverTrips = null;
+        }
+
         DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount).then(
             function (trips) {
+                CacheSrv.setReloadDriverTrips(false);
+
                 trips.forEach(function (trip) {
                     trip.bookingCounters = Utils.getBookingCounters(trip);
                     trip.style = Utils.getTripStyle(trip);
@@ -149,5 +161,18 @@ angular.module('carpooling.controllers.home', [])
     /*
      * init
      */
-    $scope.loadMorePassengerTrips();
+    $scope.$on('$ionicView.enter', function () {
+        if ($scope.tab === 0) {
+            if (CacheSrv.reloadPassengerTrips()) {
+                $scope.loadMorePassengerTrips(true);
+            }
+        } else if ($scope.tab === 1) {
+            if (CacheSrv.reloadDriverTrips()) {
+                $scope.loadMoreDriverTrips(true);
+            } else if (!!CacheSrv.reloadDriverTrip()) {
+                // TODO reload a single driver travel and refresh it in the list
+                var tripId = CacheSrv.reloadDriverTrip();
+            }
+        }
+    });
 });
