@@ -50,14 +50,13 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		
 		// check if bookings within travel has travellers with userId
 		Criteria criteria = new Criteria().where("bookings").elemMatch(
-				Criteria.where("traveller.userId").is(userId).and("accepted").is(1));
+				Criteria.where("traveller.userId").is(userId));
 		/**
 		 Query:{
 			{
 			"bookings": {
 				"$elemMatch": {
-					"traveller.userId": "53",
-					"accepted": 1
+					"traveller.userId": "53"
 					}
 				}
 			}
