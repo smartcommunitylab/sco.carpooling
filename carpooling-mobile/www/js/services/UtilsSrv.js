@@ -3,50 +3,47 @@ angular.module('carpooling.services.utils', [])
 .factory('Utils', function ($rootScope, $q, $filter, $ionicLoading, $ionicPopup, $timeout, StorageSrv) {
     var utilsService = {};
 
-    var monthList = [
-        $filter('translate')('month_jan'),
-        $filter('translate')('month_feb'),
-        $filter('translate')('month_mar'),
-        $filter('translate')('month_apr'),
-        $filter('translate')('month_may'),
-        $filter('translate')('month_jun'),
-        $filter('translate')('month_jul'),
-        $filter('translate')('month_ago'),
-        $filter('translate')('month_sep'),
-        $filter('translate')('month_oct'),
-        $filter('translate')('month_nov'),
-        $filter('translate')('month_dic')
-    ];
-
-    var daysOfWeek = [
-        $filter('translate')('dow_sunday'),
-        $filter('translate')('dow_monday'),
-        $filter('translate')('dow_tuesday'),
-        $filter('translate')('dow_wednesday'),
-        $filter('translate')('dow_thursday'),
-        $filter('translate')('dow_friday'),
-        $filter('translate')('dow_saturday')
-    ];
-
-    var shortDaysOfWeek = [
-        $filter('translate')('dow_sunday_short'),
-        $filter('translate')('dow_monday_short'),
-        $filter('translate')('dow_tuesday_short'),
-        $filter('translate')('dow_wednesday_short'),
-        $filter('translate')('dow_thursday_short'),
-        $filter('translate')('dow_friday_short'),
-        $filter('translate')('dow_saturday_short')
-    ];
-
     utilsService.getMonthList = function () {
+        var monthList = [
+            $filter('translate')('month_jan'),
+            $filter('translate')('month_feb'),
+            $filter('translate')('month_mar'),
+            $filter('translate')('month_apr'),
+            $filter('translate')('month_may'),
+            $filter('translate')('month_jun'),
+            $filter('translate')('month_jul'),
+            $filter('translate')('month_ago'),
+            $filter('translate')('month_sep'),
+            $filter('translate')('month_oct'),
+            $filter('translate')('month_nov'),
+            $filter('translate')('month_dic')
+        ];
         return monthList;
     };
 
     utilsService.getDoWList = function () {
+        var daysOfWeek = [
+            $filter('translate')('dow_sunday'),
+            $filter('translate')('dow_monday'),
+            $filter('translate')('dow_tuesday'),
+            $filter('translate')('dow_wednesday'),
+            $filter('translate')('dow_thursday'),
+            $filter('translate')('dow_friday'),
+            $filter('translate')('dow_saturday')
+        ];
         return daysOfWeek;
     };
 
     utilsService.getSDoWList = function () {
+        var shortDaysOfWeek = [
+            $filter('translate')('dow_sunday_short'),
+            $filter('translate')('dow_monday_short'),
+            $filter('translate')('dow_tuesday_short'),
+            $filter('translate')('dow_wednesday_short'),
+            $filter('translate')('dow_thursday_short'),
+            $filter('translate')('dow_friday_short'),
+            $filter('translate')('dow_saturday_short')
+        ];
         return shortDaysOfWeek;
     };
 
