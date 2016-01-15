@@ -59,6 +59,9 @@
     color: #4EB0E6;
     border: 0 solid #4EB0E6;
 }
+.carpooling-theme .tabs-top.tabs-striped .tabs {
+    border-color: transparent;
+}
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.tab-item-active,
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.active,
 .carpooling-theme .tabs-top.tabs-striped .rabs .tab-item.activated {
