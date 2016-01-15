@@ -99,6 +99,10 @@
 
 /* Others */
 
+.carpooling-theme .list:last-child {
+    margin-bottom: 20px;
+    padding-bottom: 0px;
+}
 .carpooling-theme .list .item-input {
     padding-right: 0;
     padding-left: 0;
@@ -445,20 +449,21 @@ table.chart .toes td {
     padding: 0 0.5em;
 }
 table.chart .toes .toe {
-    background: #c5cae9;
+    background: white;
     /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#c5cae9, white);
+    /*background: -webkit-linear-gradient(#c5cae9, white);*/
     /* For Safari 5.1 to 6.0 */
-    background: -moz-linear-gradient(#c5cae9, white);
+    /*background: -moz-linear-gradient(#c5cae9, white);*/
     /* For Firefox 3.6 to 15 */
-    background: -o-linear-gradient(#c5cae9, white);
+    /*background: -o-linear-gradient(#c5cae9, white);*/
     /* For Opera 11.1 to 12.0 */
-    background: linear-gradient(#c5cae9, white);
+    /*background: linear-gradient(#c5cae9, white);*/
     /* Standard syntax */
     color: #3f51b5;
     text-align: center;
     font-size: xx-large;
     font-weight: bold;
+    padding-top: 8px;
 }
 table.chart .labels {}
 .rating-avg {

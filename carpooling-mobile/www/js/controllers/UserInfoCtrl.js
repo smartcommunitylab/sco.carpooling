@@ -90,9 +90,9 @@ angular.module('carpooling.controllers.user', [])
     };
 
     $scope.saveProfile = function () {
-        if ($scope.edit.hasAuto && ($scope.user.auto.posts <=0 || !$scope.user.auto.description || !$scope.user.auto.description.trim())) {
-          Utils.toast($filter('translate')('toast_err_empty_autodescription'));
-          return;
+        if ($scope.edit.hasAuto && ($scope.user.auto.posts <= 0 || !$scope.user.auto.description || !$scope.user.auto.description.trim())) {
+            Utils.toast($filter('translate')('toast_err_empty_autodescription'));
+            return;
         }
         var auto = angular.copy($scope.user.auto);
         if (!auto) {
@@ -177,6 +177,8 @@ angular.module('carpooling.controllers.user', [])
             vote = 0;
         }
 
+        vote = 4.5;
+
         var stars = [];
 
         var fullStars = Math.floor(vote);
@@ -190,8 +192,10 @@ angular.module('carpooling.controllers.user', [])
         }
 
         var emptyStars = 5 - vote;
-        for (var i = 0; i < emptyStars; i++) {
-            stars.push('empty');
+        if (emptyStars >= 1) {
+            for (var i = 0; i < emptyStars; i++) {
+                stars.push('empty');
+            }
         }
 
         return stars;
