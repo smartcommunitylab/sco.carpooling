@@ -91,16 +91,19 @@ public class SendPushNotification {
 	 */
 	private String constructTitle(Notification n) {
 		if (CarPoolingUtils.NOTIFICATION_CONFIRM.equals(n.getType())) {
-			return  n.getData().get("status").equals("1") ?  "Viaggio confermato": "Viaggio rifiutato";
+			return n.getData().get("status").equals("1") ? "Viaggio confermato" : "Viaggio rifiutato";
 		}
 		if (CarPoolingUtils.NOTIFICATION_CHAT.equals(n.getType())) {
-			return  "Nuovo messaggio da "+ n.getData().get("senderFullName");
+			return "Nuovo messaggio da " + n.getData().get("senderFullName");
 		}
 		if (CarPoolingUtils.NOTIFICATION_AVALIABILITY.equals(n.getType())) {
-			return  "Trovato un viaggio";
+			return "Trovato un viaggio";
 		}
 		if (CarPoolingUtils.NOTIFICATION_BOOKING.equals(n.getType())) {
 			return n.getData().get("senderFullName") + " chiede di partecipare al tuo viaggio";
+		}
+		if (CarPoolingUtils.NOTIFICATION_RATING.equals(n.getType())) {
+			return n.getData().get("message");
 		}
 		return null;
 	}
