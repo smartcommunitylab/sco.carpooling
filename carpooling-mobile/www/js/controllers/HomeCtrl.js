@@ -3,7 +3,6 @@ angular.module('carpooling.controllers.home', [])
 .controller('AppCtrl', function ($scope, $state) {})
 
 .controller('HomeCtrl', function ($scope, $state, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
-
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
@@ -27,6 +26,23 @@ angular.module('carpooling.controllers.home', [])
     var passengerTripsCount = 20; // default
     $scope.passengerTripsCanHaveMore = false;
 
+    var enrichTrip = function (trip) {
+        trip.style = Utils.getTripStyle(trip);
+
+        // booking counters
+        trip.bookingCounters = Utils.getBookingCounters(trip);
+
+        // booking state
+        if (trip.userId !== StorageSrv.getUserId()) {
+            trip.bookings.forEach(function (booking) {
+                if (booking.traveller.userId === StorageSrv.getUserId()) {
+                    // my booking
+                    trip.bookingState = booking.accepted;
+                }
+            });
+        }
+    };
+
     $scope.loadMorePassengerTrips = function (reset) {
         if (passengerTripsStart === 0) {
             Utils.loading();
@@ -41,18 +57,7 @@ angular.module('carpooling.controllers.home', [])
                 CacheSrv.setReloadPassengerTrips(false);
 
                 trips.forEach(function (trip) {
-                    // booking counters
-                    trip.bookingCounters = Utils.getBookingCounters(trip);
-
-                    // booking state
-                    trip.bookings.forEach(function (booking) {
-                        if (booking.traveller.userId === StorageSrv.getUserId()) {
-                            // my booking
-                            trip.bookingState = booking.accepted;
-                        }
-                    });
-
-                    trip.style = Utils.getTripStyle(trip);
+                    enrichTrip(trip);
                 });
 
                 if (passengerTripsStart === 0) {
@@ -115,8 +120,7 @@ angular.module('carpooling.controllers.home', [])
                 CacheSrv.setReloadDriverTrips(false);
 
                 trips.forEach(function (trip) {
-                    trip.bookingCounters = Utils.getBookingCounters(trip);
-                    trip.style = Utils.getTripStyle(trip);
+                    enrichTrip(trip);
                 });
 
                 if (driverTripsStart === 0) {
@@ -170,8 +174,25 @@ angular.module('carpooling.controllers.home', [])
             if (CacheSrv.reloadDriverTrips()) {
                 $scope.loadMoreDriverTrips(true);
             } else if (!!CacheSrv.reloadDriverTrip()) {
-                // TODO reload a single driver travel and refresh it in the list
                 var tripId = CacheSrv.reloadDriverTrip();
+                PassengerSrv.getTrip(tripId).then(
+                    function (updatedTrip) {
+                        CacheSrv.setReloadDriverTrip(null);
+                        for (var i = 0; i < $scope.driverTrips.length; i++) {
+                            if ($scope.driverTrips[i].id === updatedTrip.id) {
+                                $scope.driverTrips[i] = updatedTrip;
+                                enrichTrip($scope.driverTrips[i]);
+                                i = $scope.driverTrips.length;
+                            }
+                        }
+                        Utils.loaded();
+                    },
+                    function (error) {
+                        CacheSrv.setReloadDriverTrip(null);
+                        Utils.loaded();
+                        $scope.loadMoreDriverTrips(true);
+                    }
+                );
             }
         }
     });

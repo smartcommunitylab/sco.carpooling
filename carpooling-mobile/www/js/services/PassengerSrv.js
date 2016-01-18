@@ -3,6 +3,9 @@ angular.module('carpooling.services.passenger', [])
 .factory('PassengerSrv', function ($rootScope, $http, $q, Config) {
     var passengerService = {};
 
+    /*
+     * NOTE use this function both for passenger and driver
+     */
     passengerService.getTrip = function (travelId) {
         var deferred = $q.defer();
 
