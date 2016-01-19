@@ -27,32 +27,32 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * 
  * @author nawazk
- *
+ * 
  */
 @Document
 public class Travel {
 
 	@Id
 	private String id;
-	/** From zone (reqd).**/
+	/** From zone (reqd). **/
 	private Zone from;
-	/** To zone (reqd).**/
+	/** To zone (reqd). **/
 	private Zone to;
-	/** date/time for the trip(either when or reccurrency sould be specified).**/
+	/** date/time for the trip(either when or reccurrency sould be specified). **/
 	private long when;
-	/** itinerary.**/
+	/** itinerary. **/
 	private Itinerary route;
-	/** driver id (reqd).**/
+	/** driver id (reqd). **/
 	private String userId;
-	/** recurrency of trip (either when or reccurrency sould be specified).**/
-	private Recurrency recurrency;
-	/** number of places.**/
+	/** recurrency travel id. **/
+	private String recurrentId;
+	/** number of places. **/
 	private int places = 4;
-	/** whether intermediate stops are enabled.**/
+	/** whether intermediate stops are enabled. **/
 	private boolean intermediateStops;
-	/** bookings for the trip.**/
+	/** bookings for the trip. **/
 	private List<Booking> bookings = new ArrayList<Booking>();
-	/** whether the trip is acive.**/
+	/** whether the trip is acive. **/
 	private boolean active;
 	/** list of community Ids. **/
 	List<String> communityIds = new ArrayList<String>();
@@ -62,15 +62,17 @@ public class Travel {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Travel(Zone from, Zone to, long when, Itinerary route, String userId, Recurrency recurrency, int places,
-			boolean intermediateStops, List<Booking> bookings, boolean active, List<String> communityIds) {
+	public Travel(Zone from, Zone to, long when, Itinerary route,
+			String userId, String recurrentId, int places,
+			boolean intermediateStops, List<Booking> bookings, boolean active,
+			List<String> communityIds) {
 		super();
 		this.from = from;
 		this.to = to;
 		this.when = when;
 		this.route = route;
 		this.userId = userId;
-		this.recurrency = recurrency;
+		this.recurrentId = recurrentId;
 		this.places = places;
 		this.intermediateStops = intermediateStops;
 		this.bookings = bookings;
@@ -126,12 +128,12 @@ public class Travel {
 		this.userId = userId;
 	}
 
-	public Recurrency getRecurrency() {
-		return recurrency;
+	public String getRecurrentId() {
+		return recurrentId;
 	}
 
-	public void setRecurrency(Recurrency recurrency) {
-		this.recurrency = recurrency;
+	public void setRecurrentId(String recurrentId) {
+		this.recurrentId = recurrentId;
 	}
 
 	public int getPlaces() {

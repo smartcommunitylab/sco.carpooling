@@ -20,27 +20,27 @@ import java.util.Date;
 
 public class Booking {
 
-	/** traveller description(reqd).**/
+	/** traveller description(reqd). **/
 	private Traveller traveller;
+	/** whether booking has been requested/accepted/rejected by driver. **/
+	private int accepted = 0; // {0,1,-1}
+	private int boarded = 0; // {0,1,-1}
 	/** recurrent. **/
 	private boolean recurrent;
 	/** date of non-recurrent reservation of recurrent trip. **/
 	private Date date;
-	/** list of dates, on which travel is confirmed.**/
-	private Date[] confirmed;
-	/** whether booking has been requested/accepted/rejected by driver.**/
-	private int accepted = 0;
 
 	public Booking() {
 	}
 
-	public Booking(Traveller traveller, boolean recurrent, Date date, Date[] confirmed, int accepted) {
+	public Booking(Traveller traveller, int accepted, int boarded,
+			boolean recurrent, Date date) {
 		super();
 		this.traveller = traveller;
+		this.accepted = accepted;
+		this.boarded = boarded;
 		this.recurrent = recurrent;
 		this.date = date;
-		this.confirmed = confirmed;
-		this.accepted = accepted;
 	}
 
 	public Traveller getTraveller() {
@@ -59,22 +59,6 @@ public class Booking {
 		this.recurrent = recurrent;
 	}
 
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Date[] getConfirmed() {
-		return confirmed;
-	}
-
-	public void setConfirmed(Date[] confirmed) {
-		this.confirmed = confirmed;
-	}
-
 	public int getAccepted() {
 		return accepted;
 	}
@@ -83,13 +67,30 @@ public class Booking {
 		this.accepted = accepted;
 	}
 
+	public int getBoarded() {
+		return boarded;
+	}
+
+	public void setBoarded(int boarded) {
+		this.boarded = boarded;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + (recurrent ? 1231 : 1237);
-		result = prime * result + ((traveller == null) ? 0 : traveller.hashCode());
+		result = prime * result
+				+ ((traveller == null) ? 0 : traveller.hashCode());
 		return result;
 	}
 
@@ -116,7 +117,7 @@ public class Booking {
 			return false;
 		return true;
 	}
-	
-	
+
+
 
 }

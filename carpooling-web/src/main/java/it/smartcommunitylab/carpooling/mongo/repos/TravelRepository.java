@@ -36,4 +36,7 @@ public interface TravelRepository extends PagingAndSortingRepository<Travel, Str
 	@Query("{'id':?0, 'userId':?1}")
 	Travel findTravelByIdAndDriverId(String id, String userId);
 	
+	@Query("{'when':?0}")
+	Travel findTravelByWhen(Long when);
+	
 }

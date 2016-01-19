@@ -43,7 +43,7 @@ public class TravelRequest {
 	private boolean monitored;
 	/** no of post required. **/
 	private int nrOfPost;
-
+	/** community ids. **/
 	private List<String> communityIds = new ArrayList<String>();
 	
 	public TravelRequest() {

@@ -22,6 +22,7 @@ import it.sayservice.platform.smartplanner.data.message.RType;
 import it.sayservice.platform.smartplanner.data.message.TType;
 import it.sayservice.platform.smartplanner.data.message.journey.SingleJourney;
 import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.Zone;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class MobilityPlanner {
 
 	}
 
-	public List<Itinerary> plan(Travel travel) {
+	public List<Itinerary> plan(Zone fromZone, Zone toZone, Long when) {
 
 		List<Itinerary> itns = new ArrayList<Itinerary>();
 
@@ -69,18 +70,18 @@ public class MobilityPlanner {
 		singleJourney.setTransportTypes(tTypes);
 
 		Position from = new Position();
-		from.setName(travel.getFrom().getName());
-		from.setLat(String.valueOf(travel.getFrom().getLatitude()));
-		from.setLon(String.valueOf(travel.getFrom().getLongitude()));
+		from.setName(from.getName());
+		from.setLat(String.valueOf(fromZone.getLatitude()));
+		from.setLon(String.valueOf(fromZone.getLongitude()));
 		singleJourney.setFrom(from);
 
 		Position to = new Position();
-		to.setName(travel.getTo().getName());
-		to.setLat(String.valueOf(travel.getTo().getLatitude()));
-		to.setLon(String.valueOf(travel.getTo().getLongitude()));
+		to.setName(toZone.getName());
+		to.setLat(String.valueOf(toZone.getLatitude()));
+		to.setLon(String.valueOf(toZone.getLongitude()));
 		singleJourney.setTo(to);
 
-		String dateTimeString = formatter.format(new java.util.Date(travel.getWhen()));
+		String dateTimeString = formatter.format(new java.util.Date(when));
 
 		String[] dateTime = dateTimeString.split("\\s");
 

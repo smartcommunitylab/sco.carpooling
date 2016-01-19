@@ -237,35 +237,17 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		// match +-1hr.
 		Date timePlusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, 1);
 		Date timeMinusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, -1);
-		// recurrent data.
-		int reqDOW = CarPoolingUtils.getDayOfWeek(reqDate);
-		int reqDOM = CarPoolingUtils.getDayOfMonth(reqDate);
-		int recurrTimePlusOneHour = CarPoolingUtils.getHour(timePlusOneHour);
-		int recurrTimeMinusOneHour = CarPoolingUtils.getHour(timeMinusOneHour);
+
 		// normal.
 		Criteria nonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
 				.lte(timePlusOneHour.getTime());
-		// recurr general.
-		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true)
-				.and("recurrency.time").gte(recurrTimeMinusOneHour).lte(recurrTimePlusOneHour);
-		// recurr dow.
-		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
-		// recurr dom.
-		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
-
-		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
-		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
-
-		Criteria timeCriteria = new Criteria().orOperator(nonRecurr, recurrDOW, recurrDOM);
-
 		Query query = new Query();
 		query.addCriteria(commonCriteria);
 		if (communityCriteria != null) query.addCriteria(communityCriteria);
 		query.addCriteria(zoneCriteria);
-		query.addCriteria(timeCriteria);
+		query.addCriteria(nonRecurr);
 		
-		/**
-		Query: 
+		/** Query:                
 		{
 			"active": true,
 			"communityIds": {
@@ -282,49 +264,12 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 					
 				}
 			},
-			"$or": [{
-				"when": {
-					"$gte": 1443421800000,
-					"$lte": 1443429000000
-				}
-			},
-			{
-				"$and": [{
-					"when": 0,
-					"recurrency": {
-						"$exists": true
-					},
-					"recurrency.time": {
-						"$gte": 8,
-						"$lte": 10
-					}
-				},
-				{
-					"recurrency.days": {
-						"$in": [2]
-					}
-				}]
-			},
-			{
-				"$and": [{
-					"when": 0,
-					"recurrency": {
-						"$exists": true
-					},
-					"recurrency.time": {
-						"$gte": 8,
-						"$lte": 10
-					}
-				},
-				{
-					"recurrency.dates": {
-						"$in": [28]
-					}
-				}]
-			}]
+			"when": {
+				"$gte": reqTravel.when - 1hr,
+				"$lte": reqTravel.when + 1hr
+			}
 		} **/
-
-
+		
 		travels = mongoTemplate.find(query, Travel.class);
 
 		/** filter by posts/booking state. **/
@@ -333,16 +278,9 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		for (Travel travel : temp) {
 
-			if (travel.getRecurrency() == null) {
-				if (CarPoolingUtils.getNonRecurrentAvailabiliy(travel, travelRequest) < 1) {//travelRequest.getNrOfPost()
-					travels.remove(travel);
-				}
-			} else {
-				if (!CarPoolingUtils.availableRecurrentTrip(travel, travelRequest)) {
-					travels.remove(travel);
-				}
+			if (CarPoolingUtils.getNonRecurrentAvailabiliy(travel, travelRequest) < 1) {// travelRequest.getNrOfPost()
+				travels.remove(travel);
 			}
-
 		}
 
 		return travels;
@@ -473,6 +411,23 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		completedTravels = mongoTemplate.find(query, Travel.class);
 
 		return completedTravels;
+	}
+
+	@Override
+	public Travel findOneInstanceOfRecurrTravel(TravelRequest travelRequest, String reccurentTravelId) {
+
+		Date reqDate = new Date(travelRequest.getWhen());
+		// match +-1hr.
+		Date timePlusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, 1);
+		Date timeMinusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, -1);
+		
+		Criteria criteria = new Criteria().where("recurrentId").is(reccurentTravelId).and("when")
+				.gte(timeMinusOneHour.getTime()).lte(timePlusOneHour.getTime());
+
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		return mongoTemplate.findOne(query, Travel.class);
 	}
 
 }

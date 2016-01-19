@@ -24,6 +24,8 @@ import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.model.RecurrentBooking;
+import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Response;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
@@ -53,9 +55,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- *
+ * 
  * @author nawazk
- *
+ * 
  */
 @Controller
 public class ServiceController {
@@ -76,6 +78,33 @@ public class ServiceController {
 			}
 		}
 
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips")
+	public @ResponseBody
+	Response<Travel> createNonRecurrTrip(@RequestBody Travel travel) throws CarPoolingCustomException {
+		return new Response<Travel>(carPoolingManager.saveTravel(travel, getUserId()));
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/recurrenttrips")
+	public @ResponseBody
+	Response<RecurrentTravel> createReccTrips(@RequestBody RecurrentTravel recurrentTravel)
+			throws CarPoolingCustomException {
+		return new Response<RecurrentTravel>(carPoolingManager.saveRecurrentTravel(recurrentTravel, getUserId()));
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
+	public @ResponseBody
+	Response<Travel> bookNonRecurrentTrip(@PathVariable String tripId, @RequestBody Booking booking)
+			throws CarPoolingCustomException {
+		return new Response<Travel>(carPoolingManager.bookTrip(tripId, booking, getUserId()));
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/recurrenttrips/{tripId}/book")
+	public @ResponseBody
+	Response<Travel> bookRecurrentTrip(@PathVariable String tripId, @RequestBody RecurrentBooking booking)
+			throws CarPoolingCustomException {
+		return new Response<Travel>(carPoolingManager.bookRecurrentTrip(tripId, booking, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
@@ -103,32 +132,30 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips")
 	public @ResponseBody
 	Response<List<Travel>> searchTrips(@RequestBody TravelRequest travelRequest) throws CarPoolingCustomException {
-		return new Response<List<Travel>>(carPoolingManager.searchTravels(travelRequest, getUserId()));
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/api/community/{communityId}/{time}/travel")
-	public @ResponseBody
-	Response<List<Travel>> searchCommunityTravels(@PathVariable String communityId, @PathVariable Long time) throws CarPoolingCustomException {
-		return new Response<List<Travel>>(carPoolingManager.searchCommunityTravels(communityId, time));
+
+		Long threshold = CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(),
+				CarPoolingUtils.INSTANCES_THRESHOLD);
+
+		if (travelRequest.getWhen() <= threshold) {
+			return new Response<List<Travel>>(carPoolingManager.searchTravels(travelRequest, getUserId()));
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+					"requested travel time should be within " + CarPoolingUtils.INSTANCES_THRESHOLD + " days");
+		}
+
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/community/{communityId}/{time}/travel")
 	public @ResponseBody
-	Response<Travel> createTrips(@RequestBody Travel travel) throws CarPoolingCustomException {
-		return new Response<Travel>(carPoolingManager.saveTravel(travel, getUserId()));
+	Response<List<Travel>> searchCommunityTravels(@PathVariable String communityId, @PathVariable Long time)
+			throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.searchCommunityTravels(communityId, time));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips/{tripId}")
 	public @ResponseBody
 	Response<Travel> getTrip(@PathVariable String tripId) throws CarPoolingCustomException {
 		return new Response<Travel>(carPoolingManager.getTrip(tripId));
-	}
-
-	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
-	public @ResponseBody
-	Response<Travel> bookTrip(@PathVariable String tripId, @RequestBody Booking booking)
-			throws CarPoolingCustomException {
-		return new Response<Travel>(carPoolingManager.bookTrip(tripId, booking, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/driver/trips/{tripId}/accept")
@@ -164,7 +191,7 @@ public class ServiceController {
 			throws CarPoolingCustomException {
 
 		Discussion discussion = carPoolingManager.readDiscussion(getUserId(), travelId, targetUserId);
-		
+
 		return new Response<Discussion>(discussion);
 
 	}
@@ -201,7 +228,7 @@ public class ServiceController {
 
 		return response;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/rating/driver/{driverId}")
 	public @ResponseBody
 	Response<Integer> readDriverRating(@PathVariable String driverId) throws CarPoolingCustomException {
@@ -232,7 +259,7 @@ public class ServiceController {
 
 		return response;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/rating/passenger/{passengerId}")
 	public @ResponseBody
 	Response<Integer> readPassengerRating(@PathVariable String passengerId) throws CarPoolingCustomException {
@@ -264,7 +291,7 @@ public class ServiceController {
 	Response<List<Community>> readCommunities() throws CarPoolingCustomException {
 		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities/details")
 	public @ResponseBody
 	Response<List<Community>> readCommunitiesWithDetails() throws CarPoolingCustomException {
@@ -297,8 +324,8 @@ public class ServiceController {
 			response.setData("auto information saved successfully");
 
 		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
-			//response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
-			//response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
+			// response.setErrorCode(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)));
+			// response.setErrorMessage(errorMap.get(CarPoolingUtils.ERROR_MSG));
 			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
 					errorMap.get(CarPoolingUtils.ERROR_MSG));
 
@@ -312,7 +339,8 @@ public class ServiceController {
 	Response<User> readUser(@PathVariable String userId) throws CarPoolingCustomException {
 
 		// perhaps we can add some security here
-		// for e.g. (check if logged in user and passed in user matches, send all)
+		// for e.g. (check if logged in user and passed in user matches, send
+		// all)
 		// else send only restricted information.
 		User user = carPoolingManager.readUser(userId);
 

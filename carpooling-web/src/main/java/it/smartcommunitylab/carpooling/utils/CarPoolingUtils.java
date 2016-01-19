@@ -44,6 +44,8 @@ public class CarPoolingUtils {
 	public static final String NOTIFICATION_CONFIRM = "ParticipationResponse";
 	public static final String NOTIFICATION_CHAT = "Chat";
 	public static final String NOTIFICATION_RATING = "RatingRequest";
+	/** no of instances for recurrent travel. **/
+	public static final int INSTANCES_THRESHOLD = 30;
 
 	public static Date getTimeByOffset(Date reqDate, int offset) {
 		Date result;
@@ -375,6 +377,13 @@ public class CarPoolingUtils {
 		}
 
 		return nonReccBookings;
+	}
+
+	public static long adjustNumberOfDaysToWhen(long when, int extendDay) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(when);
+		calendar.add(Calendar.DAY_OF_MONTH, extendDay);
+		return calendar.getTimeInMillis();
 	}
 
 }

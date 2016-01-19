@@ -25,6 +25,8 @@ import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.GameProfile;
 import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.model.RecurrentBooking;
+import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
@@ -33,6 +35,7 @@ import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.DiscussionRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.NotificationRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.RecurrentTravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRequestRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
@@ -56,19 +59,21 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * 
  * @author nawazk
- *
+ * 
  */
 @Component
 public class CarPoolingManager {
 
 	private static final transient Log logger = LogFactory.getLog(CarPoolingManager.class);
-	
+
 	@Autowired
 	private TravelRequestRepository travelRequestRepository;
 	@Autowired
 	private TravelRepository travelRepository;
+	@Autowired
+	private RecurrentTravelRepository reccurrentTravelRepository;
 	@Autowired
 	private CommunityRepository communityRepository;
 	@Autowired
@@ -81,6 +86,249 @@ public class CarPoolingManager {
 	private NotificationRepository notificationRepository;
 	@Autowired
 	private SendPushNotification sendPushNotification;
+
+	/**
+	 * Save Non Recurrent Travel.
+	 * 
+	 * @param travel
+	 * @param userId
+	 * @return Travel
+	 * @throws CarPoolingCustomException
+	 */
+	public Travel saveTravel(Travel travel, String userId) throws CarPoolingCustomException {
+
+		// search for plan.
+		List<Itinerary> itns = mobilityPlanner.plan(travel.getFrom(), travel.getTo(), travel.getWhen());
+
+		if (!itns.isEmpty()) {
+
+			String fromName = "";
+			String toName = "";
+			String fromAddr = "";
+			String toAddr = "";
+
+			travel.setUserId(userId);
+			travel.setRoute(itns.get(0));
+			travel.setActive(true);
+
+			if (travel.getFrom().getName() != null && !travel.getFrom().getName().isEmpty()) {
+				fromName = travel.getFrom().getName();
+			}
+
+			if (travel.getFrom().getAddress() != null && !travel.getFrom().getAddress().isEmpty()) {
+				fromAddr = travel.getFrom().getAddress();
+			}
+
+			if (travel.getTo().getName() != null && !travel.getTo().getName().isEmpty()) {
+				toName = travel.getTo().getName();
+			}
+
+			if (travel.getTo().getAddress() != null && !travel.getTo().getAddress().isEmpty()) {
+				toAddr = travel.getTo().getAddress();
+			}
+			// from.
+			Zone updateFrom = new Zone(fromName, fromAddr, travel.getFrom().getLatitude(), travel.getFrom()
+					.getLongitude(), travel.getFrom().getRange());
+			travel.setFrom(updateFrom);
+			// to
+			Zone updateTo = new Zone(toName, toAddr, travel.getTo().getLatitude(), travel.getTo().getLongitude(),
+					travel.getTo().getRange());
+			travel.setTo(updateTo);
+
+			if (travel.getCommunityIds().isEmpty()) {
+				for (Community community : communityRepository.findByUserId(userId)) {
+					if (!travel.getCommunityIds().contains(community.getId())) {
+						travel.getCommunityIds().add(community.getId());
+					}
+				}
+			}
+
+			travelRepository.save(travel);
+
+			// loop on all trip request and check if this new travel matches any
+			// of those.
+			for (TravelRequest travelRequest : travelRequestRepository.findAllMatchTravelRequest(travel)) {
+				String travelRequestId = travelRequest.getId();
+				String targetUserId = travelRequest.getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("travelRequestId", travelRequestId);
+				Notification tripAvailability = new Notification(targetUserId,
+						CarPoolingUtils.NOTIFICATION_AVALIABILITY, data, false, travel.getId(),
+						System.currentTimeMillis());
+				notificationRepository.save(tripAvailability);
+				// notify via parse.
+				try {
+					sendPushNotification.sendNotification(targetUserId, tripAvailability);
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			}
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel itinerary not found");
+		}
+
+		return travel;
+	}
+
+	/**
+	 * Save Recurrent Travel.
+	 * @param recurrentTravel
+	 * @param userId
+	 * @return Recurrent Travel.
+	 * @throws CarPoolingCustomException
+	 */
+	public RecurrentTravel saveRecurrentTravel(RecurrentTravel recurrentTravel, String userId)
+			throws CarPoolingCustomException {
+		// search for plan.
+		List<Itinerary> itns = mobilityPlanner.plan(recurrentTravel.getFrom(), recurrentTravel.getTo(),
+				recurrentTravel.getWhen());
+
+		if (!itns.isEmpty()) {
+
+			String fromName = "";
+			String toName = "";
+			String fromAddr = "";
+			String toAddr = "";
+
+			recurrentTravel.setUserId(userId);
+			recurrentTravel.setRoute(itns.get(0));
+			recurrentTravel.setActive(true);
+
+			if (recurrentTravel.getFrom().getName() != null && !recurrentTravel.getFrom().getName().isEmpty()) {
+				fromName = recurrentTravel.getFrom().getName();
+			}
+
+			if (recurrentTravel.getFrom().getAddress() != null && !recurrentTravel.getFrom().getAddress().isEmpty()) {
+				fromAddr = recurrentTravel.getFrom().getAddress();
+			}
+
+			if (recurrentTravel.getTo().getName() != null && !recurrentTravel.getTo().getName().isEmpty()) {
+				toName = recurrentTravel.getTo().getName();
+			}
+
+			if (recurrentTravel.getTo().getAddress() != null && !recurrentTravel.getTo().getAddress().isEmpty()) {
+				toAddr = recurrentTravel.getTo().getAddress();
+			}
+			// from.
+			Zone updateFrom = new Zone(fromName, fromAddr, recurrentTravel.getFrom().getLatitude(), recurrentTravel
+					.getFrom().getLongitude(), recurrentTravel.getFrom().getRange());
+			recurrentTravel.setFrom(updateFrom);
+			// to
+			Zone updateTo = new Zone(toName, toAddr, recurrentTravel.getTo().getLatitude(), recurrentTravel.getTo()
+					.getLongitude(), recurrentTravel.getTo().getRange());
+			recurrentTravel.setTo(updateTo);
+
+			if (recurrentTravel.getCommunityIds().isEmpty()) {
+				for (Community community : communityRepository.findByUserId(userId)) {
+					if (!recurrentTravel.getCommunityIds().contains(community.getId())) {
+						recurrentTravel.getCommunityIds().add(community.getId());
+					}
+				}
+			}
+
+			reccurrentTravelRepository.save(recurrentTravel);
+
+			/** create instances of non recurrent travels. **/
+
+			for (int extendDay = 1; extendDay <= CarPoolingUtils.INSTANCES_THRESHOLD; extendDay++) {
+
+				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(recurrentTravel.getWhen(), extendDay);
+
+				Travel instance = new Travel();
+				// set parent Id.
+				instance.setRecurrentId(recurrentTravel.getId());
+				instance.setFrom(recurrentTravel.getFrom());
+				instance.setTo(recurrentTravel.getTo());
+				instance.setWhen(temp);
+				instance.setRoute(recurrentTravel.getRoute());
+				instance.setUserId(recurrentTravel.getUserId());
+				instance.setPlaces(recurrentTravel.getPlaces());
+				instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
+				instance.setActive(recurrentTravel.isActive());
+				instance.setCommunityIds(recurrentTravel.getCommunityIds());
+
+				travelRepository.save(instance);
+
+				// last instance when to be updated in parent recurrent travel object.
+				if (extendDay == CarPoolingUtils.INSTANCES_THRESHOLD) {
+					recurrentTravel.setLastInstance(instance.getWhen());
+					reccurrentTravelRepository.save(recurrentTravel);
+				}
+
+			}
+
+			// loop on all trip request and check if this new travel matches any
+			// of those.
+			for (TravelRequest travelRequest : travelRequestRepository.findAllMatchTravelRequest(recurrentTravel)) {
+
+				String travelRequestId = travelRequest.getId();
+				String targetUserId = travelRequest.getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("travelRequestId", travelRequestId);
+
+				// get travelId of the instance of recurrent travel.
+				Travel instance = travelRepository
+						.findOneInstanceOfRecurrTravel(travelRequest, recurrentTravel.getId());
+
+				Notification tripAvailability = new Notification(targetUserId,
+						CarPoolingUtils.NOTIFICATION_AVALIABILITY, data, false, instance.getId(),
+						System.currentTimeMillis());
+
+				notificationRepository.save(tripAvailability);
+				// notify via parse.
+				try {
+					sendPushNotification.sendNotification(targetUserId, tripAvailability);
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			}
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel itinerary not found");
+		}
+
+		return recurrentTravel;
+	}
+	
+	@Scheduled(cron = "0 59 23 * * ?")
+	public void autoExtendRecurrTravelInstances() throws CarPoolingCustomException {
+
+		logger.info("/**** Extending NonRecurrent instances of RecurrentTravel with window of 30 days.****/ ");
+
+		for (RecurrentTravel recurrentTravel : reccurrentTravelRepository
+				.searchTravelsToExtend(CarPoolingUtils.INSTANCES_THRESHOLD)) {
+
+			// get last instance non recurrent instance.
+			Travel previousLastInstance = travelRepository.findTravelByWhen(recurrentTravel.getLastInstance());
+
+			if (previousLastInstance != null) {
+
+				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(previousLastInstance.getWhen(), 1);
+
+				Travel instance = new Travel();
+				// set parent Id.
+				instance.setRecurrentId(previousLastInstance.getRecurrentId());
+				instance.setFrom(previousLastInstance.getFrom());
+				instance.setTo(previousLastInstance.getTo());
+				instance.setWhen(temp);
+				instance.setRoute(previousLastInstance.getRoute());
+				instance.setUserId(previousLastInstance.getUserId());
+				instance.setPlaces(previousLastInstance.getPlaces());
+				instance.setIntermediateStops(previousLastInstance.isIntermediateStops());
+				instance.setActive(previousLastInstance.isActive());
+				instance.setCommunityIds(previousLastInstance.getCommunityIds());
+				instance.setBookings(previousLastInstance.getBookings());
+				// save new instance.
+				travelRepository.save(instance);
+				// update recurrent travel.
+				recurrentTravel.setLastInstance(instance.getWhen());				
+				reccurrentTravelRepository.save(recurrentTravel);
+
+			} else {
+				logger.error("could not find last instance of recurrent travel " + recurrentTravel.getId());
+			}
+		}
+
+	}
 
 	public List<TravelRequest> getTravelRequest(String userId) {
 		return travelRequestRepository.findByUserId(userId);
@@ -100,22 +348,22 @@ public class CarPoolingManager {
 	}
 
 	public List<Travel> getDriverTrips(String userId, int start, int count) {
-		
-		Page<Travel> travels = travelRepository.findTravelByDriverId(userId, new PageRequest(start,
-				count, Direction.DESC, "route.startime"));
+
+		Page<Travel> travels = travelRepository.findTravelByDriverId(userId, new PageRequest(start, count,
+				Direction.DESC, "route.startime"));
 
 		return travels.getContent();
-//		return travelRepository.findTravelByDriverId(userId, start, count);
+		// return travelRepository.findTravelByDriverId(userId, start, count);
 	}
 
 	public List<Travel> searchTravels(TravelRequest travelRequest, String userId) {
-		
+
 		List<Travel> searchTravels = new ArrayList<Travel>();
 
 		searchTravels = travelRepository.searchTravels(travelRequest);
 
 		if (travelRequest.isMonitored()) {
-			
+
 			String fromName = "";
 			String toName = "";
 			String fromAddr = "";
@@ -157,86 +405,12 @@ public class CarPoolingManager {
 
 		return searchTravels;
 	}
-	
+
 	public List<Travel> searchCommunityTravels(String communityId, Long timeInMillies) {
 
 		List<Travel> communityTravels = travelRepository.searchCommunityTravels(communityId, timeInMillies);
 
 		return communityTravels;
-	}
-
-	public Travel saveTravel(Travel travel, String userId) throws CarPoolingCustomException {
-
-		// search for plan.
-		List<Itinerary> itns = mobilityPlanner.plan(travel);
-
-		if (!itns.isEmpty()) {
-			
-			String fromName = "";
-			String toName = "";
-			String fromAddr = "";
-			String toAddr = "";
-			
-			travel.setUserId(userId);
-			travel.setRoute(itns.get(0));
-			travel.setActive(true);
-			
-			if (travel.getFrom().getName() != null && !travel.getFrom().getName().isEmpty()) {
-				fromName = travel.getFrom().getName(); 
-			}
-					
-			if (travel.getFrom().getAddress() != null && !travel.getFrom().getAddress().isEmpty()) {
-				fromAddr = travel.getFrom().getAddress();
-			}
-					
-			if (travel.getTo().getName() != null && !travel.getTo().getName().isEmpty()) {
-				toName = travel.getTo().getName();
-			}
-			
-			if (travel.getTo().getAddress() != null && !travel.getTo().getAddress().isEmpty()) {
-				toAddr = travel.getTo().getAddress();
-			}
-			// from.
-			Zone updateFrom = new Zone(fromName, fromAddr, travel.getFrom().getLatitude(), travel.getFrom().getLongitude(), travel
-					.getFrom().getRange());
-			travel.setFrom(updateFrom);
-			// to
-			Zone updateTo = new Zone(toName, toAddr, travel.getTo().getLatitude(), travel.getTo().getLongitude(), travel
-					.getTo().getRange());
-			travel.setTo(updateTo);
-			
-			if (travel.getCommunityIds().isEmpty()) {
-				for (Community community : communityRepository.findByUserId(userId)) {
-					if (!travel.getCommunityIds().contains(community.getId())) {
-						travel.getCommunityIds().add(community.getId());
-					}
-				}
-			}
-			
-			travelRepository.save(travel);
-
-			// loop on all trip request and check if this new travel matches any of those.
-			for (TravelRequest travelRequest : travelRequestRepository.findAllMatchTravelRequest(travel)) {
-				String travelRequestId = travelRequest.getId();
-				String targetUserId = travelRequest.getUserId();
-				Map<String, String> data = new HashMap<String, String>();
-				data.put("travelRequestId", travelRequestId);
-				Notification tripAvailability = new Notification(targetUserId,
-						CarPoolingUtils.NOTIFICATION_AVALIABILITY, data, false, travel.getId(),
-						System.currentTimeMillis());
-				notificationRepository.save(tripAvailability);
-				// notify via parse.
-				try {
-					sendPushNotification.sendNotification(targetUserId, tripAvailability);
-				} catch (JSONException e) {
-					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-				}
-			}
-		} else {
-			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel itinerary not found");
-		}
-
-		return travel;
 	}
 
 	public Travel bookTrip(String travelId, Booking reqBooking, String userId) throws CarPoolingCustomException {
@@ -245,46 +419,44 @@ public class CarPoolingManager {
 
 		if (travel != null) {
 			if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
-				if (travel.getRecurrency() != null) { // recurrent travel.
-					if (CarPoolingUtils.ifBookableRecurr(travel, reqBooking, userId)) {
-						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-						travelRepository.save(travel);
-					} else {
-						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
-								"travel not bookable.");
-					}
+				// if (travel.getRecurrency() != null) { // recurrent travel.
+				if (CarPoolingUtils.ifBookableRecurr(travel, reqBooking, userId)) {
+					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+					travelRepository.save(travel);
+				} else {
+					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
+				}
 
-				} else if (!reqBooking.isRecurrent()) {
-					//non-recurrent travel + non-recurrent requested booking.
-					if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
-						// update traveller.
-						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-						travelRepository.save(travel);
-					} else {
-						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
-								"travel not bookable.");
-					}
+			} else if (!reqBooking.isRecurrent()) {
+				// non-recurrent travel + non-recurrent requested booking.
+				if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
+					// update traveller.
+					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+					travelRepository.save(travel);
+				} else {
+					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
 				}
-				if (travel != null) {
-					String targetUserId = travel.getUserId();
-					Map<String, String> data = new HashMap<String, String>();
-					data.put("senderId", userId);
-					User user = userRepository.findOne(userId);
-					data.put("senderFullName", user.fullName());
-					Notification bookingNotification = new Notification(targetUserId,
-							CarPoolingUtils.NOTIFICATION_BOOKING, data, false, travel.getId(),
-							System.currentTimeMillis());
-					notificationRepository.save(bookingNotification);
-					// notify via parse.
-					try {
-						sendPushNotification.sendNotification(targetUserId, bookingNotification);
-					} catch (JSONException e) {
-						throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-					}	
-				}
-			} else {
-				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user not valid.");
 			}
+			if (travel != null) {
+				String targetUserId = travel.getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("senderId", userId);
+				User user = userRepository.findOne(userId);
+				data.put("senderFullName", user.fullName());
+				Notification bookingNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_BOOKING,
+						data, false, travel.getId(), System.currentTimeMillis());
+				notificationRepository.save(bookingNotification);
+				// notify via parse.
+				try {
+					sendPushNotification.sendNotification(targetUserId, bookingNotification);
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			}
+			// } else {
+			// throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(),
+			// "user not valid.");
+			// }
 		} else {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
 		}
@@ -295,7 +467,7 @@ public class CarPoolingManager {
 	/**
 	 * @param tripId
 	 * @return
-	 * @throws CarPoolingCustomException 
+	 * @throws CarPoolingCustomException
 	 */
 	public Travel getTrip(String tripId) throws CarPoolingCustomException {
 		Travel travel = travelRepository.findOne(tripId);
@@ -309,7 +481,7 @@ public class CarPoolingManager {
 	public Travel acceptTrip(String travelId, Booking booking, String userId) throws CarPoolingCustomException {
 
 		Travel travel = travelRepository.findTravelByIdAndDriverId(travelId, userId);
-		//travelRepository.findOne(travelId);
+		// travelRepository.findOne(travelId);
 
 		boolean found = false;
 
@@ -326,16 +498,15 @@ public class CarPoolingManager {
 				travelRepository.save(travel);
 				String targetUserId = booking.getTraveller().getUserId();
 				Map<String, String> data = new HashMap<String, String>();
-				data.put("status", ""+booking.getAccepted());
-				Notification confirmNotification = new Notification(targetUserId,
-						CarPoolingUtils.NOTIFICATION_CONFIRM, data, false, travel.getId(),
-						System.currentTimeMillis());
+				data.put("status", "" + booking.getAccepted());
+				Notification confirmNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_CONFIRM,
+						data, false, travel.getId(), System.currentTimeMillis());
 				notificationRepository.save(confirmNotification);
 				try {
 					sendPushNotification.sendNotification(targetUserId, confirmNotification);
 				} catch (JSONException e) {
 					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-				}	
+				}
 			} else {
 				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not found");
 			}
@@ -377,7 +548,7 @@ public class CarPoolingManager {
 						nrOfCars = nrOfCars + 1;
 					}
 				}
-				
+
 			}
 			community.setCars(nrOfCars);
 			detailedCommunities.add(community);
@@ -433,9 +604,9 @@ public class CarPoolingManager {
 
 		if (user != null) {
 			if (!user.getTravelProfile().getRoutes().isEmpty()) {
-				travelProfile = user.getTravelProfile();	
+				travelProfile = user.getTravelProfile();
 			}
-			
+
 		} else {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "user not found");
 		}
@@ -480,7 +651,7 @@ public class CarPoolingManager {
 		return errorMap;
 
 	}
-	
+
 	public Integer getMyRatingForPassenger(String userId, String passengerId) throws CarPoolingCustomException {
 
 		Integer rating = null;
@@ -497,7 +668,8 @@ public class CarPoolingManager {
 
 			} else {
 
-				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "passenger rating not found");
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+						"passenger rating not found");
 			}
 		} else {
 
@@ -577,13 +749,14 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
-	
+
 	/**
 	 * Get My Rating For Driver.
+	 * 
 	 * @param userId
 	 * @param driverId
 	 * @return
-	 * @throws CarPoolingCustomException 
+	 * @throws CarPoolingCustomException
 	 */
 	public Integer getMyRatingForDriver(String userId, String driverId) throws CarPoolingCustomException {
 
@@ -592,7 +765,7 @@ public class CarPoolingManager {
 		User driver = userRepository.findOne(driverId);
 
 		if (driver != null) {
-			
+
 			GameProfile gameProfile = driver.getGameProfile();
 
 			if (gameProfile != null && gameProfile.getDriverRatings().containsKey(userId)) {
@@ -646,24 +819,22 @@ public class CarPoolingManager {
 
 			discussion.getMessages().add(message);
 			discussionRepository.save(discussion);
-			
+
 			String targetUserId = message.getTargetUserId();
 			Map<String, String> data = new HashMap<String, String>();
 			data.put("senderId", userId);
 			User user = userRepository.findOne(userId);
 			data.put("senderFullName", user.fullName());
 			data.put("message", message.getMessage());
-			Notification chatNotification = new Notification(targetUserId,
-					CarPoolingUtils.NOTIFICATION_CHAT, data, false, travelId,
-					System.currentTimeMillis());
+			Notification chatNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_CHAT, data,
+					false, travelId, System.currentTimeMillis());
 			notificationRepository.save(chatNotification);
 			// notify via parse.
 			try {
 				sendPushNotification.sendNotification(targetUserId, chatNotification);
 			} catch (JSONException e) {
 				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-			}	
-
+			}
 
 		} catch (Exception e) {
 			status.put(CarPoolingUtils.ERROR_CODE, String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
@@ -684,11 +855,21 @@ public class CarPoolingManager {
 
 		if (discussion != null) {
 
-			// msgs are ordered by the insertion at server side, since it can be sent from diff timezones.
+			// msgs are ordered by the insertion at server side, since it can be
+			// sent from diff timezones.
 			for (Message msg : discussion.getMessages()) {
 				if ((msg.getUserId().equalsIgnoreCase(userId) && (msg.getTargetUserId().equalsIgnoreCase(targetUserId)))
 						| (msg.getTargetUserId().equalsIgnoreCase(userId) && msg.getUserId().equalsIgnoreCase(
-								targetUserId))) { // targetUserId == userId.(for drivers) or they understand it from bookings
+								targetUserId))) { // targetUserId
+													// ==
+													// userId.(for
+													// drivers)
+													// or
+													// they
+													// understand
+													// it
+													// from
+													// bookings
 					response.getMessages().add(msg);
 				}
 			}
@@ -700,6 +881,7 @@ public class CarPoolingManager {
 
 	/**
 	 * read user.
+	 * 
 	 * @param userId
 	 * @return
 	 */
@@ -716,6 +898,7 @@ public class CarPoolingManager {
 
 	/**
 	 * read notifications.
+	 * 
 	 * @param userId
 	 * @param start
 	 * @param count
@@ -732,6 +915,7 @@ public class CarPoolingManager {
 
 	/**
 	 * mark notification as read.
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -755,11 +939,12 @@ public class CarPoolingManager {
 
 	/**
 	 * delete notification id.
+	 * 
 	 * @param notificationId
 	 * @return
 	 */
 	public Map<String, String> deleteNotification(String notificationId) {
-		
+
 		Map<String, String> errorMap = new HashMap<String, String>();
 
 		Notification notification = notificationRepository.findOne(notificationId);
@@ -777,6 +962,7 @@ public class CarPoolingManager {
 
 	/**
 	 * delete travel request.
+	 * 
 	 * @param travelRequestId
 	 * @return
 	 */
@@ -796,7 +982,6 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
-
 
 	@Scheduled(cron = "0 0 0/1 * * ?")
 	public void autoSendEvaluationNotification() throws CarPoolingCustomException {
@@ -839,7 +1024,8 @@ public class CarPoolingManager {
 
 					if (nofityDriver) {
 
-						// create notification for driver only if there is atleast a passenger accepted.
+						// create notification for driver only if there is
+						// atleast a passenger accepted.
 						String driverId = travel.getUserId();
 						Map<String, String> dataDriverNotification = new HashMap<String, String>();
 						dataDriverNotification.put("message",
@@ -857,6 +1043,13 @@ public class CarPoolingManager {
 				}
 			}
 		}
-	}	
+	}
+
+	public Travel bookRecurrentTrip(String tripId, RecurrentBooking booking, String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 
 }
