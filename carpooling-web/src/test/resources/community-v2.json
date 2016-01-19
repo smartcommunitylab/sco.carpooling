@@ -1,0 +1,29 @@
+[{
+    "id" : "cPCommunity1",
+    "name" : "carpooling community 1",
+    "users" : [ 
+        "52", 
+        "53",
+        "54",
+        "70"
+    ]
+},
+{
+    "id" : "cPCommunity2",
+    "name" : "carpooling community 2",
+    "users" : [ 
+        "52", 
+        "53",
+        "54",
+        "70"
+    ]
+},
+{
+    "id" : "exCommunity",
+    "name" : "exCommunity",
+    "users" : [ 
+        "60", 
+        "65"
+    ]
+}
+]
