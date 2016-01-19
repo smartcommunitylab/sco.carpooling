@@ -102,6 +102,9 @@ public class SendPushNotification {
 		if (CarPoolingUtils.NOTIFICATION_BOOKING.equals(n.getType())) {
 			return n.getData().get("senderFullName") + " chiede di partecipare al tuo viaggio";
 		}
+		if (CarPoolingUtils.NOTIFICATION_RATING.equals(n.getType())) {
+			return n.getData().get("message");
+		}
 		return null;
 	}
 
