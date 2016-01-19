@@ -1,0 +1,143 @@
+[
+  {
+    "id": "560263eed1f1f802c2a83book",
+    "from": {
+      "name": "Piazza Venezia",
+      "address": "Piazza Venezia",
+      "latitude": 46.067918,
+      "longitude": 11.12708,
+      "range": 1,
+      "coordinates": [
+        46.067918,
+        11.12708
+      ]
+    },
+    "to": {
+      "name": "Ponte San Lorenzo",
+      "address": "Ponte San Lorenzo",
+      "latitude": 46.070144,
+      "longitude": 11.115014,
+      "range": 1,
+      "coordinates": [
+        46.070144,
+        11.115014
+      ]
+    },
+    "recurrency": {
+      "time": 9,
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    "route": {
+      "from": {
+        "name": "road",
+        "stopId": {
+          "id": "",
+          "agencyId": ""
+        },
+        "lon": "11.12708",
+        "lat": "46.067918"
+      },
+      "to": {
+        "name": "Ponte di San Lorenzo",
+        "stopId": {
+          "id": "",
+          "agencyId": ""
+        },
+        "lon": "11.115000659666784",
+        "lat": "46.070119106960526"
+      },
+      "startime": 1474581600000,
+      "endtime": 1442959860000,
+      "duration": 660000,
+      "walkingDuration": 660,
+      "leg": [
+        {
+          "legId": "null_null",
+          "startime": 1442959200000,
+          "endtime": 1442959860000,
+          "duration": 660,
+          "from": {
+            "name": "road",
+            "lon": "11.12708",
+            "lat": "46.067918"
+          },
+          "to": {
+            "name": "Ponte di San Lorenzo",
+            "lon": "11.115000659666784",
+            "lat": "46.070119106960526"
+          },
+          "transport": {
+            "type": "CAR"
+          },
+          "legGeometery": {
+            "length": 108,
+            "points": ""
+          },
+          "alertStrikeList": [
+            
+          ],
+          "alertDelayList": [
+            
+          ],
+          "alertParkingList": [
+            
+          ],
+          "alertRoadList": [
+            
+          ],
+          "alertAccidentList": [
+            
+          ],
+          "length": 1799.96
+        }
+      ],
+      "promoted": false
+    },
+    "userId": "53",
+    "places": 4,
+    "intermediateStops": false,
+    "bookings": [
+      {
+        "traveller": {
+          "userId": "u1"
+        },
+        "recurrent": true,
+        "accepted": 1
+      },
+      {
+        "traveller": {
+          "userId": "u2"
+        },
+        "recurrent": true,
+        "accepted": 1
+      },
+      {
+        "traveller": {
+          "userId": "u2"
+        },
+        "recurrent": true,
+        "accepted": -1
+      },
+       {
+        "traveller": {
+          "userId": "52"
+        },
+        "recurrent": true,
+        "accepted": -1
+      }
+    ],
+    "active": true,
+    "communityIds": [
+      "cPCommunity1",
+      "cPCommunity2"
+    ]
+  }
+]
