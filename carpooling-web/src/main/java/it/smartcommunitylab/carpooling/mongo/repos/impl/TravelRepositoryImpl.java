@@ -44,31 +44,60 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public List<Travel> findTravelByPassengerId(String userId, int pageNum, int pageSize) {
+	public List<Travel> findTravelByPassengerId(String userId, int pageNum, int pageSize, Long from, Long to
+			, int order, boolean boarded, String communityId) {
+		
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
+		Criteria timeC = new Criteria().where("when").gte(from).lte(to);
+
+		Criteria communityC = new Criteria().where("communityIds").in(communityId);
+
+		Criteria boardedC = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId).and("boarded").ne(0));
 		
 		// check if bookings within travel has travellers with userId
-		Criteria criteria = new Criteria().where("bookings").elemMatch(
-				Criteria.where("traveller.userId").is(userId));
+		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
+
+		Query query = new Query();
+		query.addCriteria(criteria);
+		
+		// (optional) - time.
+		if (from != null && from > 0 && to != null && to > 0) {
+			query.addCriteria(timeC);
+
+		}
+		// (optional) - communityId.
+		if (communityId != null && !communityId.isEmpty()) {
+			query.addCriteria(communityC);
+		}
+		// (optional) - boarded.
+		if (boarded) {
+			query.addCriteria(boardedC);
+		}
+			
+		// pagination.
+		query.skip((pageNum - 1) * pageSize);
+		query.limit(pageSize);
+		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "route.startime"));
+		
+		
 		/**
-		 Query:{
-			{
+		query:
+		{
 			"bookings": {
 				"$elemMatch": {
-					"traveller.userId": "53"
-					}
+					"traveller.userId": "52"
 				}
+			},
+			"when": {
+				"$gte": 1453762800000,
+				"$lte": 1454022000000
+			},
+			"communityIds": {
+				"$in": ["cPCommunity1"]
 			}
 		}
 		**/
-		Query query = new Query();
-		query.addCriteria(criteria);
-		// pagination.
-		query.skip((pageNum - 1 ) * pageSize);
-		query.limit(pageSize);
-		query.with(new Sort(Sort.Direction.DESC, "route.startime"));
-		
 		
 		travelsForPassenger = mongoTemplate.find(query, Travel.class);
 
@@ -82,6 +111,47 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		}**/
 
 		return travelsForPassenger;
+	}
+	
+	@Override
+	public List<Travel> findTravelByDriverId(String userId, int pageNum, int pageSize, Long from, Long to, int order) {
+		List<Travel> travelsForDriver = new ArrayList<Travel>();
+
+		Criteria timeC = new Criteria().where("when").gte(from).lte(to);
+
+		// check if bookings within travel has travellers with userId
+		Criteria criteria = new Criteria().where("userId").is(userId);
+
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		// (optional) - time.
+		if (from != null && from > 0 && to != null && to > 0) {
+			query.addCriteria(timeC);
+
+		}
+
+		// pagination.
+		query.skip((pageNum - 1) * pageSize);
+		query.limit(pageSize);
+		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "route.startime"));
+
+		/**
+		 Query:
+		 {
+			"userId": "53",
+			"when": {
+				"$gte": 1453762800000,
+				"$lte": 1454022000000
+			}
+		}
+		
+		*/
+
+		travelsForDriver = mongoTemplate.find(query, Travel.class);
+
+		return travelsForDriver;
+
 	}
 
 	@Override
@@ -429,5 +499,19 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		return mongoTemplate.findOne(query, Travel.class);
 	}
+
+	@Override
+	public List<Travel> findFutureInstanceOfRecurrTravel(String reccurentId) {
+
+		Criteria criteria = new Criteria().where("recurrentId").is(reccurentId).and("when")
+				.gte(System.currentTimeMillis());
+
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		return mongoTemplate.find(query, Travel.class);
+
+	}
+
 
 }

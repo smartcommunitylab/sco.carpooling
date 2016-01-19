@@ -67,7 +67,8 @@ public class TestRepository {
 	
 	@Before
 	public void init() throws JsonProcessingException, IOException {
-		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("reccNonReccTravel.json");
+		// populate non recurrent travels.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader().getResourceAsStream("v2-travel.json");
 		JsonNode rootNode = mapper.readTree(jsonlFile);
 		ArrayNode arrayNode = (ArrayNode) rootNode;
 		for (JsonNode node : arrayNode) {
@@ -92,22 +93,28 @@ public class TestRepository {
 
 	@Test
 	public void testTravelRepoByPassengerId() {
-		for (Travel travel : travelRepository.findTravelByPassengerId("52")) {
+//		for (Travel travel : travelRepository.findTravelByPassengerId("52")) {
+//			System.out.println(travel.getId());
+//		}
+		// pagination. 
+//		1453762800 - jan 26
+//		1453849200 - jan 27
+		for (Travel travel : travelRepository.findTravelByPassengerId("52",1,1, 1453762800000L, 1454022000000L, -1, false, "cPCommunity1")) {
 			System.out.println(travel.getId());
 		}
-		// pagination.
-		for (Travel travel : travelRepository.findTravelByPassengerId("52",1,3)) {
-			System.out.println(travel.getId());
-		}
+		
+		
 	}
 	
 	@Test
 	public void testTravelRepoByDriverId() {
 
-		Page<Travel> travels = travelRepository.findTravelByDriverId("53", new PageRequest(0, 20, Direction.DESC,
-				"route.startime"));
-		
-		for (Travel travel : travels.getContent()) {
+		// Page<Travel> travels = travelRepository.findTravelByDriverId("53",
+		// new PageRequest(0, 20, Direction.DESC,
+		// "route.startime"));
+
+		List<Travel> travels = travelRepository.findTravelByDriverId("54", 1, 1, 1453762800000L, 1454022000000L, -1);
+		for (Travel travel : travels) {
 			System.out.println(travel.getId());
 		}
 	}

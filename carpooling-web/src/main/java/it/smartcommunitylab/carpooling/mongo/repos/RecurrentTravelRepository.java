@@ -16,9 +16,6 @@
 
 package it.smartcommunitylab.carpooling.mongo.repos;
 
-import it.smartcommunitylab.carpooling.model.RecurrentTravel;
-import it.smartcommunitylab.carpooling.model.Travel;
-
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -26,16 +23,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface RecurrentTravelRepository extends PagingAndSortingRepository<RecurrentTravel, String>,
-		RecurrentTravelRepositoryCustom {
+import it.smartcommunitylab.carpooling.model.RecurrentTravel;
+
+public interface RecurrentTravelRepository
+		extends PagingAndSortingRepository<RecurrentTravel, String>, RecurrentTravelRepositoryCustom {
 
 	@Query("{'userId':?0}")
-	List<Travel> findTravelByDriverId(String userId);
+	List<RecurrentTravel> findTravelByDriverId(String userId);
 
 	@Query("{'userId':?0}")
-	Page<Travel> findTravelByDriverId(String userId, Pageable pageable);
+	Page<RecurrentTravel> findTravelByDriverId(String userId, Pageable pageable);
 
 	@Query("{'id':?0, 'userId':?1}")
-	Travel findTravelByIdAndDriverId(String id, String userId);
+	RecurrentTravel findTravelByIdAndDriverId(String id, String userId);
 
 }

@@ -257,18 +257,18 @@ public class TestManager {
 		// reject first two non recurrent bookings.
 		nonRecurr1.setAccepted(-1);
 		nonRecurr2.setAccepted(-1);
-		travel = travelManager.acceptTrip("560263eed1f1f802c2a83book", nonRecurr1, "54");
-		travel = travelManager.acceptTrip("560263eed1f1f802c2a83book", nonRecurr2, "54");
+		travel = travelManager.acceptNonRecurrentTrip("560263eed1f1f802c2a83book", nonRecurr1, "54");
+		travel = travelManager.acceptNonRecurrentTrip("560263eed1f1f802c2a83book", nonRecurr2, "54");
 
 		recurrBooking.setAccepted(-1);
-		travel = travelManager.acceptTrip("560263eed1f1f802c2a83book", recurrBooking, "54");
+		travel = travelManager.acceptNonRecurrentTrip("560263eed1f1f802c2a83book", recurrBooking, "54");
 
 		travel = travelManager.bookTrip("560263eed1f1f802c2a83book", recurrBooking2, "70");
 
 		Assert.assertEquals(travel.getBookings().size(), 7);
 
 		recurrBooking2.setAccepted(1);
-		travel = travelManager.acceptTrip("560263eed1f1f802c2a83book", recurrBooking2, "54");
+		travel = travelManager.acceptNonRecurrentTrip("560263eed1f1f802c2a83book", recurrBooking2, "54");
 
 		boolean accepted = false;
 		for (Booking booking : travel.getBookings()) {

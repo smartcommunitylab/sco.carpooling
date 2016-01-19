@@ -343,17 +343,17 @@ public class CarPoolingManager {
 		travelRequestRepository.save(travelRequest);
 	}
 
-	public List<Travel> getPassengerTrips(String passengerId, int start, int count) {
-		return travelRepository.findTravelByPassengerId(passengerId, start, count);
+	public List<Travel> getPassengerTrips(String passengerId, int start, int count, Long from, Long to, int order, Boolean boarded, String communityId) {
+		return travelRepository.findTravelByPassengerId(passengerId, start, count, from, to, order, boarded, communityId);
 	}
 
-	public List<Travel> getDriverTrips(String userId, int start, int count) {
+	public List<Travel> getDriverTrips(String userId, int start, int count, Long from, Long to, int order) {
 
-		Page<Travel> travels = travelRepository.findTravelByDriverId(userId, new PageRequest(start, count,
-				Direction.DESC, "route.startime"));
-
-		return travels.getContent();
-		// return travelRepository.findTravelByDriverId(userId, start, count);
+//		Page<Travel> travels = travelRepository.findTravelByDriverId(userId, new PageRequest(start, count,
+//				Direction.DESC, "route.startime"));
+//
+//		return travels.getContent();
+		return travelRepository.findTravelByDriverId(userId, start, count, from, to, order);
 	}
 
 	public List<Travel> searchTravels(TravelRequest travelRequest, String userId) {
@@ -413,50 +413,109 @@ public class CarPoolingManager {
 		return communityTravels;
 	}
 
+	public RecurrentTravel bookRecurrentTrip(String travelId, RecurrentBooking reqBooking, String userId)
+			throws CarPoolingCustomException {
+
+		RecurrentTravel travel = reccurrentTravelRepository.findOne(travelId);
+
+		if (travel != null) {
+			if (CarPoolingUtils.isValidUserRecurrentTravel(travel, userId, reqBooking)) {
+
+				if (havePlacesInRecurrentTravel(travel, reqBooking, userId)) {
+					travel = updateRecurrentTravelBooking(travel, reqBooking, userId);
+				} else {
+					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
+				}
+
+			} else {
+				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user not valid.");
+			}
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
+		}
+
+		return travel;
+	}
+	
+	/**
+	 * Update Booking of Recurrent Travel + Instances.
+	 * @param travel
+	 * @param reqBooking
+	 * @param userId
+	 * @return
+	 */
+	private RecurrentTravel updateRecurrentTravelBooking(RecurrentTravel travel, RecurrentBooking reqBooking,
+			String userId) {
+
+		// update traveller.
+		reqBooking.getTraveller().setUserId(userId);
+		reqBooking.setAccepted(0);
+		travel.getBookings().add(reqBooking);
+
+		reccurrentTravelRepository.save(travel);
+
+		Booking instanceBooking = new Booking();
+		instanceBooking.setAccepted(0);
+		instanceBooking.setTraveller(reqBooking.getTraveller());
+		instanceBooking.setRecurrent(true);
+		instanceBooking.setDate(new java.util.Date(System.currentTimeMillis()));
+
+		for (Travel instance : travelRepository.findFutureInstanceOfRecurrTravel(travel.getId())) {
+
+			instance.getBookings().add(instanceBooking);
+			travelRepository.save(instance);
+		}
+
+		return travel;
+	}
+
 	public Travel bookTrip(String travelId, Booking reqBooking, String userId) throws CarPoolingCustomException {
 
 		Travel travel = travelRepository.findOne(travelId);
 
 		if (travel != null) {
 			if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
-				// if (travel.getRecurrency() != null) { // recurrent travel.
-				if (CarPoolingUtils.ifBookableRecurr(travel, reqBooking, userId)) {
-					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-					travelRepository.save(travel);
-				} else {
-					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
-				}
+//				if (travel.getRecurrentId() != null && !travel.getRecurrentId().isEmpty()) { // recurrent travel.
+					if (CarPoolingUtils.havePlaces(travel, reqBooking, userId)) {
+						reqBooking.setRecurrent(false);
+						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+						travelRepository.save(travel);
+					} else {
+						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
+								"travel not bookable.");
+					}
 
-			} else if (!reqBooking.isRecurrent()) {
-				// non-recurrent travel + non-recurrent requested booking.
-				if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
-					// update traveller.
-					travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-					travelRepository.save(travel);
-				} else {
-					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
-				}
+//				} else if (!reqBooking.isRecurrent()) {
+//					// non-recurrent travel + non-recurrent requested booking.
+//					if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
+//						// update traveller.
+//						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
+//						travelRepository.save(travel);
+//					} else {
+//						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
+//								"travel not bookable.");
+//					}
+//				}
+//				if (travel != null) {
+					String targetUserId = travel.getUserId();
+					Map<String, String> data = new HashMap<String, String>();
+					data.put("senderId", userId);
+					User user = userRepository.findOne(userId);
+					data.put("senderFullName", user.fullName());
+					Notification bookingNotification = new Notification(targetUserId,
+							CarPoolingUtils.NOTIFICATION_BOOKING, data, false, travel.getId(),
+							System.currentTimeMillis());
+					notificationRepository.save(bookingNotification);
+					// notify via parse.
+					try {
+						sendPushNotification.sendNotification(targetUserId, bookingNotification);
+					} catch (JSONException e) {
+						throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+					}
+//				}
+			} else {
+				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user has already booked.");
 			}
-			if (travel != null) {
-				String targetUserId = travel.getUserId();
-				Map<String, String> data = new HashMap<String, String>();
-				data.put("senderId", userId);
-				User user = userRepository.findOne(userId);
-				data.put("senderFullName", user.fullName());
-				Notification bookingNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_BOOKING,
-						data, false, travel.getId(), System.currentTimeMillis());
-				notificationRepository.save(bookingNotification);
-				// notify via parse.
-				try {
-					sendPushNotification.sendNotification(targetUserId, bookingNotification);
-				} catch (JSONException e) {
-					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-				}
-			}
-			// } else {
-			// throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(),
-			// "user not valid.");
-			// }
 		} else {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
 		}
@@ -478,7 +537,47 @@ public class CarPoolingManager {
 		throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
 	}
 
-	public Travel acceptTrip(String travelId, Booking booking, String userId) throws CarPoolingCustomException {
+	
+	public RecurrentTravel acceptRecurrentTrip(String travelId, RecurrentBooking booking, String userId)
+			throws CarPoolingCustomException {
+
+		RecurrentTravel travel = reccurrentTravelRepository.findTravelByIdAndDriverId(travelId, userId);
+
+		boolean found = false;
+
+		if (travel != null) {
+			for (RecurrentBooking book : travel.getBookings()) {
+				if (book.equals(booking)) {
+					book.setAccepted(booking.getAccepted());
+					found = true;
+					break;
+				}
+			}
+
+			if (found) {
+				reccurrentTravelRepository.save(travel);
+				String targetUserId = booking.getTraveller().getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("status", "" + booking.getAccepted());
+				Notification confirmNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_CONFIRM,
+						data, false, travel.getId(), System.currentTimeMillis());
+				notificationRepository.save(confirmNotification);
+				try {
+					sendPushNotification.sendNotification(targetUserId, confirmNotification);
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+			} else {
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not found");
+			}
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found");
+		}
+
+		return travel;
+	}
+	
+	public Travel acceptNonRecurrentTrip(String travelId, Booking booking, String userId) throws CarPoolingCustomException {
 
 		Travel travel = travelRepository.findTravelByIdAndDriverId(travelId, userId);
 		// travelRepository.findOne(travelId);
@@ -1045,11 +1144,61 @@ public class CarPoolingManager {
 		}
 	}
 
-	public Travel bookRecurrentTrip(String tripId, RecurrentBooking booking, String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public boolean havePlacesInRecurrentTravel(RecurrentTravel travel, RecurrentBooking reqBooking, String userId) {
+
+		boolean bookable = false;
+		int capacity = travel.getPlaces();
+
+		for (RecurrentBooking booking : travel.getBookings()) {
+			if (booking.getAccepted() != -1) {
+				capacity--;
+			}
+		}
+
+		// check that there are places in the bookings of all the Travel objects
+		// with this recurrencyId
+		if (capacity > 0) {
+			List<Travel> instances = travelRepository.findFutureInstanceOfRecurrTravel(travel.getId());
+
+			for (Travel instance : instances) {
+				int seats = instance.getPlaces();
+				for (Booking booking : instance.getBookings()) {
+					if (booking.getAccepted() != -1) {
+						seats--;
+					}
+				}
+				// user must not have booking of himself with recurrent.
+				if (seats < 1) {
+					bookable = false;
+					break;
+				}
+			}
+		}
+		return bookable;
 	}
-	
-	
+
+	public Booking updateBoarding(String tripId, String userId, int boarding) throws CarPoolingCustomException {
+
+		Travel travel = travelRepository.findOne(tripId);
+
+		Booking foundBooking = null;
+
+		for (Booking booking : travel.getBookings()) {
+			if (booking.getTraveller().getUserId().equalsIgnoreCase(userId)) {
+				booking.setBoarded(boarding);
+				foundBooking = booking;
+				break;
+			}
+		}
+
+		if (foundBooking != null) {
+			travelRepository.save(travel);
+			return foundBooking;
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not found");
+		}
+
+	}
 
 }

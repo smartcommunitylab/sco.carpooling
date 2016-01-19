@@ -39,4 +39,7 @@ public interface TravelRepository extends PagingAndSortingRepository<Travel, Str
 	@Query("{'when':?0}")
 	Travel findTravelByWhen(Long when);
 	
+	@Query("{'recurrentId':?0}")
+	List<Travel> findInstanceOfRecurrTravel(String recurrentId);
+	
 }

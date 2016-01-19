@@ -23,7 +23,10 @@ import java.util.List;
 
 public interface TravelRepositoryCustom {
 
-	List<Travel> findTravelByPassengerId(String userId, int start, int count);
+	List<Travel> findTravelByPassengerId(String userId, int start, int count, Long from, Long to, int order,
+			boolean boarded, String communityId);
+	
+	List<Travel> findTravelByDriverId(String userid, int start, int count, Long from, Long to, int order);
 	
 	List<Travel> findTravelByPassengerId(String userId);
 
@@ -40,4 +43,6 @@ public interface TravelRepositoryCustom {
 	List<Travel> searchCompletedTravels(Long timeInMillies);
 	
 	Travel findOneInstanceOfRecurrTravel(TravelRequest travelRequest, String reccurentTravelId);
+	
+	List<Travel> findFutureInstanceOfRecurrTravel(String reccurentId);
 }
