@@ -437,7 +437,8 @@ angular.module('carpooling', [
         url: '/risultaticercaviaggi',
         cache: false,
         params: {
-            'searchResults': {}
+            'searchResults': {},
+            'searchParams': {}
         },
         views: {
             'menuContent': {
@@ -578,6 +579,7 @@ angular.module('carpooling', [
         lbl_offer: 'Offri un viaggio',
         lbl_from: 'Da',
         lbl_to: 'A',
+        lbl_when: 'Alle',
         lbl_halfwaystops: 'Fermate intermedie',
         lbl_halfwaystops_none: 'Nessuna',
         lbl_halfwaystops_agree: 'Da concordare con il conducente',
