@@ -2,16 +2,14 @@
     <ion-content class="padding">
         <div class="padding">
             <div class="src-infos">
-                <ul>
-                    <li>
-                        <span class="left-infos">{{'lbl_from' | translate | lowercase}} <span>{{searchParams.from.name}}</span></span>
-                        <span class="right-infos"><span>{{searchParams.when | date: travelDateFormat}}</span></span>
-                    </li>
-                    <li>
-                        <span class="left-infos">{{'lbl_to' | translate | lowercase}} <span>{{searchParams.to.name}}</span></span>
-                        <span class="right-infos">{{'lbl_when' | translate | lowercase}} <span>{{searchParams.when | date: travelTimeFormat}}</span></span>
-                    </li>
-                </ul>
+                    <ul class="left-infos">
+                        <li>{{'lbl_from' | translate | lowercase}} <span>{{searchParams.from.name}}</span></li>
+                        <li>{{'lbl_to' | translate | lowercase}} <span>{{searchParams.to.name}}</span></li>
+                    </ul>
+                    <ul class="right-infos">
+                        <li><span>{{searchParams.when | date: travelDateFormat}}</span></li>
+                        <li>{{'lbl_when' | translate | lowercase}} <span>{{searchParams.when | date: travelTimeFormat}}</span></li>
+                    </ul>
             </div>
         </div>
         <div ng-if="!passengerTripsFound || passengerTripsFound.length == 0">

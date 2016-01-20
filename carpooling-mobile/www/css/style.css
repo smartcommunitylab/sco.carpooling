@@ -259,7 +259,7 @@ placeautocomplete ul li {
     border-radius: 50%;
     color: #0099CC;
 }
-.card.card-trip .trip-confirmed-tick div{
+.card.card-trip .trip-confirmed-tick div {
     font-size: 2em;
     padding-top: 0.1em;
 }
@@ -623,9 +623,17 @@ table.chart .labels {}
 }
 
 /*Found Trips results*/
-.carpooling-theme .src-infos{
+
+.carpooling-theme .src-infos {
     font-weight: bold;
 }
-.carpooling-theme .src-infos .right-infos{
+.carpooling-theme .src-infos .left-infos {
+    display: inline-block;
+    width: 60%;
+}
+.carpooling-theme .src-infos .right-infos {
+    text-align: right;
+    display: inline-block;
     float: right;
+    width: 40%;
 }
