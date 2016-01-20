@@ -251,7 +251,20 @@ placeautocomplete ul li {
 .card.card-trip .trip-data .trip-data-rejected {
     color: #FF0000;
 }
-.card.card-trip .trip-counter {
+.card.card-trip .trip-confirmed-tick {
+    width: 2.5em;
+    height: 2.5em;
+    font-size: 1.6em;
+    border: 3px solid #0099CC;
+    border-radius: 50%;
+    color: #0099CC;
+}
+.card.card-trip .trip-confirmed-tick div{
+    font-size: 2em;
+    padding-top: 0.1em;
+}
+.card.card-trip .trip-counter,
+.card.card-trip .trip-confirmed {
     vertical-align: middle;
     text-align: center;
     width: 25%;
