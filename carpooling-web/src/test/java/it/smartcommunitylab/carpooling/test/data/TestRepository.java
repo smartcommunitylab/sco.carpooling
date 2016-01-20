@@ -16,15 +16,6 @@
 
 package it.smartcommunitylab.carpooling.test.data;
 
-import it.smartcommunitylab.carpooling.model.Community;
-import it.smartcommunitylab.carpooling.model.Travel;
-import it.smartcommunitylab.carpooling.model.TravelRequest;
-import it.smartcommunitylab.carpooling.model.Zone;
-import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
-import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
-import it.smartcommunitylab.carpooling.test.TestConfig;
-import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -39,18 +30,24 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.Travel;
+import it.smartcommunitylab.carpooling.model.TravelRequest;
+import it.smartcommunitylab.carpooling.model.Zone;
+import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
+import it.smartcommunitylab.carpooling.test.TestConfig;
+import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 /**
  * 
  * @author nawazk
  *
  */
-//@org.junit.Ignore
+@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestRepository {

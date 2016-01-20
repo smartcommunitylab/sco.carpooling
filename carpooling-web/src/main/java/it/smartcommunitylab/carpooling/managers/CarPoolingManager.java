@@ -230,7 +230,7 @@ public class CarPoolingManager {
 
 			/** create instances of non recurrent travels. **/
 
-			for (int extendDay = 1; extendDay <= CarPoolingUtils.INSTANCES_THRESHOLD; extendDay++) {
+			for (int extendDay = 0; extendDay <= CarPoolingUtils.INSTANCES_THRESHOLD; extendDay++) {
 
 				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(recurrentTravel.getWhen(), extendDay);
 
@@ -413,23 +413,15 @@ public class CarPoolingManager {
 		return communityTravels;
 	}
 
-	public RecurrentTravel bookRecurrentTrip(String travelId, RecurrentBooking reqBooking, String userId)
+	public RecurrentTravel bookRecurrentTravel(String travelId, RecurrentBooking reqBooking, String userId)
 			throws CarPoolingCustomException {
 
 		RecurrentTravel travel = reccurrentTravelRepository.findOne(travelId);
 
 		if (travel != null) {
-			if (CarPoolingUtils.isValidUserRecurrentTravel(travel, userId, reqBooking)) {
 
-				if (havePlacesInRecurrentTravel(travel, reqBooking, userId)) {
-					travel = updateRecurrentTravelBooking(travel, reqBooking, userId);
-				} else {
-					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
-				}
+			travel = updateRecurrentTravelBooking(travel, reqBooking, userId);
 
-			} else {
-				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user not valid.");
-			}
 		} else {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found.");
 		}
@@ -439,80 +431,121 @@ public class CarPoolingManager {
 	
 	/**
 	 * Update Booking of Recurrent Travel + Instances.
-	 * @param travel
+	 * @param recurrentTravel
 	 * @param reqBooking
 	 * @param userId
 	 * @return
+	 * @throws CarPoolingCustomException 
 	 */
-	private RecurrentTravel updateRecurrentTravelBooking(RecurrentTravel travel, RecurrentBooking reqBooking,
-			String userId) {
+	private RecurrentTravel updateRecurrentTravelBooking(RecurrentTravel recurrentTravel, RecurrentBooking reqBooking,
+			String userId) throws CarPoolingCustomException {
 
-		// update traveller.
-		reqBooking.getTraveller().setUserId(userId);
-		reqBooking.setAccepted(0);
-		travel.getBookings().add(reqBooking);
+		List<Travel> tranistInstances = travelRepository.findFutureInstanceOfRecurrTravel(recurrentTravel.getId());
 
-		reccurrentTravelRepository.save(travel);
-
+		// booking instance to replicate.
 		Booking instanceBooking = new Booking();
 		instanceBooking.setAccepted(0);
 		instanceBooking.setTraveller(reqBooking.getTraveller());
 		instanceBooking.setRecurrent(true);
 		instanceBooking.setDate(new java.util.Date(System.currentTimeMillis()));
 
-		for (Travel instance : travelRepository.findFutureInstanceOfRecurrTravel(travel.getId())) {
+		for (Travel instance : tranistInstances) {
 
-			instance.getBookings().add(instanceBooking);
-			travelRepository.save(instance);
+			List<Booking> transitStateBooking = instance.getBookings();
+
+			int availability = instance.getPlaces();
+
+			if (transitStateBooking.isEmpty()) {
+				// add new booking to instance.
+				transitStateBooking.add(instanceBooking);
+			
+			} else {
+				
+				List<Booking> temp = new ArrayList<Booking>();
+				temp.addAll(transitStateBooking);
+				
+				boolean updatedNewBooking = false;
+				for (Booking uBooking : temp) {
+
+					if (uBooking.getTraveller().getUserId().equalsIgnoreCase(userId)) {
+						// 1. check if user is present with recurrent booking -> throw exception [USER ALREADY BOOKED].
+						if (uBooking.isRecurrent()) {
+							throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(),
+									"user has already booked.");
+						}
+						// 2. if user is present with non recurrent booking -> override it.
+						if (!uBooking.isRecurrent()) {
+							transitStateBooking.remove(uBooking);
+							uBooking.setRecurrent(true);
+							uBooking.setAccepted(0);
+							transitStateBooking.add(uBooking);
+//							instance.setBookings(transitStateBooking);
+							
+						}
+					} else if (uBooking.getAccepted() != -1) {
+						availability--; // 3. if not present check for availability
+						
+						if (!updatedNewBooking) {
+							// add new booking to instance.
+							transitStateBooking.add(instanceBooking);
+							updatedNewBooking = true;
+						}
+					}
+				}
+				if (availability < 1) {
+					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
+				}
+			}
+
 		}
 
-		return travel;
+		// update recurrent travel.
+		reqBooking.getTraveller().setUserId(userId);
+		reqBooking.setAccepted(0);
+		recurrentTravel.getBookings().add(reqBooking);
+		reccurrentTravelRepository.save(recurrentTravel);
+		
+		travelRepository.save(tranistInstances);
+
+		return recurrentTravel;
+
 	}
 
-	public Travel bookTrip(String travelId, Booking reqBooking, String userId) throws CarPoolingCustomException {
+	public Travel bookNonRecurrent(String travelId, Booking reqBooking, String userId) throws CarPoolingCustomException {
 
 		Travel travel = travelRepository.findOne(travelId);
 
 		if (travel != null) {
-			if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
-//				if (travel.getRecurrentId() != null && !travel.getRecurrentId().isEmpty()) { // recurrent travel.
-					if (CarPoolingUtils.havePlaces(travel, reqBooking, userId)) {
-						reqBooking.setRecurrent(false);
-						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-						travelRepository.save(travel);
-					} else {
-						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
-								"travel not bookable.");
-					}
 
-//				} else if (!reqBooking.isRecurrent()) {
-//					// non-recurrent travel + non-recurrent requested booking.
-//					if (CarPoolingUtils.ifBookable(travel, reqBooking, userId)) {
-//						// update traveller.
-//						travel = CarPoolingUtils.updateTravel(travel, reqBooking, userId);
-//						travelRepository.save(travel);
-//					} else {
-//						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
-//								"travel not bookable.");
-//					}
-//				}
-//				if (travel != null) {
-					String targetUserId = travel.getUserId();
-					Map<String, String> data = new HashMap<String, String>();
-					data.put("senderId", userId);
-					User user = userRepository.findOne(userId);
-					data.put("senderFullName", user.fullName());
-					Notification bookingNotification = new Notification(targetUserId,
-							CarPoolingUtils.NOTIFICATION_BOOKING, data, false, travel.getId(),
-							System.currentTimeMillis());
-					notificationRepository.save(bookingNotification);
-					// notify via parse.
-					try {
-						sendPushNotification.sendNotification(targetUserId, bookingNotification);
-					} catch (JSONException e) {
-						throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-					}
-//				}
+			if (CarPoolingUtils.isValidUser(travel, userId, reqBooking)) {
+
+				if (CarPoolingUtils.havePlaces(travel, reqBooking, userId)) {
+					reqBooking.setRecurrent(false);
+					reqBooking.getTraveller().setUserId(userId);
+					reqBooking.setAccepted(0);
+					travel.getBookings().add(reqBooking);
+					// save travel.
+					travelRepository.save(travel);
+
+				} else {
+					throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(), "travel not bookable.");
+				}
+				// create notification.
+				String targetUserId = travel.getUserId();
+				Map<String, String> data = new HashMap<String, String>();
+				data.put("senderId", userId);
+				User user = userRepository.findOne(userId);
+				data.put("senderFullName", user.fullName());
+				Notification bookingNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_BOOKING,
+						data, false, travel.getId(), System.currentTimeMillis());
+				notificationRepository.save(bookingNotification);
+				// notify via parse.
+				try {
+					sendPushNotification.sendNotification(targetUserId, bookingNotification);
+				} catch (JSONException e) {
+					throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+				}
+
 			} else {
 				throw new CarPoolingCustomException(HttpStatus.FORBIDDEN.value(), "user has already booked.");
 			}
@@ -550,12 +583,28 @@ public class CarPoolingManager {
 				if (book.equals(booking)) {
 					book.setAccepted(booking.getAccepted());
 					found = true;
+					/**
+					 * update instances. (reject instances where recurrentId is travelId and booking.traveller.userId is
+					 * recurrBooking->traveller.userId
+					 */
+					// passengerId.
+					String passengerId = booking.getTraveller().getUserId();
+
+					for (Travel instanceRT : travelRepository.findInstanceOfRecurrTravel(travelId)) {
+						for (Booking instanceBooking : instanceRT.getBookings()) {
+							if (instanceBooking.getTraveller().getUserId().equalsIgnoreCase(passengerId)) {
+								instanceBooking.setAccepted(booking.getAccepted());
+								travelRepository.save(instanceRT);
+							}
+						}
+					}
+					reccurrentTravelRepository.save(travel);
 					break;
 				}
 			}
 
 			if (found) {
-				reccurrentTravelRepository.save(travel);
+				
 				String targetUserId = booking.getTraveller().getUserId();
 				Map<String, String> data = new HashMap<String, String>();
 				data.put("status", "" + booking.getAccepted());
@@ -1145,38 +1194,38 @@ public class CarPoolingManager {
 	}
 
 	
-	public boolean havePlacesInRecurrentTravel(RecurrentTravel travel, RecurrentBooking reqBooking, String userId) {
-
-		boolean bookable = false;
-		int capacity = travel.getPlaces();
-
-		for (RecurrentBooking booking : travel.getBookings()) {
-			if (booking.getAccepted() != -1) {
-				capacity--;
-			}
-		}
-
-		// check that there are places in the bookings of all the Travel objects
-		// with this recurrencyId
-		if (capacity > 0) {
-			List<Travel> instances = travelRepository.findFutureInstanceOfRecurrTravel(travel.getId());
-
-			for (Travel instance : instances) {
-				int seats = instance.getPlaces();
-				for (Booking booking : instance.getBookings()) {
-					if (booking.getAccepted() != -1) {
-						seats--;
-					}
-				}
-				// user must not have booking of himself with recurrent.
-				if (seats < 1) {
-					bookable = false;
-					break;
-				}
-			}
-		}
-		return bookable;
-	}
+//	public boolean performUpdateRecurrBooking(RecurrentTravel travel, RecurrentBooking reqBooking, String userId) {
+//
+//		boolean bookable = false;
+//		int capacity = travel.getPlaces();
+//
+//		for (RecurrentBooking booking : travel.getBookings()) {
+//			if (booking.getAccepted() != -1) {
+//				capacity--;
+//			}
+//		}
+//
+//		// check that there are places in the bookings of all the Travel objects
+//		// with this recurrencyId
+//		if (capacity > 0) {
+//			List<Travel> instances = travelRepository.findFutureInstanceOfRecurrTravel(travel.getId());
+//
+//			for (Travel instance : instances) {
+//				int seats = instance.getPlaces();
+//				for (Booking booking : instance.getBookings()) {
+//					if (booking.getAccepted() != -1) {
+//						seats--;
+//					}
+//				}
+//				// user must not have booking of himself with recurrent.
+//				if (seats < 1) {
+//					bookable = false;
+//					break;
+//				}
+//			}
+//		}
+//		return bookable;
+//	}
 
 	public Booking updateBoarding(String tripId, String userId, int boarding) throws CarPoolingCustomException {
 

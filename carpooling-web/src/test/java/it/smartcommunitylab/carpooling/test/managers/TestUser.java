@@ -20,11 +20,15 @@ import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.RecurrentBooking;
+import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
+import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.Traveller;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
+import it.smartcommunitylab.carpooling.mongo.repos.RecurrentTravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.UserRepository;
 import it.smartcommunitylab.carpooling.test.TestConfig;
@@ -45,6 +49,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -57,6 +62,8 @@ public class TestUser {
 	private CommunityRepository communityRepository;
 	@Autowired
 	private TravelRepository travelRepository;
+	@Autowired
+	private RecurrentTravelRepository recurrentTravelRepository;
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -118,101 +125,207 @@ public class TestUser {
 	}
 
 	@Test
-	public void testUserTransitionReccToRecc() throws CarPoolingCustomException {
+	public void testUserTransitionReccToRecc() throws JsonProcessingException, IOException {
 		/**
 		 * User("52") with Recc Booking exist.
 		 * User try to make another Recc booking.
-		 * Previous booking overwritten.
+		 * forbid user.
 		 */
-		Booking reccBooking = new Booking();
-		reccBooking.setRecurrent(true);
+
+		travelRepository.deleteAll();
+		recurrentTravelRepository.deleteAll();
+
+		// construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("recurrentTravel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+
+		for (JsonNode node : arrayNode) {
+			RecurrentTravel travel = mapper.convertValue(node, RecurrentTravel.class);
+			travel.setWhen(System.currentTimeMillis());
+			try {
+
+				travelManager.saveRecurrentTravel(travel, "54");
+
+			} catch (CarPoolingCustomException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+//		InputStream travelReqJson = Thread.currentThread().getContextClassLoader()
+//				.getResourceAsStream("travelReq.json");
+//		JsonNode travelReqrootNode = mapper.readTree(travelReqJson);
+//		ArrayNode travelReqArrayNode = (ArrayNode) travelReqrootNode;
+//		TravelRequest travelRequest = mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
+//		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 1));
+//		travelRequest.setUserId("52");
+
+		RecurrentBooking reccBooking = new RecurrentBooking();
 		reccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
 
-		List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20, null, null, -1, false, null);
-		Assert.assertFalse(userTravels.isEmpty());
-		Travel existingTravelForUser = userTravels.get(0);
+		RecurrentTravel travel;
+		try {
+			travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", reccBooking, "52");
+			Assert.assertEquals(travel.getBookings().size(), 1);
+		} catch (CarPoolingCustomException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
-		Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", reccBooking, "52");
-
-		Assert.assertEquals(existingTravelForUser.getBookings().size(), travel.getBookings().size());
+		try {
+			travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", reccBooking, "52");
+		} catch (CarPoolingCustomException cpe) {
+			Assert.assertEquals(cpe.getBody().getErrorCode(), HttpStatus.FORBIDDEN.value());
+		}
 
 	}
 
 	@Test
-	public void testUserTransitionReccToNonRecc() {
+	public void testUserTransitionReccToNonRecc() throws JsonProcessingException, IOException {
 		/**
 		 * User("52") with Recc booking exist.
 		 * User to make Non-Recc booking.
 		 * User not allowed.
 		 * Previous booking remains.
 		 */
+	
+		travelRepository.deleteAll();
+		recurrentTravelRepository.deleteAll();
+
+		// construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("recurrentTravel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+
+		for (JsonNode node : arrayNode) {
+			RecurrentTravel travel = mapper.convertValue(node, RecurrentTravel.class);
+			travel.setWhen(System.currentTimeMillis());
+			try {
+
+				travelManager.saveRecurrentTravel(travel, "54");
+
+			} catch (CarPoolingCustomException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		InputStream travelReqJson = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("travelReq.json");
+		JsonNode travelReqrootNode = mapper.readTree(travelReqJson);
+		ArrayNode travelReqArrayNode = (ArrayNode) travelReqrootNode;
+		TravelRequest travelRequest = mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
+		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 1));
+		travelRequest.setUserId("52");
+
+		RecurrentBooking reccBooking = new RecurrentBooking();
+		reccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
+
+		RecurrentTravel travel;
 		try {
-
-			Booking nonReccBooking = new Booking();
-			nonReccBooking.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
-			nonReccBooking.setRecurrent(false);
-			nonReccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
-
-			List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20, null, null, -1, false, null);
-			List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "52");
-			List<Booking> nonReccBookingsForUser = CarPoolingUtils
-					.getAllNonReccBookingForUserTravels(userTravels, "52");
-
-			Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonReccBooking, "52");
-
-			List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("52", 0, 20, null, null, -1, false, null);
-			List<Booking> postBookingReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
-					postBookingTravels, "52");
-			List<Booking> postBookingnonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
-					postBookingTravels, "52");
-
-			Assert.assertEquals(reccBookingsForUser.size(), postBookingReccBookingsForUser.size());
-			Assert.assertEquals(nonReccBookingsForUser.size(), 0);
-			Assert.assertEquals(postBookingnonReccBookingsForUser.size(), 0);
-
-		} catch (ParseException e) {
+			travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", reccBooking, "52");
+			Assert.assertEquals(travel.getBookings().size(), 1);
+		} catch (CarPoolingCustomException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // booking avaialble for this date.
-		catch (CarPoolingCustomException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
+		}
+
+		Booking nonReccBooking = new Booking();
+		nonReccBooking.setRecurrent(false);
+		nonReccBooking.setDate(new java.util.Date(System.currentTimeMillis()));
+		nonReccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
+
+		List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20, null, null, -1, false, null);
+		List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "52");
+		List<Booking> nonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(userTravels, "52");
+
+		try {
+			Travel travelNR = travelManager.bookNonRecurrent(userTravels.get(0).getId(), nonReccBooking, "52");
+		} catch (CarPoolingCustomException cpe) {
+			Assert.assertEquals(cpe.getBody().getErrorCode(), HttpStatus.FORBIDDEN.value());
+		}
+		
+	}
+
+	@Test
+	public void testUserTransitionNonReccToRecc() throws JsonProcessingException, IOException, ParseException {
+		/**
+		 * User("52") with non-recc booking exist.
+		 * User try to make recc booking.
+		 * User non recc booking overwritten with recc one.
+		 */
+		
+		Booking booking = null;
+		RecurrentTravel recurrTravel = null;
+		Travel nonRecurrTravel = null;
+
+		travelRepository.deleteAll();
+		recurrentTravelRepository.deleteAll();
+
+		// construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("recurrentTravel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+
+		for (JsonNode node : arrayNode) {
+			RecurrentTravel travel = mapper.convertValue(node, RecurrentTravel.class);
+			travel.setWhen(System.currentTimeMillis());
+			try {
+
+				travelManager.saveRecurrentTravel(travel, "54");
+				recurrTravel = travel;
+
+			} catch (CarPoolingCustomException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		InputStream travelReqJson = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("travelReq.json");
+		JsonNode travelReqrootNode = mapper.readTree(travelReqJson);
+		ArrayNode travelReqArrayNode = (ArrayNode) travelReqrootNode;
+		TravelRequest travelRequest = mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
+		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 1));
+
+		List<Travel> travels = travelManager.searchTravels(travelRequest, "52");
+
+		try {
+			Booking nonRecurr1 = new Booking();
+			nonRecurr1.setRecurrent(false);
+			nonRecurr1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
+			nonRecurr1.setTraveller(new Traveller("52", "Non Reccurrent User", "Non Reccurrent User", null));
+
+			Travel travel = travelManager.bookNonRecurrent(travels.get(0).getId(), nonRecurr1, "52");
+			Assert.assertEquals(travel.getBookings().size(), 1);
+			nonRecurrTravel = travel;
+
+			Assert.assertEquals(travel.getBookings().size(), 1);
+			Assert.assertFalse(travel.getBookings().get(0).isRecurrent());
+
+			RecurrentBooking recurrBooking = new RecurrentBooking();
+			recurrBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
+
+			RecurrentTravel travelR = travelManager.bookRecurrentTravel(recurrTravel.getId(), recurrBooking, "52");
+			Assert.assertEquals(travel.getBookings().size(), 1);
+
+			Travel travelUpdated = travelRepository.findOne(travel.getId());
+
+			Assert.assertEquals(travelUpdated.getBookings().size(), 1);
+			Assert.assertTrue(travelUpdated.getBookings().get(0).isRecurrent());
+
+		} catch (CarPoolingCustomException cpe) {
+			System.err.println(cpe.getMessage());
 		}
 
 	}
 
 	@Test
-	public void testUserTransitionNonReccToRecc() throws CarPoolingCustomException {
-		/**
-		 * User("53") with non-recc booking exist.
-		 * User try to make recc booking.
-		 * User non recc booking overwritten with recc one.
-		 */
-		Booking reccBooking = new Booking();
-		reccBooking.setRecurrent(true);
-		reccBooking.setTraveller(new Traveller("53", "User Non recurrent", "User Non recurrent", null));
-
-		List<Travel> userTravels = travelRepository.findTravelByPassengerId("53", 0, 20, null, null, -1, false, null);
-		List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "53");
-		List<Booking> nonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(userTravels, "53");
-
-		Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", reccBooking, "53");
-
-		List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("53", 0, 20, null, null, -1, false, null);
-		List<Booking> postBookingReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
-				postBookingTravels, "53");
-		List<Booking> postBookingNonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
-				postBookingTravels, "53");
-
-		Assert.assertEquals(nonReccBookingsForUser.size(), 1);
-		Assert.assertEquals(reccBookingsForUser.size(), 0);
-		Assert.assertEquals(postBookingReccBookingsForUser.size(), 1);
-		Assert.assertEquals(postBookingNonReccBookingsForUser.size(), 0);
-
-	}
-
-	@Test
-	public void testUserTransitionNonReccToNonRecc() {
+	public void testUserTransitionNonReccToNonRecc() throws JsonProcessingException, IOException {
 		/**
 		 * User("53") with non recc booking exist.
 		 * User try to make another non recc booking on different date.
@@ -220,50 +333,62 @@ public class TestUser {
 		 * User try to make another non recc booking on existing booked date for that user.
 		 * User not allowed.
 		 */
+	
+		travelRepository.deleteAll();
+		recurrentTravelRepository.deleteAll();
+
+		// construct ref Travel from json file.
+		InputStream jsonlFile = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("recurrentTravel.json");
+		JsonNode rootNode = mapper.readTree(jsonlFile);
+		ArrayNode arrayNode = (ArrayNode) rootNode;
+
+		for (JsonNode node : arrayNode) {
+			RecurrentTravel travel = mapper.convertValue(node, RecurrentTravel.class);
+			travel.setWhen(System.currentTimeMillis());
+			try {
+
+				travelManager.saveRecurrentTravel(travel, "54");
+
+			} catch (CarPoolingCustomException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		InputStream travelReqJson = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("travelReq.json");
+		JsonNode travelReqrootNode = mapper.readTree(travelReqJson);
+		ArrayNode travelReqArrayNode = (ArrayNode) travelReqrootNode;
+		TravelRequest travelRequest = mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
+		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 1));
+
+		List<Travel> travels = travelManager.searchTravels(travelRequest, "53");
+
 		try {
+			Booking nonRecurr1 = new Booking();
+			nonRecurr1.setRecurrent(false);
+			nonRecurr1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
+			nonRecurr1.setTraveller(new Traveller("52", "Non Reccurrent User", "Non Reccurrent User", null));
 
-			Booking nonRecc1 = new Booking();
-			nonRecc1.setRecurrent(false);
-			nonRecc1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
-			nonRecc1.setTraveller(new Traveller("53", "User Non recurrent", "User Non recurrent", null));
+			Travel travel = travelManager.bookNonRecurrent(travels.get(0).getId(), nonRecurr1, "53");
+			Assert.assertEquals(travel.getBookings().size(), 1);
 
-			List<Travel> userTravels = travelRepository.findTravelByPassengerId("53", 0, 20, null, null, -1, false, null);
-			List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "53");
-			List<Booking> nonReccBookingsForUser = CarPoolingUtils
-					.getAllNonReccBookingForUserTravels(userTravels, "53");
+			travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 2));
 
-			Assert.assertEquals(nonReccBookingsForUser.size(), 1);
-			Assert.assertEquals(reccBookingsForUser.size(), 0);
+			travels = travelManager.searchTravels(travelRequest, "53");
+			travel = travelManager.bookNonRecurrent(travels.get(0).getId(), nonRecurr1, "53");
 
-			Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonRecc1, "53");
+			Assert.assertEquals(travel.getBookings().size(), 1);
 
-			List<Travel> postBookingTravels = travelRepository.findTravelByPassengerId("53", 0, 20, null, null, -1, false, null);
-			List<Booking> postBookingReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
-					postBookingTravels, "53");
-			List<Booking> postBookingNonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
-					postBookingTravels, "53");
-
-			Assert.assertEquals(postBookingReccBookingsForUser.size(), 0);
-			Assert.assertEquals(postBookingNonReccBookingsForUser.size(), 2);
-
-			travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonRecc1, "53");
-
-			List<Travel> postBooking2Travels = travelRepository.findTravelByPassengerId("53", 0, 20, null, null, -1, false, null);
-			List<Booking> postBooking2ReccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(
-					postBookingTravels, "53");
-			List<Booking> postBooking2NonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(
-					postBookingTravels, "53");
-
-			Assert.assertEquals(postBooking2ReccBookingsForUser.size(), 0);
-			Assert.assertEquals(postBooking2NonReccBookingsForUser.size(), 2);
+			travel = travelManager.bookNonRecurrent(travels.get(0).getId(), nonRecurr1, "53");
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // available date.
-		catch (CarPoolingCustomException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		catch (CarPoolingCustomException cpe) {
+			Assert.assertEquals(cpe.getBody().getErrorCode(), HttpStatus.FORBIDDEN.value());
 		}
 
 	}
@@ -341,13 +466,13 @@ public class TestUser {
 		ArrayNode travelProfileArrayNode = (ArrayNode) travelProfileNode;
 		TravelProfile refTravelProfile = mapper.convertValue(travelProfileArrayNode.get(0), TravelProfile.class);
 
-		TravelProfile travelProfile = travelManager.readTravelProfile("52");
+//		TravelProfile travelProfile = travelManager.readTravelProfile("52");
 
-		Assert.assertTrue(travelProfile.getRoutes().isEmpty());
+//		Assert.assertTrue(travelProfile.getRoutes().isEmpty());
 
 		travelManager.saveTravelProfile(refTravelProfile, "52");
 
-		travelProfile = travelManager.readTravelProfile("52");
+		TravelProfile travelProfile = travelManager.readTravelProfile("52");
 
 		Assert.assertFalse(travelProfile.getRoutes().isEmpty());
 

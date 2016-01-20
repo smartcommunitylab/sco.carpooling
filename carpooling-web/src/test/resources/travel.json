@@ -100,16 +100,6 @@
 		"coordinates": [46.070144,
 		11.115014]
 	},
-	"recurrency": {
-		"time": 9,
-		"days": [1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7]
-	},
 	"route": {
 		"from": {
 			"name": "road",

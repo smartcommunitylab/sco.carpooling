@@ -85,28 +85,6 @@
 	"userId": "54",
 	"places": 4,
 	"intermediateStops": false,
-	"bookings": [{
-		"traveller": {
-			"userId": "u1"
-		},
-		"recurrent": true,
-		"accepted": 1
-	},
-	{
-		"traveller": {
-			"userId": "u2"
-		},
-		"recurrent": true,
-		"accepted": 1
-	},
-		{
-		"traveller": {
-			"userId": "u2"
-		},
-		"recurrent": true,
-		"accepted": -1
-	}
-	],
 	"active": true,
 	"communityIds": ["cPCommunity1",
 	"cPCommunity2"]

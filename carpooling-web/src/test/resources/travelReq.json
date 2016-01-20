@@ -24,6 +24,7 @@
   },
   "when": 1443425400000,
   "userId": "52",
-  "monitored": false
+  "monitored": false,
+  "communityIds": ["cPCommunity1"]
 }
 ]

@@ -95,13 +95,13 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/trips/{tripId}/book")
 	public @ResponseBody Response<Travel> bookNonRecurrentTrip(@PathVariable String tripId,
 			@RequestBody Booking booking) throws CarPoolingCustomException {
-		return new Response<Travel>(carPoolingManager.bookTrip(tripId, booking, getUserId()));
+		return new Response<Travel>(carPoolingManager.bookNonRecurrent(tripId, booking, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/api/passenger/recurrenttrips/{tripId}/book")
 	public @ResponseBody Response<RecurrentTravel> bookRecurrentTrip(@PathVariable String tripId,
 			@RequestBody RecurrentBooking booking) throws CarPoolingCustomException {
-		return new Response<RecurrentTravel>(carPoolingManager.bookRecurrentTrip(tripId, booking, getUserId()));
+		return new Response<RecurrentTravel>(carPoolingManager.bookRecurrentTravel(tripId, booking, getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
