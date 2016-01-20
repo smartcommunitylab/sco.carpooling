@@ -297,7 +297,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
                 Utils.loaded();
                 // console.log('Done trip search');
                 $state.go('app.risultaticercaviaggi', {
-                    'searchResults': searchResults
+                    'searchResults': searchResults,
+                    'searchParams': $scope.travelRequest
                 });
             },
             function (error) {
@@ -308,53 +309,11 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     };
 })
 
-.controller('RisultatiCercaViaggiCtrl', function ($scope, $state, $stateParams, Utils, PassengerSrv) {
+.controller('RisultatiCercaViaggiCtrl', function ($scope, $state, $stateParams, Utils, PassengerSrv, $filter) {
     $scope.passengerTripsFound = $stateParams['searchResults'];
+    $scope.searchParams = $stateParams['searchParams'];
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
-
-    // NOTE: temporary mock results TO BE REMOVED
-    /*
-    $scope.passengerTripsFoundFAKE = [
-        {
-            "from": {
-                "name": "Via Fiume",
-                "address": "Via Fiume",
-                "latitude": 46.065487,
-                "longitude": 11.131346,
-                "range": 1,
-                "coordinates": [
-                    46.065487,
-                    11.131346
-                ]
-            },
-            "to": {
-                "name": "Muse",
-                "address": "Muse",
-                "latitude": 46.063266,
-                "longitude": 11.113062,
-                "range": 1,
-                "coordinates": [
-                    46.063266,
-                    11.113062
-                ]
-            },
-            "bookings": [
-                {
-                    accepted: 1
-                },
-                {
-                    accepted: -1
-                }
-            ],
-            "userId": 73,
-            "places": 4,
-            "when": 1443425400000,
-            "monitored": false
-        }
-    ];
-    */
-
     $scope.passengerTripsFound.forEach(function (travel) {
         travel.bookingCounters = Utils.getBookingCounters(travel);
     });

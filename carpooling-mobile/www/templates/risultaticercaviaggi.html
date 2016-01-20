@@ -1,5 +1,19 @@
 <ion-view title="{{'lbl_trips_found' | translate}}">
     <ion-content class="padding">
+        <div class="padding">
+            <div class="src-infos">
+                <ul>
+                    <li>
+                        <span class="left-infos">{{'lbl_from' | translate | lowercase}} <span>{{searchParams.from.name}}</span></span>
+                        <span class="right-infos"><span>{{searchParams.when | date: travelDateFormat}}</span></span>
+                    </li>
+                    <li>
+                        <span class="left-infos">{{'lbl_to' | translate | lowercase}} <span>{{searchParams.to.name}}</span></span>
+                        <span class="right-infos">{{'lbl_when' | translate | lowercase}} <span>{{searchParams.when | date: travelTimeFormat}}</span></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div ng-if="!passengerTripsFound || passengerTripsFound.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
