@@ -1,13 +1,9 @@
-<ion-view title="{{'app_name' | translate}}">
+<ion-view title="{{'menu_history' | translate}}">
     <ion-nav-buttons side="right">
-        <a href="#/app/notifiche" class="button button-icon ion-android-notifications"></a>
-        <a ng-href="{{tab == 0 ? '#/app/cerca' : '#/app/offri'}}" ng-class="tab == 0 ? 'ion-android-search' : 'ion-android-add' " class="button button-icon padding-left"></a>
     </ion-nav-buttons>
-
     <ion-tabs class="tabs-top">
-        <ion-tab title="{{'tab_participate' | translate}}" ng-click="selectTab(0)">
-            <!--        <ion-nav-view name="tab-partecipo"></ion-nav-view>-->
-            <ion-view>
+        <ion-tab title="{{'tab_participated' | translate}}" ng-click="selectTab(0)">
+            <!--<ion-view>
                 <ion-content>
                     <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
@@ -34,29 +30,23 @@
                                             <span class="trip-data-requested" ng-if="trip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
                                         </li>
                                     </ul>
-                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
                                 </div>
                                 <div class="trip-counter">
                                     <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
                                     <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                                 </div>
                                 <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
-                                <!--CHECKMARK-->
-                                <!--<div class="trip-confirmed">
-                                    <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
-                                </div>-->
                             </div>
                         </div>
                     </div>
                     <ion-infinite-scroll ng-if="passengerTripsCanHaveMore" on-infinite="loadMorePassengerTrips()" distance="5%">
                     </ion-infinite-scroll>
                 </ion-content>
-            </ion-view>
+            </ion-view>-->
         </ion-tab>
 
-        <ion-tab title="{{'tab_offer' | translate}}" ng-click="selectTab(1)">
-            <!--        <ion-nav-view name="tab-offro"></ion-nav-view>-->
-            <ion-view>
+        <ion-tab title="{{'tab_offered' | translate}}" ng-click="selectTab(1)">
+            <!--<ion-view>
                 <ion-content ng-init="loadMoreDriverTrips()">
                     <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
@@ -79,7 +69,6 @@
                                             {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
                                         </li>
                                     </ul>
-                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
                                 </div>
                                 <div class="trip-counter">
                                     <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
@@ -92,7 +81,7 @@
                     <ion-infinite-scroll ng-if="driverTripsCanHaveMore" on-infinite="loadMoreDriverTrips()" distance="5%">
                     </ion-infinite-scroll>
                 </ion-content>
-            </ion-view>
+            </ion-view>-->
         </ion-tab>
     </ion-tabs>
 </ion-view>

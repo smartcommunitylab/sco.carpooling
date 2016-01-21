@@ -17,6 +17,7 @@ angular.module('carpooling', [
     'carpooling.services.utils',
     'carpooling.directives',
     'carpooling.controllers.home',
+    'carpooling.controllers.storico',
     'carpooling.controllers.offri',
     'carpooling.controllers.cercaviaggi',
     'carpooling.controllers.viaggio',
@@ -373,6 +374,17 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.storico', {
+        url: '/storico',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/storico.html',
+                controller: 'StoricoCtrl'
+            }
+        }
+    })
+
     .state('app.viaggio', {
         url: '/viaggio/:travelId',
         cache: false,
@@ -545,6 +557,7 @@ angular.module('carpooling', [
         menu_home: 'Home',
         menu_community: 'Comunità',
         menu_chat: 'Chat',
+        menu_history: 'Storico viaggi',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
         menu_logout: 'Logout',
@@ -619,6 +632,8 @@ angular.module('carpooling', [
         lbl_rating_driver_avg: 'Voto medio viaggi offerti ',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
+        tab_participated: 'Partecipati',
+        tab_offered: 'Offrerti',
         title_setrecurrency: 'Imposta ricorrenza',
         radio_daily: 'Giornaliera',
         radio_weekly: 'Settimanale',
