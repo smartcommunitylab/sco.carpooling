@@ -304,6 +304,21 @@ angular.module('carpooling.controllers.offri', [])
         return Utils.getSDoWList();
     };
 
+    $scope.allSelected = {};
+    $scope.selectAllDoW = function () {
+        for (var i = 0; i < $scope.recurrencyPopupDoW.length; i++) {
+            $scope.recurrencyPopupDoW[i].checked = $scope.allSelected.allItemsSelected;
+        }
+    };
+
+    $scope.deselect = function () {
+        for (var i = 0; i < $scope.recurrencyPopupDoW.length; i++) {
+            if (!$scope.recurrencyPopupDoW[i].checked) {
+                $scope.allSelected.allItemsSelected = false;
+            }
+        }
+    };
+
     $scope.getArray = function (num) {
         var array = new Array(num);
         for (var i = 0; i < num; i++) {
