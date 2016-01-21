@@ -479,7 +479,6 @@ public class CarPoolingManager {
 							uBooking.setRecurrent(true);
 							uBooking.setAccepted(0);
 							transitStateBooking.add(uBooking);
-//							instance.setBookings(transitStateBooking);
 							
 						}
 					} else if (uBooking.getAccepted() != -1) {
@@ -505,6 +504,7 @@ public class CarPoolingManager {
 		recurrentTravel.getBookings().add(reqBooking);
 		reccurrentTravelRepository.save(recurrentTravel);
 		
+		// update travel instances of recurrent travel.		
 		travelRepository.save(tranistInstances);
 
 		return recurrentTravel;

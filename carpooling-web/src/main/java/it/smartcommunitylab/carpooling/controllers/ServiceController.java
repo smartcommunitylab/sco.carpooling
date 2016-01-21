@@ -112,7 +112,7 @@ public class ServiceController {
 					throws CarPoolingCustomException {
 
 		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId(), (start == null ? 0 : start),
-				(count == null ? 20 : count), from, to, (order == null ? -1 : order), boarded, communityId));
+				(count == null ? 20 : count), from, to, (order == null ? -1 : order), (boarded == null ? false : boarded), communityId));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")

@@ -59,7 +59,6 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
 
 		Query query = new Query();
-		query.addCriteria(criteria);
 		
 		// (optional) - time.
 		if (from != null && from > 0 && to != null && to > 0) {
@@ -73,6 +72,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		// (optional) - boarded.
 		if (boarded) {
 			query.addCriteria(boardedC);
+		} else {
+			query.addCriteria(criteria);
 		}
 			
 		// pagination.

@@ -193,11 +193,11 @@ public class TestManager {
 	public void testRecurrentTravelBooking() throws JsonProcessingException, IOException, ParseException {
 
 		/**
-		 * travel with 4 places, has two recurrent bookings. (since one is rejected, see recurrentTravel.json)
+		 * exist recurrent travel with 4 places.
 		 * user(53) request for non-recurrent booking and allowed. 
 		 * 	-> instance of recurr travel updated.
 		 * user(53) request for non recurrent booking on different date and now allowed.
-		 * user(53) request for recurrent booking -> allowed and overridden.
+		 * user(53) request for recurrent booking -> allowed and overridden (non recurrent booking).
 		 * user(52) request for reccruent booking and allowed.
 		 * user(55) request for reccruent booking and allowed.
 		 * user(56) request for reccruent booking and allowed.
