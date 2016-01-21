@@ -24,6 +24,7 @@
 <!--<div class="list popup-offri-dow" ng-if="recurrency.recurrenceType === 'w'">-->
 <div class="list popup-offri-dow">
     <ion-checkbox ng-repeat="dow in recurrencyPopupDoW" ng-model="dow.checked">{{dow.shortname | translate}}</ion-checkbox>
+    <ion-checkbox>{{'lbl_all' | translate | uppercase}}</ion-checkbox>
     <!--<ion-checkbox ng-model="recurrency.recurrencyDoW[1]" ng-true-value="2" ng-false-value="0">{{'dow_monday_short' | translate}}</ion-checkbox>
     <ion-checkbox ng-model="recurrency.recurrencyDoW[2]" ng-true-value="3" ng-false-value="0">{{'dow_tuesday_short' | translate}}</ion-checkbox>
     <ion-checkbox ng-model="recurrency.recurrencyDoW[3]" ng-true-value="4" ng-false-value="0">{{'dow_wednesday_short' | translate}}</ion-checkbox>

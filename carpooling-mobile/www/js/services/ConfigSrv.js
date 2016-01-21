@@ -5,7 +5,7 @@ angular.module('carpooling.services.config', [])
     var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
     var APPID = 'QZByJ7flOj4rmtN3gpyBhMyw7jONUU3sgzJJT3pL';
     var CLIENTKEY = 'mTCHyDLCaogDtE5IA7g3xM0J0o400j4a8u9Nnc8N';
-    var RECURRENCY = false;
+    var RECURRENCY = true;
 
     var HTTP_CONFIG = {
         timeout: 5000

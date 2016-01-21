@@ -173,9 +173,15 @@
 
 /* Custom */
 
+.popup-offri-dow{
+    text-align: center;
+    background-color: #f7f7f7;
+}
+
 .popup-offri-dow label.item-checkbox {
+    background-color: #f7f7f7;
     display: inline-block;
-    padding: 0;
+    padding: 0.2em;
     text-align: center;
 }
 .popup-offri-dow label.item-checkbox .checkbox {
@@ -185,6 +191,10 @@
     right: auto;
     margin-top: auto;
     padding-bottom: 0;
+}
+.popup-offri-title{
+    font-weight: bold;
+    font-size: 1.2em;
 }
 .item-autocomplete {
     overflow: visible;

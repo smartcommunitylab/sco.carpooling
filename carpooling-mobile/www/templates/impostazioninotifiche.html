@@ -1,16 +1,24 @@
 <ion-view title="{{'lbl_notificationsettings'| translate}}">
     <ion-content class="padding">
         <h4>{{'lbl_notifications'| translate}}</h4>
-        <div class="list">
-            <ion-checkbox class="checkbox" ng-model="newMessage" ng-value="isChecked">{{'lbl_newmessage'| translate}}</ion-checkbox>
-            <ion-checkbox class="checkbox" ng-model="driverVal" ng-value="isChecked">
-                {{'lbl_drivervalutation' | translate}}<br/>
-                <p>{{'lbl_drivervalutation_parenthesis' | translate}}</p>
-            </ion-checkbox>
-            <ion-checkbox class="checkbox" ng-model="passengerVal" ng-value="isChecked">
-                {{'lbl_passengervalutation'| translate}}<br/>
-                <p>{{'lbl_passengervalutation_parenthesis' | translate}}</p>
-            </ion-checkbox>
-        </div>
+        <ul class="list">
+            <li>
+                <ion-checkbox class="checkbox" ng-model="newMessage" ng-value="isChecked">{{'lbl_newmessage'| translate}}</ion-checkbox>
+            </li>
+            <li>
+                <ion-checkbox class="checkbox" ng-model="driverVal" ng-value="isChecked">
+                    {{'lbl_drivervalutation' | translate}}
+                    <br/>
+                    <p>{{'lbl_drivervalutation_parenthesis' | translate}}</p>
+                </ion-checkbox>
+            </li>
+            <li>
+                <ion-checkbox class="checkbox" ng-model="passengerVal" ng-value="isChecked">
+                    {{'lbl_passengervalutation'| translate}}
+                    <br/>
+                    <p>{{'lbl_passengervalutation_parenthesis' | translate}}</p>
+                </ion-checkbox>
+            </li>
+        </ul>
     </ion-content>
 </ion-view>
