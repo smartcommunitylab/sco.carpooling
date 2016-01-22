@@ -18,7 +18,8 @@
                                 <div class="trip-data">
                                     <ul>
                                         <li>
-                                            <!--<i class="icons ion-arrow-return-left padding-right" ng-if="!!trip.recurrency"></i>--><span>{{trip.when | date: travelDateFormat}}</span>
+                                            <!--<span class="cp-recurring"></span>-->
+                                            <span>{{trip.when | date: travelDateFormat}}</span>
                                         </li>
                                         <li>
                                             {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>

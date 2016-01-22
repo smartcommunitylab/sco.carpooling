@@ -173,11 +173,10 @@
 
 /* Custom */
 
-.popup-offri-dow{
+.popup-offri-dow {
     text-align: center;
     background-color: #f7f7f7;
 }
-
 .popup-offri-dow label.item-checkbox {
     background-color: #f7f7f7;
     display: inline-block;
@@ -192,7 +191,7 @@
     margin-top: auto;
     padding-bottom: 0;
 }
-.popup-offri-title{
+.popup-offri-title {
     font-weight: bold;
     font-size: 1.2em;
 }
@@ -523,28 +522,16 @@ table.chart .labels {}
     display: inline-block;
     color: #000000;
     text-align: center;
+    margin-top: 0.2em;
 }
 .carpooling-theme .trip-passengers ul li.trip-places-booked {
-    margin-right: 0.2em;
+    margin-right: 0;
 }
 .carpooling-theme .trip-passengers ul li.trip-places-booked:last-child {
     margin-right: 0;
 }
-.carpooling-theme .trip-passengers ul li.trip-places-left {
-    width: 2.5em;
-    height: 2.5em;
-    font-size: 0.6em;
-    border: 2px solid #3448A5;
-    border-radius: 50%;
-    color: #3448A5;
-}
-.carpooling-theme .trip-passengers ul li.trip-places-left span {
-    line-height: 1.5em;
-}
-.carpooling-theme .trip-passengers ul li.trip-places-left div {
-    font-size: 0.5em;
-    line-height: 1em;
-    margin: 0;
+.carpooling-theme .trip-passengers ul li.trip-places-left{
+    margin-right: 0.2em;
 }
 .carpooling-theme .trip-status {
     text-align: center;
