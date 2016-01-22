@@ -523,6 +523,7 @@ public class CarPoolingManager {
 					reqBooking.setRecurrent(false);
 					reqBooking.getTraveller().setUserId(userId);
 					reqBooking.setAccepted(0);
+					reqBooking.setDate(new java.util.Date(System.currentTimeMillis()));
 					travel.getBookings().add(reqBooking);
 					// save travel.
 					travelRepository.save(travel);

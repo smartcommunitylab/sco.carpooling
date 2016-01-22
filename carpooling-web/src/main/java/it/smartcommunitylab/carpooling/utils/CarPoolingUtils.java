@@ -182,7 +182,8 @@ public class CarPoolingUtils {
 
 		for (Booking booking : travel.getBookings()) {
 
-			if (CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), travelRequest.getWhen())) {
+			if (booking.getDate() != null
+					&& CarPoolingUtils.isBeforeDate(booking.getDate().getTime(), travelRequest.getWhen())) {
 				continue;
 			}
 			// if it is not rejected, occupied.
