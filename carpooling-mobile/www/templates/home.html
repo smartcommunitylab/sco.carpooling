@@ -15,9 +15,9 @@
                     </div>
                     <div class="list" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length > 0">
                         <h5 class="text-center">{{'lbl_tripstoconfirm'| translate}}</h5>
-                        <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
+                        <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips" >
                             <div class="item">
-                                <div class="trip-data">
+                                <div class="trip-data" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
                                     <ul>
                                         <li>
                                             <!--<span class="cp-recurring"></span>-->
@@ -39,13 +39,9 @@
                                     </ul>
                                     <!-- <div class="trip-flag" ng-if="false"></div> -->
                                 </div>
-                                <div class="trip-counter">
-                                    <p class="trip-counter-num">{{nctrip.bookingCounters['available']}}</p>
-                                    <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
-                                </div>
                                 <div class="trip-flag" ng-if="!!nctrip.style" ng-style="nctrip.style"></div>
                                 <!--CHECKMARK-->
-                                <div class="trip-confirmed">
+                                <div class="trip-confirmed" ng-click="confirmDialog($index)">
                                     <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
                                 </div>
                             </div>

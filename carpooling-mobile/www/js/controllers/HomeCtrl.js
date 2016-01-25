@@ -2,7 +2,7 @@ angular.module('carpooling.controllers.home', [])
 
 .controller('AppCtrl', function ($scope, $state) {})
 
-.controller('HomeCtrl', function ($scope, $state, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('HomeCtrl', function ($scope, $state, $filter, $ionicPopup, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
 
     $scope.tab = 0;
 
@@ -50,7 +50,7 @@ angular.module('carpooling.controllers.home', [])
             Utils.loading();
         }
         // read future trips
-        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true, false).then(
+        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true).then(
             function (trips) {
                 $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
 
@@ -63,7 +63,7 @@ angular.module('carpooling.controllers.home', [])
 
                 if (passengerTripsStart == 0) {
                   // read trips to confirm
-                  PassengerSrv.getPassengerTrips(0, 100, false, false).then(function(toConfirm) {
+                  PassengerSrv.getPassengerTrips(0, 100, false, true).then(function(toConfirm) {
                     $scope.nonConfirmedTrips = toConfirm;
                     if (passengerTripsStart === 0) {
                         Utils.loaded();
@@ -83,9 +83,50 @@ angular.module('carpooling.controllers.home', [])
         );
     };
 
-    $scope.selectParticipatedTrip = function (index) {
+    var doConfirm = function($index, confirm) {
+        Utils.loading();
+        PassengerSrv.confirmTrip($scope.nonConfirmedTrips[$index].id, confirm).then(function() {
+          Utils.loaded();
+          $scope.nonConfirmedTrips.splice($index,1);
+        }, function() {
+          Utils.loaded();
+          Utils.toast();
+        });
+    }
+    $scope.confirmDialog = function($index) {
+      var confirmPopup = $ionicPopup.show({
+        title: $filter('translate')('popup_confirm_boarding'),
+        template: $filter('translate')('popup_confirm_boarding_body'),
+        buttons: [
+            {
+                text: $filter('translate')('cancel'),
+                //type: 'button-stable',
+                onTap: function (event) {
+
+                }
+            },
+            {
+                text: $filter('translate')('no'),
+                type: 'button-carpooling',
+                onTap: function (event) {
+                  doConfirm($index, false);
+                }
+            },
+            {
+                text: $filter('translate')('yes'),
+                type: 'button-carpooling',
+                onTap: function (event) {
+                  doConfirm($index, true);
+                }
+            },
+
+        ]
+      });
+    }
+
+    $scope.selectParticipatedTrip = function (index, coll) {
         $state.go('app.viaggio', {
-            'travelId': $scope.passengerTrips[index].id
+            'travelId': coll[index].id
         });
     };
 

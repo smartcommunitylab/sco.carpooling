@@ -47,7 +47,7 @@ angular.module('carpooling.controllers.storico', [])
             Utils.loading();
         }
         // read future trips
-        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, false, true).then(
+        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, false, false).then(
             function (trips) {
                 $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
 
