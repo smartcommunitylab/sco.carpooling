@@ -9,12 +9,11 @@
             <!--        <ion-nav-view name="tab-partecipo"></ion-nav-view>-->
             <ion-view>
                 <ion-content>
+                    <h5 class="text-center" ng-if="!!nonConfirmedTrips">{{'lbl_tripstoconfirm'| translate}}</h5>
                     <div class="padding" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length == 0">
-                        <h5 class="text-center">{{'lbl_tripstoconfirm'| translate}}</h5>
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
                     <div class="list" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length > 0">
-                        <h5 class="text-center">{{'lbl_tripstoconfirm'| translate}}</h5>
                         <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
                             <div class="item">
                                 <div class="trip-data">
@@ -51,12 +50,12 @@
                             </div>
                         </div>
                     </div>
+
+                    <h5 class="text-center" ng-if="!!passengerTrips">{{'lbl_futuretrips'| translate}}</h5>
                     <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
-                        <h5 class="text-center">{{'lbl_futuretrips'| translate}}</h5>
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
                     <div class="list" ng-if="!!passengerTrips && passengerTrips.length > 0">
-                        <h5 class="text-center">{{'lbl_futuretrips'| translate}}</h5>
                         <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index, passengerTrips)">
                             <div class="item">
                                 <div class="trip-data">

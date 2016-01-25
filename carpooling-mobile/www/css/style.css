@@ -157,6 +157,9 @@
     text-align: left;
     padding-left: 50px;
 }
+.carpooling-theme h5:first-child {
+    margin-top: 20px;
+}
 
 /* Community infos */
 
@@ -530,7 +533,7 @@ table.chart .labels {}
 .carpooling-theme .trip-passengers ul li.trip-places-booked:last-child {
     margin-right: 0;
 }
-.carpooling-theme .trip-passengers ul li.trip-places-left{
+.carpooling-theme .trip-passengers ul li.trip-places-left {
     margin-right: 0.2em;
 }
 .carpooling-theme .trip-status {
@@ -626,8 +629,7 @@ table.chart .labels {}
     float: right;
     width: 40%;
 }
-
 h5 {
-  text-transform: uppercase;
-  color: #3448A5;
+    text-transform: uppercase;
+    color: #3448A5;
 }
