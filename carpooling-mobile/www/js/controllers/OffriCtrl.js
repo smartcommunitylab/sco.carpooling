@@ -304,17 +304,17 @@ angular.module('carpooling.controllers.offri', [])
         return Utils.getSDoWList();
     };
 
-    $scope.allSelected = {};
+    $scope.DoWselection = {};
     $scope.selectAllDoW = function () {
         for (var i = 0; i < $scope.recurrencyPopupDoW.length; i++) {
-            $scope.recurrencyPopupDoW[i].checked = $scope.allSelected.allItemsSelected;
+            $scope.recurrencyPopupDoW[i].checked = $scope.DoWselection.all;
         }
     };
 
-    $scope.deselect = function () {
+    $scope.deselectDoW = function () {
         for (var i = 0; i < $scope.recurrencyPopupDoW.length; i++) {
             if (!$scope.recurrencyPopupDoW[i].checked) {
-                $scope.allSelected.allItemsSelected = false;
+                $scope.DoWselection.all = false;
             }
         }
     };
@@ -446,34 +446,24 @@ angular.module('carpooling.controllers.offri', [])
             }
 
             Utils.loading();
+
+            var creationSuccess = function (savedTravel) {
+                Utils.loaded();
+                $state.go('app.home', {}, {
+                    reload: true
+                });
+                Utils.toast(($filter('translate')('toast_trip_offered')));
+            };
+
+            var creationError = function (error) {
+                Utils.loaded();
+                Utils.toast();
+            };
+
             if (!!$scope.travel.recurrency) {
-                DriverSrv.createRecurrentTrip($scope.travel).then(
-                    function (savedTravel) {
-                        Utils.loaded();
-                        $state.go('app.home', {}, {
-                            reload: true
-                        });
-                        Utils.toast(($filter('translate')('toast_trip_offered')));
-                    },
-                    function (error) {
-                        Utils.loaded();
-                        Utils.toast();
-                    }
-                );
+                DriverSrv.createRecurrentTrip($scope.travel).then(creationSuccess, creationError);
             } else {
-                DriverSrv.createTrip($scope.travel).then(
-                    function (savedTravel) {
-                        Utils.loaded();
-                        $state.go('app.home', {}, {
-                            reload: true
-                        });
-                        Utils.toast(($filter('translate')('toast_trip_offered')));
-                    },
-                    function (error) {
-                        Utils.loaded();
-                        Utils.toast();
-                    }
-                );
+                DriverSrv.createTrip($scope.travel).then(creationSuccess, creationError);
             }
         } else {
             Utils.toast(($filter('translate')('toast_auto_disabled')));

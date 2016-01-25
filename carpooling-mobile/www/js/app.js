@@ -638,7 +638,7 @@ angular.module('carpooling', [
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         tab_participated: 'Partecipati',
-        tab_offered: 'Offrerti',
+        tab_offered: 'Offerti',
         title_setrecurrency: 'Imposta ricorrenza settimanale',
         radio_daily: 'Giornaliera',
         radio_weekly: 'Settimanale',

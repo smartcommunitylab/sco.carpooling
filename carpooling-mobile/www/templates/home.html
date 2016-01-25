@@ -6,21 +6,19 @@
 
     <ion-tabs class="tabs-top">
         <ion-tab title="{{'tab_participate' | translate}}" ng-click="selectTab(0)">
-            <!--        <ion-nav-view name="tab-partecipo"></ion-nav-view>-->
             <ion-view>
                 <ion-content>
+                    <h5 class="text-center" ng-if="!!nonConfirmedTrips">{{'lbl_tripstoconfirm'| translate}}</h5>
                     <div class="padding" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length == 0">
-                        <h5 class="text-center">{{'lbl_tripstoconfirm'| translate}}</h5>
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
                     <div class="list" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length > 0">
-                        <h5 class="text-center">{{'lbl_tripstoconfirm'| translate}}</h5>
-                        <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips" >
+                        <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips">
                             <div class="item">
                                 <div class="trip-data" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
                                     <ul>
                                         <li>
-                                            <!--<span class="cp-recurring"></span>-->
+                                            <i class="icon cp-recurring" ng-if="!!nctrip.recurrentId"></i>
                                             <span>{{nctrip.when | date: travelDateFormat}}</span>
                                         </li>
                                         <li>
@@ -37,28 +35,28 @@
                                             <span class="trip-data-requested" ng-if="nctrip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
                                         </li>
                                     </ul>
-                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
+                                    <!--<div class="trip-flag" ng-if="false"></div>-->
                                 </div>
                                 <div class="trip-flag" ng-if="!!nctrip.style" ng-style="nctrip.style"></div>
-                                <!--CHECKMARK-->
+                                <!-- CHECKMARK -->
                                 <div class="trip-confirmed" ng-click="confirmDialog($index)">
                                     <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <h5 class="text-center" ng-if="!!passengerTrips">{{'lbl_futuretrips'| translate}}</h5>
                     <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
-                        <h5 class="text-center">{{'lbl_futuretrips'| translate}}</h5>
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
                     <div class="list" ng-if="!!passengerTrips && passengerTrips.length > 0">
-                        <h5 class="text-center">{{'lbl_futuretrips'| translate}}</h5>
                         <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index, passengerTrips)">
                             <div class="item">
                                 <div class="trip-data">
                                     <ul>
                                         <li>
-                                            <!--<span class="cp-recurring"></span>-->
+                                            <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
                                             <span>{{trip.when | date: travelDateFormat}}</span>
                                         </li>
                                         <li>
@@ -92,7 +90,6 @@
         </ion-tab>
 
         <ion-tab title="{{'tab_offer' | translate}}" ng-click="selectTab(1)">
-            <!--        <ion-nav-view name="tab-offro"></ion-nav-view>-->
             <ion-view>
                 <ion-content ng-init="loadMoreDriverTrips()">
                     <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">
