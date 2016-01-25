@@ -105,14 +105,25 @@ public class ServiceController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips")
-	public @ResponseBody Response<List<Travel>> readPassengerTrips(@RequestParam(required = false) Integer start,
-			@RequestParam(required = false) Integer count, @RequestParam(required = false) Long from,
-			@RequestParam(required = false) Long to, @RequestParam(required = false) Integer order,
-			@RequestParam(required = false) Boolean boarded, @RequestParam(required = false) String communityId)
+	public @ResponseBody Response<List<Travel>> readPassengerTrips(
+			@RequestParam(required = false) Integer start,
+			@RequestParam(required = false) Integer count, 
+			@RequestParam(required = false) Long from,
+			@RequestParam(required = false) Long to, 
+			@RequestParam(required = false) Integer order,
+			@RequestParam(required = false) Boolean boarded, 
+			@RequestParam(required = false) Boolean accepted, 
+			@RequestParam(required = false) String communityId)
 					throws CarPoolingCustomException {
 
-		return new Response<List<Travel>>(carPoolingManager.getPassengerTrips(getUserId(), (start == null ? 0 : start),
-				(count == null ? 20 : count), from == null ? 1 : from, to == null ? Long.MAX_VALUE : to, (order == null ? -1 : order), (boarded == null ? false : boarded), communityId));
+		return new Response<List<Travel>>(
+				carPoolingManager.getPassengerTrips(getUserId(), 
+						(start == null ? 0 : start), (count == null ? 20 : count), 
+						from == null ? 1 : from, to == null ? Long.MAX_VALUE : to, 
+						(order == null ? -1 : order), 
+						boarded, 
+						accepted, 
+						communityId));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/driver/trips")
