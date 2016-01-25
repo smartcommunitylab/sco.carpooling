@@ -242,6 +242,9 @@ placeautocomplete ul li {
 .card.card-community .item {
     padding: 5px;
 }
+.card.card-trip .cp-recurring {
+    color: #3448A5;
+}
 .card.card-trip .trip-data {
     vertical-align: middle;
     position: relative;

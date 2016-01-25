@@ -64,6 +64,7 @@
                                 <div class="trip-data">
                                     <ul>
                                         <li>
+                                            <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
                                             <span>{{trip.when | date: travelDateFormat}}</span>
                                         </li>
                                         <li>

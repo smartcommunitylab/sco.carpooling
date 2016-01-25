@@ -68,10 +68,10 @@
                     <div>{{'lbl_spaces_left' | translate | uppercase}}</div>
                 </li>-->
                 <li class="trip-places-booked" ng-repeat="i in getNumber(bookingCounters.booked) track by $index">
-                    <span class="cp-seat"></span>
+                    <i class="icon cp-seat"></i>
                 </li>
                 <li class="trip-places-left" ng-repeat="i in getNumber(bookingCounters.available) track by $index">
-                    <span class="cp-seat_outline"></span>
+                    <i class="icon cp-seat_outline"></i>
                 </li>
             </ul>
         </div>
