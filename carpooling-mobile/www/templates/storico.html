@@ -3,7 +3,7 @@
     </ion-nav-buttons>
     <ion-tabs class="tabs-top">
         <ion-tab title="{{'tab_participated' | translate}}" ng-click="selectTab(0)">
-            <!--<ion-view>
+            <ion-view>
                 <ion-content>
                     <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
@@ -42,11 +42,11 @@
                     <ion-infinite-scroll ng-if="passengerTripsCanHaveMore" on-infinite="loadMorePassengerTrips()" distance="5%">
                     </ion-infinite-scroll>
                 </ion-content>
-            </ion-view>-->
+            </ion-view>
         </ion-tab>
 
         <ion-tab title="{{'tab_offered' | translate}}" ng-click="selectTab(1)">
-            <!--<ion-view>
+            <ion-view>
                 <ion-content ng-init="loadMoreDriverTrips()">
                     <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
@@ -81,7 +81,7 @@
                     <ion-infinite-scroll ng-if="driverTripsCanHaveMore" on-infinite="loadMoreDriverTrips()" distance="5%">
                     </ion-infinite-scroll>
                 </ion-content>
-            </ion-view>-->
+            </ion-view>
         </ion-tab>
     </ion-tabs>
 </ion-view>

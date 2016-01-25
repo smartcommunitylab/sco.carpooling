@@ -1,15 +1,22 @@
 angular.module('carpooling.services.driver', [])
 
-.factory('DriverSrv', function ($rootScope, $http, $q, Config) {
+.factory('DriverSrv', function ($rootScope, $http, $q, Config, Utils) {
     var driverService = {};
 
-    driverService.getDriverTrips = function (start, count) {
+    driverService.getDriverTrips = function (start, count, future) {
         var deferred = $q.defer();
 
-        var httpConfig = Config.getHTTPConfig();
+        var httpConfig = angular.copy(Config.getHTTPConfig());
+        httpConfig.params = {};
+        if (future) {
+          httpConfig.params.from = new Date().getTime();
+          httpConfig.params.order = 1;
+        } else {
+          httpConfig.params.to = new Date().getTime();
+          httpConfig.params.order = -1;
+        }
 
         if (start != null || count != null) {
-            httpConfig.params = {};
 
             if (start != null) {
                 if (start >= 0) {
@@ -38,6 +45,11 @@ angular.module('carpooling.services.driver', [])
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
+                    response.data.data.forEach(function (trip) {
+                        trip.bookingCounters = Utils.getBookingCounters(trip);
+                        trip.style = Utils.getTripStyle(trip);
+                    });
+
                     deferred.resolve(response.data.data);
                 }
             },

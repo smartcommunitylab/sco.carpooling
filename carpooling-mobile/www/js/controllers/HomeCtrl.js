@@ -18,53 +18,10 @@ angular.module('carpooling.controllers.home', [])
     $scope.travelTimeFormat = 'HH:mm';
 
     $scope.passengerTrips = null;
+    $scope.nonConfirmedTrips = null;
     $scope.driverTrips = null;
 
-    /*
-     * Partecipo
-     */
-    var passengerTripsStart = 0;
-    var passengerTripsCount = 20; // default
-    $scope.passengerTripsCanHaveMore = false;
-
-    $scope.loadMorePassengerTrips = function () {
-        if (passengerTripsStart === 0) {
-            Utils.loading();
-        }
-
-        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount).then(
-            function (trips) {
-                trips.forEach(function (trip) {
-                    // booking counters
-                    trip.bookingCounters = Utils.getBookingCounters(trip);
-
-                    // booking state
-                    trip.bookings.forEach(function (booking) {
-                        if (booking.traveller.userId === StorageSrv.getUserId()) {
-                            // my booking
-                            trip.bookingState = booking.accepted;
-                        }
-                    });
-
-                    trip.style = Utils.getTripStyle(trip);
-                });
-
-                if (passengerTripsStart === 0) {
-                    Utils.loaded();
-                } else {
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                }
-
-                $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
-
-                if (trips.length === passengerTripsCount) {
-                    $scope.passengerTripsCanHaveMore = true;
-                    passengerTripsStart++;
-                } else {
-                    $scope.passengerTripsCanHaveMore = false;
-                }
-            },
-            function (error) {
+    var err = function (error) {
                 if (passengerTripsStart === 0) {
                     Utils.loaded();
                 } else {
@@ -78,7 +35,51 @@ angular.module('carpooling.controllers.home', [])
                 if ($scope.passengerTrips === null) {
                     $scope.passengerTrips = [];
                 }
-            }
+            };
+
+
+    /*
+     * Partecipo
+     */
+    var passengerTripsStart = 0;
+    var passengerTripsCount = 20; // default
+    $scope.passengerTripsCanHaveMore = false;
+
+    $scope.loadMorePassengerTrips = function () {
+        if (passengerTripsStart === 0) {
+            Utils.loading();
+        }
+        // read future trips
+        PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true, false).then(
+            function (trips) {
+                $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
+
+                if (trips.length === passengerTripsCount) {
+                    $scope.passengerTripsCanHaveMore = true;
+                    passengerTripsStart++;
+                } else {
+                    $scope.passengerTripsCanHaveMore = false;
+                }
+
+                if (passengerTripsStart == 0) {
+                  // read trips to confirm
+                  PassengerSrv.getPassengerTrips(0, 100, false, false).then(function(toConfirm) {
+                    $scope.nonConfirmedTrips = toConfirm;
+                    if (passengerTripsStart === 0) {
+                        Utils.loaded();
+                    } else {
+                        $scope.$broadcast('scroll.infiniteScrollComplete');
+                    }
+                  }, err);
+                } else {
+                  if (passengerTripsStart === 0) {
+                      Utils.loaded();
+                  } else {
+                      $scope.$broadcast('scroll.infiniteScrollComplete');
+                  }
+                }
+            },
+          err
         );
     };
 
@@ -100,13 +101,8 @@ angular.module('carpooling.controllers.home', [])
             Utils.loading();
         }
 
-        DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount).then(
+        DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount, true).then(
             function (trips) {
-                trips.forEach(function (trip) {
-                    trip.bookingCounters = Utils.getBookingCounters(trip);
-                    trip.style = Utils.getTripStyle(trip);
-                });
-
                 if (driverTripsStart === 0) {
                     Utils.loaded();
                 } else {

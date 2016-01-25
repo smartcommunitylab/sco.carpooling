@@ -631,6 +631,8 @@ angular.module('carpooling', [
         lbl_number_driver_avg: 'Viaggi offerti ',
         lbl_rating_pass_avg: 'Voto medio viaggi partecipati',
         lbl_rating_driver_avg: 'Voto medio viaggi offerti ',
+        lbl_tripstoconfirm: 'Viaggi da confermare',
+        lbl_futuretrips: 'Prossimi viaggi',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         tab_participated: 'Partecipati',

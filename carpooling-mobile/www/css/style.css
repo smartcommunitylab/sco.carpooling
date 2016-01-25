@@ -626,3 +626,8 @@ table.chart .labels {}
     float: right;
     width: 40%;
 }
+
+h5 {
+  text-transform: uppercase;
+  color: #3448A5;
+}
