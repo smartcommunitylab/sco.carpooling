@@ -45,7 +45,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 	@Override
 	public List<Travel> findTravelByPassengerId(String userId, int pageNum, int pageSize, Long from, Long to
-			, int order, boolean boarded, String communityId) {
+			, int order, Boolean boarded, Boolean accepted, String communityId) {
 		
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
@@ -53,10 +53,18 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		Criteria communityC = new Criteria().where("communityIds").in(communityId);
 
-		Criteria boardedC = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId).and("boarded").ne(0));
+		Criteria elemCriteria = Criteria.where("traveller.userId").is(userId);
+		if (boarded != null) {
+			if (boarded) elemCriteria = elemCriteria.and("boarded").ne(0);
+			else elemCriteria = elemCriteria.and("boarded").is(0);
+		}
+		if (accepted != null) {
+			if (accepted) elemCriteria = elemCriteria.and("accepted").is(1);
+			else elemCriteria = elemCriteria.and("accepted").ne(1);
+		}
 		
 		// check if bookings within travel has travellers with userId
-		Criteria criteria = new Criteria().where("bookings").elemMatch(Criteria.where("traveller.userId").is(userId));
+		Criteria criteria = Criteria.where("bookings").elemMatch(elemCriteria);
 
 		Query query = new Query();
 		
@@ -69,12 +77,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		if (communityId != null && !communityId.isEmpty()) {
 			query.addCriteria(communityC);
 		}
-		// (optional) - boarded.
-		if (boarded) {
-			query.addCriteria(boardedC);
-		} else {
-			query.addCriteria(criteria);
-		}
+		query.addCriteria(criteria);
 			
 		// pagination.
 		query.skip((pageNum - 1) * pageSize);

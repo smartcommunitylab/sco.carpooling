@@ -25,7 +25,7 @@ angular.module('carpooling.services.passenger', [])
         return deferred.promise;
     };
 
-    passengerService.getPassengerTrips = function (start, count, future, confirmed) {
+    passengerService.getPassengerTrips = function (start, count, future, toConfirm) {
         var deferred = $q.defer();
         var httpConfig = angular.copy(Config.getHTTPConfig());
         httpConfig.params = {};
@@ -37,7 +37,10 @@ angular.module('carpooling.services.passenger', [])
         } else {
           httpConfig.params.to = new Date().getTime();
           httpConfig.params.order = -1;
-          if (confirmed) {
+          if (toConfirm) {
+            httpConfig.params.boarded = false;
+            httpConfig.params.accepted = true;
+          } else {
             httpConfig.params.boarded = true;
           }
         }
@@ -224,6 +227,25 @@ angular.module('carpooling.services.passenger', [])
             );
         }
 
+        return deferred.promise;
+    }
+
+    passengerService.confirmTrip = function(tripId, boarded) {
+        var deferred = $q.defer();
+        $http.put(Config.getServerURL() + '/api/passenger/trips/' + tripId + '/boarding/' + (boarded? 'yes':'no'), {}, Config.getHTTPConfig())
+        .then(
+            function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(true);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data.error);
+            }
+        );
         return deferred.promise;
     }
 

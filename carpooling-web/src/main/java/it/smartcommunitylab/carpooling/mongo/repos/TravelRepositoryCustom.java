@@ -24,7 +24,7 @@ import java.util.List;
 public interface TravelRepositoryCustom {
 
 	List<Travel> findTravelByPassengerId(String userId, int start, int count, Long from, Long to, int order,
-			boolean boarded, String communityId);
+			Boolean boarded, Boolean accepted, String communityId);
 	
 	List<Travel> findTravelByDriverId(String userid, int start, int count, Long from, Long to, int order);
 	

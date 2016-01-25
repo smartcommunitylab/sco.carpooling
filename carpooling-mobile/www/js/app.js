@@ -546,6 +546,8 @@ angular.module('carpooling', [
     $translateProvider.translations('it', {
         app_name: 'CARpooling',
         cancel: 'Annulla',
+        yes: 'Si',
+        no: 'No',
         ok: 'OK',
         action_chat: 'Chat',
         action_rate: 'Valuta',
@@ -689,7 +691,9 @@ angular.module('carpooling', [
         toast_booking_rejected: 'La prenotazione è stata rifiutata',
         toast_notification_deleted: 'La notifica è stata cancellata',
         toast_rating_success: 'La valutazione è stata inviata',
-        toast_err_empty_autodescription: 'Fornire la descrizione dell\'auto'
+        toast_err_empty_autodescription: 'Fornire la descrizione dell\'auto',
+        popup_confirm_boarding: 'Conferma viaggio',
+        popup_confirm_boarding_body: 'Confermi di aver partecipato a questo viaggio?'
     });
 
     $translateProvider.preferredLanguage('it');

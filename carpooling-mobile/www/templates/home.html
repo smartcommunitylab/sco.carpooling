@@ -6,7 +6,6 @@
 
     <ion-tabs class="tabs-top">
         <ion-tab title="{{'tab_participate' | translate}}" ng-click="selectTab(0)">
-            <!--        <ion-nav-view name="tab-partecipo"></ion-nav-view>-->
             <ion-view>
                 <ion-content>
                     <h5 class="text-center" ng-if="!!nonConfirmedTrips">{{'lbl_tripstoconfirm'| translate}}</h5>
@@ -16,7 +15,7 @@
                     <div class="list" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length > 0">
                         <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
                             <div class="item">
-                                <div class="trip-data">
+                                <div class="trip-data" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
                                     <ul>
                                         <li>
                                             <!--<span class="cp-recurring"></span>-->
@@ -38,13 +37,9 @@
                                     </ul>
                                     <!-- <div class="trip-flag" ng-if="false"></div> -->
                                 </div>
-                                <div class="trip-counter">
-                                    <p class="trip-counter-num">{{nctrip.bookingCounters['available']}}</p>
-                                    <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
-                                </div>
                                 <div class="trip-flag" ng-if="!!nctrip.style" ng-style="nctrip.style"></div>
                                 <!--CHECKMARK-->
-                                <div class="trip-confirmed">
+                                <div class="trip-confirmed" ng-click="confirmDialog($index)">
                                     <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
                                 </div>
                             </div>
@@ -95,7 +90,6 @@
         </ion-tab>
 
         <ion-tab title="{{'tab_offer' | translate}}" ng-click="selectTab(1)">
-            <!--        <ion-nav-view name="tab-offro"></ion-nav-view>-->
             <ion-view>
                 <ion-content ng-init="loadMoreDriverTrips()">
                     <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">

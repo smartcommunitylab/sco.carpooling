@@ -96,7 +96,7 @@ public class TestRepository {
 		// pagination. 
 //		1453762800 - jan 26
 //		1453849200 - jan 27
-		for (Travel travel : travelRepository.findTravelByPassengerId("52",1,1, 1453762800000L, 1454022000000L, -1, false, "cPCommunity1")) {
+		for (Travel travel : travelRepository.findTravelByPassengerId("52",1,1, 1453762800000L, 1454022000000L, -1, false, null, "cPCommunity1")) {
 			System.out.println(travel.getId());
 		}
 		

@@ -343,8 +343,8 @@ public class CarPoolingManager {
 		travelRequestRepository.save(travelRequest);
 	}
 
-	public List<Travel> getPassengerTrips(String passengerId, int start, int count, Long from, Long to, int order, Boolean boarded, String communityId) {
-		return travelRepository.findTravelByPassengerId(passengerId, start, count, from, to, order, boarded, communityId);
+	public List<Travel> getPassengerTrips(String passengerId, int start, int count, Long from, Long to, int order, Boolean boarded, Boolean accepted, String communityId) {
+		return travelRepository.findTravelByPassengerId(passengerId, start, count, from, to, order, boarded, accepted, communityId);
 	}
 
 	public List<Travel> getDriverTrips(String userId, int start, int count, Long from, Long to, int order) {

@@ -238,7 +238,7 @@ public class TestUser {
 		nonReccBooking.setDate(new java.util.Date(System.currentTimeMillis()));
 		nonReccBooking.setTraveller(new Traveller("52", "User Reccurrent", "User Reccurrent", null));
 
-		List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20, null, null, -1, false, null);
+		List<Travel> userTravels = travelRepository.findTravelByPassengerId("52", 0, 20, null, null, -1, false, null, null);
 		List<Booking> reccBookingsForUser = CarPoolingUtils.getAllReccBookingForUserTravels(userTravels, "52");
 		List<Booking> nonReccBookingsForUser = CarPoolingUtils.getAllNonReccBookingForUserTravels(userTravels, "52");
 
