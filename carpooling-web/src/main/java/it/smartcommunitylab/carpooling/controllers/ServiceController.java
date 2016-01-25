@@ -24,6 +24,7 @@ import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.model.Recurrency;
 import it.smartcommunitylab.carpooling.model.RecurrentBooking;
 import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Response;
@@ -178,6 +179,13 @@ public class ServiceController {
 		return new Response<Booking>(carPoolingManager.updateBoarding(tripId, getUserId(), -1));
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/recurrentrips/{tripId}/recurrency")
+	public @ResponseBody Response<Recurrency> readRecurrency(@PathVariable String tripId)
+			throws CarPoolingCustomException {
+		return new Response<Recurrency>(carPoolingManager.getRecurrency(tripId));
+	}
+
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/monitored")
 	public @ResponseBody Response<List<TravelRequest>> readPassengerMonitoredRequests()
 			throws CarPoolingCustomException {

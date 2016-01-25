@@ -25,6 +25,7 @@ import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.GameProfile;
 import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.model.Recurrency;
 import it.smartcommunitylab.carpooling.model.RecurrentBooking;
 import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Travel;
@@ -1249,6 +1250,17 @@ public class CarPoolingManager {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not found");
 		}
 
+	}
+
+	/**
+	 * @param tripId
+	 * @return
+	 * @throws CarPoolingCustomException 
+	 */
+	public Recurrency getRecurrency(String tripId) throws CarPoolingCustomException {
+		RecurrentTravel rt = reccurrentTravelRepository.findOne(tripId);
+		if (rt != null) return rt.getRecurrency();
+		throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "recurrent travel not found");
 	}
 
 }
