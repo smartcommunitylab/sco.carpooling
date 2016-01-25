@@ -230,6 +230,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     $scope.dateMask = 'dd MMMM yyyy';
     var today = new Date();
     today.setHours(0, 0, 0, 0);
+    var next_month = angular.copy(today);;
+    next_month.setHours(+(24*29));
     var yesterday = angular.copy(today);
     yesterday.setHours(-24);
 
@@ -248,7 +250,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         modalHeaderColor: '',
         modalFooterColor: '',
         from: yesterday,
-        to: new Date(2019, 12, 31, 23, 59, 59),
+        //to: new Date(2019, 12, 31, 23, 59, 59),
+        to: next_month,
         inputDate: today,
         weekDaysList: Utils.getSDoWList(),
         monthList: Utils.getMonthList(),

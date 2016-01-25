@@ -75,6 +75,32 @@ angular.module('carpooling.services.driver', [])
         return deferred.promise;
     };
 
+    driverService.createRecurrentTrip = function (travel) {
+        var deferred = $q.defer();
+
+        if (!travel || !travel.from || !travel.to && !travel.userId) {
+            deferred.reject('Invalid travel');
+        } else {
+            $http.post(Config.getServerURL() + '/api/driver/recurrenttrips', travel, Config.getHTTPConfig())
+
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
     driverService.decideTrip = function (tripId, booking) {
         var deferred = $q.defer();
 

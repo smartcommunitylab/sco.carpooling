@@ -446,19 +446,35 @@ angular.module('carpooling.controllers.offri', [])
             }
 
             Utils.loading();
-            DriverSrv.createTrip($scope.travel).then(
-                function (savedTravel) {
-                    Utils.loaded();
-                    $state.go('app.home', {}, {
-                        reload: true
-                    });
-                    Utils.toast(($filter('translate')('toast_trip_offered')));
-                },
-                function (error) {
-                    Utils.loaded();
-                    Utils.toast();
-                }
-            );
+            if (!!$scope.travel.recurrency) {
+                DriverSrv.createRecurrentTrip($scope.travel).then(
+                    function (savedTravel) {
+                        Utils.loaded();
+                        $state.go('app.home', {}, {
+                            reload: true
+                        });
+                        Utils.toast(($filter('translate')('toast_trip_offered')));
+                    },
+                    function (error) {
+                        Utils.loaded();
+                        Utils.toast();
+                    }
+                );
+            } else {
+                DriverSrv.createTrip($scope.travel).then(
+                    function (savedTravel) {
+                        Utils.loaded();
+                        $state.go('app.home', {}, {
+                            reload: true
+                        });
+                        Utils.toast(($filter('translate')('toast_trip_offered')));
+                    },
+                    function (error) {
+                        Utils.loaded();
+                        Utils.toast();
+                    }
+                );
+            }
         } else {
             Utils.toast(($filter('translate')('toast_auto_disabled')));
         }
