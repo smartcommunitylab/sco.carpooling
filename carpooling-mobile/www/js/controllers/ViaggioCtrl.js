@@ -419,7 +419,22 @@ angular.module('carpooling.controllers.viaggio', [])
             'user': $scope.driverInfo
         });
     };
-
+    /* Show Passenger */
+    $scope.showPassenger = function (booking) {
+        UserSrv.getUser(booking.traveller.userId).then(
+            function (userInfo) {
+                $state.go('app.profilo', {
+                    'user': userInfo
+                });
+                Utils.loaded();
+            },
+            function (error) {
+                Utils.loaded();
+                console.error(error);
+                Utils.toast();
+            }
+        );
+    };
     var mainCommunity = function () {
         if (!!$scope.selectedTrip.communityIds && $scope.selectedTrip.communityIds.length === 1) {
             return StorageSrv.getCommunityById($scope.selectedTrip.communityIds[0]);

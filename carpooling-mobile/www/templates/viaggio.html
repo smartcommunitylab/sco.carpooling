@@ -108,7 +108,7 @@
             <ion-list ng-if="bookingCounters.booked > 0">
                 <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted === 0 || booking.accepted === 1">
                     <!--<i class="icon ion-person"></i>-->
-                    <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
+                    <p ng-click="showPassenger(booking)">{{booking.traveller.name}} {{booking.traveller.surname}}</p>
                     <!--Name Surname-->
                     <button class="button button-carpooling" ng-if="booking.accepted === 0" ng-click="reject(booking)">
                         <i class="icon ion-close-round"></i>
