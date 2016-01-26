@@ -242,7 +242,7 @@ angular.module('carpooling.controllers.offri', [])
         showTodayButton: 'false',
         modalHeaderColor: '',
         modalFooterColor: '',
-        from: yesterday,
+        from: today,
         to: new Date(2019, 12, 31, 23, 59, 59),
         inputDate: today,
         weekDaysList: Utils.getSDoWList(),

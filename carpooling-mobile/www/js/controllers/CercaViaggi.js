@@ -249,7 +249,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         showTodayButton: 'false',
         modalHeaderColor: '',
         modalFooterColor: '',
-        from: yesterday,
+        from: today,
         //to: new Date(2019, 12, 31, 23, 59, 59),
         to: next_month,
         inputDate: today,
