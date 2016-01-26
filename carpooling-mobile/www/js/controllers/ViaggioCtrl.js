@@ -298,6 +298,7 @@ angular.module('carpooling.controllers.viaggio', [])
         var me = StorageSrv.getUser();
 
         var booking = {
+            recurrent: false,
             traveller: {
                 userId: me.userId,
                 name: me.name,
@@ -306,23 +307,64 @@ angular.module('carpooling.controllers.viaggio', [])
             }
         };
 
-        if ($rootScope.isRecurrencyEnabled()) {
-            // FUTURE handle recurrency ('recurrent' and 'date' field, TBD)
+        if ($rootScope.isRecurrencyEnabled() && !!$scope.selectedTrip.recurrendId) {
+            // TODO show popup: single or recurrent booking?
+            var showBookingRecurrencyPopup = $ionicPopup.show({
+                scope: $scope,
+                title: $filter('translate')('popup_recurrency', rateUserParams),
+                templateUrl: 'templates/popup_rate.html',
+                buttons: [
+                    {
+                        text: $filter('translate')('cancel'),
+                        //type: 'button-stable',
+                        onTap: function (event) {}
+                    },
+                    {
+                        text: $filter('translate')('action_confirm'),
+                        type: 'button-carpooling',
+                        onTap: function (event) {
+                            if (booking.recurrent === true) {
+                                delete booking.recurrent;
+                                PassengerSrv.bookRecurrentTrip($scope.travelId, booking).then(
+                                    function (updatedTrip) {
+                                        Utils.loaded();
+                                        // TODO reload list!
+                                    },
+                                    function (error) {
+                                        Utils.loaded();
+                                        Utils.toast();
+                                    }
+                                );
+                            } else {
+                                booking.date = new Date($scope.selectedTrip.when);
+                                PassengerSrv.bookTrip($scope.travelId, booking).then(
+                                    function (updatedTrip) {
+                                        Utils.loaded();
+                                        refreshTrip(updatedTrip);
+                                    },
+                                    function (error) {
+                                        Utils.loaded();
+                                        Utils.toast();
+                                    }
+                                );
+                            }
+                        }
+                    }
+                ]
+            });
         } else {
-            booking.recurrent = false;
             booking.date = new Date($scope.selectedTrip.when);
+            PassengerSrv.bookTrip($scope.travelId, booking).then(
+                function (updatedTrip) {
+                    Utils.loaded();
+                    refreshTrip(updatedTrip);
+                },
+                function (error) {
+                    Utils.loaded();
+                    Utils.toast();
+                }
+            );
         }
-
-        PassengerSrv.bookTrip($scope.travelId, booking).then(
-            function (updatedTrip) {
-                Utils.loaded();
-                refreshTrip(updatedTrip);
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast();
-            }
-        );
     };
 
     $scope.bookingAction = function () {

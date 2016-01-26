@@ -1,27 +1,27 @@
 <ion-view title="{{isMine ? 'lbl_mytrip': 'lbl_trip'| translate}}">
     <ion-content>
         <div ng-if="!isMine">
-          <div id="trip-map-container" data-tap-disabled="true">
-              <leaflet event-broadcast="events" center="center" markers="markers" paths="pathLine" style="width: 100%; height: 200px;" ng-init="initMap()" id="tripMap"></leaflet>
-          </div>
-          <div class="row trip-owner">
-            <div class="col" ng-click="showUser()">
-                <i class="icons ion-person"></i>
-                <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span>
+            <div id="trip-map-container" data-tap-disabled="true">
+                <leaflet event-broadcast="events" center="center" markers="markers" paths="pathLine" style="width: 100%; height: 200px;" ng-init="initMap()" id="tripMap"></leaflet>
             </div>
-            <div class="col" ng-if="mainCommunity != null" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
-                <i class="icons ion-ios-people"></i>
-                <span>{{mainCommunity.name}}</span>
+            <div class="row trip-owner">
+                <div class="col" ng-click="showUser()">
+                    <i class="icons ion-person"></i>
+                    <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span>
+                </div>
+                <div class="col" ng-if="mainCommunity != null" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
+                    <i class="icons ion-ios-people"></i>
+                    <span>{{mainCommunity.name}}</span>
+                </div>
             </div>
-          </div>
         </div>
         <div ng-if="isMine && mainCommunity != null">
-          <div class="row trip-owner">
-            <div class="col" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
-                <i class="icons ion-ios-people"></i>
-                <span>{{mainCommunity.name}}</span>
+            <div class="row trip-owner">
+                <div class="col" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
+                    <i class="icons ion-ios-people"></i>
+                    <span>{{mainCommunity.name}}</span>
+                </div>
             </div>
-          </div>
         </div>
         </div>
 
@@ -82,6 +82,7 @@
             <span ng-if="myBooking.accepted === 1" class="accepted">{{'lbl_trip_accepted' | translate}}</span>
         </div>
 
+        <!-- I AM A PASSENGER -->
         <div class="padding row trip-actions" ng-if="!isMine">
             <div class="col" ng-if="myBooking.accepted === null || myBooking.accepted !== -1">
                 <button class="button button-carpooling" ng-click="bookingAction()" ng-disabled="myBooking.accepted === 0">
@@ -96,6 +97,7 @@
             </div>
         </div>
 
+        <!-- I AM A DRIVER -->
         <!--<div class="padding trip-requests" ng-if="isMine && $scope.selectedTrip.bookings.length > 0">-->
         <div class="trip-requests" ng-if="isMine && !!selectedTrip.bookings && bookingCounters.booked > 0">
             <h5>{{'lbl_requests' | translate}}</h5>
@@ -115,7 +117,7 @@
                         <i class="icon" ng-class="{'ion-checkmark-round': booking.accepted === 0, 'ion-more': booking.accepted === 1}"></i>
                     </button>
                 </a>
-            <!--</div>-->
+                <!--</div>-->
             </ion-list>
         </div>
     </ion-content>

@@ -32,17 +32,17 @@ angular.module('carpooling.services.passenger', [])
 
 
         if (future) {
-          httpConfig.params.from = new Date().getTime();
-          httpConfig.params.order = 1;
+            httpConfig.params.from = new Date().getTime();
+            httpConfig.params.order = 1;
         } else {
-          httpConfig.params.to = new Date().getTime();
-          httpConfig.params.order = -1;
-          if (toConfirm) {
-            httpConfig.params.boarded = false;
-            httpConfig.params.accepted = true;
-          } else {
-            httpConfig.params.boarded = true;
-          }
+            httpConfig.params.to = new Date().getTime();
+            httpConfig.params.order = -1;
+            if (toConfirm) {
+                httpConfig.params.boarded = false;
+                httpConfig.params.accepted = true;
+            } else {
+                httpConfig.params.boarded = true;
+            }
         }
         if (start != null || count != null) {
 
@@ -175,6 +175,34 @@ angular.module('carpooling.services.passenger', [])
         return deferred.promise;
     };
 
+    passengerService.bookRecurrentTrip = function (tripId, recurrentBooking) {
+        var deferred = $q.defer();
+
+        if (!tripId) {
+            deferred.reject('Invalid tripId');
+        } else if (!recurrentBooking || !recurrentBooking.traveller || !recurrentBooking.traveller.userId || !recurrentBooking.traveller.name || !recurrentBooking.traveller.surname) {
+            deferred.reject('Invalid travelRequest');
+        } else {
+            $http.post(Config.getServerURL() + '/api/passenger/recurrenttrips/' + tripId + '/book', recurrentBooking, Config.getHTTPConfig())
+
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
     passengerService.deleteTripRequest = function (travelRequestId) {
         var deferred = $q.defer();
 
@@ -230,22 +258,22 @@ angular.module('carpooling.services.passenger', [])
         return deferred.promise;
     }
 
-    passengerService.confirmTrip = function(tripId, boarded) {
+    passengerService.confirmTrip = function (tripId, boarded) {
         var deferred = $q.defer();
-        $http.put(Config.getServerURL() + '/api/passenger/trips/' + tripId + '/boarding/' + (boarded? 'yes':'no'), {}, Config.getHTTPConfig())
-        .then(
-            function (response) {
-                if (response.data[0] == '<') {
-                    deferred.reject(Config.LOGIN_EXPIRED);
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(true);
+        $http.put(Config.getServerURL() + '/api/passenger/trips/' + tripId + '/boarding/' + (boarded ? 'yes' : 'no'), {}, Config.getHTTPConfig())
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(true);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
                 }
-            },
-            function (responseError) {
-                deferred.reject(responseError.data.error);
-            }
-        );
+            );
         return deferred.promise;
     }
 
