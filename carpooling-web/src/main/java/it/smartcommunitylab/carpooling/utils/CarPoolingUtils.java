@@ -17,6 +17,7 @@
 package it.smartcommunitylab.carpooling.utils;
 
 import it.smartcommunitylab.carpooling.model.Booking;
+import it.smartcommunitylab.carpooling.model.Recurrency;
 import it.smartcommunitylab.carpooling.model.RecurrentBooking;
 import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Travel;
@@ -358,7 +359,39 @@ public class CarPoolingUtils {
 		return null;
 	}
 
+	/**
+	 * check if recurrence applies.
+	 * @param recurrency
+	 * @param temp
+	 * @return
+	 */
+	public static boolean ifRecurrencyApplies(Recurrency recurrency, long temp) {
+		boolean applies = false;
+		Date date = new Date(temp);
+		if (recurrency.getDates() != null && !recurrency.getDates().isEmpty()) {
+			// get days of month.
+			List<Integer> dOM = recurrency.getDates();
+
+			if (dOM.contains(CarPoolingUtils.getDayOfMonth(date))) {
+				applies = true;
+			}
+		} else {
+			// get days of week.
+			List<Integer> dOW = recurrency.getDays();
+			if (dOW.contains(CarPoolingUtils.getDayOfWeek(date))) {
+				applies = true;
+			}
+		}
+
+		return applies;
+	}
 	
+	public static void main (String args[]) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.get(Calendar.DAY_OF_WEEK);
+		CarPoolingUtils.getDayOfWeek(calendar.getTime());
+		
+	}
 
 
 

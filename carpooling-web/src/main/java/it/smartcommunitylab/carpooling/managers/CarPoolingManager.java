@@ -233,27 +233,31 @@ public class CarPoolingManager {
 
 			for (int extendDay = 0; extendDay <= CarPoolingUtils.INSTANCES_THRESHOLD; extendDay++) {
 
+				Recurrency recurrency = recurrentTravel.getRecurrency();
+
 				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(recurrentTravel.getWhen(), extendDay);
-
-				Travel instance = new Travel();
-				// set parent Id.
-				instance.setRecurrentId(recurrentTravel.getId());
-				instance.setFrom(recurrentTravel.getFrom());
-				instance.setTo(recurrentTravel.getTo());
-				instance.setWhen(temp);
-				instance.setRoute(recurrentTravel.getRoute());
-				instance.setUserId(recurrentTravel.getUserId());
-				instance.setPlaces(recurrentTravel.getPlaces());
-				instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
-				instance.setActive(recurrentTravel.isActive());
-				instance.setCommunityIds(recurrentTravel.getCommunityIds());
-
-				travelRepository.save(instance);
-
 				// last instance when to be updated in parent recurrent travel object.
 				if (extendDay == CarPoolingUtils.INSTANCES_THRESHOLD) {
-					recurrentTravel.setLastInstance(instance.getWhen());
+					recurrentTravel.setLastInstance(temp);
 					reccurrentTravelRepository.save(recurrentTravel);
+				}
+
+				// create instance if recurrency applies.
+				if (CarPoolingUtils.ifRecurrencyApplies(recurrency, temp)) {
+					Travel instance = new Travel();
+					// set parent Id.
+					instance.setRecurrentId(recurrentTravel.getId());
+					instance.setFrom(recurrentTravel.getFrom());
+					instance.setTo(recurrentTravel.getTo());
+					instance.setWhen(temp);
+					instance.setRoute(recurrentTravel.getRoute());
+					instance.setUserId(recurrentTravel.getUserId());
+					instance.setPlaces(recurrentTravel.getPlaces());
+					instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
+					instance.setActive(recurrentTravel.isActive());
+					instance.setCommunityIds(recurrentTravel.getCommunityIds());
+
+					travelRepository.save(instance);
 				}
 
 			}
@@ -298,34 +302,40 @@ public class CarPoolingManager {
 		for (RecurrentTravel recurrentTravel : reccurrentTravelRepository
 				.searchTravelsToExtend(CarPoolingUtils.INSTANCES_THRESHOLD)) {
 
-			// get last instance non recurrent instance.
-			Travel previousLastInstance = travelRepository.findTravelByWhen(recurrentTravel.getLastInstance());
+			long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(recurrentTravel.getLastInstance(), 1);
 
-			if (previousLastInstance != null) {
+			Recurrency recurrency = recurrentTravel.getRecurrency();
 
-				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(previousLastInstance.getWhen(), 1);
+			// update recurrent travel.
+			recurrentTravel.setLastInstance(temp);
 
+			if (CarPoolingUtils.ifRecurrencyApplies(recurrency, temp)) {
 				Travel instance = new Travel();
 				// set parent Id.
-				instance.setRecurrentId(previousLastInstance.getRecurrentId());
-				instance.setFrom(previousLastInstance.getFrom());
-				instance.setTo(previousLastInstance.getTo());
+				instance.setRecurrentId(recurrentTravel.getId());
+				instance.setFrom(recurrentTravel.getFrom());
+				instance.setTo(recurrentTravel.getTo());
 				instance.setWhen(temp);
-				instance.setRoute(previousLastInstance.getRoute());
-				instance.setUserId(previousLastInstance.getUserId());
-				instance.setPlaces(previousLastInstance.getPlaces());
-				instance.setIntermediateStops(previousLastInstance.isIntermediateStops());
-				instance.setActive(previousLastInstance.isActive());
-				instance.setCommunityIds(previousLastInstance.getCommunityIds());
-				instance.setBookings(previousLastInstance.getBookings());
+				instance.setRoute(recurrentTravel.getRoute());
+				instance.setUserId(recurrentTravel.getUserId());
+				instance.setPlaces(recurrentTravel.getPlaces());
+				instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
+				instance.setActive(recurrentTravel.isActive());
+				instance.setCommunityIds(recurrentTravel.getCommunityIds());
+				for (RecurrentBooking recurrentBooking : recurrentTravel.getBookings()) {
+					Booking book = new Booking();
+					book.setRecurrent(true);
+					book.setTraveller(recurrentBooking.getTraveller());
+					book.setAccepted(recurrentBooking.getAccepted());
+					book.setDate(new java.util.Date(System.currentTimeMillis()));
+					instance.getBookings().add(book);
+				}
 				// save new instance.
 				travelRepository.save(instance);
-				// update recurrent travel.
-				recurrentTravel.setLastInstance(instance.getWhen());				
 				reccurrentTravelRepository.save(recurrentTravel);
 
 			} else {
-				logger.error("could not find last instance of recurrent travel " + recurrentTravel.getId());
+				logger.info("no instance create as recurrency doesn't apply " + recurrentTravel.getId());
 			}
 		}
 
