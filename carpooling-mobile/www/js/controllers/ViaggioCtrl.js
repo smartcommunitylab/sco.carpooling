@@ -175,7 +175,7 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.reject = function (booking) {
         var deferred = $q.defer();
 
-        // TODO create a confirmation popup for reject
+        // confirmation popup for reject
         $ionicPopup.confirm({
             title: $filter('translate')('popup_confirm_reject', {
                 username: booking.traveller.name + ' ' + booking.traveller.surname
@@ -212,7 +212,7 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.accept = function (booking) {
-        // TODO create a confirmation popup for accept
+        // confirmation popup for accept
         $ionicPopup.confirm({
             title: $filter('translate')('popup_confirm_accept', {
                 username: booking.traveller.name + ' ' + booking.traveller.surname
@@ -315,7 +315,7 @@ angular.module('carpooling.controllers.viaggio', [])
         };
 
         if ($rootScope.isRecurrencyEnabled() && !!$scope.selectedTrip.recurrentId) {
-            // TODO show popup: single or recurrent booking?
+            // popup: single or recurrent booking?
             var showBookingRecurrencyPopup = $ionicPopup.show({
                 scope: $scope,
                 title: $filter('translate')('popup_recurrency'),
@@ -336,7 +336,7 @@ angular.module('carpooling.controllers.viaggio', [])
                                 PassengerSrv.bookRecurrentTrip($scope.selectedTrip.recurrentId, $scope.booking).then(
                                     function (updatedRecurrentTrip) {
                                         Utils.loaded();
-                                        // TODO reload list!
+                                        // TODO reload partecipated trips list!
                                     },
                                     function (error) {
                                         Utils.loaded();
