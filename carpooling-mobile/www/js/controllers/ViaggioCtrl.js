@@ -5,6 +5,7 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.travelTimeFormat = 'HH:mm';
 
     $scope.isMine = null;
+    $scope.isPastTrip = null;
     $scope.driverInfo = {};
 
     $scope.selectedTrip = {};
@@ -55,6 +56,12 @@ angular.module('carpooling.controllers.viaggio', [])
 
     var refreshTrip = function (trip) {
         $scope.selectedTrip = trip;
+        var today = Date.now();
+        if (today > $scope.selectedTrip.when) {
+            $scope.isPastTrip = true;
+        } else {
+            $scope.isPastTrip = false;
+        }
         $scope.mainCommunity = mainCommunity();
 
         if (!!$scope.selectedTrip) {
