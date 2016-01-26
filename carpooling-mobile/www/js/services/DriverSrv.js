@@ -119,7 +119,7 @@ angular.module('carpooling.services.driver', [])
         if (!tripId) {
             deferred.reject('Invalid tripId');
         } else if (!booking || !booking.traveller || !booking.traveller.userId || !booking.traveller.name || !booking.traveller.surname) {
-            deferred.reject('Invalid travel');
+            deferred.reject('Invalid traveller');
         } else {
             $http.post(Config.getServerURL() + '/api/driver/trips/' + tripId + '/accept', booking, Config.getHTTPConfig())
 
@@ -141,7 +141,35 @@ angular.module('carpooling.services.driver', [])
         return deferred.promise;
     };
 
-    driverService.ratePassenger = function (passengerId, rating, booking) {
+    driverService.decideRecurrentTrip = function (recurrentId, recurrentBooking) {
+        var deferred = $q.defer();
+
+        if (!recurrentId) {
+            deferred.reject('Invalid recurrentId');
+        } else if (!recurrentBooking || !recurrentBooking.traveller || !recurrentBooking.traveller.userId || !recurrentBooking.traveller.name || !recurrentBooking.traveller.surname) {
+            deferred.reject('Invalid traveller');
+        } else {
+            $http.post(Config.getServerURL() + '/api/driver/recurrenttrips/' + recurrentId + '/accept', recurrentBooking, Config.getHTTPConfig())
+
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data.error);
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
+    driverService.ratePassenger = function (passengerId, rating, Booking) {
         var deferred = $q.defer();
 
         if (!passengerId) {
