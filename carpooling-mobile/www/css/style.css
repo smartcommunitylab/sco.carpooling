@@ -412,6 +412,15 @@ placeautocomplete ul li {
 #modalMap {
     width: 100%;
 }
+.custom-button-calm {
+    padding: 0;
+    font-size: 0.8em;
+    min-height: 16px;
+    line-height: 0px;
+}
+.zeromargin{
+    margin: 0;
+}
 
 /* USERINFO  */
 
