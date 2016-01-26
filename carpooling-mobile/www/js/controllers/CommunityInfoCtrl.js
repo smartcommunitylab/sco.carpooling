@@ -5,6 +5,7 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.communityTrips = null;
     $scope.communityStyle = null;
     $scope.community = {};
+    $scope.travelTimeFormat = 'HH:mm';
 
     $scope.hasAuto = !!StorageSrv.getUser().auto;
 
