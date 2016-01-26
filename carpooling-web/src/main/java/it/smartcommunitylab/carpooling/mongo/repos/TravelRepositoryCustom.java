@@ -28,7 +28,8 @@ public interface TravelRepositoryCustom {
 	
 	List<Travel> findTravelByDriverId(String userid, int start, int count, Long from, Long to, int order);
 	
-	List<Travel> findTravelByPassengerId(String userId);
+	int countTravelByPassengerId(String userId);
+	int countTravelByDriverId(String userId);
 
 	List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds);
 

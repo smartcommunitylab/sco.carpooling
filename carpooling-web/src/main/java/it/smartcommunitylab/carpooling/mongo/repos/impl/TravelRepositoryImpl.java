@@ -445,8 +445,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	}
 
 	@Override
-	public List<Travel> findTravelByPassengerId(String userId) {
-		List<Travel> travelsForPassenger = new ArrayList<Travel>();
+	public int countTravelByPassengerId(String userId) {
 
 		// check if bookings within travel has travellers with userId
 		Criteria criteria = new Criteria().where("bookings").elemMatch(
@@ -468,9 +467,33 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		}
 		**/
 
-		travelsForPassenger = mongoTemplate.find(query, Travel.class);
+		return (int)mongoTemplate.count(query, Travel.class);
+	}
 
-		return travelsForPassenger;
+	@Override
+	public int countTravelByDriverId(String userId) {
+
+		// check if there exist bookings with boardings
+		Criteria criteria = new Criteria().where("userId").is(userId).and("bookings").elemMatch(
+				Criteria.where("boarded").is(1));
+
+		Query query = new Query();
+		query.addCriteria(criteria);
+
+		/**
+		 Query:{
+			{
+			"bookings": {
+				"$elemMatch": {
+					"traveller.userId": "53",
+					"boarded": 1
+					}
+				}
+			}
+		}
+		**/
+
+		return (int)mongoTemplate.count(query, Travel.class);
 	}
 
 	@Override

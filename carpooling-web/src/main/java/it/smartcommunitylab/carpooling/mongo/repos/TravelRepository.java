@@ -26,9 +26,6 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface TravelRepository extends PagingAndSortingRepository<Travel, String>, TravelRepositoryCustom { 
-
-	@Query("{'userId':?0}")
-	List<Travel> findTravelByDriverId(String userId);
 	
 	@Query("{'userId':?0}")
 	Page<Travel> findTravelByDriverId(String userId, Pageable pageable);

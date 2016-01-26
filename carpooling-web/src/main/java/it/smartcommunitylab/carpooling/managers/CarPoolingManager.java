@@ -1039,9 +1039,9 @@ public class CarPoolingManager {
 		User user = userRepository.findOne(userId);
 		if (user != null) {
 			// get count of user offered travels(as driver).
-			user.setOfferedTravels(travelRepository.findTravelByDriverId(userId).size());
+			user.setOfferedTravels(travelRepository.countTravelByDriverId(userId));
 			// get count user participated travel(as passenger)
-			user.setParticipatedTravels(travelRepository.findTravelByPassengerId(userId).size());
+			user.setParticipatedTravels(travelRepository.countTravelByPassengerId(userId));
 		}
 		return user;
 	}
