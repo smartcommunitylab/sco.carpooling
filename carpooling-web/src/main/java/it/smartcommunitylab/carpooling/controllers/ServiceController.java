@@ -179,7 +179,7 @@ public class ServiceController {
 		return new Response<Booking>(carPoolingManager.updateBoarding(tripId, getUserId(), -1));
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/recurrentrips/{tripId}/recurrency")
+	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/recurrenttrips/{tripId}/recurrency")
 	public @ResponseBody Response<Recurrency> readRecurrency(@PathVariable String tripId)
 			throws CarPoolingCustomException {
 		return new Response<Recurrency>(carPoolingManager.getRecurrency(tripId));
