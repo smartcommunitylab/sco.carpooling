@@ -25,6 +25,7 @@ import it.smartcommunitylab.carpooling.model.Discussion;
 import it.smartcommunitylab.carpooling.model.GameProfile;
 import it.smartcommunitylab.carpooling.model.Message;
 import it.smartcommunitylab.carpooling.model.Notification;
+import it.smartcommunitylab.carpooling.model.Recurrency;
 import it.smartcommunitylab.carpooling.model.RecurrentBooking;
 import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Travel;
@@ -232,27 +233,31 @@ public class CarPoolingManager {
 
 			for (int extendDay = 0; extendDay <= CarPoolingUtils.INSTANCES_THRESHOLD; extendDay++) {
 
+				Recurrency recurrency = recurrentTravel.getRecurrency();
+
 				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(recurrentTravel.getWhen(), extendDay);
-
-				Travel instance = new Travel();
-				// set parent Id.
-				instance.setRecurrentId(recurrentTravel.getId());
-				instance.setFrom(recurrentTravel.getFrom());
-				instance.setTo(recurrentTravel.getTo());
-				instance.setWhen(temp);
-				instance.setRoute(recurrentTravel.getRoute());
-				instance.setUserId(recurrentTravel.getUserId());
-				instance.setPlaces(recurrentTravel.getPlaces());
-				instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
-				instance.setActive(recurrentTravel.isActive());
-				instance.setCommunityIds(recurrentTravel.getCommunityIds());
-
-				travelRepository.save(instance);
-
 				// last instance when to be updated in parent recurrent travel object.
 				if (extendDay == CarPoolingUtils.INSTANCES_THRESHOLD) {
-					recurrentTravel.setLastInstance(instance.getWhen());
+					recurrentTravel.setLastInstance(temp);
 					reccurrentTravelRepository.save(recurrentTravel);
+				}
+
+				// create instance if recurrency applies.
+				if (CarPoolingUtils.ifRecurrencyApplies(recurrency, temp)) {
+					Travel instance = new Travel();
+					// set parent Id.
+					instance.setRecurrentId(recurrentTravel.getId());
+					instance.setFrom(recurrentTravel.getFrom());
+					instance.setTo(recurrentTravel.getTo());
+					instance.setWhen(temp);
+					instance.setRoute(recurrentTravel.getRoute());
+					instance.setUserId(recurrentTravel.getUserId());
+					instance.setPlaces(recurrentTravel.getPlaces());
+					instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
+					instance.setActive(recurrentTravel.isActive());
+					instance.setCommunityIds(recurrentTravel.getCommunityIds());
+
+					travelRepository.save(instance);
 				}
 
 			}
@@ -297,34 +302,40 @@ public class CarPoolingManager {
 		for (RecurrentTravel recurrentTravel : reccurrentTravelRepository
 				.searchTravelsToExtend(CarPoolingUtils.INSTANCES_THRESHOLD)) {
 
-			// get last instance non recurrent instance.
-			Travel previousLastInstance = travelRepository.findTravelByWhen(recurrentTravel.getLastInstance());
+			long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(recurrentTravel.getLastInstance(), 1);
 
-			if (previousLastInstance != null) {
+			Recurrency recurrency = recurrentTravel.getRecurrency();
 
-				long temp = CarPoolingUtils.adjustNumberOfDaysToWhen(previousLastInstance.getWhen(), 1);
+			// update recurrent travel.
+			recurrentTravel.setLastInstance(temp);
 
+			if (CarPoolingUtils.ifRecurrencyApplies(recurrency, temp)) {
 				Travel instance = new Travel();
 				// set parent Id.
-				instance.setRecurrentId(previousLastInstance.getRecurrentId());
-				instance.setFrom(previousLastInstance.getFrom());
-				instance.setTo(previousLastInstance.getTo());
+				instance.setRecurrentId(recurrentTravel.getId());
+				instance.setFrom(recurrentTravel.getFrom());
+				instance.setTo(recurrentTravel.getTo());
 				instance.setWhen(temp);
-				instance.setRoute(previousLastInstance.getRoute());
-				instance.setUserId(previousLastInstance.getUserId());
-				instance.setPlaces(previousLastInstance.getPlaces());
-				instance.setIntermediateStops(previousLastInstance.isIntermediateStops());
-				instance.setActive(previousLastInstance.isActive());
-				instance.setCommunityIds(previousLastInstance.getCommunityIds());
-				instance.setBookings(previousLastInstance.getBookings());
+				instance.setRoute(recurrentTravel.getRoute());
+				instance.setUserId(recurrentTravel.getUserId());
+				instance.setPlaces(recurrentTravel.getPlaces());
+				instance.setIntermediateStops(recurrentTravel.isIntermediateStops());
+				instance.setActive(recurrentTravel.isActive());
+				instance.setCommunityIds(recurrentTravel.getCommunityIds());
+				for (RecurrentBooking recurrentBooking : recurrentTravel.getBookings()) {
+					Booking book = new Booking();
+					book.setRecurrent(true);
+					book.setTraveller(recurrentBooking.getTraveller());
+					book.setAccepted(recurrentBooking.getAccepted());
+					book.setDate(new java.util.Date(System.currentTimeMillis()));
+					instance.getBookings().add(book);
+				}
 				// save new instance.
 				travelRepository.save(instance);
-				// update recurrent travel.
-				recurrentTravel.setLastInstance(instance.getWhen());				
 				reccurrentTravelRepository.save(recurrentTravel);
 
 			} else {
-				logger.error("could not find last instance of recurrent travel " + recurrentTravel.getId());
+				logger.info("no instance create as recurrency doesn't apply " + recurrentTravel.getId());
 			}
 		}
 
@@ -1038,9 +1049,9 @@ public class CarPoolingManager {
 		User user = userRepository.findOne(userId);
 		if (user != null) {
 			// get count of user offered travels(as driver).
-			user.setOfferedTravels(travelRepository.findTravelByDriverId(userId).size());
+			user.setOfferedTravels(travelRepository.countTravelByDriverId(userId));
 			// get count user participated travel(as passenger)
-			user.setParticipatedTravels(travelRepository.findTravelByPassengerId(userId).size());
+			user.setParticipatedTravels(travelRepository.countTravelByPassengerId(userId));
 		}
 		return user;
 	}
@@ -1249,6 +1260,17 @@ public class CarPoolingManager {
 			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "booking not found");
 		}
 
+	}
+
+	/**
+	 * @param tripId
+	 * @return
+	 * @throws CarPoolingCustomException 
+	 */
+	public Recurrency getRecurrency(String tripId) throws CarPoolingCustomException {
+		RecurrentTravel rt = reccurrentTravelRepository.findOne(tripId);
+		if (rt != null) return rt.getRecurrency();
+		throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "recurrent travel not found");
 	}
 
 }

@@ -14,7 +14,21 @@ angular.module('carpooling.services.passenger', [])
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
-                    deferred.resolve(response.data.data);
+                    var trip = response.data.data;
+                    if (trip.recurrentId) {
+                      $http.get(Config.getServerURL() + '/api/passenger/recurrenttrips/' + trip.recurrentId+'/recurrency', Config.getHTTPConfig())
+                      .then(
+                        function(recData) {
+                          trip.recurrency = recData.data.data;
+                          deferred.resolve(trip);
+                        },
+                        function(responseError) {
+                            deferred.reject(responseError.data.error);
+                        }
+                      );
+                    } else {
+                      deferred.resolve(trip);
+                    }
                 }
             },
             function (responseError) {

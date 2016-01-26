@@ -53,7 +53,7 @@ import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
  * @author nawazk
  * 
  */
-@org.junit.Ignore
+//@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestManager {
@@ -152,7 +152,7 @@ public class TestManager {
 	}
 	
 	@Test
-	public void TestV2ExtendInstances() throws JsonProcessingException, IOException, CarPoolingCustomException {
+	public void TestV2CreateExtendInstances() throws JsonProcessingException, IOException, CarPoolingCustomException {
 
 		InputStream reqTravel = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("travelsRecurr-v2.json");
@@ -167,11 +167,12 @@ public class TestManager {
 			carPoolingManager.saveRecurrentTravel(reccurrTravel, "52");
 		}
 		
-		// call extension
+		Assert.assertEquals(travelRepository.count(), 9);
 		
+		// call extension
 		carPoolingManager.autoExtendRecurrTravelInstances();
 		
-		Assert.assertEquals(travelRepository.count(), 32);
+		Assert.assertEquals(travelRepository.count(), 10);
 
 	}
 
