@@ -5,7 +5,7 @@
 
     <ion-tabs class="tabs-top">
         <!-- Informazioni Tab -->
-        <ion-tab icon="ion-ios-information">
+        <ion-tab icon="ion-ios-information" ng-click="selectTab(0)">
             <ion-view class="info">
                 <ion-content class="has-header padding">
                     <div>
@@ -24,7 +24,7 @@
         </ion-tab>
 
         <!-- Componenti Tab -->
-        <ion-tab icon="ion-android-people">
+        <ion-tab icon="ion-android-people" ng-click="selectTab(1)">
             <ion-view>
                 <ion-content class="has-header padding components">
                     <h5>{{'lbl_components'| translate | uppercase}}</h5>
@@ -38,7 +38,7 @@
                                     <span class="padding-left">
                                         <i class="icons ion-person padding-right"></i>
                                         <span ng-if="!!user.name || !!user.surname">{{user.name}} {{user.surname}}</span>
-                                        <span ng-if="!user.name && !user.surname">{{'lbl_user_anonymous' | translate}}</span>
+                                    <span ng-if="!user.name && !user.surname">{{'lbl_user_anonymous' | translate}}</span>
                                     </span>
                                 </li>
                             </ul>
@@ -47,8 +47,9 @@
                 </ion-content>
             </ion-view>
         </ion-tab>
+
         <!-- Viaggi Tab -->
-        <ion-tab icon="ion-location">
+        <ion-tab icon="ion-location" ng-click="selectTab(2)">
             <ion-view>
                 <ion-content class="has-header padding community-trips">
                     <button class="button button-block button-carpooling" ng-click="addTrip()">

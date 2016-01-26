@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, MapSrv, Config, $filter, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, $filter, MapSrv, Config, CacheSrv, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -194,6 +194,7 @@ angular.module('carpooling.controllers.viaggio', [])
                         function (data) {
                             Utils.loaded();
                             refreshTrip(data);
+                            CacheSrv.setReloadDriverTrip($scope.selectedTrip.id);
                             Utils.toast(($filter('translate')('toast_booking_rejected')));
                             deferred.resolve();
                         },
@@ -230,6 +231,7 @@ angular.module('carpooling.controllers.viaggio', [])
                         function (data) {
                             Utils.loaded();
                             refreshTrip(data);
+                            CacheSrv.setReloadDriverTrip($scope.selectedTrip.id);
                             Utils.toast(($filter('translate')('toast_booking_accepted')));
                         },
                         function (error) {
@@ -301,10 +303,8 @@ angular.module('carpooling.controllers.viaggio', [])
      * Passenger
      */
     $scope.book = function () {
-        Utils.loading();
         var me = StorageSrv.getUser();
-
-        var booking = {
+        $scope.booking = {
             recurrent: false,
             traveller: {
                 userId: me.userId,
@@ -314,12 +314,12 @@ angular.module('carpooling.controllers.viaggio', [])
             }
         };
 
-        if ($rootScope.isRecurrencyEnabled() && !!$scope.selectedTrip.recurrendId) {
+        if ($rootScope.isRecurrencyEnabled() && !!$scope.selectedTrip.recurrentId) {
             // TODO show popup: single or recurrent booking?
             var showBookingRecurrencyPopup = $ionicPopup.show({
                 scope: $scope,
-                title: $filter('translate')('popup_recurrency', rateUserParams),
-                templateUrl: 'templates/popup_rate.html',
+                title: $filter('translate')('popup_recurrency'),
+                templateUrl: 'templates/popup_recurrency.html',
                 buttons: [
                     {
                         text: $filter('translate')('cancel'),
@@ -330,10 +330,11 @@ angular.module('carpooling.controllers.viaggio', [])
                         text: $filter('translate')('action_confirm'),
                         type: 'button-carpooling',
                         onTap: function (event) {
-                            if (booking.recurrent === true) {
-                                delete booking.recurrent;
-                                PassengerSrv.bookRecurrentTrip($scope.travelId, booking).then(
-                                    function (updatedTrip) {
+                            if ($scope.booking.recurrent === true) {
+                                Utils.loading();
+                                delete $scope.booking.recurrent;
+                                PassengerSrv.bookRecurrentTrip($scope.selectedTrip.recurrentId, $scope.booking).then(
+                                    function (updatedRecurrentTrip) {
                                         Utils.loaded();
                                         // TODO reload list!
                                     },
@@ -343,11 +344,13 @@ angular.module('carpooling.controllers.viaggio', [])
                                     }
                                 );
                             } else {
-                                booking.date = new Date($scope.selectedTrip.when);
-                                PassengerSrv.bookTrip($scope.travelId, booking).then(
+                                Utils.loading();
+                                $scope.booking.date = new Date($scope.selectedTrip.when);
+                                PassengerSrv.bookTrip($scope.travelId, $scope.booking).then(
                                     function (updatedTrip) {
                                         Utils.loaded();
                                         refreshTrip(updatedTrip);
+                                        CacheSrv.setReloadPassengerTrips(true);
                                     },
                                     function (error) {
                                         Utils.loaded();
@@ -360,8 +363,9 @@ angular.module('carpooling.controllers.viaggio', [])
                 ]
             });
         } else {
-            booking.date = new Date($scope.selectedTrip.when);
-            PassengerSrv.bookTrip($scope.travelId, booking).then(
+            Utils.loading();
+            $scope.booking.date = new Date($scope.selectedTrip.when);
+            PassengerSrv.bookTrip($scope.travelId, $scope.booking).then(
                 function (updatedTrip) {
                     Utils.loaded();
                     refreshTrip(updatedTrip);

@@ -2,7 +2,7 @@ angular.module('carpooling.controllers.home', [])
 
 .controller('AppCtrl', function ($scope, $state) {})
 
-.controller('HomeCtrl', function ($scope, $state, $filter, $ionicPopup, Config, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('HomeCtrl', function ($scope, $state, $filter, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
 
     $scope.tab = 0;
 
@@ -21,23 +21,6 @@ angular.module('carpooling.controllers.home', [])
     $scope.nonConfirmedTrips = null;
     $scope.driverTrips = null;
 
-    var err = function (error) {
-                if (passengerTripsStart === 0) {
-                    Utils.loaded();
-                } else {
-                    $scope.$broadcast('scroll.infiniteScrollComplete');
-                }
-
-                if (error !== Config.LOGIN_EXPIRED) {
-                    Utils.toast();
-                }
-
-                if ($scope.passengerTrips === null) {
-                    $scope.passengerTrips = [];
-                }
-            };
-
-
     /*
      * Partecipo
      */
@@ -45,13 +28,77 @@ angular.module('carpooling.controllers.home', [])
     var passengerTripsCount = 20; // default
     $scope.passengerTripsCanHaveMore = false;
 
-    $scope.loadMorePassengerTrips = function () {
+    var enrichTrip = function (trip) {
+        trip.style = Utils.getTripStyle(trip);
+
+        // booking counters
+        trip.bookingCounters = Utils.getBookingCounters(trip);
+
+        // booking state
+        if (trip.userId !== StorageSrv.getUserId()) {
+            trip.bookings.forEach(function (booking) {
+                if (booking.traveller.userId === StorageSrv.getUserId()) {
+                    // my booking
+                    trip.bookingState = booking.accepted;
+                }
+            });
+        }
+    };
+
+    var errorGettingPassengerTrips = function (error) {
+        if (passengerTripsStart === 0) {
+            Utils.loaded();
+        } else {
+            $scope.$broadcast('scroll.infiniteScrollComplete');
+        }
+
+        if (error !== Config.LOGIN_EXPIRED) {
+            Utils.toast();
+        }
+
+        if ($scope.passengerTrips === null) {
+            $scope.passengerTrips = [];
+        }
+    };
+
+    $scope.loadMorePassengerTrips = function (reset) {
         if (passengerTripsStart === 0) {
             Utils.loading();
         }
+
+        if (reset) {
+            $scope.passengerTrips = null;
+        }
+
+        // read trips to confirm
+        // TODO use CacheSrv for these trips too?
+        PassengerSrv.getPassengerTrips(0, 100, false, true).then(
+            function (toConfirm) {
+                $scope.nonConfirmedTrips = toConfirm;
+                if (passengerTripsStart === 0) {
+                    Utils.loaded();
+                } else {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+            },
+            errorGettingPassengerTrips
+        );
+
         // read future trips
         PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true).then(
             function (trips) {
+                CacheSrv.setReloadPassengerTrips(false);
+
+                trips.forEach(function (trip) {
+                    enrichTrip(trip);
+                });
+
+                if (passengerTripsStart === 0) {
+                    Utils.loaded();
+                } else {
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+
                 $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
 
                 if (trips.length === passengerTripsCount) {
@@ -60,69 +107,49 @@ angular.module('carpooling.controllers.home', [])
                 } else {
                     $scope.passengerTripsCanHaveMore = false;
                 }
-
-                if (passengerTripsStart == 0) {
-                  // read trips to confirm
-                  PassengerSrv.getPassengerTrips(0, 100, false, true).then(function(toConfirm) {
-                    $scope.nonConfirmedTrips = toConfirm;
-                    if (passengerTripsStart === 0) {
-                        Utils.loaded();
-                    } else {
-                        $scope.$broadcast('scroll.infiniteScrollComplete');
-                    }
-                  }, err);
-                } else {
-                  if (passengerTripsStart === 0) {
-                      Utils.loaded();
-                  } else {
-                      $scope.$broadcast('scroll.infiniteScrollComplete');
-                  }
-                }
             },
-          err
+            errorGettingPassengerTrips
         );
     };
 
-    var doConfirm = function($index, confirm) {
+    var doConfirm = function ($index, confirm) {
         Utils.loading();
-        PassengerSrv.confirmTrip($scope.nonConfirmedTrips[$index].id, confirm).then(function() {
-          Utils.loaded();
-          $scope.nonConfirmedTrips.splice($index,1);
-        }, function() {
-          Utils.loaded();
-          Utils.toast();
+        PassengerSrv.confirmTrip($scope.nonConfirmedTrips[$index].id, confirm).then(function () {
+            Utils.loaded();
+            $scope.nonConfirmedTrips.splice($index, 1);
+        }, function () {
+            Utils.loaded();
+            Utils.toast();
         });
-    }
-    $scope.confirmDialog = function($index) {
-      var confirmPopup = $ionicPopup.show({
-        title: $filter('translate')('popup_confirm_boarding'),
-        template: $filter('translate')('popup_confirm_boarding_body'),
-        buttons: [
-            {
-                text: $filter('translate')('cancel'),
-                //type: 'button-stable',
-                onTap: function (event) {
+    };
 
+    $scope.confirmDialog = function ($index) {
+        var confirmPopup = $ionicPopup.show({
+            title: $filter('translate')('popup_confirm_boarding'),
+            template: $filter('translate')('popup_confirm_boarding_body'),
+            buttons: [
+                {
+                    text: $filter('translate')('cancel'),
+                    //type: 'button-stable',
+                    onTap: function (event) {}
+                },
+                {
+                    text: $filter('translate')('no'),
+                    type: 'button-carpooling',
+                    onTap: function (event) {
+                        doConfirm($index, false);
+                    }
+                },
+                {
+                    text: $filter('translate')('yes'),
+                    type: 'button-carpooling',
+                    onTap: function (event) {
+                        doConfirm($index, true);
+                    }
                 }
-            },
-            {
-                text: $filter('translate')('no'),
-                type: 'button-carpooling',
-                onTap: function (event) {
-                  doConfirm($index, false);
-                }
-            },
-            {
-                text: $filter('translate')('yes'),
-                type: 'button-carpooling',
-                onTap: function (event) {
-                  doConfirm($index, true);
-                }
-            },
-
-        ]
-      });
-    }
+            ]
+        });
+    };
 
     $scope.selectParticipatedTrip = function (index, coll) {
         $state.go('app.viaggio', {
@@ -137,13 +164,23 @@ angular.module('carpooling.controllers.home', [])
     var driverTripsCount = 20; // default
     $scope.driverTripsCanHaveMore = false;
 
-    $scope.loadMoreDriverTrips = function () {
+    $scope.loadMoreDriverTrips = function (reset) {
         if (driverTripsStart === 0) {
             Utils.loading();
         }
 
+        if (reset) {
+            $scope.driverTrips = null;
+        }
+
         DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount, true).then(
             function (trips) {
+                CacheSrv.setReloadDriverTrips(false);
+
+                trips.forEach(function (trip) {
+                    enrichTrip(trip);
+                });
+
                 if (driverTripsStart === 0) {
                     Utils.loaded();
                 } else {
@@ -186,5 +223,35 @@ angular.module('carpooling.controllers.home', [])
     /*
      * init
      */
-    $scope.loadMorePassengerTrips();
+    $scope.$on('$ionicView.enter', function () {
+        if ($scope.tab === 0) {
+            if (CacheSrv.reloadPassengerTrips()) {
+                $scope.loadMorePassengerTrips(true);
+            }
+        } else if ($scope.tab === 1) {
+            if (CacheSrv.reloadDriverTrips()) {
+                $scope.loadMoreDriverTrips(true);
+            } else if (!!CacheSrv.reloadDriverTrip()) {
+                var tripId = CacheSrv.reloadDriverTrip();
+                PassengerSrv.getTrip(tripId).then(
+                    function (updatedTrip) {
+                        CacheSrv.setReloadDriverTrip(null);
+                        for (var i = 0; i < $scope.driverTrips.length; i++) {
+                            if ($scope.driverTrips[i].id === updatedTrip.id) {
+                                $scope.driverTrips[i] = updatedTrip;
+                                enrichTrip($scope.driverTrips[i]);
+                                i = $scope.driverTrips.length;
+                            }
+                        }
+                        Utils.loaded();
+                    },
+                    function (error) {
+                        CacheSrv.setReloadDriverTrip(null);
+                        Utils.loaded();
+                        $scope.loadMoreDriverTrips(true);
+                    }
+                );
+            }
+        }
+    });
 });

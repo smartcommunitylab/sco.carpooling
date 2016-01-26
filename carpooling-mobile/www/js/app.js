@@ -15,6 +15,7 @@ angular.module('carpooling', [
     'carpooling.services.geo',
     'carpooling.services.storage',
     'carpooling.services.utils',
+    'carpooling.services.cache',
     'carpooling.directives',
     'carpooling.controllers.home',
     'carpooling.controllers.storico',
@@ -365,7 +366,6 @@ angular.module('carpooling', [
 
     .state('app.home', {
         url: '/home',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/home.html',
