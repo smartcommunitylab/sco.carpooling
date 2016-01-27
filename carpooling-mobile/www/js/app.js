@@ -376,7 +376,6 @@ angular.module('carpooling', [
 
     .state('app.storico', {
         url: '/storico',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/storico.html',

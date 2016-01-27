@@ -1,6 +1,6 @@
 angular.module('carpooling.services.passenger', [])
 
-.factory('PassengerSrv', function ($rootScope, $http, $q, Config, Utils, StorageSrv) {
+.factory('PassengerSrv', function ($rootScope, $http, $q, Config, Utils, StorageSrv, CacheSrv) {
     var passengerService = {};
 
     /*
@@ -284,6 +284,7 @@ angular.module('carpooling.services.passenger', [])
                         deferred.reject(Config.LOGIN_EXPIRED);
                         $rootScope.login();
                     } else {
+                        CacheSrv.setReloadStoricoPassengerTrips(false);
                         deferred.resolve(true);
                     }
                 },
