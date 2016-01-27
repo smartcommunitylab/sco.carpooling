@@ -21,6 +21,7 @@ import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.TravelRepositoryCustom;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
+import it.smartcommunitylab.carpooling.utils.Location;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -291,8 +292,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		List<Travel> travels = new ArrayList<Travel>();
 
 		Criteria commonCriteria = new Criteria().where("active").is(true);
-		/** community. **/
 		
+		/** community. **/
 		Criteria communityCriteria = null;
 		if (travelRequest.getCommunityIds() != null && !travelRequest.getCommunityIds().isEmpty()) {
 			communityCriteria = new Criteria().where("communityIds").in(travelRequest.getCommunityIds());
@@ -360,6 +361,106 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		return travels;
 	}
 	
+	@Override
+	public List<Travel> searchTravelsExtended(TravelRequest travelRequest) {
+		
+		List<Travel> travels = new ArrayList<Travel>();
+
+		Criteria commonCriteria = new Criteria().where("active").is(true);
+	
+		/** community. **/
+		Criteria communityCriteria = null;
+		if (travelRequest.getCommunityIds() != null && !travelRequest.getCommunityIds().isEmpty()) {
+			communityCriteria = new Criteria().where("communityIds").in(travelRequest.getCommunityIds());
+		}
+		
+		/** time. **/
+		Date reqDate = new Date(travelRequest.getWhen());
+		// match +-1hr.
+		Date timePlusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, 1);
+		Date timeMinusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, -1);
+		Criteria timeCriteria = new Criteria().where("when").gte(timeMinusOneHour.getTime())
+				.lte(timePlusOneHour.getTime());
+		
+		Query query = new Query();
+		query.addCriteria(commonCriteria);
+		query.addCriteria(timeCriteria);
+		
+		if (communityCriteria != null) {
+			query.addCriteria(communityCriteria);
+		}
+		
+		// find set of travels.
+		// call a function take takes
+		
+		
+		List<Travel> timeCommunityTravels = mongoTemplate.find(query, Travel.class);
+		
+		for (Travel checkTravel: timeCommunityTravels) {
+			
+			if (isGeoValid(checkTravel, travelRequest)) {
+				travels.add(checkTravel);
+			}
+		}
+	
+		return travels;
+		
+	}
+	
+	private boolean isGeoValid(Travel checkTravel, TravelRequest travelRequest) {
+		
+		boolean isGeoValid = false;
+
+		Point pFrom = new Point(travelRequest.getFrom().getLatitude(), travelRequest.getFrom().getLongitude());
+		double radiusFrom = travelRequest.getFrom().getRange();
+
+		Point pTo = new Point(travelRequest.getTo().getLatitude(), travelRequest.getTo().getLongitude());
+		double radiusTo = travelRequest.getTo().getRange();
+
+		String polyLine = checkTravel.getRoute().getLeg().get(0).getLegGeometery().getPoints();
+
+		List<Location> polyLinePoints = CarPoolingUtils.decode(polyLine, 1E-5);
+
+		int sIndex = getNearPointIndexOnPolyLine(polyLinePoints, pFrom, radiusFrom);
+
+		int dIndex = getNearPointIndexOnPolyLine(polyLinePoints, pTo, radiusTo);
+
+		if (sIndex > -1 && dIndex > -1 && sIndex < dIndex) {
+			isGeoValid = true;
+
+		}
+
+		return isGeoValid;
+	}
+
+	private int getNearPointIndexOnPolyLine(List<Location> polyLinePoints, Point reqPoint, double radiusFrom) {
+
+		int index = -1;
+
+		double distance = 0;
+
+		for (int i = 0; i < polyLinePoints.size(); i++) {
+
+			Location location = polyLinePoints.get(i);
+
+			double temp = CarPoolingUtils.calculateHarvesineDistance(reqPoint.getX(), reqPoint.getY(),
+					location.getLatitude(), location.getLongitude());
+
+			if (distance == 0) {
+				distance = temp;
+			}
+			
+			if (temp <= distance && temp <= radiusFrom) {
+				distance = temp;
+				index = i;
+
+			}
+
+		}
+
+		return index;
+	}
+
 	@Override
 	public List<Travel> searchCommunityTravels(String communityId, Long timeInMillies) {
 
@@ -539,6 +640,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		return mongoTemplate.find(query, Travel.class);
 
 	}
+
+
 
 
 }

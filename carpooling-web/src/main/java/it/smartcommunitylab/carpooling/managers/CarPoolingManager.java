@@ -371,7 +371,7 @@ public class CarPoolingManager {
 
 		List<Travel> searchTravels = new ArrayList<Travel>();
 
-		searchTravels = travelRepository.searchTravels(travelRequest);
+		searchTravels = travelRepository.searchTravelsExtended(travelRequest);
 
 		if (travelRequest.isMonitored()) {
 
