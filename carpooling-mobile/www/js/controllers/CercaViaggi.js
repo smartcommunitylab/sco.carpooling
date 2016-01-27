@@ -230,10 +230,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     $scope.dateMask = 'dd MMMM yyyy';
     var today = new Date();
     today.setHours(0, 0, 0, 0);
-    var next_month = angular.copy(today);;
-    next_month.setHours(+(24*29));
-    var yesterday = angular.copy(today);
-    yesterday.setHours(-24);
+    var nextMonth = angular.copy(today);;
+    nextMonth.setHours(+(24*30));
 
     $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
@@ -251,7 +249,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         modalFooterColor: '',
         from: today,
         //to: new Date(2019, 12, 31, 23, 59, 59),
-        to: next_month,
+        to: nextMonth,
         inputDate: today,
         weekDaysList: Utils.getSDoWList(),
         monthList: Utils.getMonthList(),
