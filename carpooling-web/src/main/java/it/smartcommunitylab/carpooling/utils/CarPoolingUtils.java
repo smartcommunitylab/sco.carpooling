@@ -386,13 +386,77 @@ public class CarPoolingUtils {
 		return applies;
 	}
 	
-	public static void main (String args[]) {
+	/**
+	 * Harvesine Formula to get distance between coordinates.
+	 * 
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @return distance
+	 */
+	public static double calculateHarvesineDistance(double lat1, double lon1, double lat2, double lon2) {
+		/**
+		 * R = earth’s radius (mean radius = 6,371km)
+		 * Δlat = lat2− lat1
+		 * Δlong = long2− long1
+		 * a = sin²(Δlat/2) + cos(lat1).cos(lat2).sin²(Δlong/2)
+		 * c = 2.atan2(√a, √(1−a))
+		 * d = R.c
+		 */
+		double distance = 0;
+		final int R = 6371; // Radius of the earth km.
+		Double latDistance = toRad(lat2 - lat1);
+		Double lonDistance = toRad(lon2 - lon1);
+		Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+				+ Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+		Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		distance = R * c;
+		return distance;
+	}
+
+	private static Double toRad(Double value) {
+		return value * Math.PI / 180;
+	}
+
+	public static ArrayList<Location> decode(String encodedString, double d) {
+		ArrayList<Location> polyline = new ArrayList<Location>();
+		int index = 0;
+		int len = encodedString.length();
+		double lat = 0, lng = 0;
+
+		while (index < len) {
+			int b, shift = 0, result = 0;
+			do {
+				b = encodedString.charAt(index++) - 63;
+				result |= (b & 0x1f) << shift;
+				shift += 5;
+			} while (b >= 0x20);
+			int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+			lat += dlat;
+
+			shift = 0;
+			result = 0;
+			do {
+				b = encodedString.charAt(index++) - 63;
+				result |= (b & 0x1f) << shift;
+				shift += 5;
+			} while (b >= 0x20);
+			int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+			lng += dlng;
+
+			Location p = new Location(lat * d, lng * d);
+			polyline.add(p);
+		}
+
+		return polyline;
+	}
+	
+	public static void main(String args[]) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.get(Calendar.DAY_OF_WEEK);
 		CarPoolingUtils.getDayOfWeek(calendar.getTime());
-		
+
 	}
-
-
 
 }

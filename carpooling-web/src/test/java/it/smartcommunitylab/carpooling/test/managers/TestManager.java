@@ -160,7 +160,7 @@ public class TestManager {
 		TravelRequest travelRequest = mapper.convertValue(arrNodeTReq.get(0), TravelRequest.class);
 		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 30));
 
-		List<Travel> travels = travelRepository.searchTravels(travelRequest);
+		List<Travel> travels = travelRepository.searchTravelsExtended(travelRequest);
 
 		Assert.assertEquals(travels.size(), 1);
 		// driver has same community as of user.
@@ -183,7 +183,7 @@ public class TestManager {
 		
 		travelRequest.setCommunityIds(community);
 		
-		travels = travelRepository.searchTravels(travelRequest);
+		travels = travelRepository.searchTravelsExtended(travelRequest);
 		
 		Assert.assertEquals(travels.size(), 0);
 

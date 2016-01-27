@@ -25,10 +25,11 @@ public interface TravelRepositoryCustom {
 
 	List<Travel> findTravelByPassengerId(String userId, int start, int count, Long from, Long to, int order,
 			Boolean boarded, Boolean accepted, String communityId);
-	
+
 	List<Travel> findTravelByDriverId(String userid, int start, int count, Long from, Long to, int order);
-	
+
 	int countTravelByPassengerId(String userId);
+
 	int countTravelByDriverId(String userId);
 
 	List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds);
@@ -39,11 +40,13 @@ public interface TravelRepositoryCustom {
 
 	List<Travel> searchTravels(TravelRequest travelRequest);
 	
+	List<Travel> searchTravelsExtended(TravelRequest travelRequest);
+
 	List<Travel> searchCommunityTravels(String communityId, Long timeInMillies);
 
 	List<Travel> searchCompletedTravels(Long timeInMillies);
-	
+
 	Travel findOneInstanceOfRecurrTravel(TravelRequest travelRequest, String reccurentTravelId);
-	
+
 	List<Travel> findFutureInstanceOfRecurrTravel(String reccurentId);
 }
