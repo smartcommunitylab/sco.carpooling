@@ -101,7 +101,7 @@ public class CarPoolingManager {
 		// search for plan.
 		List<Itinerary> itns = mobilityPlanner.plan(travel.getFrom(), travel.getTo(), travel.getWhen());
 
-		if (!itns.isEmpty()) {
+		if (!itns.isEmpty() && hasValidPolyLine(itns.get(0))) {
 
 			String fromName = "";
 			String toName = "";
@@ -172,6 +172,25 @@ public class CarPoolingManager {
 	}
 
 	/**
+	 * Has Valid PolyLine checker.
+	 * @param itinerary
+	 * @return
+	 */
+	private boolean hasValidPolyLine(Itinerary itinerary) {
+
+		boolean validGeometry = false;
+
+		String polyLine = itinerary.getLeg().get(0).getLegGeometery().getPoints();
+
+		if (polyLine != null && !polyLine.isEmpty()) {
+			validGeometry = true;
+
+		}
+
+		return validGeometry;
+	}
+
+	/**
 	 * Save Recurrent Travel.
 	 * @param recurrentTravel
 	 * @param userId
@@ -184,7 +203,7 @@ public class CarPoolingManager {
 		List<Itinerary> itns = mobilityPlanner.plan(recurrentTravel.getFrom(), recurrentTravel.getTo(),
 				recurrentTravel.getWhen());
 
-		if (!itns.isEmpty()) {
+		if (!itns.isEmpty() && hasValidPolyLine(itns.get(0))) {
 
 			String fromName = "";
 			String toName = "";
