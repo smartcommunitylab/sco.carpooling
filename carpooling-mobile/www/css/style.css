@@ -418,8 +418,20 @@ placeautocomplete ul li {
     min-height: 16px;
     line-height: 0px;
 }
-.zeromargin{
-    margin: 0;
+
+.btn{
+    width: 50%;
+    float: left;
+    padding: 5px;
+}
+.btn.btn-left{
+    padding-left: 5px;
+}
+.btn.btn-right{
+    padding-right: 5px;
+}
+.btn button {
+    width: 100%;
 }
 
 /* USERINFO  */
