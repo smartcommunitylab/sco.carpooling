@@ -630,6 +630,8 @@ table.chart .labels {}
 
 .carpooling-theme .src-infos {
     font-weight: bold;
+    font-size: 0.8em;
+    position: relative;
 }
 .carpooling-theme .src-infos .left-infos {
     display: inline-block;
@@ -638,8 +640,9 @@ table.chart .labels {}
 .carpooling-theme .src-infos .right-infos {
     text-align: right;
     display: inline-block;
-    float: right;
     width: 40%;
+    position: absolute;
+    right: 0;
 }
 h5 {
     text-transform: uppercase;
