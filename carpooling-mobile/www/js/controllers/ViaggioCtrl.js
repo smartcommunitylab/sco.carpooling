@@ -190,7 +190,10 @@ angular.module('carpooling.controllers.viaggio', [])
         };
 
         if (!!isRecurrent) {
-            $scope.recurrencypopup.recurrent = false;
+            $scope.recurrencypopup = {
+                recurrent : false
+            };
+
             var showRejectRecurrencyPopup = $ionicPopup.show({
                 scope: $scope,
                 title: $filter('translate')('popup_recurrency_reject'),
@@ -344,7 +347,9 @@ angular.module('carpooling.controllers.viaggio', [])
 
         if ($rootScope.isRecurrencyEnabled() && !!$scope.selectedTrip.recurrentId) {
             // popup: single or recurrent booking
-            $scope.recurrencypopup.recurrent = false;
+            $scope.recurrencypopup = {
+                recurrent : false
+            };
             var showBookingRecurrencyPopup = $ionicPopup.show({
                 scope: $scope,
                 title: $filter('translate')('popup_recurrency_book'),
