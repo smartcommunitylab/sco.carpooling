@@ -396,12 +396,18 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		
 		List<Travel> timeCommunityTravels = mongoTemplate.find(query, Travel.class);
 		
-		for (Travel checkTravel: timeCommunityTravels) {
-			
+		for (Travel checkTravel : timeCommunityTravels) {
+
 			if (isGeoValid(checkTravel, travelRequest)) {
-				travels.add(checkTravel);
+				// seat availability check.
+				if (CarPoolingUtils.getNonRecurrentAvailabiliy(checkTravel, travelRequest) > 0) {
+					travels.add(checkTravel);
+				}
+
 			}
 		}
+		
+		
 	
 		return travels;
 		
