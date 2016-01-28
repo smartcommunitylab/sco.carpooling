@@ -169,7 +169,7 @@ angular.module('carpooling.services.driver', [])
         return deferred.promise;
     };
 
-    driverService.ratePassenger = function (passengerId, rating, Booking) {
+    driverService.ratePassenger = function (passengerId, rating, booking) {
         var deferred = $q.defer();
 
         if (!passengerId) {
