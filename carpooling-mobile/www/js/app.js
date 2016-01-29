@@ -682,6 +682,7 @@ angular.module('carpooling', [
         popup_recurrency_recurrent: 'viaggi ricorrenti',
         popup_confirm_accept: 'Vuoi davvero accettare la richiesta di {{username}}?',
         popup_confirm_reject: 'Vuoi davvero rifiutare la richiesta di {{username}}?',
+        popup_confirm_reject_recurrent: 'Vuoi davvero rifiutare la richiesta ricorrente di {{username}}?',
         send_msg_placeholder: 'Scrivi un messaggio',
         notif_short_chat: 'Nuovo messaggio da {{name}}',
         notif_short_avail: 'Trovato un viaggio',
