@@ -270,7 +270,23 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.accept = function (booking) {
+
+        var deferred = $q.defer();
+        var success = function (data) {
+            Utils.loaded();
+            refreshTrip(data);
+            CacheSrv.setReloadDriverTrip($scope.selectedTrip.id);
+            Utils.toast(($filter('translate')('toast_booking_accepted')));
+            deferred.resolve();
+        };
+
+        var error = function (error) {
+            Utils.loaded();
+            Utils.toast();
+            deferred.reject();
+        };
         // confirmation popup for accept
+        var isRecurrent = (booking.recurrent === undefined || booking.recurrent === true);
         $ionicPopup.confirm({
             title: $filter('translate')('popup_confirm_accept', {
                 username: booking.traveller.name + ' ' + booking.traveller.surname
@@ -282,21 +298,20 @@ angular.module('carpooling.controllers.viaggio', [])
             function (ok) {
                 if (ok) {
                     Utils.loading();
-                    var newBooking = angular.copy(booking);
-                    newBooking['accepted'] = 1;
-
-                    DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(
-                        function (data) {
-                            Utils.loaded();
-                            refreshTrip(data);
-                            CacheSrv.setReloadDriverTrip($scope.selectedTrip.id);
-                            Utils.toast(($filter('translate')('toast_booking_accepted')));
-                        },
-                        function (error) {
-                            Utils.loaded();
-                            Utils.toast();
+                    if (isRecurrent) {
+                        // recurrent
+                        var newBooking = {
+                            traveller: angular.copy(booking.traveller),
+                            accepted: 1
                         }
-                    );
+                        DriverSrv.decideRecurrentTrip($scope.selectedTrip.recurrentId, newBooking).then(success, error);
+                    } else {
+                        // not recurrent
+                        var newBooking = angular.copy(booking);
+                        newBooking['accepted'] = 1;
+                        DriverSrv.decideTrip($scope.selectedTrip.id, newBooking).then(success, error);
+                    }
+
                 }
             }
         );
