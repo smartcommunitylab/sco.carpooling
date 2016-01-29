@@ -547,6 +547,7 @@ public class CarPoolingManager {
 			data.put("senderId", userId);
 			User user = userRepository.findOne(userId);
 			data.put("senderFullName", user.fullName());
+			// always notify with instance of recurrent travel.
 			Notification bookingNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_BOOKING,
 					data, false, tranistInstances.get(0).getId(), System.currentTimeMillis());
 			notificationRepository.save(bookingNotification);
@@ -632,7 +633,9 @@ public class CarPoolingManager {
 			throws CarPoolingCustomException {
 
 		RecurrentTravel travel = reccurrentTravelRepository.findTravelByIdAndDriverId(travelId, userId);
+		Travel instanceOfReccTravel = null;
 
+		
 		boolean found = false;
 
 		if (travel != null) {
@@ -650,6 +653,9 @@ public class CarPoolingManager {
 					for (Travel instanceRT : travelRepository.findInstanceOfRecurrTravel(travelId)) {
 						for (Booking instanceBooking : instanceRT.getBookings()) {
 							if (instanceBooking.getTraveller().getUserId().equalsIgnoreCase(passengerId)) {
+								if (instanceOfReccTravel == null) {
+									instanceOfReccTravel = instanceRT;
+								}
 								instanceBooking.setAccepted(booking.getAccepted());
 								travelRepository.save(instanceRT);
 							}
@@ -660,13 +666,14 @@ public class CarPoolingManager {
 				}
 			}
 
-			if (found) {
-				
+			if (found && instanceOfReccTravel != null) {
+
 				String targetUserId = booking.getTraveller().getUserId();
 				Map<String, String> data = new HashMap<String, String>();
 				data.put("status", "" + booking.getAccepted());
+				// always notify with instance of recurrent travel.
 				Notification confirmNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_CONFIRM,
-						data, false, travel.getId(), System.currentTimeMillis());
+						data, false, instanceOfReccTravel.getId(), System.currentTimeMillis());
 				notificationRepository.save(confirmNotification);
 				try {
 					sendPushNotification.sendNotification(targetUserId, confirmNotification);
