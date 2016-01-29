@@ -86,10 +86,11 @@
 
         <!-- I AM A PASSENGER -->
         <div class="padding trip-actions" ng-if="!isMine">
-            <div class="btn btn-left" ng-if="myBooking.accepted === null || myBooking.accepted !== -1">
-                <button class="button button-carpooling" ng-click="bookingAction()" ng-disabled="myBooking.accepted === 0 || (myBooking.accepted === null && !!isPastTrip)">
+            <!--ng-if="myBooking.accepted === null || myBooking.accepted !== -1"-->
+            <div class="btn btn-left">
+                <button class="button button-carpooling" ng-click="bookingAction()" ng-disabled="myBooking.accepted === -1 || myBooking.accepted === 0 || (myBooking.accepted === null && !!isPastTrip)">
                     <span ng-if="myBooking.accepted === null">{{'lbl_trip_ask' | translate | uppercase}}</span>
-                    <span ng-if="myBooking.accepted === 0 || myBooking.accepted === 1">{{'lbl_trip_rate' | translate | uppercase}}</span>
+                    <span ng-if="myBooking.accepted === -1 || myBooking.accepted === 0 || myBooking.accepted === 1">{{'lbl_trip_rate' | translate | uppercase}}</span>
                 </button>
             </div>
             <div class="btn btn-right">
