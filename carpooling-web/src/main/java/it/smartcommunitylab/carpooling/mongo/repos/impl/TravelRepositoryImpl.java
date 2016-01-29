@@ -83,7 +83,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		// pagination.
 		query.skip((pageNum - 1) * pageSize);
 		query.limit(pageSize);
-		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "route.startime"));
+		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "when"));
 		
 		
 		/**
@@ -139,7 +139,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		// pagination.
 		query.skip((pageNum - 1) * pageSize);
 		query.limit(pageSize);
-		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "route.startime"));
+		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "when"));
 
 		/**
 		 Query:
@@ -607,7 +607,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	public List<Travel> searchCompletedTravels(Long timeInMillies) {
 		List<Travel> completedTravels = new ArrayList<Travel>();
 
-		Criteria criteria = new Criteria().where("route.endtime").lte(timeInMillies);
+		Criteria criteria = new Criteria().where("when").lte(timeInMillies);
 
 		Query query = new Query();
 		query.addCriteria(criteria);

@@ -172,7 +172,7 @@ public class CarPoolingManager {
 	}
 
 	/**
-	 * Has Valid PolyLine checker.
+	 * Has Valid PolyLine Checker.
 	 * @param itinerary
 	 * @return
 	 */
