@@ -536,6 +536,22 @@ public class CarPoolingManager {
 		
 		// update travel instances of recurrent travel.		
 		travelRepository.save(tranistInstances);
+		
+		// create notification.
+		String targetUserId = recurrentTravel.getUserId();
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("senderId", userId);
+		User user = userRepository.findOne(userId);
+		data.put("senderFullName", user.fullName());
+		Notification bookingNotification = new Notification(targetUserId, CarPoolingUtils.NOTIFICATION_BOOKING, data,
+				false, recurrentTravel.getId(), System.currentTimeMillis());
+		notificationRepository.save(bookingNotification);
+		// notify via parse.
+		try {
+			sendPushNotification.sendNotification(targetUserId, bookingNotification);
+		} catch (JSONException e) {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+		}
 
 		return recurrentTravel;
 
