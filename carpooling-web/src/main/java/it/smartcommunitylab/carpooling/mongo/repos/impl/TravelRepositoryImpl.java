@@ -469,7 +469,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 	@Override
 	public List<Travel> searchCommunityTravels(String communityId, Long timeInMillies) {
-
+		
+		// eliminate time in past.
 		List<Travel> travels = new ArrayList<Travel>();
 
 		Criteria commonCriteria = new Criteria().where("active").is(true);
@@ -477,72 +478,34 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Criteria communityCriteria = new Criteria().where("communityIds").in(communityId);
 		/** recurrent/non trip times. **/
 		Date reqDate = new Date(timeInMillies);
-		// start and end of day.
-		Date timeStartOfDay = CarPoolingUtils.getStartOfDay(reqDate);
+		// from the moment until end of day.
 		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
-		// recurrent data.
-		int reqDOW = CarPoolingUtils.getDayOfWeek(reqDate);
-		int reqDOM = CarPoolingUtils.getDayOfMonth(reqDate);
 		// normal.
-		Criteria nonRecurr = new Criteria().where("when").gte(timeStartOfDay.getTime())
+		Criteria timeCriteria = new Criteria().where("when").gte(timeInMillies)
 				.lte(timeEndOfDay.getTime());
-		// recurr general.
-		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true);
-		// recurr dow.
-		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
-		// recurr dom.
-		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
-
-		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
-		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
-
-		Criteria timeCriteria = new Criteria().orOperator(nonRecurr, recurrDOW, recurrDOM);
 
 		Query query = new Query();
 		query.addCriteria(commonCriteria);
 		query.addCriteria(communityCriteria);
 		query.addCriteria(timeCriteria);
+		// order them by ascending.
+		query.with(new Sort(Sort.Direction.ASC, "when"));
 		
 		/**
-		Query: {
+		Query:
+			{
 			"active": true,
 			"communityIds": {
 				"$in": ["cPCommunity1"]
-			},
-			"$or": [
-				{
-					"when": {
-						"$gte": 1449702000000,
-						"$lte": 1449788399999
-					}
 				},
-				{
-					"$and": [{
-						"when": 0,
-						"recurrency": {
-							"$exists": true
-						}
-					},
-					{
-						"recurrency.days": {
-							"$in": [5]
-						}
-					}]
-				},
-				{
-					"$and": [{
-						"when": 0,
-						"recurrency": {
-							"$exists": true
-						}
-					},
-					{
-						"recurrency.dates": {
-							"$in": [10]
-						}
-					}]
+			"when": {
+				"$gte": 1451547360000,
+				"$lte": 1451602799999
 				}
-			]
+		},
+		Fields: null,
+		Sort: {
+			"when": 1
 		}
 		**/
 
