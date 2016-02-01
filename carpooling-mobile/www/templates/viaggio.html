@@ -115,10 +115,11 @@
   {{'lbl_show_profile' | translate}}
 </button></div>
                     <!--Name Surname-->
-                    <button class="button button-carpooling" ng-if="booking.accepted === 0" ng-click="reject(booking, (isRecurrencyEnabled() && !!selectedTrip.recurrentId))">
+                    <button class="button button-carpooling" ng-if="booking.accepted === 0 && !isPastTrip" ng-click="reject(booking, (isRecurrencyEnabled() && !!selectedTrip.recurrentId))">
                         <i class="icon ion-close-round"></i>
                     </button>
-                    <button class="button" ng-class="{'button-carpooling': booking.accepted === 0, 'button-carpooling-inverse': booking.accepted === 1}" ng-click="positiveAction(booking)">
+                    <!--TODO: hide this button and show a message icon in order to chat with the passenger-->
+                    <button class="button" ng-class="{'button-carpooling': booking.accepted === 0, 'button-carpooling-inverse': booking.accepted === 1}" ng-click="positiveAction(booking)" ng-if="!isPastTrip">
                         <i class="icon" ng-class="{'ion-checkmark-round': booking.accepted === 0, 'ion-more': booking.accepted === 1}"></i>
                     </button>
                 </a>

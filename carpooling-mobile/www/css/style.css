@@ -266,6 +266,14 @@ placeautocomplete ul li {
 .card.card-trip .trip-data .trip-data-rejected {
     color: #FF0000;
 }
+.card.card-trip .trip-data-storic{
+    width: 100% !important;
+}
+.card.card-trip .trip-data ul li .right-data{
+    color: #A0A0A0;
+    float: right;
+    font-size: 0.8em;
+}
 .card.card-trip .custom-checkmark {
     font-size: 5em;
     color: #0099CC;

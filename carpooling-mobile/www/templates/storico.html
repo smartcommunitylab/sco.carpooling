@@ -11,10 +11,10 @@
                     <div class="list" ng-if="!!passengerTrips && passengerTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index)">
                             <div class="item">
-                                <div class="trip-data">
+                                <div class="trip-data trip-data-storic">
                                     <ul>
                                         <li>
-                                            <span>{{trip.when | date: travelDateFormat}}</span>
+                                            <span class="right-data">{{trip.when | date: travelDateFormat}}</span>
                                         </li>
                                         <li>
                                             {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
@@ -31,10 +31,10 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="trip-counter">
+                                <!--<div class="trip-counter">
                                     <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
                                     <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
-                                </div>
+                                </div>-->
                                 <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                             </div>
                         </div>
@@ -54,10 +54,10 @@
                     <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in driverTrips" ng-click="selectOfferedTrip($index)">
                             <div class="item">
-                                <div class="trip-data">
+                                <div class="trip-data trip-data-storic">
                                     <ul>
                                         <li>
-                                            <span>{{ trip.when | date: travelDateFormat }}</span>
+                                            <span class="right-data">{{ trip.when | date: travelDateFormat }}</span>
                                         </li>
                                         <li>
                                             {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
@@ -70,10 +70,10 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div class="trip-counter">
+                                <!--<div class="trip-counter">
                                     <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
                                     <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
-                                </div>
+                                </div>-->
                                 <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                             </div>
                         </div>
