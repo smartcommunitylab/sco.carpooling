@@ -492,45 +492,20 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		query.with(new Sort(Sort.Direction.ASC, "when"));
 		
 		/**
-		Query: {
+		Query:
+			{
 			"active": true,
 			"communityIds": {
 				"$in": ["cPCommunity1"]
-			},
-			"$or": [
-				{
-					"when": {
-						"$gte": 1449702000000,
-						"$lte": 1449788399999
-					}
 				},
-				{
-					"$and": [{
-						"when": 0,
-						"recurrency": {
-							"$exists": true
-						}
-					},
-					{
-						"recurrency.days": {
-							"$in": [5]
-						}
-					}]
-				},
-				{
-					"$and": [{
-						"when": 0,
-						"recurrency": {
-							"$exists": true
-						}
-					},
-					{
-						"recurrency.dates": {
-							"$in": [10]
-						}
-					}]
+			"when": {
+				"$gte": 1451547360000,
+				"$lte": 1451602799999
 				}
-			]
+		},
+		Fields: null,
+		Sort: {
+			"when": 1
 		}
 		**/
 
