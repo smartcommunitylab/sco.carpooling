@@ -480,9 +480,6 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Date reqDate = new Date(timeInMillies);
 		// from the moment until end of day.
 		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
-		// recurrent data.
-		int reqDOW = CarPoolingUtils.getDayOfWeek(reqDate);
-		int reqDOM = CarPoolingUtils.getDayOfMonth(reqDate);
 		// normal.
 		Criteria timeCriteria = new Criteria().where("when").gte(timeInMillies)
 				.lte(timeEndOfDay.getTime());
