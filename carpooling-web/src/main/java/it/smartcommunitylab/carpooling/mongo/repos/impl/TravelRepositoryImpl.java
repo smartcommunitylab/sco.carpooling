@@ -479,25 +479,13 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		/** recurrent/non trip times. **/
 		Date reqDate = new Date(timeInMillies);
 		// from the moment until end of day.
-//		Date timeStartOfDay = CarPoolingUtils.getStartOfDay(reqDate);
 		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
 		// recurrent data.
 		int reqDOW = CarPoolingUtils.getDayOfWeek(reqDate);
 		int reqDOM = CarPoolingUtils.getDayOfMonth(reqDate);
 		// normal.
-		Criteria nonRecurr = new Criteria().where("when").gte(timeInMillies)
+		Criteria timeCriteria = new Criteria().where("when").gte(timeInMillies)
 				.lte(timeEndOfDay.getTime());
-		// recurr general.
-		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true);
-		// recurr dow.
-		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
-		// recurr dom.
-		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
-
-		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
-		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
-
-		Criteria timeCriteria = new Criteria().orOperator(nonRecurr, recurrDOW, recurrDOM);
 
 		Query query = new Query();
 		query.addCriteria(commonCriteria);
