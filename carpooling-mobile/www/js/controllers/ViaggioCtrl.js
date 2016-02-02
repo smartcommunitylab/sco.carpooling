@@ -11,6 +11,8 @@ angular.module('carpooling.controllers.viaggio', [])
     $scope.selectedTrip = {};
     $scope.travelId = null;
     $scope.bookingCounters = {};
+    $scope.pass_accepted = {};
+    $scope.pass_not_accepted = {};
 
     // myBooking.accepted values: -1 rejected, 0 requested, 1 accepted
     $scope.myBooking = {
@@ -57,6 +59,8 @@ angular.module('carpooling.controllers.viaggio', [])
     var refreshTrip = function (trip) {
         $scope.selectedTrip = trip;
         var today = Date.now();
+        $scope.pass_accepted = 0;
+        $scope.pass_not_accepted = 0;
         if (today > $scope.selectedTrip.when) {
             $scope.isPastTrip = true;
         } else {
@@ -92,6 +96,13 @@ angular.module('carpooling.controllers.viaggio', [])
                 }
             );
         } else {
+            $scope.selectedTrip.bookings.forEach(function (booking) {
+                if (booking.accepted == 1) {
+                    $scope.pass_accepted++;
+                } else if (booking.accepted == 0) {
+                    $scope.pass_not_accepted++;
+                }
+            });
             $scope.initMap();
             Utils.loaded();
         }
