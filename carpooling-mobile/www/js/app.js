@@ -619,6 +619,8 @@ angular.module('carpooling', [
         lbl_end_time: 'Orario di arrivo',
         lbl_recurrency: 'Ricorrenza',
         lbl_passengers: 'Disponibilità posti',
+        lbl_passengers_accepted: 'Passeggeri',
+        lbl_passengers_not_accepted: 'Richieste non accettate',
         lbl_spaces_left: 'liberi',
         lbl_driver_contact: 'contatta il conducente',
         lbl_trip_ask: 'Richiedi passaggio',
