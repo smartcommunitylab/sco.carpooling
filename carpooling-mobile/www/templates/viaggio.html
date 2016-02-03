@@ -133,9 +133,9 @@
             </ion-list>
             <!--PAST TRIPS-->
             <!--ACCEPTED PASSENGERS-->
-            <h5 ng-if="pass_accepted > 0 && !!isPastTrip">{{'lbl_passengers_accepted' | translate}}</h5>
-            <ion-list ng-if="pass_accepted > 0 && !!isPastTrip">
-                <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted === 1">
+            <h5 ng-if="pass_accepted.length  > 0 && !!isPastTrip">{{'lbl_passengers_accepted' | translate}}</h5>
+            <ion-list ng-if="pass_accepted.length > 0 && !!isPastTrip">
+                <a class="item item-button-right" ng-repeat="booking in pass_accepted" ng-if="booking.accepted === 1">
                     <!--<i class="icon ion-person"></i>-->
                     <div>
                         <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
@@ -154,9 +154,9 @@
             </ion-list>
             <!--PAST TRIPS-->
             <!--NON ACCEPTED PASSENGERS-->
-            <h5 ng-if="pass_not_accepted > 0 && !!isPastTrip">{{'lbl_passengers_not_accepted' | translate}}</h5>
-            <ion-list ng-if="pass_not_accepted > 0 && !!isPastTrip">
-                <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted === 0">
+            <h5 ng-if="pass_not_accepted.length  > 0 && !!isPastTrip">{{'lbl_passengers_not_accepted' | translate}}</h5>
+            <ion-list ng-if="pass_not_accepted.length > 0 && !!isPastTrip">
+                <a class="item item-button-right" ng-repeat="booking in pass_not_accepted" ng-if="booking.accepted === 0">
                     <!--<i class="icon ion-person"></i>-->
                     <div>
                         <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
