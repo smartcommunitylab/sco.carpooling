@@ -309,7 +309,8 @@ angular.module('carpooling', [
     $rootScope.logout = function () {
         LoginSrv.logout().then(
             function (data) {
-                ionic.Platform.exitApp();
+                //ionic.Platform.exitApp();
+                $rootScope.login();
             },
             function (error) {
                 Utils.toast();

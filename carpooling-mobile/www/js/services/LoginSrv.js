@@ -97,6 +97,13 @@ angular.module('carpooling.services.login', [])
 
     loginService.logout = function () {
         var deferred = $q.defer();
+        cookieMaster.clear(
+            function () {
+                console.log('Cookies have been cleared');
+            },
+            function () {
+                console.log('Cookies could not be cleared');
+            });
 
         $http.get(Config.getServerURL() + '/logout', {
             headers: {
@@ -112,7 +119,7 @@ angular.module('carpooling.services.login', [])
                     //    deferred.reject();
                     //    $rootScope.login();
                     //} else {
-                        deferred.resolve(response.data);
+                    deferred.resolve(response.data);
                     //}
                 });
             },
