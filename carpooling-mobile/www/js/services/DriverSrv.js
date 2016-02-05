@@ -54,7 +54,7 @@ angular.module('carpooling.services.driver', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data.error);
+                deferred.reject(responseError.data? responseError.data.error : responseError);
             }
         );
 
@@ -79,7 +79,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data.error);
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
                 }
             );
         }
@@ -105,7 +105,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data.error);
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
                 }
             );
         }
@@ -133,7 +133,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data.error);
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
                 }
             );
         }
@@ -161,7 +161,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data.error);
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
                 }
             );
         }
@@ -189,7 +189,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data.error);
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
                 }
             );
         }

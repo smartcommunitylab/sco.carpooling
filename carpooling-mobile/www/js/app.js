@@ -43,7 +43,7 @@ angular.module('carpooling', [
                     //cordova.plugins.notification.local.cancelAll();
                     var notific = {
                         id: local_notification.push_hash,
-                        title: "CarPooling",
+                        title: "iPosto",
                         text: txt,
                         autoCancel: true,
                         //firstAt: monday_9_am,
@@ -544,7 +544,7 @@ angular.module('carpooling', [
 
 .config(function ($translateProvider) {
     $translateProvider.translations('it', {
-        app_name: 'CARpooling',
+        app_name: 'iPosto',
         cancel: 'Annulla',
         yes: 'Si',
         no: 'No',
@@ -694,6 +694,7 @@ angular.module('carpooling', [
         notif_short_response_ko: 'Viaggio rifiutato',
         notif_short_eval: 'Valuta il tuo viaggio',
         toast_error_generic: 'OPS! Problema...',
+        toast_error_connection:'Nessuna connessione',
         toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
         toast_trip_offered: 'Il tuo viaggio è stato offerto',
         toast_booking_accepted: 'La prenotazione è stata accettata',
@@ -702,7 +703,19 @@ angular.module('carpooling', [
         toast_rating_success: 'La valutazione è stata inviata',
         toast_err_empty_autodescription: 'Fornire la descrizione dell\'auto',
         popup_confirm_boarding: 'Conferma viaggio',
-        popup_confirm_boarding_body: 'Confermi di aver partecipato a questo viaggio?'
+        popup_confirm_boarding_body: 'Confermi di aver partecipato a questo viaggio?',
+        lbl_empty_trips1: 'Sai dove andare ma non sai come arrivarci?',
+        lbl_empty_trips2: 'Cerca il viaggio che fa per te e chiedi un passaggio!',
+        lbl_empty_trips3: 'Tocca il pulsante ',
+        lbl_empty_trips4: 'per iniziare la ricerca.',
+        lbl_empty_offers1: 'Nessun viaggio offerto',
+        lbl_empty_offers2: 'Che aspetti, aggiungi un viaggio!',
+        lbl_empty_offers3: 'Tocca il pulsante ',
+        lbl_empty_offers4: ' in alto e definisci il tuo itinerario.',
+        lbl_empty_notifiche: 'Nessuna notifica presente',
+        lbl_empty_offers_storico: 'Nessuno dei viaggi da te offerti è ancora stato effettuato.',
+        lbl_empty_trips_storico: 'Conferma di aver partecipato ad un viaggio ed apparirà in questa pagina.'
+
     });
 
     $translateProvider.preferredLanguage('it');

@@ -8,10 +8,23 @@
         <ion-tab title="{{'tab_participate' | translate}}" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content>
-                    <h5 class="text-center" ng-if="!!nonConfirmedTrips">{{'lbl_tripstoconfirm'| translate}}</h5>
+                    <div class="padding" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0" style="color: gray">
+                      <div class="row" style="margin-top: 30px;"><div class="col col-center text-center">{{'lbl_empty_trips1' | translate}}</div></div>
+                      <div class="row"><div class="col col-center text-center"><img src="img/no_viaggi_partecipati.png" width="130px"></div></div>
+                      <div class="row" style="margin-top: 20px;"><div class="col col-center text-center">{{'lbl_empty_trips2' | translate}}</div></div>
+                      <div class="row" style="margin-top: 20px;">
+                        <div class="col col-center text-center">
+                          {{'lbl_empty_trips3' | translate}} <i style="font-size:20px; padding: 0 5px;" class="icon ion-android-search"></i> {{'lbl_empty_trips4' | translate}}
+                        </div>
+                      </div>
+                    </div>
+
+                    <h5 class="text-center" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">{{'lbl_tripstoconfirm'| translate}}</h5>
+<!--
                     <div class="padding" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
+-->
                     <div class="list" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length > 0">
                         <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips">
                             <div class="item">
@@ -46,10 +59,12 @@
                         </div>
                     </div>
 
-                    <h5 class="text-center" ng-if="!!passengerTrips">{{'lbl_futuretrips'| translate}}</h5>
+                    <h5 class="text-center" ng-if="passengerTrips != null && passengerTrips.length > 0">{{'lbl_futuretrips'| translate}}</h5>
+<!--
                     <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
+-->
                     <div class="list" ng-if="!!passengerTrips && passengerTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index, passengerTrips)">
                             <div class="item">
@@ -92,8 +107,16 @@
         <ion-tab title="{{'tab_offer' | translate}}" ng-click="selectTab(1)">
             <ion-view>
                 <ion-content ng-init="loadMoreDriverTrips()">
-                    <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">
-                        <h4>{{'lbl_no_results' | translate}}</h4>
+                    <div class="padding" ng-if="driverTrips != null && driverTrips.length == 0" style="color: gray">
+<!--                        <h4>{{'lbl_no_results' | translate}}</h4>-->
+                      <div class="row" style="margin-top: 30px;"><div class="col col-center text-center">{{'lbl_empty_offers1' | translate}}</div></div>
+                      <div class="row"><div class="col col-center text-center"><img src="img/no_viaggi_offerti.png" width="130px"></div></div>
+                      <div class="row" style="margin-top: 20px;"><div class="col col-center text-center">{{'lbl_empty_offers2' | translate}}</div></div>
+                      <div class="row" style="margin-top: 20px;">
+                        <div class="col col-center text-center">
+                          {{'lbl_empty_offers3' | translate}} <i style="font-size:20px; padding: 0 5px;" class="icon ion-android-add"></i> {{'lbl_empty_offers4' | translate}}
+                        </div>
+                      </div>
                     </div>
                     <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in driverTrips" ng-click="selectOfferedTrip($index)">

@@ -4,52 +4,8 @@
     <ion-nav-buttons side="right"></ion-nav-buttons>
 
     <ion-tabs class="tabs-top">
-        <!-- Informazioni Tab -->
-        <ion-tab icon="ion-ios-information" ng-click="selectTab(0)">
-            <ion-view class="info">
-                <ion-content class="has-header padding">
-                    <div>
-                        <h5>{{'lbl_generalinformations'| translate}}</h5>
-                        <p class="padding-top"><span>{{'lbl_tripzone'| translate}}:</span> {{community.zone}}</p>
-                    </div>
-                    <div class="padding-top padding-bottom">
-                        <h5>{{'lbl_numberauto'| translate}}</h5>
-                        <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
-                    </div>
-                    <button class="button button-block button-carpooling" ng-click="changeAutoState()">
-                        {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
-                    </button>
-                </ion-content>
-            </ion-view>
-        </ion-tab>
-
-        <!-- Componenti Tab -->
-        <ion-tab icon="ion-android-people" ng-click="selectTab(1)">
-            <ion-view>
-                <ion-content class="has-header padding components">
-                    <h5>{{'lbl_components'| translate | uppercase}}</h5>
-                    <div ng-if="community.users.lenght == 0">
-                        <h4>{{'lbl_no_results' | translate}}</h4>
-                    </div>
-                    <div class="card card-trip" ng-repeat="user in community.userObjs">
-                        <div class="item row" ng-click="showUser($index)">
-                            <ul class="padding-bottom">
-                                <li class="padding">
-                                    <span class="padding-left">
-                                        <i class="icons ion-person padding-right"></i>
-                                        <span ng-if="!!user.name || !!user.surname">{{user.name}} {{user.surname}}</span>
-                                    <span ng-if="!user.name && !user.surname">{{'lbl_user_anonymous' | translate}}</span>
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </ion-content>
-            </ion-view>
-        </ion-tab>
-
         <!-- Viaggi Tab -->
-        <ion-tab icon="ion-location" ng-click="selectTab(2)">
+        <ion-tab icon="ion-location" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content class="has-header padding community-trips">
                     <button class="button button-block button-carpooling" ng-click="addTrip()">
@@ -93,5 +49,48 @@
                 </ion-content>
             </ion-view>
         </ion-tab>
+        <!-- Componenti Tab -->
+        <ion-tab icon="ion-android-people" ng-click="selectTab(1)">
+            <ion-view>
+                <ion-content class="has-header padding components">
+                    <h5>{{'lbl_components'| translate | uppercase}}</h5>
+                    <div ng-if="community.users.lenght == 0">
+                        <h4>{{'lbl_no_results' | translate}}</h4>
+                    </div>
+                    <div class="card card-trip" ng-repeat="user in community.userObjs">
+                        <div class="item row" ng-click="showUser($index)">
+                            <ul class="padding-bottom">
+                                <li class="padding">
+                                    <span class="padding-left">
+                                        <i class="icons ion-person padding-right"></i>
+                                        <span ng-if="!!user.name || !!user.surname">{{user.name}} {{user.surname}}</span>
+                                    <span ng-if="!user.name && !user.surname">{{'lbl_user_anonymous' | translate}}</span>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+        <!-- Informazioni Tab -->
+        <ion-tab icon="ion-ios-information" ng-click="selectTab(2)">
+            <ion-view class="info">
+                <ion-content class="has-header padding">
+                    <div>
+                        <h5>{{'lbl_generalinformations'| translate}}</h5>
+                        <p class="padding-top"><span>{{'lbl_tripzone'| translate}}:</span> {{community.zone}}</p>
+                    </div>
+                    <div class="padding-top padding-bottom">
+                        <h5>{{'lbl_numberauto'| translate}}</h5>
+                        <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
+                    </div>
+                    <button class="button button-block button-carpooling" ng-click="changeAutoState()">
+                        {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
+                    </button>
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+
     </ion-tabs>
 </ion-view>

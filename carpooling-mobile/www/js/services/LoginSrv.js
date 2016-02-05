@@ -124,7 +124,7 @@ angular.module('carpooling.services.login', [])
                 });
             },
             function (responseError) {
-                deferred.reject(responseError.data.error);
+                deferred.reject(responseError.data? responseError.data.error : responseError);
             }
         );
 

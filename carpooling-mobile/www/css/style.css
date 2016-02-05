@@ -22,6 +22,10 @@
 
 /* Menu */
 
+.carpooling-theme .menu .item:first-child {
+  margin-top: 16px;
+}
+
 .carpooling-theme .menu,
 .carpooling-theme .menu .item,
 .carpooling-theme .menu .item .item-content {
@@ -167,7 +171,7 @@
     color: #3448A5;
 }
 .carpooling-theme .info span {
-    color: lightgray;
+    color: gray;
 }
 .carpooling-theme .info #auto {
     color: #3448A5;
@@ -422,7 +426,7 @@ placeautocomplete ul li {
 }
 .custom-button-calm {
     padding: 0;
-    font-size: 0.8em;
+    font-size: 14px;
     min-height: 16px;
     line-height: 0px;
 }
@@ -561,12 +565,14 @@ table.chart .labels {}
 }
 .carpooling-theme .trip-passengers ul li.trip-places-booked {
     margin-right: 0;
+    color: red;
 }
 .carpooling-theme .trip-passengers ul li.trip-places-booked:last-child {
     margin-right: 0;
 }
 .carpooling-theme .trip-passengers ul li.trip-places-left {
     margin-right: 0.2em;
+    color: green;
 }
 .carpooling-theme .trip-status {
     text-align: center;
@@ -596,6 +602,7 @@ table.chart .labels {}
 }
 .carpooling-theme .trip-requests .list .item-button-right > .button {
     right: 70.5px;
+    top: 20px;
 }
 .carpooling-theme .trip-requests .list .item-button-right > .button:last-child {
     right: 16px;
@@ -643,7 +650,7 @@ table.chart .labels {}
     text-align: center;
     padding: 10px 5px 10px 10px;
     border-bottom: 1px solid #d2d2d2;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 /*Found Trips results*/
@@ -667,4 +674,19 @@ table.chart .labels {}
 h5 {
     text-transform: uppercase;
     color: #3448A5;
+}
+
+.popup-buttons button {
+  white-space: nowrap;
+}
+.profile-label-readonly {
+  white-space: normal;
+  text-align: right;
+  min-width: 50px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.autocomplete-suggestions {
+  background-color: #fff !important;
 }

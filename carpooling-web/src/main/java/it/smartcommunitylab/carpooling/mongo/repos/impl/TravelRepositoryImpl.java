@@ -81,7 +81,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		query.addCriteria(criteria);
 			
 		// pagination.
-		query.skip((pageNum - 1) * pageSize);
+		query.skip(pageNum * pageSize);
 		query.limit(pageSize);
 		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "when"));
 		
@@ -137,7 +137,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		}
 
 		// pagination.
-		query.skip((pageNum - 1) * pageSize);
+		query.skip(pageNum * pageSize);
 		query.limit(pageSize);
 		query.with(new Sort((order == -1) ? Sort.Direction.DESC : Sort.Direction.ASC, "when"));
 

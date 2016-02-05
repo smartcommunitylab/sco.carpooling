@@ -5,8 +5,9 @@
         <ion-tab title="{{'tab_participated' | translate}}" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content>
-                    <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
-                        <h4>{{'lbl_no_results' | translate}}</h4>
+                    <div class="padding" ng-if="passengerTrips != null && passengerTrips.length == 0">
+<!--                        <h4>{{'lbl_no_results' | translate}}</h4>-->
+                      <div class="row" style="margin-top: 30px; color: gray;"><div class="col col-center text-center">{{'lbl_empty_trips_storico' | translate}}</div></div>
                     </div>
                     <div class="list" ng-if="!!passengerTrips && passengerTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index)">
@@ -48,9 +49,10 @@
         <ion-tab title="{{'tab_offered' | translate}}" ng-click="selectTab(1)">
             <ion-view>
                 <ion-content ng-init="loadMoreDriverTrips()">
-                    <div class="padding" ng-if="!!driverTrips && driverTrips.length == 0">
-                        <h4>{{'lbl_no_results' | translate}}</h4>
-                    </div>
+                    <div class="padding" ng-if="driverTrips != null && driverTrips.length == 0">
+<!--                        <h4>{{'lbl_no_results' | translate}}</h4>-->
+                        <div class="row" style="margin-top: 30px; color: gray;"><div class="col col-center text-center">{{'lbl_empty_offers_storico' | translate}}</div></div>
+                  </div>
                     <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in driverTrips" ng-click="selectOfferedTrip($index)">
                             <div class="item">

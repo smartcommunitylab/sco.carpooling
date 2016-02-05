@@ -6,7 +6,9 @@
 -->
     <ion-content>
         <div class="padding" ng-if="!!notifications && notifications.length == 0">
-            <h4>{{'lbl_no_results' | translate}}</h4>
+<!--            <h4>{{'lbl_no_results' | translate}}</h4>-->
+          <div class="row" style="margin-top: 30px;"><div class="col col-center text-center"><img src="img/no_notifiche.png" width="130px"></div></div>
+          <div class="row" style="margin-top: 20px; color: gray;"><div class="col col-center text-center">{{'lbl_empty_notifiche' | translate}}</div></div>
         </div>
         <div class="list" ng-if="!!notifications && notifications.length > 0">
             <!-- collection-repeat="notific in notifications" -->

@@ -103,6 +103,11 @@ angular.module('carpooling.services.utils', [])
     };
 
     utilsService.toast = function (message, duration, position) {
+        if(window.Connection) {
+            if(navigator.connection.type == Connection.NONE) {
+              message = message || $filter('translate')('toast_error_connection');
+            }
+        }
         message = message || $filter('translate')('toast_error_generic');
         duration = duration || 'short';
         position = position || 'bottom';

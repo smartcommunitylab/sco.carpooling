@@ -24,14 +24,16 @@
                         <div ng-if="!!user.auto">
                             <label class="item item-input">
                                 <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
-                                <input type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
+                                <input ng-if="editMode" type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
+                                <span ng-if="!editMode" class="profile-label-readonly">{{user.auto.description}}</span>
                             </label>
 
-                            <label class="item item-input item-select">
+                            <label class="item item-input" ng-class="{'item-select':editMode}">
                                 <div class="input-label">
                                     {{'lbl_user_car_seats_user' | translate}}
                                 </div>
-                                <select ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!editMode || !user.auto"></select>
+                                <select ng-if="editMode" ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!user.auto"></select>
+                                <span ng-if="!editMode" class="profile-label-readonly">{{user.auto.posts}}</span>
                             </label>
                         </div>
                     </div>

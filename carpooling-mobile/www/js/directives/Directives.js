@@ -297,7 +297,7 @@ angular.module('carpooling.directives', [])
             class="{{ attrs.inputclass }}"\
             id="{{ attrs.inputid }}"\
             ng-required="{{ placeautocompleteRequired }}" />\
-          <ul ng-show="completing && (suggestions).length > 0">\
+          <ul class="autocomplete-suggestions" ng-show="completing && (suggestions).length > 0">\
             <li\
               suggestion\
               ng-repeat="suggestion in suggestions | orderBy:\'toString()\' track by $index"\

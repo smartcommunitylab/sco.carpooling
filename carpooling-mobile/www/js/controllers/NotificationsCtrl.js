@@ -48,7 +48,7 @@ angular.module('carpooling.controllers.notifications', [])
         return '';
     };
 
-    $scope.notifications = [];
+    $scope.notifications =  null;
     $scope.start = 0;
     $scope.all = 10;
     $scope.end_reached = false;
@@ -63,7 +63,7 @@ angular.module('carpooling.controllers.notifications', [])
     $scope.loadMoreNotifications = function () {
         UserSrv.readNotifications($scope.start, $scope.all).then(function (notifics) {
             notifics = correctNotificsShortText(notifics);
-            $scope.notifications = !!$scope.notifications ? $scope.notifications.concat(notifics) : notifics;
+            $scope.notifications = $scope.notifications != null ? $scope.notifications.concat(notifics) : notifics;
 
             if (notifics.length >= $scope.all) {
                 $scope.$broadcast('scroll.infiniteScrollComplete');
