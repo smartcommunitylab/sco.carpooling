@@ -1,6 +1,6 @@
 angular.module('carpooling.services.login', [])
 
-.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, UserSrv, Config) {
+.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, UserSrv, Config, CacheSrv) {
     var loginService = {};
 
     var authWindow = null;
@@ -97,6 +97,7 @@ angular.module('carpooling.services.login', [])
 
     loginService.logout = function () {
         var deferred = $q.defer();
+        CacheSrv.reset();
         cookieMaster.clear(
             function () {
                 console.log('Cookies have been cleared');

@@ -11,6 +11,16 @@ angular.module('carpooling.services.cache', [])
     var rStoricoPassengerTrips = true;
     var rStoricoDriverTrips = true;
 
+    cacheService.reset = function() {
+      rPassengerTrips = true;
+      rDriverTrips = true;
+      rDriverTrip = null;
+      rCommunityTrips = true;
+      rCommunityTrip = null;
+      rStoricoPassengerTrips = true;
+      rStoricoDriverTrips = true;
+    };
+
     cacheService.setReloadPassengerTrips = function (reload) {
         rPassengerTrips = reload;
     };
