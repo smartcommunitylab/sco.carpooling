@@ -423,7 +423,8 @@ angular.module('carpooling.controllers.viaggio', [])
                                 PassengerSrv.bookRecurrentTrip($scope.selectedTrip.recurrentId, booking).then(
                                     function (updatedRecurrentTrip) {
                                         Utils.loaded();
-                                        // TODO reload partecipated trips list!
+                                        refreshTrip(updatedRecurrentTrip);
+                                        CacheSrv.setReloadPassengerTrips(true);
                                     },
                                     function (error) {
                                         Utils.loaded();
