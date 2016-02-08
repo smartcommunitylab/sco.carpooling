@@ -57,7 +57,21 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     var refreshTrip = function (trip) {
-        $scope.selectedTrip = trip;
+        // recurrent trip is returned, but we should reset the instance.
+        if (trip.recurrency != null && !trip.recurrentId) {
+          PassengerSrv.getTrip($scope.selectedTrip.id).then(
+            function (data) {
+                refreshTrip(data);
+            },
+            function (error) {
+                Utils.loaded();
+                Utils.toast();
+            }
+          );
+          return;
+        } else {
+          $scope.selectedTrip = trip;
+        }
         var today = Date.now();
         $scope.pass_accepted = [];
         $scope.pass_not_accepted = [];
@@ -200,7 +214,8 @@ angular.module('carpooling.controllers.viaggio', [])
             deferred.reject();
         };
 
-        if (booking.accepted === 1 && booking.recurrent == undefined) {
+        // booking.recurent == undefined means accepted. TODO: fix
+        if (booking.accepted === 1 && (booking.recurrent == undefined || booking.recurrent == true)) {
             // already accepted, recurrent: CHOOSE
             $scope.recurrencypopup = {
                 recurrent: false
