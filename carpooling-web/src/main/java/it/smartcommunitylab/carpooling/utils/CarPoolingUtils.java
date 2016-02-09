@@ -145,6 +145,19 @@ public class CarPoolingUtils {
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime();
 	}
+	
+	
+	public static int getDaysBetweenDates(Long millies1, Long millies2) {
+
+		// Calculate difference in milliseconds
+		long diff = millies2 - millies1;
+		// Calculate difference in days
+		int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+		
+		int remainingDays = diffDays + INSTANCES_THRESHOLD;
+
+		return remainingDays;
+	}
 
 //	public static boolean availableRecurrentTrip(Travel travel, TravelRequest travelRequest) {
 //

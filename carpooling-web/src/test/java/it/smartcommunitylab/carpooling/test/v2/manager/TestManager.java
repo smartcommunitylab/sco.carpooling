@@ -53,7 +53,7 @@ import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
  * @author nawazk
  * 
  */
-//@org.junit.Ignore
+@org.junit.Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestConfig.class })
 public class TestManager {
@@ -88,6 +88,13 @@ public class TestManager {
 	@Before
 	public void before() {
 
+		travelRequestRepository.deleteAll();
+		recurrentTravelRepository.deleteAll();
+		communityRepository.deleteAll();
+		travelRepository.deleteAll();
+		travelRequestRepository.deleteAll();
+		userRepository.deleteAll();
+		
 		InputStream userJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("users-v2.json");
 		InputStream communityJson = Thread.currentThread().getContextClassLoader()
 				.getResourceAsStream("community-v2.json");
