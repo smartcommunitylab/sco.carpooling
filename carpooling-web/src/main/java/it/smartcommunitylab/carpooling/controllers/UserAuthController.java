@@ -21,6 +21,7 @@ import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.CarPoolingUserDetails;
+import it.smartcommunitylab.carpooling.security.CommunityEmailSetup;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -45,6 +46,7 @@ import eu.trentorise.smartcampus.aac.AACService;
 import eu.trentorise.smartcampus.aac.model.TokenData;
 import eu.trentorise.smartcampus.network.JsonUtils;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.model.AccountProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 /**
@@ -65,6 +67,8 @@ public class UserAuthController {
 	private UserManager userManager;
 	@Autowired
 	private CommunityRepository communityRepository;
+	@Autowired
+	private CommunityEmailSetup communityEmailSetup;
 
 	private AACService service;
 	private BasicProfileService profileService;
@@ -98,6 +102,7 @@ public class UserAuthController {
 			TokenData tokenData = service.exchngeCodeForToken(request.getParameter("code"),
 					env.getProperty("ext.redirect"));
 			BasicProfile basicProfile = profileService.getBasicProfile(tokenData.getAccess_token());
+			AccountProfile accountProfile = profileService.getAccountProfile(tokenData.getAccess_token());
 			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 					basicProfile.getUserId(), basicProfile.getUserId(), CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
 			token.setDetails(new WebAuthenticationDetails(request));
@@ -106,13 +111,15 @@ public class UserAuthController {
 			SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 
 			User user = User.fromUserProfile(basicProfile);
-			if (!userManager.exist(user)) {
+//			if (!userManager.exist(user)) {
+				user.setEmail(accountProfile.getAttributes().get("google").get("OIDC_CLAIM_email"));
 				userManager.saveUser(user);
-			}
+//			}
 			
-			/** add user to community. **/
+			/** add user to community after checking it against list of emails. **/
 			for (Community community : communityRepository.findAll()) {
-				if (!community.getUsers().contains(user.getUserId())) {
+				if (!community.getUsers().contains(user.getUserId())
+						&& communityEmailSetup.getEmailAccounts().contains(user.getEmail())) {
 					community.getUsers().add(user.getUserId());
 					communityRepository.save(community);
 				}

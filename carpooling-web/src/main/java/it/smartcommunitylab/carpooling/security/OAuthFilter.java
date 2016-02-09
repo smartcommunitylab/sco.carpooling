@@ -39,6 +39,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.web.filter.GenericFilterBean;
 
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.model.AccountProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 /**
@@ -74,6 +75,7 @@ public class OAuthFilter extends GenericFilterBean {
 				String authToken = extractToken((HttpServletRequest) request);
 				if (authToken != null && !authToken.isEmpty()) {
 					BasicProfile basicProfile = profileService.getBasicProfile(authToken);
+					AccountProfile accountProfile = profileService.getAccountProfile(authToken);
 					UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
 							basicProfile.getUserId(), basicProfile.getUserId(),
 							CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
@@ -81,9 +83,10 @@ public class OAuthFilter extends GenericFilterBean {
 					Authentication authenticatedUser = authenticationManager.authenticate(token);
 					SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 					User user = User.fromUserProfile(basicProfile);
-					if (!userManager.exist(user)) {
+//					if (!userManager.exist(user)) {
+						user.setEmail(accountProfile.getAttributes().get("google").get("OIDC_CLAIM_email"));
 						userManager.saveUser(user);
-					}
+//					}
 					SecurityContextHolder.getContext().setAuthentication(token);
 				}
 			} catch (Exception e) {
