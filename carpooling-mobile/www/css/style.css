@@ -476,16 +476,23 @@ table.chart {
 }
 table.chart tr td {
     width: 50%;
+    position: relative;
 }
 table.chart .values {
     height: 100%;
 }
 table.chart .values td {
-    padding: 0 0.5em;
+/*    padding: 0 0.5em;*/
+  border-bottom: 3px solid #3f51b5;
 }
+
+
 table.chart .values .value {
-    position: relative;
+    position: absolute;
     height: 100%;
+    width: 70%;
+    bottom: 0;
+    left: 15%;
     background: #c5cae9;
     border-top-left-radius: 1em;
     border-top-right-radius: 1em;
