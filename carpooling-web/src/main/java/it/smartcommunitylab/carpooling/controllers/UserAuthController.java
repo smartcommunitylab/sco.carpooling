@@ -113,6 +113,7 @@ public class UserAuthController {
 			User user = User.fromUserProfile(basicProfile);
 //			if (!userManager.exist(user)) {
 				user.setEmail(accountProfile.getAttributes().get("google").get("OIDC_CLAIM_email"));
+				userManager.saveUser(user);
 //			}
 			
 			/** add user to community after checking it against list of emails. **/
@@ -121,7 +122,6 @@ public class UserAuthController {
 						&& communityEmailSetup.getEmailAccounts(community.getId()).contains(user.getEmail())) {
 					community.getUsers().add(user.getUserId());
 					communityRepository.save(community);
-					userManager.saveUser(user);
 				}
 			}
 
