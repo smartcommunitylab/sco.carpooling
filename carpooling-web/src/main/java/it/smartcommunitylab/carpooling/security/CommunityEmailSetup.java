@@ -17,6 +17,7 @@
 package it.smartcommunitylab.carpooling.security;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -35,19 +36,57 @@ public class CommunityEmailSetup {
 
 	@PostConstruct
 	public void init() throws IOException {
-		Yaml yaml = new Yaml(new Constructor(List.class));
-		List<String> data = (List<String>) yaml.load(resource.getInputStream());
-		this.emailAccounts = data;
+		Yaml yaml = new Yaml(new Constructor(CommunityEmailSetup.class));
+		CommunityEmailSetup data = (CommunityEmailSetup) yaml.load(resource.getInputStream());
+		this.communityWithEmails = data.communityWithEmails;
 	}
 
-	private List<String> emailAccounts;
+	private List<CommunityWithEmails> communityWithEmails;
 
-	public List<String> getEmailAccounts() {
-		return emailAccounts;
+	public List<String> getEmailAccounts(String id) {
+		// get community Id email list.
+		List<String> emails = new ArrayList<String>();
+		for (CommunityWithEmails community : communityWithEmails)
+			if (community.getId().equalsIgnoreCase(id)) {
+				emails.addAll(community.getEmails());
+
+			}
+		return emails;
 	}
 
-	public void setEmailAccounts(List<String> emailAccounts) {
-		this.emailAccounts = emailAccounts;
+	public List<CommunityWithEmails> getCommunityWithEmails() {
+		return communityWithEmails;
+	}
+
+	public void setCommunityWithEmails(List<CommunityWithEmails> communityWithEmails) {
+		this.communityWithEmails = communityWithEmails;
+	}
+
+}
+
+class CommunityWithEmails {
+	public String id;
+	public List<String> emails;
+
+	public CommunityWithEmails() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public List<String> getEmails() {
+		return emails;
+	}
+
+	public void setEmails(List<String> emails) {
+		this.emails = emails;
 	}
 
 }

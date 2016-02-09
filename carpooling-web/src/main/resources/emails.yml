@@ -1,3 +1,10 @@
-- nawaz1981@gmail.com
-- nawaz.khurshid@unitn.it
-- mi04naku@gmail.com
+communityWithEmails:
+ - id: cPCommunity1
+   emails: 
+   - nawaz.khurshid@unitn.it
+   - mi04naku@gmail.com
+ - id: cPCommunity2
+   emails:
+   - nawaz.khurshid@unitn.it
+   - mi04naku@gmail.com
+ 
