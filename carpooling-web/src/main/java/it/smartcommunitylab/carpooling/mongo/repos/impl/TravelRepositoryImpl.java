@@ -62,6 +62,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		if (accepted != null) {
 			if (accepted) elemCriteria = elemCriteria.and("accepted").is(1);
 			else elemCriteria = elemCriteria.and("accepted").ne(1);
+		} else {
+			elemCriteria = elemCriteria.and("accepted").ne(-1);
 		}
 		
 		// check if bookings within travel has travellers with userId
