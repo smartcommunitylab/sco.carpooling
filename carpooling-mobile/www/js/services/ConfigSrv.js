@@ -12,9 +12,10 @@ angular.module('carpooling.services.config', [])
     };
 
     var ttJsonConfig = null;
-    var DISTANCE_AUTOCOMPLETE = '6';
-    var LAT = 46.069672;
-    var LON = 11.121270;
+    var DISTANCE_AUTOCOMPLETE = '25';
+    // Rovereto
+    var LAT = 45.883238;
+    var LON = 11.018961;
     var ZOOM = 15;
 
     var CLOCK_STEP = 5;
