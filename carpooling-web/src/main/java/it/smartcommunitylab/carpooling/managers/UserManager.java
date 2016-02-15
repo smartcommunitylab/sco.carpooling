@@ -40,5 +40,9 @@ public class UserManager {
 	public boolean exist(User user) {
 		return userRepository.exists(user.getUserId());
 	}
+	
+	public User findUser(String id) {
+		return userRepository.findOne(id);
+	}
 
 }

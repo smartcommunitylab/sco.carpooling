@@ -111,6 +111,10 @@ public class UserAuthController {
 			SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 
 			User user = User.fromUserProfile(basicProfile);
+			User dbUser = userManager.findUser(user.getUserId());
+			if (dbUser != null) {
+				user = dbUser;
+			}
 //			if (!userManager.exist(user)) {
 				user.setEmail(accountProfile.getAttributes().get("google").get("OIDC_CLAIM_email"));
 				userManager.saveUser(user);
