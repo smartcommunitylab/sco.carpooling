@@ -27,10 +27,6 @@ angular.module('carpooling.controllers.offri', [])
         'to': false
     };
 
-    if (!!$stateParams['communityId']) {
-        $scope.travel['communityIds'] = [$stateParams['communityId']];
-    }
-
     /*
      * Autocompletion stuff
      */
@@ -430,6 +426,10 @@ angular.module('carpooling.controllers.offri', [])
 
     $scope.offer = function () {
         // NOTE: 'from', 'to' and 'intermediateStops' are already on $scope.travel
+        if (!!$stateParams['communityId']) {
+            $scope.travel['communityIds'] = [$stateParams['communityId']];
+            console.log($scope.travel);
+        }
         var auto = StorageSrv.getUser().auto;
 
         if (!!auto && auto.posts > 0) {
