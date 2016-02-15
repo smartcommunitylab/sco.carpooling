@@ -29,7 +29,7 @@ angular.module('carpooling', [
     'leaflet-directive'
 ])
 
-.run(function ($ionicPlatform, $rootScope, $state, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
+.run(function ($ionicPlatform, $rootScope, $state, $ionicHistory, $q, StorageSrv, LoginSrv, UserSrv, Config, Utils) {
     var isIOS = ionic.Platform.isIOS();
     var isAndroid = ionic.Platform.isAndroid();
 
@@ -292,9 +292,20 @@ angular.module('carpooling', [
                 $rootScope.loginStarted = false;
                 UserSrv.getUser(data.userId).then(function () {
                     $rootScope.pushRegistration(data.userId);
-                    $state.go('app.home', {}, {
-                        reload: true
-                    });
+                    $ionicHistory.nextViewOptions({
+                                historyRoot: true,
+                                disableBack: true
+                            });
+                    if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+                        $rootScope.initialSetup = true;
+                        $state.go('app.profilo');
+                    } else {
+                        $rootScope.initialSetup = false;
+                        $state.go('app.home');
+                    }
+//                    $state.go('app.home', {}, {
+//                        reload: true
+//                    });
                 });
             },
             function (error) {
@@ -341,15 +352,17 @@ angular.module('carpooling', [
         }
     });
 
-    $rootScope.$on('$stateChangeStart',
-        function (event, toState, toParams, fromState, fromParams) {
-            if (!$rootScope.initialSetup && toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
-                $rootScope.initialSetup = !StorageSrv.isProfileComplete();
-                event.preventDefault();
-                $state.go('app.profilo');
-            }
-        }
-    );
+//    $rootScope.$on('$stateChangeStart',
+//        function (event, toState, toParams, fromState, fromParams) {
+//            if (!$rootScope.initialSetup && toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+//                $rootScope.initialSetup = true;
+//                event.preventDefault();
+//                return $state.go('app.profilo');
+////            } else if ($rootScope.initialSetup && toState.name == 'app.home') {
+////                event.preventDefault();
+//            }
+//        }
+//    );
 })
 
 .config(function ($httpProvider, $ionicConfigProvider) {
@@ -505,6 +518,15 @@ angular.module('carpooling', [
             }
         }
     })
+    .state('app.login', {
+        url: '/login',
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/login.html'
+            }
+        }
+    })
 
     .state('app.profilo', {
         url: '/profilo',
@@ -535,9 +557,16 @@ angular.module('carpooling', [
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
+//      var StorageSrv = $injector.get('StorageSrv');
+//      var $rootScope = $injector.get('$rootScope');
+//      var logged = $injector.get('LoginSrv').userIsLogged();
+//      if (!logged || StorageSrv.getUserId() == null || !StorageSrv.isProfileComplete()) {
+//          $rootScope.initialSetup = true;
+//          return '/app/profilo';
+//      }
         var logged = $injector.get('LoginSrv').userIsLogged();
         if (!logged) {
-            return '/';
+            return '/app/login';
         }
         return '/app/home';
     });

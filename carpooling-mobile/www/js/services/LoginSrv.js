@@ -97,32 +97,35 @@ angular.module('carpooling.services.login', [])
 
     loginService.logout = function () {
         var deferred = $q.defer();
-        CacheSrv.reset();
-        cookieMaster.clear(
-            function () {
-                console.log('Cookies have been cleared');
-            },
-            function () {
-                console.log('Cookies could not be cleared');
-            });
 
+        var complete = function(response) {
+          StorageSrv.reset().then(function () {
+            try{
+              cookieMaster.clear(
+                function () {
+                    console.log('Cookies have been cleared');
+                    deferred.resolve(response.data);
+                },
+                function () {
+                    console.log('Cookies could not be cleared');
+                    deferred.resolve(response.data);
+                });
+            } catch(e) {
+              deferred.resolve(e);
+            }
+          });
+        };
+
+        CacheSrv.reset();
         $http.get(Config.getServerURL() + '/logout', {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         })
-
         .then(
             function (response) {
-                StorageSrv.reset().then(function () {
-                    //if (response.data[0] == '<') {
-                    //    deferred.reject();
-                    //    $rootScope.login();
-                    //} else {
-                    deferred.resolve(response.data);
-                    //}
-                });
+              complete(response);
             },
             function (responseError) {
                 deferred.reject(responseError.data? responseError.data.error : responseError);
