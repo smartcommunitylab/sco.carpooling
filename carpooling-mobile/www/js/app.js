@@ -310,7 +310,8 @@ angular.module('carpooling', [
         LoginSrv.logout().then(
             function (data) {
                 //ionic.Platform.exitApp();
-                $rootScope.login();
+                window.location.reload(true);
+                Utils.loading();
             },
             function (error) {
                 Utils.toast();
@@ -694,7 +695,7 @@ angular.module('carpooling', [
         notif_short_response_ko: 'Viaggio rifiutato',
         notif_short_eval: 'Valuta il tuo viaggio',
         toast_error_generic: 'OPS! Problema...',
-        toast_error_connection:'Nessuna connessione',
+        toast_error_connection: 'Nessuna connessione',
         toast_auto_disabled: 'Per offrire un viaggio devi aggiungere un\'auto al tuo profilo',
         toast_trip_offered: 'Il tuo viaggio è stato offerto',
         toast_booking_accepted: 'La prenotazione è stata accettata',
