@@ -317,6 +317,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     $scope.travelTimeFormat = 'HH:mm';
     $scope.passengerTripsFound.forEach(function (travel) {
         travel.bookingCounters = Utils.getBookingCounters(travel);
+        travel.style = Utils.getTripStyle(travel);
     });
 
     $scope.selectTrip = function (index) {
