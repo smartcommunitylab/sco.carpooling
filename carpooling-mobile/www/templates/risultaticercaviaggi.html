@@ -35,14 +35,15 @@
                             </li>
                         </ul>
                         <!-- TODO: define when the flag needs to be shown here -->
-                        <div class="trip-flag" ng-if="false"></div>
+                       <!-- <div class="trip-flag" ng-if="false"></div>-->
                     </div>
                     <div class="trip-counter">
                         <p class="trip-counter-num">{{trip.bookingCounters.available}}</p>
                         <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
                     </div>
                     <!-- TODO: define when the flag needs to be shown here -->
-                    <div class="trip-flag" ng-if="false"></div>
+                    <!--<div class="trip-flag" ng-if="false"></div>-->
+                    <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                 </div>
             </div>
         </div>

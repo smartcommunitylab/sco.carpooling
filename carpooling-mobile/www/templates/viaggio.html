@@ -6,7 +6,7 @@
             </div>
             <div class="row trip-owner">
                 <div class="col">
-                    <div>
+                    <div class="trip-driver">
                         <p><i class="icons ion-person"></i>
                             <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span></p>
                         <button class="button button-clear button-calm custom-button-calm" ng-click="showUser()">
@@ -14,9 +14,9 @@
                         </button>
                     </div>
                 </div>
-                <div class="col" ng-if="mainCommunity != null" ng-style="{'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
-                    <i class="icons ion-ios-people"></i>
-                    <span>{{mainCommunity.name}}</span>
+                <div class="col" ng-style="{'color': '#FFFFFF', 'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
+                    <i class="icons ion-ios-people" ng-style="{'vertical-align': 'middle', 'font-size': '2em'}"></i>
+                    <p>{{mainCommunity.name}}</p>
                 </div>
             </div>
         </div>

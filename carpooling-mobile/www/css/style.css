@@ -659,6 +659,16 @@ table.chart .labels {}
     border-bottom: 1px solid #d2d2d2;
     font-size: 14px;
 }
+.carpooling-theme .trip-driver{
+    padding-top: 5px;
+}
+.carpooling-theme .trip-driver .icons{
+    vertical-align: middle;
+    font-size: 1.5em;
+}
+.carpooling-theme .trip-driver button{
+    margin: 0;
+}
 
 /*Found Trips results*/
 
