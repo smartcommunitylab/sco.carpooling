@@ -14,7 +14,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col" ng-style="{'color': '#FFFFFF', 'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
+                <div ng-if="mainCommunity != null" class="col" ng-style="{'color': '#FFFFFF', 'background-color': '#'+mainCommunity.color}" ng-click="showCommunity()">
                     <i class="icons ion-ios-people" ng-style="{'vertical-align': 'middle', 'font-size': '2em'}"></i>
                     <p>{{mainCommunity.name}}</p>
                 </div>
