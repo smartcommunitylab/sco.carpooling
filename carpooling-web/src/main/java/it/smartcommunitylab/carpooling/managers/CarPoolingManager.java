@@ -526,31 +526,46 @@ public class CarPoolingManager {
 								uBooking.setRecurrent(true);
 								uBooking.setAccepted(0);
 								transitStateBooking.add(uBooking);
-
+								updatedNewBooking = true;
+								break;
 							}
 						} else if (uBooking.getAccepted() != -1) {
 							availability--; // 3. if not present check for availability
-
-							if (!updatedNewBooking) {
-								// add new booking to instance.
-								transitStateBooking.add(instanceBooking);
-								updatedNewBooking = true;
-							}
 						}
 					}
 					if (availability < 1) {
 						throw new CarPoolingCustomException(HttpStatus.PRECONDITION_FAILED.value(),
 								"travel not bookable.");
 					}
+					if (!updatedNewBooking) {
+						// add new booking to instance.
+						transitStateBooking.add(instanceBooking);
+					}
 				}
-
 			}
 
 			// update recurrent travel.
 			reqBooking.getTraveller().setUserId(userId);
 			reqBooking.setAccepted(0);
-			recurrentTravel.getBookings().add(reqBooking);
-			reccurrentTravelRepository.save(recurrentTravel);
+			
+			boolean alreadyBooked = false;
+			List<RecurrentBooking> tmpList = new ArrayList<RecurrentBooking>();
+			if (recurrentTravel.getBookings() != null) tmpList.addAll(recurrentTravel.getBookings());
+			for (RecurrentBooking uBooking : tmpList) {
+				if (userId.equals(uBooking.getTraveller().getUserId())) {
+					alreadyBooked = true;
+					// if in the past was rejected, allow for being re-booked again? consider rejecting
+					if (uBooking.getAccepted() == -1) {
+						uBooking.setAccepted(0);
+						reccurrentTravelRepository.save(recurrentTravel);
+					}
+					break;
+				}
+			}
+			if (!alreadyBooked) {
+				recurrentTravel.getBookings().add(reqBooking);
+				reccurrentTravelRepository.save(recurrentTravel);
+			}
 
 			// update travel instances of recurrent travel.
 			travelRepository.save(tranistInstances);
