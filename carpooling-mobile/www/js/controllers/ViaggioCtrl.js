@@ -534,7 +534,7 @@ angular.module('carpooling.controllers.viaggio', [])
                                         Utils.loaded();
                                         $ionicHistory.goBack();
                                         Utils.toast($filter('translate')('toast_removed_trips'));
-                                        /* TODO: cache refresh */
+                                        CacheSrv.setReloadDriverTrips(true);
                                     },
                                     function (error) {
                                         Utils.loaded();
@@ -547,7 +547,7 @@ angular.module('carpooling.controllers.viaggio', [])
                                         Utils.loaded();
                                         $ionicHistory.goBack();
                                         Utils.toast($filter('translate')('toast_removed_trip'));
-                                        /* TODO: cache refresh */
+                                        CacheSrv.setReloadDriverTrips(true);
                                     },
                                     function (error) {
                                         Utils.loaded();

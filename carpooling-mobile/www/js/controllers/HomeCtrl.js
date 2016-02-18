@@ -68,6 +68,9 @@ angular.module('carpooling.controllers.home', [])
 
         if (reset) {
             $scope.passengerTrips = null;
+            passengerTripsStart = 0;
+            passengerTripsCount = 20; // default
+            $scope.passengerTripsCanHaveMore = false;
         }
 
         // read trips to confirm
@@ -171,6 +174,9 @@ angular.module('carpooling.controllers.home', [])
 
         if (reset) {
             $scope.driverTrips = null;
+            driverTripsStart = 0;
+            driverTripsCount = 20;
+            $scope.driverTripsCanHaveMore = false;
         }
 
         DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount, true).then(

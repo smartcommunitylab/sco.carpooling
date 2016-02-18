@@ -10,6 +10,7 @@ angular.module('carpooling.services.cache', [])
     var rCommunityTrip = null;
     var rStoricoPassengerTrips = true;
     var rStoricoDriverTrips = true;
+    var rStoricoDriverTrip = null;
 
     cacheService.reset = function() {
       rPassengerTrips = true;
@@ -19,6 +20,7 @@ angular.module('carpooling.services.cache', [])
       rCommunityTrip = null;
       rStoricoPassengerTrips = true;
       rStoricoDriverTrips = true;
+      rStoricoDriverTrip = null;
     };
 
     cacheService.setReloadPassengerTrips = function (reload) {
@@ -77,5 +79,12 @@ angular.module('carpooling.services.cache', [])
         return rStoricoDriverTrips;
     };
 
+    cacheService.setReloadStoricoDriverTrip = function (tripId) {
+        rStoricoDriverTrip = tripId;
+    };
+
+    cacheService.reloadStoricoDriverTrip = function () {
+        return rStoricoDriverTrip;
+    };
     return cacheService;
 });

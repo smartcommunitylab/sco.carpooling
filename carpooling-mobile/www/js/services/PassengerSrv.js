@@ -27,7 +27,8 @@ angular.module('carpooling.services.passenger', [])
                                 deferred.resolve(trip);
                             },
                             function (responseError) {
-                                deferred.reject(responseError.data? responseError.data.error : responseError);
+                                //deferred.reject(responseError.data? responseError.data.error : responseError);
+                                deferred.resolve(trip);
                             }
                         );
                     } else {
