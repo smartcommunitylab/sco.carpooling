@@ -197,5 +197,57 @@ angular.module('carpooling.services.driver', [])
         return deferred.promise;
     };
 
+    driverService.deleteTravel = function (id) {
+        var deferred = $q.defer();
+
+        if (!id) {
+            deferred.reject('Invalid travel id');
+        } else {
+            $http.delete(Config.getServerURL() + '/api/delete/trip/' + id, Config.getHTTPConfig())
+
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
+    driverService.deleteRecurrentTravel = function (id) {
+        var deferred = $q.defer();
+
+        if (!id) {
+            deferred.reject('Invalid travel id');
+        } else {
+            $http.delete(Config.getServerURL() + '/api/delete/recurrenttrip/' + id, Config.getHTTPConfig())
+
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                }
+            );
+        }
+
+        return deferred.promise;
+    };
+
     return driverService;
 });

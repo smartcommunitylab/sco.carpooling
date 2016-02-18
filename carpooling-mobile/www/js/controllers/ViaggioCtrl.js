@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.viaggio', [])
 
-.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, $filter, MapSrv, Config, CacheSrv, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv) {
+.controller('ViaggioCtrl', function ($scope, $rootScope, $q, $state, $stateParams, $ionicPopup, $ionicActionSheet, $filter, MapSrv, Config, CacheSrv, UserSrv, Utils, StorageSrv, PassengerSrv, DriverSrv, $ionicHistory) {
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
@@ -59,18 +59,18 @@ angular.module('carpooling.controllers.viaggio', [])
     var refreshTrip = function (trip) {
         // recurrent trip is returned, but we should reset the instance.
         if (trip.recurrency != null && !trip.recurrentId) {
-          PassengerSrv.getTrip($scope.selectedTrip.id).then(
-            function (data) {
-                refreshTrip(data);
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast();
-            }
-          );
-          return;
+            PassengerSrv.getTrip($scope.selectedTrip.id).then(
+                function (data) {
+                    refreshTrip(data);
+                },
+                function (error) {
+                    Utils.loaded();
+                    Utils.toast();
+                }
+            );
+            return;
         } else {
-          $scope.selectedTrip = trip;
+            $scope.selectedTrip = trip;
         }
         var today = Date.now();
         $scope.pass_accepted = [];
@@ -496,6 +496,94 @@ angular.module('carpooling.controllers.viaggio', [])
             travelId: $scope.travelId,
             personId: $scope.selectedTrip.userId
         });
+    };
+
+    /* Cancel a trip from the DB */
+    $scope.RemoveTrip = function () {
+        if ($scope.pass_not_accepted.length != 0 || $scope.pass_accepted.length != 0) {
+            Utils.toast($filter('translate')('toast_err_remove_trip'));
+        } else {
+            $scope.showRemoveTripPopup();
+        }
+    };
+    /* cancel a trip from the DB popup */
+
+    $scope.showRemoveTripPopup = function () {
+        $scope.recurrencypopup = {
+            recurrent: false
+        };
+        if (!!$scope.selectedTrip.recurrentId) {
+            $ionicPopup.show({
+                scope: $scope,
+                title: $filter('translate')('popup_recurrency_remove'),
+                templateUrl: 'templates/popup_recurrency.html',
+                buttons: [
+                    {
+                        text: $filter('translate')('cancel'),
+                        //type: 'button-stable',
+                        onTap: function (event) {}
+                                },
+                    {
+                        text: $filter('translate')('action_confirm'),
+                        type: 'button-carpooling',
+                        onTap: function (event) {
+                            Utils.loading();
+                            if (!!$scope.recurrencypopup.recurrent) {
+                                DriverSrv.deleteRecurrentTravel($scope.selectedTrip.recurrentId).then(
+                                    function (data) {
+                                        Utils.loaded();
+                                        $ionicHistory.goBack();
+                                        Utils.toast($filter('translate')('toast_removed_trips'));
+                                        /* TODO: cache refresh */
+                                    },
+                                    function (error) {
+                                        Utils.loaded();
+                                        Utils.toast($filter('translate')('toast_err_remove_trip'));
+                                    }
+                                );
+                            } else {
+                                DriverSrv.deleteTravel($scope.selectedTrip.id).then(
+                                    function (data) {
+                                        Utils.loaded();
+                                        $ionicHistory.goBack();
+                                        Utils.toast($filter('translate')('toast_removed_trip'));
+                                        /* TODO: cache refresh */
+                                    },
+                                    function (error) {
+                                        Utils.loaded();
+                                        Utils.toast($filter('translate')('toast_err_remove_trip'));
+                                    }
+                                );
+                            }
+                        }
+                }
+            ]
+            });
+        } else {
+            $ionicPopup.confirm({
+                title: $filter('translate')('popup_removet_trip'),
+                cancelText: $filter('translate')('cancel'),
+                okText: $filter('translate')('popup_recurrency_remove'),
+                okType: 'button-carpooling'
+            }).then(
+                function (ok) {
+                    if (ok) {
+                        DriverSrv.deleteTravel($scope.travelId).then(
+                            function (data) {
+                                Utils.loaded();
+                                $ionicHistory.goBack();
+                                Utils.toast($filter('translate')('toast_removed_trip'));
+                                /* TODO: cache refresh */
+                            },
+                            function (error) {
+                                Utils.loaded();
+                                Utils.toast($filter('translate')('toast_err_remove_trip'));
+                            }
+                        );
+                    }
+                }
+            );
+        }
     };
 
     /*

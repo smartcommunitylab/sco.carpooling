@@ -1,4 +1,7 @@
 <ion-view title="{{isMine ? 'lbl_mytrip': 'lbl_trip'| translate}}">
+    <ion-nav-buttons side="right">
+        <a ng-if="isMine && !isPastTrip" class="button button-icon ion-trash-b" ng-click="RemoveTrip()"></a>
+    </ion-nav-buttons>
     <ion-content>
         <div ng-if="!isMine">
             <div id="trip-map-container" data-tap-disabled="true">
