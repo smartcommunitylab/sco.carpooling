@@ -472,4 +472,61 @@ public class CarPoolingUtils {
 
 	}
 
+	/**
+	 * Check if Travel instance can be deleted.
+	 * @param travel
+	 * @return
+	 */
+	public static boolean isPossibleToDeleteTravel(Travel travel) {
+
+		boolean delete = true;
+
+		if (travel.getBookings().isEmpty()) {
+			return delete;
+		} else {
+			for (Booking booking : travel.getBookings()) {
+				if (booking.getAccepted() != -1) {
+					delete = false;
+					break;
+				}
+
+			}
+		}
+
+		return delete;
+	}
+                         
+	/**
+	 * Check if Recurrent Travel can be deleted.
+	 * @param recurrentTravel
+	 * @param futureInstances
+	 * @return
+	 */
+	public static boolean isPossibleToDeleteRecurrTravel(RecurrentTravel recurrentTravel,
+			List<Travel> futureInstances) {
+
+		boolean deleteRecurr = true;
+
+		boolean deleteInstances = true;
+
+		for (RecurrentBooking booking : recurrentTravel.getBookings()) {
+			if (booking.getAccepted() != -1) {
+				deleteRecurr = false;
+				break;
+			}
+		}
+		
+		if (deleteRecurr) {
+			for (Travel instance : futureInstances) {
+				if (!isPossibleToDeleteTravel(instance)) {
+					deleteInstances = false;
+					break;
+				}
+			}
+		}
+
+
+		return (deleteRecurr & deleteInstances);
+	}
+
 }

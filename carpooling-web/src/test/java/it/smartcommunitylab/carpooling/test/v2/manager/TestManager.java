@@ -18,6 +18,7 @@ package it.smartcommunitylab.carpooling.test.v2.manager;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
@@ -35,10 +36,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
+import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.RecurrentBooking;
 import it.smartcommunitylab.carpooling.model.RecurrentTravel;
 import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
+import it.smartcommunitylab.carpooling.model.Traveller;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.RecurrentTravelRepository;
@@ -211,124 +215,107 @@ public class TestManager {
 
 	}
 	
-	//
-	// @Test
-	// public void testRecurrentTravelBooking() throws JsonProcessingException,
-	// IOException, ParseException, CarPoolingCustomException {
-	//
-	// /**
-	// * travel with 4 places, has two recurrent bookings. (since one is
-	// rejected, see recurrentTravel.json)
-	// * user(53) request for non-recurrent booking and allowed.
-	// * user(53) request for recurrnt booking on different date and allowed
-	// * user(52) request for reccruent booking and allowed.
-	// * user(70) request for reccurrent booking and disallowed.
-	// * driver rejects above bookings.
-	// * user(70) request for reccurrent booking and allowed + accepted by
-	// driver.
-	// */
-	//
-	// travelRepository.deleteAll();
-	//
-	// // construct ref Travel from json file.
-	// InputStream jsonlFile = Thread.currentThread().getContextClassLoader()
-	// .getResourceAsStream("recurrentTravel.json");
-	// JsonNode rootNode = mapper.readTree(jsonlFile);
-	// ArrayNode arrayNode = (ArrayNode) rootNode;
-	//
-	// for (JsonNode node : arrayNode) {
-	// Travel travel = mapper.convertValue(node, Travel.class);
-	// travelRepository.save(travel);
-	// }
-	//
-	// InputStream travelReqJson =
-	// Thread.currentThread().getContextClassLoader()
-	// .getResourceAsStream("travelReq.json");
-	// JsonNode travelReqrootNode = mapper.readTree(travelReqJson);
-	// ArrayNode travelReqArrayNode = (ArrayNode) travelReqrootNode;
-	// TravelRequest travelRequest =
-	// mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
-	//
-	// List<Travel> travels = travelManager.searchTravels(travelRequest, "53");
-	//
-	// Assert.assertEquals(travels.get(0).getBookings().size(), 3); // since one
-	// booking is rejected.
-	//
-	// Booking nonRecurr1 = new Booking();
-	// nonRecurr1.setRecurrent(false);
-	// nonRecurr1.setDate(CarPoolingUtils.dateFormat.parse("2015-09-29"));
-	// nonRecurr1.setTraveller(new Traveller("53", "User Reccurrent",
-	// "User Reccurrent", null));
-	//
-	// Travel travel = travelManager.bookTrip("560263eed1f1f802c2a83book",
-	// nonRecurr1, "53");
-	//
-	// Assert.assertEquals(travel.getBookings().size(), 4);
-	//
-	// // second booking for same user.
-	// Booking nonRecurr2 = new Booking();
-	// nonRecurr2.setRecurrent(false);
-	// nonRecurr2.setDate(CarPoolingUtils.dateFormat.parse("2015-09-30"));
-	// nonRecurr2.setTraveller(new Traveller("53", "User Reccurrent",
-	// "User Reccurrent", null));
-	//
-	// travel = travelManager.bookTrip("560263eed1f1f802c2a83book", nonRecurr2,
-	// "53");
-	//
-	// Assert.assertEquals(travel.getBookings().size(), 5);
-	//
-	// Booking recurrBooking = new Booking();
-	// recurrBooking.setRecurrent(true);
-	// recurrBooking.setTraveller(new Traveller("52", "User Reccurrent",
-	// "User Reccurrent", null));
-	//
-	// travel = travelManager.bookTrip("560263eed1f1f802c2a83book",
-	// recurrBooking, "52");
-	//
-	// Assert.assertEquals(travel.getBookings().size(), 6);
-	//
-	// Booking recurrBooking2 = new Booking();
-	// recurrBooking2.setRecurrent(true);
-	// recurrBooking2.setTraveller(new Traveller("70",
-	// "Blocked User Reccurrent", "Blocked User Reccurrent", null));
-	//
-	// travel = travelManager.bookTrip("560263eed1f1f802c2a83book",
-	// recurrBooking2, "70");
-	//
-	// Assert.assertEquals(travel.getBookings().size(), 6);
-	//
-	// // reject first two non recurrent bookings.
-	// nonRecurr1.setAccepted(-1);
-	// nonRecurr2.setAccepted(-1);
-	// travel = travelManager.acceptTrip("560263eed1f1f802c2a83book",
-	// nonRecurr1, "54");
-	// travel = travelManager.acceptTrip("560263eed1f1f802c2a83book",
-	// nonRecurr2, "54");
-	//
-	// recurrBooking.setAccepted(-1);
-	// travel = travelManager.acceptTrip("560263eed1f1f802c2a83book",
-	// recurrBooking, "54");
-	//
-	// travel = travelManager.bookTrip("560263eed1f1f802c2a83book",
-	// recurrBooking2, "70");
-	//
-	// Assert.assertEquals(travel.getBookings().size(), 7);
-	//
-	// recurrBooking2.setAccepted(1);
-	// travel = travelManager.acceptTrip("560263eed1f1f802c2a83book",
-	// recurrBooking2, "54");
-	//
-	// boolean accepted = false;
-	// for (Booking booking : travel.getBookings()) {
-	// if (booking.getTraveller().getUserId().equalsIgnoreCase("70") &&
-	// booking.getAccepted() == 1) {
-	// accepted = true;
-	// }
-	// }
-	//
-	// Assert.assertTrue(accepted);
-	// }
-	//
+	
+	@Test
+	public void testDeleteRecurrentTravel()
+			throws JsonProcessingException, IOException, CarPoolingCustomException, ParseException {
+
+		/**
+		 * create recurrent travel with two instances in past.
+		 * delete recurrent travel.
+		 * check remaining instances (must be two) since the ones in future gets deleted.
+		 * run auto extend nothing new should be created.
+		 */
+
+		travelRepository.deleteAll();
+		
+		RecurrentTravel reccurrTravel = null;
+		String userId = "52";
+		String passengerId = "53";
+
+		InputStream reqTravel = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("travelsRecurr-v2.json");
+		JsonNode travelReqNode = mapper.readTree(reqTravel);
+		ArrayNode travelReqArray = (ArrayNode) travelReqNode;
+
+		// create recurrent travel of now.
+		for (JsonNode node : travelReqArray) {
+			reccurrTravel = mapper.convertValue(node, RecurrentTravel.class);
+			// +hour, -hour.
+			reccurrTravel.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), -2));
+			carPoolingManager.saveRecurrentTravel(reccurrTravel, userId);
+		}
+
+		Assert.assertEquals(travelRepository.count(), 10);
+		
+		carPoolingManager.deleteRecurrentTravel(reccurrTravel.getId(), userId);
+		
+		Assert.assertEquals(travelRepository.count(), 2);
+		
+		// call extension
+		carPoolingManager.autoExtendRecurrTravelInstances();
+				
+		/**
+		 * create another recurrent travel.
+		 * make a booking to one of non-recurrent instances.
+		 * delete recurrent travel, remaining instances must be same as before.
+		 */
+		
+		travelRepository.deleteAll();
+		
+		for (JsonNode node : travelReqArray) {
+			reccurrTravel = mapper.convertValue(node, RecurrentTravel.class);
+			// +hour, -hour.
+			reccurrTravel.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), -2));
+			carPoolingManager.saveRecurrentTravel(reccurrTravel, userId);
+		}
+		
+		InputStream travelReqJson = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("single-travelReq-v2.json");
+		JsonNode travelReqrootNode = mapper.readTree(travelReqJson);
+		ArrayNode travelReqArrayNode = (ArrayNode) travelReqrootNode;
+		TravelRequest travelRequest = mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
+		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), -1));
+
+		List<Travel> travels = carPoolingManager.searchTravels(travelRequest, "53");
+
+		RecurrentBooking recurrBooking = new RecurrentBooking();
+		recurrBooking.setTraveller(new Traveller(passengerId, "User Reccurrent", "User Reccurrent", null));
+
+		reccurrTravel = carPoolingManager.bookRecurrentTravel(reccurrTravel.getId(), recurrBooking, passengerId);
+		Assert.assertEquals(reccurrTravel.getBookings().size(), 1);
+
+		try {
+			carPoolingManager.deleteRecurrentTravel(reccurrTravel.getId(), userId);
+		} catch (Exception e) {
+			Assert.assertEquals(travelRepository.count(), 10);
+
+		}
+
+		carPoolingManager.deleteTravel(travels.get(0).getId(), userId);
+
+		Assert.assertEquals(travelRepository.count(), 9);
+
+		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 0));
+
+		travels = carPoolingManager.searchTravels(travelRequest, "53");
+
+		try {
+
+			Booking nonRecurr2 = new Booking();
+			nonRecurr2.setRecurrent(false);
+			nonRecurr2.setDate(CarPoolingUtils.dateFormat.parse("2015-09-30"));
+			nonRecurr2.setTraveller(new Traveller(passengerId, "Non Reccurrent User", "Non Reccurrent User", null));
+
+			Travel bookedTravel = carPoolingManager.bookNonRecurrent(travels.get(0).getId(), nonRecurr2, passengerId);
+			carPoolingManager.deleteTravel(bookedTravel.getId(), userId);
+			
+		} catch (Exception e) {
+			Assert.assertEquals(travelRepository.count(), 9);
+		}
+
+	}
+	
 	// @Test
 	// public void testTravelRequestMatching() throws JsonProcessingException,
 	// IOException, CarPoolingCustomException {

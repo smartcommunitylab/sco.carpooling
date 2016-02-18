@@ -1208,6 +1208,74 @@ public class CarPoolingManager {
 
 		return errorMap;
 	}
+	
+	/**
+	 * Delete Travel.
+	 * @param travelId
+	 * @param userId
+	 * @return
+	 * @throws CarPoolingCustomException
+	 */
+	public Map<String, String> deleteTravel(String travelId, String userId) throws CarPoolingCustomException {
+
+		Map<String, String> errorMap = new HashMap<String, String>();
+
+		Travel travel = travelRepository.findTravelByIdAndDriverId(travelId, userId);
+
+		if (travel != null) {
+			// check if travel can be deleted.
+			if (CarPoolingUtils.isPossibleToDeleteTravel(travel)) {
+				travelRepository.delete(travel);
+			} else {
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "cannot delete travel");
+			}
+
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "travel not found");
+		}
+
+		return errorMap;
+	}
+
+	/**
+	 * Delete Recurrent Travel
+	 * @param recurrentTravelId
+	 * @param userId
+	 * @return
+	 */
+	public Map<String, String> deleteRecurrentTravel(String recurrentTravelId, String userId)
+			throws CarPoolingCustomException {
+
+		Map<String, String> errorMap = new HashMap<String, String>();
+
+		RecurrentTravel recurrentTravel = reccurrentTravelRepository.findTravelByIdAndDriverId(recurrentTravelId,
+				userId);
+
+		if (recurrentTravel != null) {
+
+			// get all future instances of recurrent travel.
+			List<Travel> futureInstances = travelRepository.findFutureInstanceOfRecurrTravel(recurrentTravelId);
+
+			// check if recurrent travel can be deleted.
+			if (CarPoolingUtils.isPossibleToDeleteRecurrTravel(recurrentTravel, futureInstances)) {
+
+				// delete future instances.
+				if (!futureInstances.isEmpty()) {
+					travelRepository.delete(futureInstances);
+				}
+
+				// delete recurrent travel;
+				reccurrentTravelRepository.delete(recurrentTravel);
+			} else {
+				throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "cannot delete recurrent travel");	
+			}
+
+		} else {
+			throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "recurrent travel not found");
+		}
+
+		return errorMap;
+	}
 
 	@Scheduled(cron = "0 0 0/1 * * ?")
 	public void autoSendEvaluationNotification() throws CarPoolingCustomException {
@@ -1337,6 +1405,6 @@ public class CarPoolingManager {
 		RecurrentTravel rt = reccurrentTravelRepository.findOne(tripId);
 		if (rt != null) return rt.getRecurrency();
 		throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "recurrent travel not found");
-	}
+	}	
 
 }

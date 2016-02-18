@@ -443,6 +443,42 @@ public class ServiceController {
 
 		return response;
 	}
+	
+	
+	@RequestMapping(method = RequestMethod.DELETE, value = "/api/delete/trip/{travelId}")
+	public @ResponseBody Response<String> deleteTravel(@PathVariable String travelId) throws CarPoolingCustomException {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.deleteTravel(travelId, getUserId());
+
+		if (errorMap.isEmpty()) {
+			response.setData("travel deleted successfully");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+	}
+	
+	@RequestMapping(method = RequestMethod.DELETE, value = "/api/delete/recurrenttrip/{recurrentTravelId}")
+	public @ResponseBody Response<String> deleteRecurrentTravel(@PathVariable String recurrentTravelId) throws CarPoolingCustomException {
+
+		Response<String> response = new Response<String>();
+
+		Map<String, String> errorMap = carPoolingManager.deleteRecurrentTravel(recurrentTravelId, getUserId());
+
+		if (errorMap.isEmpty()) {
+			response.setData("recurrent travel deleted successfully");
+		} else if (errorMap.containsKey(CarPoolingUtils.ERROR_CODE)) {
+			throw new CarPoolingCustomException(Integer.valueOf(errorMap.get(CarPoolingUtils.ERROR_CODE)),
+					errorMap.get(CarPoolingUtils.ERROR_MSG));
+		}
+
+		return response;
+	}
+	
 
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody Response<Void> handleExceptions(Exception exception, HttpServletResponse response) {
