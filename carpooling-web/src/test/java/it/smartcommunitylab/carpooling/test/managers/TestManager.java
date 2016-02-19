@@ -220,6 +220,7 @@ public class TestManager {
 			travel.setWhen(System.currentTimeMillis());
 			try {
 
+				userRepository.save(new User("54", null, null, null, null, null, null));
 				travelManager.saveRecurrentTravel(travel, "54");
 
 			} catch (CarPoolingCustomException e) {
@@ -235,6 +236,7 @@ public class TestManager {
 		TravelRequest travelRequest = mapper.convertValue(travelReqArrayNode.get(0), TravelRequest.class);
 		travelRequest.setWhen(CarPoolingUtils.adjustNumberOfDaysToWhen(System.currentTimeMillis(), 1));
 
+		userRepository.save(new User("53", null, null, null, null, null, null));
 		List<Travel> travels = travelManager.searchTravels(travelRequest, "53");
 
 		Booking nonRecurr1 = new Booking();
@@ -278,11 +280,13 @@ public class TestManager {
 
 			Assert.assertEquals(travel.getBookings().size(), 2);
 
+			userRepository.save(new User("55", null, null, null, null, null, null));
 			recurrBooking.setTraveller(new Traveller("55", "User Recurrent", "User Recurrent", null));
 			travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", recurrBooking, "55");
 
 			Assert.assertEquals(travel.getBookings().size(), 3);
 
+			userRepository.save(new User("56", null, null, null, null, null, null));
 			recurrBooking.setTraveller(new Traveller("56", "User Recurrent", "User Recurrent", null));
 			travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", recurrBooking, "56");
 
@@ -293,6 +297,7 @@ public class TestManager {
 		}
 
 		try {
+			userRepository.save(new User("70", null, null, null, null, null, null));
 			recurrBooking.setTraveller(new Traveller("70", "Blocked Userd", "Blocked User", null));
 			RecurrentTravel travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", recurrBooking,
 					"70");
@@ -317,6 +322,7 @@ public class TestManager {
 			
 			Assert.assertTrue(rejected);
 
+			userRepository.save(new User("70", null, null, null, null, null, null));
 			recurrBooking.setTraveller(new Traveller("70", "Blocked User", "Blocked User", null));
 			travel = travelManager.bookRecurrentTravel("560263eed1f1f802c2a83book", recurrBooking, "70");
 
