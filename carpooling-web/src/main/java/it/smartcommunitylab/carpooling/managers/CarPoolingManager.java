@@ -1320,7 +1320,7 @@ public class CarPoolingManager {
 					boolean nofityDriver = false;
 
 					for (Booking booking : travel.getBookings()) {
-						if (booking.getAccepted() == 1) {
+						if (booking.getAccepted() == 1 && booking.getBoarded() == 1) {
 							nofityDriver = true;
 							String passengerId = booking.getTraveller().getUserId();
 							Notification passengerRatingNotification = new Notification(passengerId,
