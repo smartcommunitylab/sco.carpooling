@@ -23,9 +23,8 @@
 /* Menu */
 
 .carpooling-theme .menu .item:first-child {
-  margin-top: 16px;
+    margin-top: 16px;
 }
-
 .carpooling-theme .menu,
 .carpooling-theme .menu .item,
 .carpooling-theme .menu .item .item-content {
@@ -270,10 +269,10 @@ placeautocomplete ul li {
 .card.card-trip .trip-data .trip-data-rejected {
     color: #FF0000;
 }
-.card.card-trip .trip-data-storic{
+.card.card-trip .trip-data-storic {
     width: 100% !important;
 }
-.card.card-trip .trip-data ul li .right-data{
+.card.card-trip .trip-data ul li .right-data {
     color: #A0A0A0;
     float: right;
     font-size: 0.8em;
@@ -430,48 +429,57 @@ placeautocomplete ul li {
     min-height: 16px;
     line-height: 0px;
 }
-
-.btn{
+.btn {
     width: 50%;
     float: left;
     padding: 5px;
 }
-.btn.btn-left{
+.btn.btn-left {
     padding-left: 5px;
 }
-.btn.btn-right{
+.btn.btn-right {
     padding-right: 5px;
 }
 .btn button {
     width: 100%;
 }
-.day-change{
+.day-change {
     text-align: center;
+    position: relative;
 }
-.day-change h5{
+.day-change h5 {
     display: inline-block;
-    margin: 0;
-    padding: 0;
     vertical-align: super;
     font-size: 1.2em;
+    padding-bottom: 10px;
 }
-.day-change .button-day{
-    font-size: 2.5em;
+.day-change .button-day {
+    font-size: 1.5em;
     display: inline-block;
-    color: #3f51b5;
+    color: #FFFFFF;
     border: none;
-    background-color: #FFFFFF;
+    background-color: #4EB0E6;
+    border-radius: 1.6em;
+    width: 1.6em;
+    height: 1.6em;
+    padding-top: 0.2em;
 }
-.day-change .button-day.b_left{
-    float: left;
-    margin-left: 0.2em;
+.day-change .button-day.b_left {
+    margin-left: 1em;
+    padding-left: 0.2em;
+    position: absolute;
+    top: 0.8em;
+    left: 1em;
 }
-.day-change .button-day.b_right{
-    float: right;
-    margin-right: 0.2em;
+.day-change .button-day.b_right {
+    margin-right: 1em;
+    padding-right: 0.2em;
+    position: absolute;
+    top: 0.8em;
+    right: 1em;
 }
-.day-change .button-day:disabled{
-    color: #888888;
+.day-change .button-day:disabled {
+    background-color: #E8E8E8;
 }
 
 /* USERINFO  */
@@ -510,11 +518,9 @@ table.chart .values {
     height: 100%;
 }
 table.chart .values td {
-/*    padding: 0 0.5em;*/
-  border-bottom: 3px solid #3f51b5;
+    /*    padding: 0 0.5em;*/
+    border-bottom: 3px solid #3f51b5;
 }
-
-
 table.chart .values .value {
     position: absolute;
     height: 100%;
@@ -678,6 +684,11 @@ table.chart .labels {}
     text-align: center;
     padding-top: 1em;
 }
+.carpooling-theme .community-trips button.button-block.button-carpooling {
+    margin-top: 0;
+    border-radius: 0;
+    border-top-color: #3448A5;
+}
 .trip-owner {
     padding: 0px;
 }
@@ -687,14 +698,14 @@ table.chart .labels {}
     border-bottom: 1px solid #d2d2d2;
     font-size: 14px;
 }
-.carpooling-theme .trip-driver{
+.carpooling-theme .trip-driver {
     padding-top: 5px;
 }
-.carpooling-theme .trip-driver .icons{
+.carpooling-theme .trip-driver .icons {
     vertical-align: middle;
     font-size: 1.5em;
 }
-.carpooling-theme .trip-driver button{
+.carpooling-theme .trip-driver button {
     margin: 0;
 }
 
@@ -720,18 +731,16 @@ h5 {
     text-transform: uppercase;
     color: #3448A5;
 }
-
 .popup-buttons button {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 .profile-label-readonly {
-  white-space: normal;
-  text-align: right;
-  min-width: 50px;
-  font-size: 14px;
-  font-weight: bold;
+    white-space: normal;
+    text-align: right;
+    min-width: 50px;
+    font-size: 14px;
+    font-weight: bold;
 }
-
 .autocomplete-suggestions {
-  background-color: #fff !important;
+    background-color: #fff !important;
 }
