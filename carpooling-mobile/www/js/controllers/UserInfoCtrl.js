@@ -3,7 +3,7 @@ angular.module('carpooling.controllers.user', [])
 .controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
 
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
-
+    $scope.phone_numb = null;
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {

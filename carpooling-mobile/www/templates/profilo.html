@@ -6,7 +6,7 @@
 
     <ion-tabs class="tabs-top">
         <!-- User Info Tab -->
-        <ion-tab icon="ion-ios-information"  ng-click="selectTab(0)">
+        <ion-tab icon="ion-ios-information" ng-click="selectTab(0)">
             <!--<ion-nav-view name="tab-userinfo"></ion-nav-view>-->
             <ion-view>
                 <ion-content class="padding user-profile">
@@ -19,18 +19,24 @@
                     </div>
 
                     <div class="list user-options">
-                        <ion-toggle ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}</ion-toggle>
-
+                        <!--TODO <div class="item item-input">
+                            <span class="input-label">{{'lbl_phone_contact' | translate}}:</span>
+                            <a class="phone" href="tel:{{phone_numb}}" target="_blank">{{phone_numb}}</a>
+                        </div>-->
+                        <ion-toggle style="color: #3448A5" ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}:</ion-toggle>
+                        <!--TODO <div class="item item-input">
+                                <span class="input-label">{{'lbl_user_car_owner' | translate}}:</span>
+                        </div>-->
                         <div ng-if="!!user.auto">
                             <label class="item item-input">
-                                <span class="input-label">{{'lbl_user_car_info' | translate}}</span>
+                                <span class="input-label">{{'lbl_user_car_info' | translate}}:</span>
                                 <input ng-if="editMode" type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
                                 <span ng-if="!editMode" class="profile-label-readonly">{{user.auto.description}}</span>
                             </label>
 
                             <label class="item item-input" ng-class="{'item-select':editMode}">
                                 <div class="input-label">
-                                    {{'lbl_user_car_seats_user' | translate}}
+                                    {{'lbl_user_car_seats_user' | translate}}:
                                 </div>
                                 <select ng-if="editMode" ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!user.auto"></select>
                                 <span ng-if="!editMode" class="profile-label-readonly">{{user.auto.posts}}</span>
@@ -42,7 +48,7 @@
         </ion-tab>
 
         <!-- User Stats Tab -->
-        <ion-tab icon="ion-stats-bars"  ng-click="selectTab(1)">
+        <ion-tab icon="ion-stats-bars" ng-click="selectTab(1)">
             <!--    <ion-nav-view name="tab-userstats"></ion-nav-view>-->
             <ion-view>
                 <ion-content class="padding" ng-init="initStats()">
