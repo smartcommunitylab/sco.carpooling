@@ -44,5 +44,8 @@ public interface NotificationRepository extends PagingAndSortingRepository<Notif
 
 	@Query("{'travelId':?0, 'type':?1}")
 	List<Notification> findByTravelIdAndNotificationType(String travelId, String type);
+	
+	@Query("{'travelId':?0}")
+	List<Notification> findByTravelId(String travelId);
 
 }

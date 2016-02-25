@@ -1153,6 +1153,19 @@ public class CarPoolingManager {
 		return notifications.getContent();
 
 	}
+	
+	/**
+	 * read notifications of travel
+	 * @param userId
+	 * @param travelId
+	 * @return
+	 */
+	public List<Notification> readNotificationsOfTravelId(String travelId) {
+
+		List<Notification> notifications = notificationRepository.findByTravelId(travelId);
+
+		return notifications;
+	}
 
 	/**
 	 * mark notification as read.
@@ -1420,6 +1433,7 @@ public class CarPoolingManager {
 		RecurrentTravel rt = reccurrentTravelRepository.findOne(tripId);
 		if (rt != null) return rt.getRecurrency();
 		throw new CarPoolingCustomException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "recurrent travel not found");
-	}	
+	}
+
 
 }
