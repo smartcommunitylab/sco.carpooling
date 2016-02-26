@@ -1,10 +1,12 @@
-<ion-view title="{{'menu_chat' | translate}}">
-    <ion-content delegate-handle="userMessageScroll" overflow-scroll="true"><!-- ng-init="loadAllMsg()" -->
+<ion-view>
+    <ion-nav-title>{{personName}}</ion-nav-title>
+    <ion-content delegate-handle="userMessageScroll" overflow-scroll="true">
+        <!-- ng-init="loadAllMsg()" -->
         <button ng-if="oldMsgPresent" class="button button-full button-light" ng-click="loadOldChat()">
             {{'lbl_old_chat' | translate}}
         </button>
         <div class="chat-wrapper">
-<!--            <ion-refresher pulling-icon="ion-ios-arrow-thin-down" refreshing-text="loading messages" on-refresh="moreMessages()">
+            <!--            <ion-refresher pulling-icon="ion-ios-arrow-thin-down" refreshing-text="loading messages" on-refresh="moreMessages()">
             </ion-refresher>-->
             <div ng-repeat="ms in messages" ng-last-repeat="messages">
                 <div id="{{ ms.timestamp }}" class="card card-chat" ng-class="{'card-chat-my': (isMe(ms.userId) && !chatExtraLength(ms.text)), 'card-chat-my-extra': (isMe(ms.userId) && chatExtraLength(ms.text))}">
@@ -23,8 +25,9 @@
     </ion-content>
     <ion-footer-bar keyboard-attach class="bar-stable item-input input-chat">
         <input type="text" placeholder="{{'send_msg_placeholder' | translate}}" ng-model="new_message" ng-focus="inputUp()" ng-blur="inputDown()">
-        <button class="button button-carpooling icon ion-android-send" ng-click="sendMessage(new_message)"><!-- button-icon button-large -->
-<!--          <i class="icon ion-android-send"></i>-->
+        <button class="button button-carpooling icon ion-android-send" ng-click="sendMessage(new_message)">
+            <!-- button-icon button-large -->
+            <!--          <i class="icon ion-android-send"></i>-->
         </button>
     </ion-footer-bar>
 </ion-view>
