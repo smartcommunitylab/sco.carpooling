@@ -46,7 +46,7 @@ angular.module('carpooling.controllers.communityinfo', [])
         if ($scope.selectDate >= start && $scope.selectDate <= end) {
             $scope.lbl_day = $filter('translate')('lbl_todaytrips');
         } else {
-            $scope.lbl_day = $filter('date')($scope.selectDate, 'EEEE dd/MM/yyyy');
+            $scope.lbl_day = $filter('date')($scope.selectDate, 'EEE dd/MM/yyyy');
         }
     };
 
