@@ -481,10 +481,10 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		/** recurrent/non trip times. **/
 		Date reqDate = new Date(timeInMillies);
 		// from the start of day until end of day.
-		Date startOfDay = CarPoolingUtils.getStartOfDay(reqDate);
+		Date timestartOfDay = CarPoolingUtils.getStartOfDay(reqDate);
 		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
 		// normal.
-		Criteria timeCriteria = new Criteria().where("when").gte(startOfDay.getTime())
+		Criteria timeCriteria = new Criteria().where("when").gte(timestartOfDay.getTime())
 				.lte(timeEndOfDay.getTime());
 
 		Query query = new Query();
