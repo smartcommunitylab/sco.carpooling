@@ -484,7 +484,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Date startOfDay = CarPoolingUtils.getStartOfDay(reqDate);
 		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
 		// normal.
-		Criteria timeCriteria = new Criteria().where("when").gte(startOfDay)
+		Criteria timeCriteria = new Criteria().where("when").gte(startOfDay.getTime())
 				.lte(timeEndOfDay.getTime());
 
 		Query query = new Query();
