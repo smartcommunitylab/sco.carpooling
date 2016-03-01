@@ -3,7 +3,6 @@ angular.module('carpooling.controllers.user', [])
 .controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
 
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
-    $scope.phone_numb = null;
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
@@ -16,7 +15,7 @@ angular.module('carpooling.controllers.user', [])
 
     var hasAuto = function (auto) {
         // return !!$scope.user.auto
-        if (!!auto && !!auto.description && auto.posts !== 0) {
+        if (!!auto && !!auto.description && auto.posts > 0) {
             return true;
         }
         return false;
@@ -27,7 +26,11 @@ angular.module('carpooling.controllers.user', [])
 
         if (!$scope.user) {
             $scope.user = {
-                auto: null
+                auto: {
+                    description: '',
+                    posts: -1,
+                    telephone: ''
+                }
             };
         }
 
@@ -142,12 +145,22 @@ angular.module('carpooling.controllers.user', [])
         if ($scope.edit.hasAuto) {
             if (!$scope.user.auto) {
                 $scope.user.auto = {
-                    posts: 4,
+                    posts: -1,
                     description: ''
+                };
+            } else {
+                $scope.user.auto = {
+                    posts: 4,
+                    description: '',
+                    telephone: $scope.user.auto.telephone
                 };
             }
         } else {
-            $scope.user.auto = null;
+            $scope.user.auto = {
+                description: '',
+                posts: -1,
+                telephone: $scope.user.auto.telephone
+            };
         }
     }
 
