@@ -366,7 +366,9 @@ angular.module('carpooling', [
 })
 
 .config(function ($httpProvider, $ionicConfigProvider) {
-    $httpProvider.defaults.withCredentials = true;
+  // PROBLEM WITH SCROLL RESIZE ON OLD ANDROID DEVICES
+  $ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4);
+  $httpProvider.defaults.withCredentials = true;
     $ionicConfigProvider.backButton.text('');
     $ionicConfigProvider.backButton.previousTitleText(false);
 })
