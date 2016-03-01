@@ -1031,7 +1031,7 @@ public class CarPoolingManager {
 		User driver = userRepository.findOne(userId);
 
 		if (driver != null) {
-			if (!auto.getDescription().isEmpty() && auto.getPosts() > -1) {
+			if (!auto.getDescription().isEmpty()) { //&& auto.getPosts() > -1
 				driver.setAuto(auto);
 			} else {
 				driver.setAuto(null);
