@@ -17,20 +17,17 @@
                         <h4 class="user-name" ng-if="!!user.name || !!user.surname">{{user.name}} {{user.surname}}</h4>
                         <h4 class="user-name" ng-if="!user.name && !user.surname">{{'lbl_user_anonymous' | translate}}</h4>
                     </div>
-
                     <div class="list user-options">
-                        <!--TODO <div class="item item-input">
-                            <span class="input-label">{{'lbl_phone_contact' | translate}}:</span>
-                            <a class="phone" href="tel:{{phone_numb}}" target="_blank">{{phone_numb}}</a>
-                        </div>-->
+                        <span class="item item-input" ng-if="editMode || !!user.auto.telephone">
+                            <span class="input input-label">{{'lbl_phone_contact' | translate}}:</span>
+                        <a class="phone" href="tel:{{user.auto.telephone}}" target="_blank" ng-if="!editMode && !!user.auto.telephone">{{user.auto.telephone}}</a>
+                        <input ng-if="editMode" type="text" ng-model="user.auto.telephone" ng-readonly="!editMode" placeholder="...">
+                        </span>
                         <ion-toggle style="color: #3448A5" ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}:</ion-toggle>
-                        <!--TODO <div class="item item-input">
-                                <span class="input-label">{{'lbl_user_car_owner' | translate}}:</span>
-                        </div>-->
-                        <div ng-if="!!user.auto">
+                        <div ng-if="(!!user.auto  && !!user.auto.description && user.auto.posts > 0) || editMode">
                             <label class="item item-input">
                                 <span class="input-label">{{'lbl_user_car_info' | translate}}:</span>
-                                <input ng-if="editMode" type="text" ng-model="user.auto.description" ng-disabled="editMode && !user.auto" ng-readonly="!editMode" placeholder="...">
+                                <input ng-if="editMode" type="text" ng-model="user.auto.description" ng-disabled="editMode && !edit.hasAuto" ng-readonly="!editMode" placeholder="...">
                                 <span ng-if="!editMode" class="profile-label-readonly">{{user.auto.description}}</span>
                             </label>
 
@@ -38,7 +35,7 @@
                                 <div class="input-label">
                                     {{'lbl_user_car_seats_user' | translate}}:
                                 </div>
-                                <select ng-if="editMode" ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="!user.auto"></select>
+                                <select ng-if="editMode" ng-model="user.auto.posts" ng-options="n for n in edit.postsAvailable" ng-disabled="editMode && !edit.hasAuto"></select>
                                 <span ng-if="!editMode" class="profile-label-readonly">{{user.auto.posts}}</span>
                             </label>
                         </div>
