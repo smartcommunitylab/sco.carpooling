@@ -18,9 +18,9 @@
                         <h4 class="user-name" ng-if="!user.name && !user.surname">{{'lbl_user_anonymous' | translate}}</h4>
                     </div>
                     <div class="list user-options">
-                        <span class="item item-input">
+                        <span class="item item-input" ng-if="editMode || !!user.auto.telephone">
                             <span class="input input-label">{{'lbl_phone_contact' | translate}}:</span>
-                        <a class="phone" href="tel:{{user.auto.telephone}}" target="_blank" ng-if="!editMode">{{user.auto.telephone}}</a>
+                        <a class="phone" href="tel:{{user.auto.telephone}}" target="_blank" ng-if="!editMode && !!user.auto.telephone">{{user.auto.telephone}}</a>
                         <input ng-if="editMode" type="text" ng-model="user.auto.telephone" ng-readonly="!editMode" placeholder="...">
                         </span>
                         <ion-toggle style="color: #3448A5" ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}:</ion-toggle>
