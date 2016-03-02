@@ -491,15 +491,55 @@ placeautocomplete ul li {
 .user-profile .user-image i {
     font-size: 10em;
 }
-.user-profile .user-options {}
-.user-profile .user-options .item.item-input .input-label{
+.user-profile .user-options .item.item-input .input-label {
     color: #3448A5;
 }
-.user-profile .user-options .phone{
+.user-profile .user-options .phone {
     text-decoration: none;
     color: #4EB0E6;
     width: 100%;
     padding-top: 2px;
+}
+
+/* custom radio button */
+
+.custom-toggle .item .item-content {
+    background-color: #fff !important;
+}
+.custom-toggle .item {
+    border: none;
+    background-color: #FFFFFF;
+}
+.custom-toggle .radio-icon {
+    visibility: visible !important;
+}
+.custom-toggle .radio-icon:before {
+    content: "" !important;
+    border: 2px solid black !important;
+    width: 24px !important;
+    height: 24px !important;
+    border-radius: 50% !important;
+    /*overflow: hidden !important;*/
+}
+.custom-toggle .radio-icon:after {
+    content: "" !important;
+    position: absolute !important;
+    right: 20px !important;
+    top: 21px !important;
+    background: black !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-radius: 50% !important;
+}
+.item-radio input:checked + .radio-content .radio-icon:after {
+    width: 12px !important;
+    height: 12px !important;
+}
+.radio-positive .radio-icon:after {
+    background: #3448A5 !important;
+}
+.radio-positive .radio-icon:before {
+    border-color: #3448A5 !important;
 }
 
 /* Stats*/
@@ -734,7 +774,7 @@ h5 {
 }
 .profile-label-readonly {
     white-space: normal;
-    text-align: right;
+    text-align: left;
     min-width: 50px;
     font-size: 14px;
     font-weight: bold;

@@ -23,7 +23,17 @@
                         <a class="phone" href="tel:{{user.auto.telephone}}" target="_blank" ng-if="!editMode && !!user.auto.telephone">{{user.auto.telephone}}</a>
                         <input ng-if="editMode" type="text" ng-model="user.auto.telephone" ng-readonly="!editMode" placeholder="...">
                         </span>
-                        <ion-toggle style="color: #3448A5" ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}:</ion-toggle>
+                        <!--<ion-toggle style="color: #3448A5" ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}:</ion-toggle>-->
+                        <div class="custom-toggle item item-input">
+                            <span class="input input-label">{{'lbl_user_car_owner' | translate}}:</span>
+                            <ion-radio ng-value="true" ng-model="edit.hasAuto" class="radio-positive" ng-if="editMode" ng-change="toggleHasAuto()">
+                                {{'lbl_yes' | translate}}
+                            </ion-radio>
+                            <ion-radio ng-value="false" ng-model="edit.hasAuto" class="radio-positive" ng-if="editMode" ng-change="toggleHasAuto()">
+                                {{'lbl_no' | translate}}
+                            </ion-radio>
+                            <span ng-if="!editMode" class="profile-label-readonly">{{(edit.hasAuto ? 'lbl_yes':'lbl_no')|translate}}</span>
+                        </div>
                         <div ng-if="(!!user.auto  && !!user.auto.description && user.auto.posts > 0) || editMode">
                             <label class="item item-input">
                                 <span class="input-label">{{'lbl_user_car_info' | translate}}:</span>

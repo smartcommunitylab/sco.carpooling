@@ -672,6 +672,8 @@ angular.module('carpooling', [
         lbl_futuretrips: 'Prossimi viaggi',
         lbl_show_profile: 'Vedi Profilo',
         lbl_phone_contact: 'Contatto telefonico',
+        lbl_yes: 'Si',
+        lbl_no: 'No',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         tab_participated: 'Partecipati',
