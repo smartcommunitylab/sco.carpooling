@@ -48,7 +48,7 @@ angular.module('carpooling.controllers.notifications', [])
         return '';
     };
 
-    $scope.notifications =  null;
+    $scope.notifications = null;
     $scope.start = 0;
     $scope.all = 10;
     $scope.end_reached = false;
@@ -195,15 +195,26 @@ angular.module('carpooling.controllers.notifications', [])
     $scope.messages = [];
     $scope.id = StorageSrv.getUserId();
     $scope.oldMsgPresent = false;
+    $scope.dateDayMask = 'dd MMMM yyyy';
+    $scope.isToday = function (time) {
+        var start = new Date();
+        var end = new Date();
+        start.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+        start = start.getTime();
+        end = end.getTime();
+        if (time >= start && time <= end) {
+            return true;
+        }
+    };
 
     var init = function () {
         $scope.personId = $stateParams.personId;
         $scope.travelId = $stateParams.travelId;
-
         Utils.loading();
         UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.messages = discussion.messages ? discussion.messages : [];
-            if($scope.messages.length > 10){
+            if ($scope.messages.length > 10) {
                 $scope.oldMsgPresent = true;
             }
             $scope.personName = discussion.personName;

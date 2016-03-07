@@ -17,6 +17,8 @@
                         <span>{{ ms.message }}</span>
                     </div>
                     <div class="item item-divider">
+                        <label ng-if="isToday(ms.timestamp)">{{'lbl_today' | translate}}, </label>
+                        <label ng-if="!isToday(ms.timestamp)">{{ ms.timestamp | date: dateDayMask }}, </label>
                         {{ ms.timestamp | date:'HH:mm' }}
                     </div>
                 </div>

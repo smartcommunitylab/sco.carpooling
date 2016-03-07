@@ -674,6 +674,7 @@ angular.module('carpooling', [
         lbl_phone_contact: 'Contatto telefonico',
         lbl_yes: 'Si',
         lbl_no: 'No',
+        lbl_today: 'Oggi',
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         tab_participated: 'Partecipati',
