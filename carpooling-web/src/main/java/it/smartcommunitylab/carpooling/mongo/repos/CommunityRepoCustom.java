@@ -24,4 +24,5 @@ public interface CommunityRepoCustom {
 
 	List<Community> findByUserId(String userId);
 	List<String> getCommunityIdsForUser(String userId);
+	List<Community> searchCommunity(String location, String searchText);
 }

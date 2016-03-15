@@ -20,16 +20,15 @@ public class Auto {
 
 	private int posts = -1;
 	private String description = "";
-	private String telephone = "";
 
 	public Auto() {
 	}
 
-	public Auto(int posts, String description, String telephone) {
+	public Auto(int posts, String description) {
 		super();
 		this.posts = posts;
 		this.description = description;
-		this.telephone = telephone;
+
 	}
 
 	public int getPosts() {
@@ -46,14 +45,6 @@ public class Auto {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
 	}
 
 }

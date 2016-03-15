@@ -27,17 +27,21 @@ public class User {
 
 	@Id
 	private String userId;
-	/** name (reqd).**/
+	/** name (reqd). **/
 	private String name;
-	/** surname (reqd).**/
+	/** surname (reqd). **/
 	private String surname;
-	/** email (reqd).**/
+	/** display Name. **/
+	private String dpName;
+	/** telephone. **/
+	private String telephone;
+	/** email (reqd). **/
 	private String email;
-	/** orgins/destinations (reqd).**/
+	/** orgins/destinations (reqd). **/
 	private TravelProfile travelProfile;
-	/** user points/ratings (reqd).**/
+	/** user points/ratings (reqd). **/
 	private GameProfile gameProfile;
-	/** description of car(if any).**/
+	/** description of car(if any). **/
 	private Auto auto;
 	/** number of offered travels. **/
 	private int offeredTravels;
@@ -116,7 +120,7 @@ public class User {
 	public void setAuto(Auto auto) {
 		this.auto = auto;
 	}
-	
+
 	public int getOfferedTravels() {
 		return offeredTravels;
 	}
@@ -131,6 +135,22 @@ public class User {
 
 	public void setParticipatedTravels(int participatedTravels) {
 		this.participatedTravels = participatedTravels;
+	}
+
+	public String getDpName() {
+		return dpName;
+	}
+
+	public void setDpName(String dpName) {
+		this.dpName = dpName;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
 	}
 
 	/**
@@ -152,12 +172,15 @@ public class User {
 	 */
 	public String fullName() {
 		String res = "";
-		if (!StringUtils.isEmpty(name)) res += name.trim();
+		if (!StringUtils.isEmpty(name))
+			res += name.trim();
 		if (!StringUtils.isEmpty(surname)) {
-			if (res.length() > 0) res += " "; 
+			if (res.length() > 0)
+				res += " ";
 			res += surname.trim();
 		}
-		if (StringUtils.isEmpty(res)) return "Anonymous"+userId;
+		if (StringUtils.isEmpty(res))
+			return "Anonymous" + userId;
 		return res;
 	}
 
