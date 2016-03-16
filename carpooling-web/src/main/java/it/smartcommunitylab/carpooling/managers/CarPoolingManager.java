@@ -32,6 +32,7 @@ import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.User;
+import it.smartcommunitylab.carpooling.model.UserInfo;
 import it.smartcommunitylab.carpooling.model.Zone;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.mongo.repos.DiscussionRepository;
@@ -1034,21 +1035,21 @@ public class CarPoolingManager {
 		return rating;
 	}
 
-	public Map<String, String> updateUserInfo(String userId, Auto auto, String dpName, String telephone) {
+	public Map<String, String> updateUserInfo(String userId, UserInfo userInfo) {
 
 		Map<String, String> errorMap = new HashMap<String, String>();
 
 		User driver = userRepository.findOne(userId);
 
 		if (driver != null) {
-			if (auto != null) {
-				driver.setAuto(auto);
+			if (userInfo != null && userInfo.getAuto() != null) {
+				driver.setAuto(userInfo.getAuto());
 			}
-			if (dpName != null && !dpName.isEmpty()) {
-				driver.setDpName(dpName);
+			if (userInfo.getDisplayName() != null && !userInfo.getDisplayName().isEmpty()) {
+				driver.setDpName(userInfo.getDisplayName());
 			}
-			if (telephone != null && !telephone.isEmpty()) {
-				driver.setTelephone(telephone);
+			if (userInfo.getTelephone() != null && !userInfo.getTelephone().isEmpty()) {
+				driver.setTelephone(userInfo.getTelephone());
 			}
 			userRepository.save(driver);
 		} else {

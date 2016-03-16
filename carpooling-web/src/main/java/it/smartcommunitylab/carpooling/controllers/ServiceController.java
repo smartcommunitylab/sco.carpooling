@@ -32,6 +32,7 @@ import it.smartcommunitylab.carpooling.model.Travel;
 import it.smartcommunitylab.carpooling.model.TravelProfile;
 import it.smartcommunitylab.carpooling.model.TravelRequest;
 import it.smartcommunitylab.carpooling.model.User;
+import it.smartcommunitylab.carpooling.model.UserInfo;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.UserCommunitiesSetup;
 import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
@@ -402,14 +403,14 @@ public class ServiceController {
 
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/api/update/user/{dpName}/{telephone}")
+	@RequestMapping(method = RequestMethod.POST, value = "/api/update/user")
 	public @ResponseBody
-	Response<String> updateUser(@PathVariable String dpName, @PathVariable String telephone, @RequestBody Auto auto)
+	Response<String> updateUser(@RequestBody UserInfo userInfo)
 			throws CarPoolingCustomException {
 
 		Response<String> response = new Response<String>();
 
-		Map<String, String> errorMap = carPoolingManager.updateUserInfo(getUserId(), auto, dpName, telephone);
+		Map<String, String> errorMap = carPoolingManager.updateUserInfo(getUserId(), userInfo);
 
 		if (errorMap.isEmpty()) {
 			response.setData("user information saved successfully");
