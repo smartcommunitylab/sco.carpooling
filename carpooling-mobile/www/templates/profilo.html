@@ -20,12 +20,12 @@
                     <div class="list user-options">
                         <div class="item item-input">
                             <span class="input-label">{{'lbl_user_nickname' | translate}}:</span>
-                            <input ng-if="editMode" type="text" ng-model="user.displayName" ng-readonly="!editMode" placeholder="{{'lbl_user_nickname_placeholder' | translate}}">
-                            <span ng-if="!editMode" class="profile-label-readonly">{{user.displayName ? user.displayName : user.name + ' ' + user.surname}}</span>
+                            <input ng-if="editMode" type="text" ng-model="user.dpName" ng-readonly="!editMode" placeholder="{{'lbl_user_nickname_placeholder' | translate}}">
+                            <span ng-if="!editMode" class="profile-label-readonly">{{user.dpName ? user.dpName : user.name + ' ' + user.surname}}</span>
                         </div>
                         <div class="item item-input" ng-if="editMode || !!user.telephone">
                             <span class="input input-label">{{'lbl_phone_contact' | translate}}:</span>
-                            <a class="phone" href="tel:{{user.telephone}}" target="_blank" ng-if="!editMode && !!user.telephone">{{user.auto.telephone}}</a>
+                            <a class="phone" href="tel:{{cleanTelephone(user.telephone)}}" target="_blank" ng-if="!editMode && !!user.telephone">{{user.telephone}}</a>
                             <input ng-if="editMode" type="text" ng-model="user.telephone" ng-readonly="!editMode" placeholder="{{'lbl_user_tel_placeholder' | translate}}" />
                         </div>
                         <!--<ion-toggle style="color: #3448A5" ng-model="edit.hasAuto" ng-disabled="!editMode" ng-change="toggleHasAuto()">{{'lbl_user_car_owner' | translate}}:</ion-toggle>-->

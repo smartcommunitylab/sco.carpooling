@@ -125,14 +125,14 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
     };
     */
-    userService.updateUserInfo = function (displayName, telephone, auto) {
+    userService.updateUserInfo = function (dpName, telephone, auto) {
         var deferred = $q.defer();
 
         // in telephone number accept only digits, +, -, /
         telephone = telephone.replace(/[^\d\+-\/]/g, '');
 
         var payload = {
-            displayName: displayName,
+            displayName: dpName,
             telephone: telephone,
             auto: auto
         };

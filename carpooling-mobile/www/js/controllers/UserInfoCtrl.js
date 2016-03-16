@@ -105,7 +105,7 @@ angular.module('carpooling.controllers.user', [])
         }
 
         //UserSrv.saveAuto(auto).then(
-        UserSrv.updateUserInfo($scope.user.displayName, $scope.user.telephone, auto).then(
+        UserSrv.updateUserInfo($scope.user.dpName, $scope.user.telephone, auto).then(
             function (data) {
                 if ($rootScope.initialSetup) {
                     UserSrv.getUser($scope.user.userId).then(
@@ -232,5 +232,10 @@ angular.module('carpooling.controllers.user', [])
         }, function (err) {
             Utils.loaded();
         });
+    };
+
+    $scope.cleanTelephone = function (tel) {
+        tel = tel.replace(/[^\d\+]/g, '');
+        return tel;
     };
 });
