@@ -169,7 +169,7 @@
 .carpooling-theme .info h5 {
     color: #3448A5;
 }
-.carpooling-theme .info span {
+.carpooling-theme .info span:first-child {
     color: gray;
 }
 .carpooling-theme .info #auto {

@@ -284,7 +284,9 @@ angular.module('carpooling', [
 
     $rootScope.loginStarted = false;
     $rootScope.login = function () {
-        if ($rootScope.loginStarted) return;
+        if ($rootScope.loginStarted) {
+            return
+        };
 
         $rootScope.loginStarted = true;
         LoginSrv.login().then(
@@ -293,9 +295,10 @@ angular.module('carpooling', [
                 UserSrv.getUser(data.userId).then(function () {
                     $rootScope.pushRegistration(data.userId);
                     $ionicHistory.nextViewOptions({
-                                historyRoot: true,
-                                disableBack: true
-                            });
+                        historyRoot: true,
+                        disableBack: true
+                    });
+
                     if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
                         $rootScope.initialSetup = true;
                         $state.go('app.profilo');
@@ -303,9 +306,12 @@ angular.module('carpooling', [
                         $rootScope.initialSetup = false;
                         $state.go('app.home');
                     }
-//                    $state.go('app.home', {}, {
-//                        reload: true
-//                    });
+
+                    /*
+                    $state.go('app.home', {}, {
+                        reload: true
+                    });
+                    */
                 });
             },
             function (error) {
@@ -352,23 +358,25 @@ angular.module('carpooling', [
         }
     });
 
-//    $rootScope.$on('$stateChangeStart',
-//        function (event, toState, toParams, fromState, fromParams) {
-//            if (!$rootScope.initialSetup && toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
-//                $rootScope.initialSetup = true;
-//                event.preventDefault();
-//                return $state.go('app.profilo');
-////            } else if ($rootScope.initialSetup && toState.name == 'app.home') {
-////                event.preventDefault();
-//            }
-//        }
-//    );
+    /*
+    $rootScope.$on('$stateChangeStart',
+        function (event, toState, toParams, fromState, fromParams) {
+            if (!$rootScope.initialSetup && toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+                $rootScope.initialSetup = true;
+                event.preventDefault();
+                return $state.go('app.profilo');
+            //} else if ($rootScope.initialSetup && toState.name == 'app.home') {
+            //    event.preventDefault();
+            }
+        }
+    );
+    */
 })
 
 .config(function ($httpProvider, $ionicConfigProvider) {
-  // PROBLEM WITH SCROLL RESIZE ON OLD ANDROID DEVICES
-  $ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4);
-  $httpProvider.defaults.withCredentials = true;
+    // PROBLEM WITH SCROLL RESIZE ON OLD ANDROID DEVICES
+    $ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4);
+    $httpProvider.defaults.withCredentials = true;
     $ionicConfigProvider.backButton.text('');
     $ionicConfigProvider.backButton.previousTitleText(false);
 })
@@ -512,23 +520,23 @@ angular.module('carpooling', [
     })
 
     .state('app.impostazioninotifiche', {
-        url: '/impostazioninotifiche',
-        cache: false,
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/impostazioninotifiche.html'
+            url: '/impostazioninotifiche',
+            cache: false,
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/impostazioninotifiche.html'
+                }
             }
-        }
-    })
-    .state('app.login', {
-        url: '/login',
-        cache: false,
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/login.html'
+        })
+        .state('app.login', {
+            url: '/login',
+            cache: false,
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/login.html'
+                }
             }
-        }
-    })
+        })
 
     .state('app.profilo', {
         url: '/profilo',
@@ -559,13 +567,15 @@ angular.module('carpooling', [
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
-//      var StorageSrv = $injector.get('StorageSrv');
-//      var $rootScope = $injector.get('$rootScope');
-//      var logged = $injector.get('LoginSrv').userIsLogged();
-//      if (!logged || StorageSrv.getUserId() == null || !StorageSrv.isProfileComplete()) {
-//          $rootScope.initialSetup = true;
-//          return '/app/profilo';
-//      }
+        //var StorageSrv = $injector.get('StorageSrv');
+        //var $rootScope = $injector.get('$rootScope');
+        //var logged = $injector.get('LoginSrv').userIsLogged();
+        /*
+        if (!logged || StorageSrv.getUserId() == null || !StorageSrv.isProfileComplete()) {
+            $rootScope.initialSetup = true;
+            return '/app/profilo';
+        }
+        */
         var logged = $injector.get('LoginSrv').userIsLogged();
         if (!logged) {
             return '/app/login';
@@ -578,7 +588,7 @@ angular.module('carpooling', [
     $translateProvider.translations('it', {
         app_name: 'iPosto',
         cancel: 'Annulla',
-        yes: 'Si',
+        yes: 'Sì',
         no: 'No',
         ok: 'OK',
         action_chat: 'Chat',
@@ -642,13 +652,18 @@ angular.module('carpooling', [
         lbl_cerca: 'Cerca',
         lbl_mycommunity: 'Nelle mie community',
         lbl_allcommunity: 'In tutte le community',
+        lbl_joincommunity: 'Entra nella community',
+        lbl_leavecommunity: 'Abbandona community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         lbl_start_time: 'Orario di partenza',
         lbl_user_anonymous: 'Anonimo',
+        lbl_user_nickname: 'Nome visualizzato',
         lbl_user_car_owner: 'Automunito',
         lbl_user_car_info: 'Tipo di auto',
         lbl_user_car_seats: 'Posti disponibili',
         lbl_user_car_seats_user: 'Posti disponibili ai passeggeri',
+        lbl_user_nickname_placeholder: '...',
+        lbl_user_tel_placeholder: 'es. 3xx1234567',
         lbl_end_time: 'Orario di arrivo',
         lbl_recurrency: 'Ricorrenza',
         lbl_passengers: 'Disponibilità posti',
@@ -672,7 +687,7 @@ angular.module('carpooling', [
         lbl_futuretrips: 'Prossimi viaggi',
         lbl_show_profile: 'Vedi Profilo',
         lbl_phone_contact: 'Contatto telefonico',
-        lbl_yes: 'Si',
+        lbl_yes: 'Sì',
         lbl_no: 'No',
         lbl_today: 'Oggi',
         tab_participate: 'Partecipo',
@@ -756,7 +771,6 @@ angular.module('carpooling', [
         lbl_empty_notifiche: 'Nessuna notifica presente',
         lbl_empty_offers_storico: 'Nessuno dei viaggi da te offerti è ancora stato effettuato.',
         lbl_empty_trips_storico: 'Conferma di aver partecipato ad un viaggio ed apparirà in questa pagina.'
-
     });
 
     $translateProvider.preferredLanguage('it');

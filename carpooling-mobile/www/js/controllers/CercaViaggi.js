@@ -219,13 +219,13 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         });
     };
 
-    /*
-     * Recurrence popup stuff
-     */
     $scope.hideModalMap = function () {
         $scope.modalMap.hide();
     };
 
+    /*
+     * Recurrence popup stuff
+     */
     /* Date Picker */
     $scope.dateMask = 'dd MMMM yyyy';
     var today = new Date();

@@ -2,17 +2,17 @@
     <ion-content class="padding">
         <form novalidate class="simple-form search-form">
             <div class="list">
-                <label class="item item-input">
-                    <input type="text" placeholder="{{'lbl_name'| translate}}">
-                </label>
-                <label class="item item-input">
-                    <input type="text" placeholder="{{'lbl_tripzone'| translate}}">
-                    <a class="button button-icon icon ion-android-locate positive"></a>
-                </label>
+                <div class="item item-input">
+                    <input type="text" placeholder="{{'lbl_name'| translate}}" ng-model="search.searchText">
+                </div>
+                <div class="item item-input">
+                    <input type="text" placeholder="{{'lbl_tripzone'| translate}}" ng-model="search.location.address">
+                    <button class="button button-icon icon ion-android-locate" ng-click="showModalMap()"></button>
+                </div>
             </div>
             <div class="row">
                 <div class="col text-center">
-                    <button class="button button-positive" ng-click="findCommunity()">
+                    <button class="button button-carpooling" ng-click="findCommunity()">
                         {{'lbl_cerca'| translate}}
                     </button>
                 </div>

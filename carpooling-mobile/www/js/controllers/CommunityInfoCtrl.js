@@ -14,6 +14,7 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
+    $scope.iAmMember = $scope.amIaMember();
     $scope.communityTrips = null;
     $scope.communityStyle = null;
     $scope.community = {};
@@ -23,25 +24,18 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.lbl_day = $filter('translate')('lbl_todaytrips');
     var start = new Date();
     var end = new Date();
-    /*Get the start and the end of the current day in milliseconds*/
+
+    /* Get the start and the end of the current day in milliseconds */
     var toTimestamp = function () {
         start.setHours(0, 0, 0, 0);
         end.setHours(23, 59, 59, 999);
         start = start.getTime();
         end = end.getTime();
     }
+
     toTimestamp();
 
-    $scope.changeDay = function (num) {
-        if (num === 0) {
-            $scope.selectDate -= 24 * 60 * 60 * 1000;
-        } else {
-            $scope.selectDate += 24 * 60 * 60 * 1000;
-        }
-        compareDate();
-        init();
-    };
-    /* Check if the selected date is Today  */
+    /* Check if the selected date is Today */
     var compareDate = function () {
         if ($scope.selectDate >= start && $scope.selectDate <= end) {
             $scope.lbl_day = $filter('translate')('lbl_todaytrips');
@@ -50,13 +44,6 @@ angular.module('carpooling.controllers.communityinfo', [])
         }
     };
 
-    $scope.hideYesterday = function () {
-        if ($scope.selectDate <= Date.now()) {
-            return true;
-        } else {
-            return false;
-        }
-    };
     var init = function () {
         Utils.loading();
         UserSrv.getCommunityDetails($stateParams.community.id).then(
@@ -86,6 +73,24 @@ angular.module('carpooling.controllers.communityinfo', [])
         );
     };
 
+    $scope.changeDay = function (num) {
+        if (num === 0) {
+            $scope.selectDate -= 24 * 60 * 60 * 1000;
+        } else {
+            $scope.selectDate += 24 * 60 * 60 * 1000;
+        }
+        compareDate();
+        init();
+    };
+
+    $scope.hideYesterday = function () {
+        if ($scope.selectDate <= Date.now()) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     init();
 
     $scope.changeAutoState = function () {
@@ -103,6 +108,19 @@ angular.module('carpooling.controllers.communityinfo', [])
             params.user = user;
         }
         $state.go('app.profilo', params);
+    };
+
+    $scope.amIaMember = function () {
+        var member = false;
+        for (var i = 0; i < $scope.community.userObjs.length; i++) {
+            var user = $scope.community.userObjs[index];
+            if (user.userId === StorageSrv.getUser().userId) {
+                // it's-a-me!
+                member = true;
+                i = $scope.community.userObjs.length;
+            }
+        };
+        return member;
     };
 
     $scope.selectTrip = function (index) {

@@ -1,7 +1,6 @@
 angular.module('carpooling.controllers.user', [])
 
 .controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
-
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
     $scope.tab = 0;
 
@@ -28,9 +27,9 @@ angular.module('carpooling.controllers.user', [])
             $scope.user = {
                 auto: {
                     description: '',
-                    posts: -1,
-                    telephone: ''
-                }
+                    posts: -1
+                },
+                telephone: ''
             };
         }
 
@@ -104,7 +103,9 @@ angular.module('carpooling.controllers.user', [])
                 posts: -1
             };
         }
-        UserSrv.saveAuto(auto).then(
+
+        //UserSrv.saveAuto(auto).then(
+        UserSrv.updateUserInfo($scope.user.displayName, $scope.user.telephone, auto).then(
             function (data) {
                 if ($rootScope.initialSetup) {
                     UserSrv.getUser($scope.user.userId).then(

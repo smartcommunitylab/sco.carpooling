@@ -1,6 +1,5 @@
 <ion-view>
     <ion-nav-title>{{community.name}}</ion-nav-title>
-
     <ion-nav-buttons side="right"></ion-nav-buttons>
 
     <ion-tabs class="tabs-top">
@@ -8,7 +7,10 @@
         <ion-tab icon="ion-location" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content class="has-header community-trips">
-                    <button class="button button-block button-carpooling" ng-click="addTrip()">
+                    <button class="button button-block button-carpooling" ng-if="!iAmMember" ng-click="joinCommunity()">
+                        {{'lbl_joincommunity' | translate | uppercase}}
+                    </button>
+                    <button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="addTrip()">
                         {{'lbl_addtrip' | translate | uppercase}}
                     </button>
                     <div class="day-change">
@@ -83,15 +85,26 @@
                 <ion-content class="has-header padding">
                     <div>
                         <h5>{{'lbl_generalinformations'| translate}}</h5>
-                        <p class="padding-top"><span>{{'lbl_tripzone'| translate}}:</span> {{community.zone}}</p>
+                        <p class="padding-top">
+                            <span>{{'lbl_tripzone'| translate}}:</span>
+                            <!-- old zone string -->
+                            <span ng-if="!community.zone.name && !community.zone.address">{{community.zone}}</span>
+                            <!-- name and address -->
+                            <span ng-if="!!community.zone.name && !!community.zone.address">{{community.zone.name}} ({{community.zone.address}})</span>
+                            <!-- only name -->
+                            <span ng-if="!!community.zone.name && !community.zone.address">{{community.zone.name}}</span>
+                            <!-- only address -->
+                            <span ng-if="!community.zone.name && !!community.zone.address">{{community.zone.address}}</span>
+                        </p>
                     </div>
                     <div class="padding-top padding-bottom">
                         <h5>{{'lbl_numberauto'| translate}}</h5>
                         <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
                     </div>
-                    <button class="button button-block button-carpooling" ng-click="changeAutoState()">
+                    <button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">
                         {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
                     </button>
+                    <a href="#" ng-if="iAmMember" ng-click="leaveCommunity()">{{'lbl_leavecommunity'| translate}}</a>
                 </ion-content>
             </ion-view>
         </ion-tab>
