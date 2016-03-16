@@ -102,29 +102,34 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 			// add criterias.
 			query.addCriteria(criteriaF);
 
-			if (searchText != null && !searchText.isEmpty()) {
-				Criteria criteriaText = new Criteria().where("zone.name").is(searchText);
-				query.addCriteria(criteriaText);
-			}
+			// if (searchText != null && !searchText.isEmpty()) {
+			// Criteria criteriaText = new
+			// Criteria().where("zone.name").is(searchText);
+			// query.addCriteria(criteriaText);
+			// }
 
 			List<Community> matchedCommunity = mongoTemplate.find(query, Community.class);
 			communities.addAll(matchedCommunity);
 
 		}
 
-		// if (searchText != null && !searchText.isEmpty()) {
-		//
-		// Criteria criteriaText = new
-		// Criteria().where("zone.name").is(searchText);
-		// // query.
-		// Query query = new Query();
-		// // add criterias.
-		// query.addCriteria(criteriaText);
-		//
-		// List<Community> matchedCommunity = mongoTemplate.find(query,
-		// Community.class);
-		// communities.addAll(matchedCommunity);
-		// }
+		if (searchText != null && !searchText.isEmpty()) {
+
+			Criteria criteriaText = new Criteria().where("zone.name").is(searchText);
+			// query.
+			Query query = new Query();
+			// add criterias.
+			query.addCriteria(criteriaText);
+
+			List<Community> matchedCommunity = mongoTemplate.find(query, Community.class);
+			
+			for (Community comm: matchedCommunity) {
+				if (!communities.contains(comm)) {
+					communities.add(comm);
+				}
+			}
+//			communities.addAll(matchedCommunity);
+		}
 
 		return communities;
 	}
