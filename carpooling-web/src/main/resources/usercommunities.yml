@@ -2,8 +2,8 @@ userCommunities:
 - id: cPCommunity1
   name: carpooling community 1
   color: FF0000
-  zone: Trento, Rovereto
+  zone: {name: Trento,address: Trento,latitude: 46.0805591,longitude: 11.0503154,range: 5,coordinates: [46.0805591,11.0503154]}
 - id: cPCommunity2
   name: carpooling community 2
   color: 0000FF
-  zone: Trento, Rovereto
+  zone: {name: Rovereto,address: Rovereto,latitude: 45.8832637,longitude: 11.0014506,range: 5,coordinates: [45.8832637,11.0014506]}

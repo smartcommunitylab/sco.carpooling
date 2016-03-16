@@ -25,7 +25,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * 
  * @author nawazk.
- *
+ * 
  */
 
 @Document
@@ -33,14 +33,14 @@ public class Community {
 
 	@Id
 	private String id;
-	/** community name (reqd).**/
+	/** community name (reqd). **/
 	private String name;
-	/** list of user ids (reqd).**/
+	/** list of user ids (reqd). **/
 	private List<String> users = new ArrayList<String>();
 	/** color. **/
 	private String color;
 	/** zone. **/
-	private String zone;
+	private Zone zone;
 	/** number of cars in community. **/
 	private int cars;
 	/** list of user objects. **/
@@ -58,7 +58,7 @@ public class Community {
 		this.users = users;
 	}
 
-	public Community(String id, String name, List<String> users, String color, String zone) {
+	public Community(String id, String name, List<String> users, String color, Zone zone) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -99,11 +99,11 @@ public class Community {
 		this.color = color;
 	}
 
-	public String getZone() {
+	public Zone getZone() {
 		return zone;
 	}
 
-	public void setZone(String zone) {
+	public void setZone(Zone zone) {
 		this.zone = zone;
 	}
 

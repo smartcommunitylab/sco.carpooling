@@ -36,7 +36,7 @@ import java.util.Map;
 public class CarPoolingUtils {
 
 	/** radius of circle. **/
-	//	public static final double radius = 1;
+	public static final double communitySearchRange = 5;
 	/** date format. **/
 	public static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	/** constants. **/

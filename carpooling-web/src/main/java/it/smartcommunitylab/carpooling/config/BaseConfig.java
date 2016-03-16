@@ -15,6 +15,7 @@
  ******************************************************************************/
 package it.smartcommunitylab.carpooling.config;
 
+import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Travel;
 
 import java.net.UnknownHostException;
@@ -58,7 +59,9 @@ public class BaseConfig extends WebMvcConfigurerAdapter {
 
 		template.indexOps(Travel.class).ensureIndex(new GeospatialIndex("from.coordinates"));
 		template.indexOps(Travel.class).ensureIndex(new GeospatialIndex("to.coordinates"));
+		template.indexOps(Community.class).ensureIndex(new GeospatialIndex("zone.coordinates"));
 
+		
 		return template;
 
 	}
