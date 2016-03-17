@@ -36,12 +36,70 @@ angular.module('carpooling.controllers.communities', [])
     $scope.communitiesToFilter = $stateParams['myCommunities'];
     var filteredCommunities = [];
 
+    $scope.communities = null;
+
     $scope.search = {
         searchText: null,
         location: {
+            name: null,
+            address: null,
+            coordinates: null
+        },
+        tempLocation: {
+            name: null,
             address: null,
             coordinates: null
         }
+    };
+
+    /*
+     * Autocompletion stuff
+     */
+    // names: array with the names of the places
+    // coordinates: object that maps a place name with an object that has its coordinate in key 'latlng'
+    $scope.afterMapSelection = false;
+
+    $scope.places = {
+        'names': [],
+        'coordinates': {}
+    };
+
+    $scope.typing = function (typedthings) {
+        if ($scope.afterMapSelection) {
+            $scope.afterMapSelection = false;
+            return;
+        }
+
+        if (Utils.fastCompareObjects($scope.search.tempLocation, $scope.search.location)) {
+            return;
+        } else {
+            if (!!$scope.search.tempLocation['address']) {
+                $scope.search.tempLocation['address'] = '';
+            }
+            if (!!$scope.search.tempLocation['coordinates']) {
+                $scope.search.tempLocation['coordinates'] = null;
+            }
+        }
+
+        var newPlaces = PlanSrv.getTypedPlaces(typedthings);
+        newPlaces.then(function (data) {
+            // merge with favorites and check no double values
+            $scope.places.names = data;
+            $scope.places.coordinates = PlanSrv.getNames();
+        });
+    };
+
+    $scope.setLocation = function (name) {
+        $scope.search.tempLocation.name = name;
+        $scope.search.tempLocation.address = name;
+        $scope.search.tempLocation.coordinates = $scope.places.coordinates[name];
+
+        $scope.search.location = angular.copy($scope.search.tempLocation);
+
+        $scope.places = {
+            'names': [],
+            'coordinates': {}
+        };
     };
 
     /*
@@ -151,12 +209,23 @@ angular.module('carpooling.controllers.communities', [])
     };
 
     $scope.findCommunity = function () {
-        var coords = $scope.search.location ? $scope.search.location.coordinates : null;
+        Utils.loading();
+        var coords = $scope.search.location ? $scope.search.location.coordinates.latlng : null;
         UserSrv.searchCommunities(coords, $scope.search.searchText).then(
             function (communities) {
-                // TODO process and assign results
+                $scope.communities = communities;
+                Utils.loaded();
             },
-            function (reason) {}
+            function (reason) {
+                Utils.loaded();
+            }
         );
+    };
+
+    $scope.selectCommunity = function (index) {
+        var community = $scope.communities[index];
+        $state.go('app.comunitainfo', {
+            'community': community
+        });
     };
 });

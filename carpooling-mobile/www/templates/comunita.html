@@ -1,6 +1,6 @@
 <ion-view title="{{'menu_community' | translate}}" class="communities">
     <ion-nav-buttons side="right">
-         <a href="#/app/cercacomunita" class="button button-icon ion-android-search"></button>
+         <a href="#/app/cercacomunita" class="button button-icon ion-android-search"></a>
     </ion-nav-buttons>
     <ion-content>
         <div class="padding" ng-if="communities == null || communities.length == 0">
@@ -14,7 +14,7 @@
                 <ul>
                     <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
                     <li>
-                        <span class="lbl">{{'lbl_tripzone'| translate}}:</span> {{comm.zone}}
+                        <span class="lbl">{{'lbl_tripzone'| translate}}:</span> {{comm.zone.name}}
                     </li>
                     <li class="community-numbers">
                         <div class="row">

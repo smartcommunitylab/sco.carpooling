@@ -14,7 +14,7 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.iAmMember = $scope.amIaMember();
+    $scope.iAmMember = false;
     $scope.communityTrips = null;
     $scope.communityStyle = null;
     $scope.community = {};
@@ -45,10 +45,16 @@ angular.module('carpooling.controllers.communityinfo', [])
     };
 
     var init = function () {
+        if (!$stateParams.community || !$stateParams.community.id) {
+            return;
+        }
+
         Utils.loading();
         UserSrv.getCommunityDetails($stateParams.community.id).then(
             function (community) {
                 $scope.community = community;
+                $scope.iAmMember = $scope.amIaMember();
+
                 UserSrv.getCommunityTravels($scope.community.id, $scope.selectDate).then(
                     function (todayCommunityTrips) {
                         $scope.communityTrips = todayCommunityTrips;
@@ -110,19 +116,6 @@ angular.module('carpooling.controllers.communityinfo', [])
         $state.go('app.profilo', params);
     };
 
-    $scope.amIaMember = function () {
-        var member = false;
-        for (var i = 0; i < $scope.community.userObjs.length; i++) {
-            var user = $scope.community.userObjs[index];
-            if (user.userId === StorageSrv.getUser().userId) {
-                // it's-a-me!
-                member = true;
-                i = $scope.community.userObjs.length;
-            }
-        };
-        return member;
-    };
-
     $scope.selectTrip = function (index) {
         $state.go('app.viaggio', {
             'travelId': $scope.communityTrips[index].id
@@ -133,5 +126,54 @@ angular.module('carpooling.controllers.communityinfo', [])
         $state.go('app.offri', {
             'communityId': $scope.community.id
         });
+    };
+
+    $scope.amIaMember = function () {
+        var member = false;
+        for (var i = 0; i < $scope.community.userObjs.length; i++) {
+            var user = $scope.community.userObjs[i];
+            if (user.userId === StorageSrv.getUser().userId) {
+                // it's-a-me!
+                member = true;
+                i = $scope.community.userObjs.length;
+            }
+        };
+        return member;
+    };
+
+    $scope.joinCommunity = function () {
+        if (!!$scope.community.id) {
+            Utils.loading();
+            UserSrv.joinCommunity($scope.community.id).then(
+                function () {
+                    Utils.loaded();
+                    init();
+                },
+                function (reason) {
+                    Utils.loaded();
+                    Utils.toast();
+                }
+            );
+        } else {
+            Utils.toast();
+        }
+    };
+
+    $scope.leaveCommunity = function () {
+        if (!!$scope.community.id) {
+            Utils.loading();
+            UserSrv.leaveCommunity($scope.community.id).then(
+                function () {
+                    Utils.loaded();
+                    init();
+                },
+                function (reason) {
+                    Utils.loaded();
+                    Utils.toast();
+                }
+            );
+        } else {
+            Utils.toast();
+        }
     };
 });

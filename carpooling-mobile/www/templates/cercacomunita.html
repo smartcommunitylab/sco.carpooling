@@ -1,23 +1,48 @@
-<ion-view title="{{'lbl_findcommunity'| translate}}">
+<ion-view title="{{'lbl_findcommunity'| translate}}" class="findcommunities">
     <ion-content class="padding">
         <form novalidate class="simple-form search-form">
             <div class="list">
                 <div class="item item-input">
                     <input type="text" placeholder="{{'lbl_name'| translate}}" ng-model="search.searchText">
                 </div>
-                <div class="item item-input">
-                    <input type="text" placeholder="{{'lbl_tripzone'| translate}}" ng-model="search.location.address">
+                <div class="item item-input item-autocomplete">
+                    <!--<input type="text" placeholder="{{'lbl_tripzone'| translate}}" ng-model="search.location.address">-->
+                    <placeautocomplete ng-model="search.tempLocation.name" placeholder="{{'lbl_tripzone'| translate}}" attr-placeholder="{{'lbl_tripzone'| translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocation"></placeautocomplete>
                     <button class="button button-icon icon ion-android-locate" ng-click="showModalMap()"></button>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col text-center">
+                <div class="buttons">
                     <button class="button button-carpooling" ng-click="findCommunity()">
                         {{'lbl_cerca'| translate}}
                     </button>
                 </div>
             </div>
-
         </form>
+        <div class="padding" ng-if="communities != null && communities.length == 0">
+            <h4>{{'lbl_no_results' | translate}}</h4>
+        </div>
+        <div class="card card-community" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
+            <div class="item" ng-style="{'background-color':'#{{comm.color}}'}">
+                <h2 class="name">{{comm.name}}</h2>
+            </div>
+            <div class="item">
+                <ul>
+                    <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
+                    <li>
+                        <span class="lbl">{{'lbl_tripzone'| translate}}:</span> {{comm.zone.name}}
+                    </li>
+                    <li class="community-numbers">
+                        <div class="row">
+                            <div class="col">
+                                <span id="custom-icons"><i class="icons ion-person-stalker"></i> {{comm.users.length}} </span>
+                            </div>
+                            <div class="col">
+                                <span id="custom-icons"><i class="icons ion-model-s"></i> {{comm.cars}} </span>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </ion-content>
 </ion-view>

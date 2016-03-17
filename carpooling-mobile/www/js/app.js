@@ -457,7 +457,6 @@ angular.module('carpooling', [
 
     .state('app.cercacomunita', {
         url: '/cercacomunita',
-        cache: false,
         params: {
             'myCommunities': {}
         },

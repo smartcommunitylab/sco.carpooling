@@ -747,7 +747,7 @@ table.chart .labels {}
     margin: 0;
 }
 
-/*Found Trips results*/
+/* Found Trips results */
 
 .carpooling-theme .src-infos {
     font-weight: bold;
@@ -781,4 +781,12 @@ h5 {
 }
 .autocomplete-suggestions {
     background-color: #fff !important;
+}
+/* Search communities */
+.findcommunities .buttons {
+    padding-top: 10px;
+    text-align: center;
+}
+.actions {
+    text-align: center;
 }

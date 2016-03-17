@@ -90,7 +90,7 @@
                             <!-- old zone string -->
                             <span ng-if="!community.zone.name && !community.zone.address">{{community.zone}}</span>
                             <!-- name and address -->
-                            <span ng-if="!!community.zone.name && !!community.zone.address">{{community.zone.name}} ({{community.zone.address}})</span>
+                            <span ng-if="!!community.zone.name && !!community.zone.address && !(community.zone.name == community.zone.zone)">{{community.zone.name}} ({{community.zone.address}})</span>
                             <!-- only name -->
                             <span ng-if="!!community.zone.name && !community.zone.address">{{community.zone.name}}</span>
                             <!-- only address -->
@@ -101,10 +101,12 @@
                         <h5>{{'lbl_numberauto'| translate}}</h5>
                         <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
                     </div>
-                    <button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">
-                        {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
-                    </button>
-                    <a href="#" ng-if="iAmMember" ng-click="leaveCommunity()">{{'lbl_leavecommunity'| translate}}</a>
+                    <div class="actions">
+                        <button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">
+                            {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
+                        </button>
+                        <a class="padding-top" href="" ng-if="iAmMember" ng-click="leaveCommunity()">{{'lbl_leavecommunity'| translate}}</a>
+                    </div>
                 </ion-content>
             </ion-view>
         </ion-tab>
