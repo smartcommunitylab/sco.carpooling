@@ -24,6 +24,7 @@ import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Circle;
@@ -115,7 +116,7 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 
 		if (searchText != null && !searchText.isEmpty()) {
 
-			Criteria criteriaText = new Criteria().where("zone.name").is(searchText);
+			Criteria criteriaText = new Criteria().where("zone.name").regex(Pattern.compile(searchText, Pattern.CASE_INSENSITIVE));
 			// query.
 			Query query = new Query();
 			// add criterias.
