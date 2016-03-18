@@ -116,20 +116,40 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 
 		if (searchText != null && !searchText.isEmpty()) {
 
-			Criteria criteriaText = new Criteria().where("zone.name").regex(Pattern.compile(searchText, Pattern.CASE_INSENSITIVE));
+			Criteria c1 = new Criteria().where("zone.name")
+					.regex(Pattern.compile(".*" + searchText + ".*", Pattern.CASE_INSENSITIVE));
+			Criteria c2 = new Criteria().where("name")
+					.regex(Pattern.compile(".*" + searchText + ".*", Pattern.CASE_INSENSITIVE));
+
+			Criteria criteriaText = new Criteria().orOperator(c1, c2);
 			// query.
 			Query query = new Query();
 			// add criterias.
 			query.addCriteria(criteriaText);
 
+			/**
+			 * { "$or": [ 
+			 * 				{ 
+			 * 				"zone.name": {
+			 * 					 "$regex": ".*vere.*", "$options": "i"
+			 * 					 }
+			 * 				 },
+			 * 				{
+			 * 				 "name": {
+			 * 					 "$regex": ".*vere.*", "$options": "i" 
+			 * 					} 
+			 * 				} 
+			 * 			]
+			 *  }
+			 **/
+
 			List<Community> matchedCommunity = mongoTemplate.find(query, Community.class);
-			
-			for (Community comm: matchedCommunity) {
+
+			for (Community comm : matchedCommunity) {
 				if (!communities.contains(comm)) {
 					communities.add(comm);
 				}
 			}
-//			communities.addAll(matchedCommunity);
 		}
 
 		return communities;
