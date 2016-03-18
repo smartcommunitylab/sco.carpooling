@@ -100,7 +100,7 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 
 			// query.
 			Query query = new Query();
-			// add criterias.
+			// add criteria.
 			query.addCriteria(criteriaF);
 
 			// if (searchText != null && !searchText.isEmpty()) {
@@ -124,23 +124,25 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 			Criteria criteriaText = new Criteria().orOperator(c1, c2);
 			// query.
 			Query query = new Query();
-			// add criterias.
+			// add criteria.
 			query.addCriteria(criteriaText);
 
 			/**
-			 * { "$or": [ 
-			 * 				{ 
-			 * 				"zone.name": {
-			 * 					 "$regex": ".*vere.*", "$options": "i"
-			 * 					 }
-			 * 				 },
-			 * 				{
-			 * 				 "name": {
-			 * 					 "$regex": ".*vere.*", "$options": "i" 
-			 * 					} 
-			 * 				} 
-			 * 			]
-			 *  }
+			 * {
+			 *  "$or":
+			 *   [ 
+			 * 		{ 
+			 * 		"zone.name": {
+			 * 		 	"$regex": ".*text.*", "$options": "i"
+			 * 		 	}
+			 * 		},
+			 * 		{
+			 * 		"name": {
+			 * 			"$regex": ".*text.*", "$options": "i"
+			 * 			} 
+			 * 		}
+			 * 	]
+			 * }
 			 **/
 
 			List<Community> matchedCommunity = mongoTemplate.find(query, Community.class);
@@ -154,4 +156,5 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 
 		return communities;
 	}
+	
 }
