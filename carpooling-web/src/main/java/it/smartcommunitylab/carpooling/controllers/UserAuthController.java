@@ -89,7 +89,7 @@ public class UserAuthController {
 	}
 	@RequestMapping("/userlogin/{authority}")
 	public void loginAuthority(@PathVariable String authority, @RequestParam(required=false) String token, HttpServletResponse response) throws IOException {
-		String url = service.generateAuthorizationURIForCodeFlow(env.getProperty("ext.redirect"), authority, null, null);
+		String url = service.generateAuthorizationURIForCodeFlow(env.getProperty("ext.redirect"), "/"+authority, null, null);
 		if (token != null) {
 			url += "&token="+token;
 		}
