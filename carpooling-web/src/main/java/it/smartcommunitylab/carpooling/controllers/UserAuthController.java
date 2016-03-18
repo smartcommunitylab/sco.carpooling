@@ -39,7 +39,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.aac.AACService;
@@ -81,8 +83,16 @@ public class UserAuthController {
 	}
 
 	@RequestMapping("/userlogin")
-	public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void login(HttpServletResponse response) throws IOException {
 		String url = service.generateAuthorizationURIForCodeFlow(env.getProperty("ext.redirect"), null, null, null);
+		response.sendRedirect(url);
+	}
+	@RequestMapping("/userlogin/{authority}")
+	public void loginAuthority(@PathVariable String authority, @RequestParam(required=false) String token, HttpServletResponse response) throws IOException {
+		String url = service.generateAuthorizationURIForCodeFlow(env.getProperty("ext.redirect"), authority, null, null);
+		if (token != null) {
+			url += "&token="+token;
+		}
 		response.sendRedirect(url);
 	}
 
