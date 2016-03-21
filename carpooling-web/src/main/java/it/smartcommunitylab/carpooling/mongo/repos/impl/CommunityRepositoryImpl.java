@@ -155,6 +155,7 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 		}
 
 		return communities;
+		
 	}
 	
 }
