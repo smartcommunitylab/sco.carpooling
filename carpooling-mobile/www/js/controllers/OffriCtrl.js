@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.offri', [])
 
-.controller('OffriCtrl', function ($scope, $state, $stateParams, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, CacheSrv, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv) {
+.controller('OffriCtrl', function ($scope, $state, $stateParams, $filter, $ionicModal, $ionicPopup, $ionicLoading, Config, CacheSrv, Utils, MapSrv, GeoSrv, PlanSrv, DriverSrv, StorageSrv, UserSrv) {
     // 'from' and 'to' are 'zone' objects
     $scope.formTravel = {
         'from': {
@@ -17,7 +17,8 @@ angular.module('carpooling.controllers.offri', [])
         },
         'when': 0,
         'places': 0,
-        'intermediateStops': false
+        'intermediateStops': false,
+        'communityIds': []
     };
 
     $scope.travel = angular.copy($scope.formTravel);
@@ -26,6 +27,11 @@ angular.module('carpooling.controllers.offri', [])
         'from': false,
         'to': false
     };
+
+    $scope.communities = [];
+    UserSrv.getCommunities().then(function (communities) {
+        $scope.communities = communities
+    });
 
     /*
      * Autocompletion stuff
@@ -423,6 +429,56 @@ angular.module('carpooling.controllers.offri', [])
             $scope.showRecurrencyPopup();
         }
     });
+
+    $scope.selectCommunitiesPopup = function () {
+        if ($scope.communities.length == 0) {
+            return;
+        }
+
+        var communitiesPopup = $ionicPopup.show({
+            templateUrl: 'templates/popup_communities.html',
+            title: $filter('translate')('lbl_communities'),
+            scope: $scope,
+            buttons: [
+                /*{
+                    text: $filter('translate')('cancel'),
+                    type: 'button-stable',
+                },*/
+                {
+                    text: $filter('translate')('ok'),
+                    type: 'button-carpooling'
+                }
+            ]
+        });
+    };
+
+    $scope.getCommunitiesString = function (communityIds) {
+        if (!communityIds) {
+            return null;
+        }
+
+        var cnames = '';
+        for (var i = 0; i < $scope.communities.length; i++) {
+            var community = $scope.communities[i];
+            if (communityIds.indexOf(community.id) > -1) {
+                cnames += community.name + ', ';
+            }
+        }
+        cnames = cnames.substring(0, cnames.length - 2);
+        return cnames;
+    };
+
+    $scope.updateTravelCommunityIds = function (community) {
+        if (community.checked) {
+            if ($scope.travel.communityIds.indexOf(community.id) == -1) {
+                $scope.travel.communityIds.push(community.id);
+            }
+        } else {
+            if ($scope.travel.communityIds.indexOf(community.id) != -1) {
+                $scope.travel.communityIds.splice($scope.travel.communityIds.indexOf(community.id), 1);
+            }
+        }
+    };
 
     $scope.offer = function () {
         // NOTE: 'from', 'to' and 'intermediateStops' are already on $scope.travel

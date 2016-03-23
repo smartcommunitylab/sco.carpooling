@@ -1,6 +1,7 @@
 <ion-view title="{{'lbl_offer' | translate}}">
-    <ion-content class="padding">
-        <div class="list">
+    <ion-content class="offer">
+        <!--class="padding"-->
+        <div class="list padding-top padding-horizontal">
             <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelFields['from']}">
                 <!--<input type="text" placeholder="{{'lbl_from' | translate}}" ng-model="locations['from'].name">-->
                 <placeautocomplete ng-model="formTravel['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typingFrom" on-select="setLocationFrom"></placeautocomplete>
@@ -13,17 +14,19 @@
             </div>
         </div>
 
-        <h4>{{'lbl_halfwaystops' | translate}}</h4>
-        <div class="list">
-            <ion-radio ng-model="travel.intermediateStops" ng-value="false">{{'lbl_halfwaystops_none' | translate}}</ion-radio>
-            <ion-radio ng-model="travel.intermediateStops" ng-value="true">{{'lbl_halfwaystops_agree' | translate}}</ion-radio>
+        <div class="offer-stops">
+            <div class="input-label padding-horizontal">{{'lbl_halfwaystops' | translate}}</div>
+            <div class="list">
+                <ion-radio ng-model="travel.intermediateStops" ng-value="false">{{'lbl_halfwaystops_none' | translate}}</ion-radio>
+                <ion-radio ng-model="travel.intermediateStops" ng-value="true">{{'lbl_halfwaystops_agree' | translate}}</ion-radio>
+            </div>
         </div>
 
-        <div class="list">
+        <div class="list padding-horizontal">
             <div class="item item-input">
                 <span class="input-label">{{'lbl_date' | translate}}</span>
                 <ionic-datepicker input-obj="datepickerObj">
-                    <span class="input-label"> {{datepickerObj.inputDate | date:dateMask}}</span>
+                    <strong><span class="input-label"> {{datepickerObj.inputDate | date:dateMask}}</span></strong>
                 </ionic-datepicker>
             </div>
             <div class="item item-input">
@@ -38,6 +41,18 @@
                 <ion-toggle ng-model="recurrency.isRecurrent">{{'lbl_recurrenttrip' | translate}}</ion-toggle>
                 <a class="link-carpooling" ng-if="recurrency.isRecurrent" ng-click="showRecurrencyPopup()">{{recurrency.recurrencyDoWstring}}</a>
             </div>
+
+            <div class="item item-input">
+                <div class="input-label">
+                    Pubblica viaggio in
+                    <strong>
+                        <span ng-if="travel.communityIds.length == 0">{{'lbl_communities_all' | translate}}</span>
+                        <span ng-if="travel.communityIds.length > 0" class="label-multiline">{{getCommunitiesString(travel.communityIds)}}</span>
+                    </strong>
+                </div>
+            </div>
+            <!--<button class="button-clear icon-left" ng-class="{'ion-plus' : travel.communityIds.length == 0, 'ion-edit' : travel.communityIds.length > 0}" ng-click="selectCommunitiesPopup()"> {{(travel.communityIds.length == 0 ? 'add' : 'edit') | translate}}</button>-->
+            <button class="button-carpooling-inverse button-clear icon-left ion-plus" ng-click="selectCommunitiesPopup()"> {{'add' | translate}}</button>
         </div>
 
         <div class="row">
