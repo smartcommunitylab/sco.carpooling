@@ -34,7 +34,7 @@
     },
     {
       "variables": {
-        "REVERSED_CLIENT_ID": "myreversedclientid"
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.453601816446-ltpupimimr3snbpuv2fea3f1lu50p372"
       },
       "locator": "https://github.com/smartcommunitylab/cordova-plugin-googleplus",
       "id": "cordova-plugin-googleplus"
