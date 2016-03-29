@@ -625,6 +625,7 @@ angular.module('carpooling', [
         lbl_allcommunity: 'In tutte le community',
         lbl_joincommunity: 'Entra nella community',
         lbl_leavecommunity: 'Abbandona community',
+        lbl_suggestcommunity: 'Suggerisci community',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         lbl_start_time: 'Orario di partenza',
         lbl_user_anonymous: 'Anonimo',
@@ -741,7 +742,9 @@ angular.module('carpooling', [
         lbl_empty_offers4: ' in alto e definisci il tuo itinerario.',
         lbl_empty_notifiche: 'Nessuna notifica presente',
         lbl_empty_offers_storico: 'Nessuno dei viaggi da te offerti è ancora stato effettuato.',
-        lbl_empty_trips_storico: 'Conferma di aver partecipato ad un viaggio ed apparirà in questa pagina.'
+        lbl_empty_trips_storico: 'Conferma di aver partecipato ad un viaggio ed apparirà in questa pagina.',
+        ph_community_suggestion_subject: 'Suggerimento nuova community',
+        ph_community_suggestion_body: 'Salve, vorrei suggerire la creazione di una nuova community.'
     });
 
     $translateProvider.preferredLanguage('it');

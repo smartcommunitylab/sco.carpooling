@@ -733,7 +733,7 @@ table.chart .labels {}
     text-align: center;
     padding-top: 1em;
 }
-.carpooling-theme .community-trips button.button-block.button-carpooling {
+.carpooling-theme .button.button-block.button-carpooling.button-carpooling-head {
     margin-top: 0;
     border-radius: 0;
     border-top-color: #3448A5;

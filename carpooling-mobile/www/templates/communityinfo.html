@@ -7,10 +7,10 @@
         <ion-tab icon="ion-location" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content class="has-header community-trips">
-                    <button class="button button-block button-carpooling" ng-if="!iAmMember" ng-click="joinCommunity()">
+                    <button class="button button-block button-carpooling button-carpooling-head" ng-if="!iAmMember" ng-click="joinCommunity()">
                         {{'lbl_joincommunity' | translate | uppercase}}
                     </button>
-                    <button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="addTrip()">
+                    <button class="button button-block button-carpooling button-carpooling-head" ng-if="iAmMember" ng-click="addTrip()">
                         {{'lbl_addtrip' | translate | uppercase}}
                     </button>
                     <div class="day-change">
