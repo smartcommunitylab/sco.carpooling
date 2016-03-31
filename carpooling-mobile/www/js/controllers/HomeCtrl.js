@@ -1,6 +1,21 @@
 angular.module('carpooling.controllers.home', [])
 
-.controller('AppCtrl', function ($scope, $state) {})
+.controller('AppCtrl', function ($scope, $state, $ionicModal) {
+    $ionicModal.fromTemplateUrl('templates/modal_credits.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modalCredits = modal;
+    });
+
+    $scope.openCredits = function () {
+        $scope.modalCredits.show();
+    };
+
+    $scope.closeCredits = function () {
+        $scope.modalCredits.hide();
+    };
+})
 
 .controller('HomeCtrl', function ($scope, $state, $filter, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
 

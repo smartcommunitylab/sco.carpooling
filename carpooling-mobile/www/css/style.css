@@ -19,6 +19,14 @@
 .carpooling-theme .bar .button {
     color: #FFFFFF;
 }
+.carpooling-theme .bar-light {
+    background-color: #fff;
+    border-color: #fff;
+    color: #000;
+}
+.carpooling-theme .bar-light .button {
+    color: #000;
+}
 
 /* Menu */
 
@@ -414,6 +422,7 @@ placeautocomplete ul li {
 }
 
 /* Other */
+
 .offer .input-label {
     width: initial;
 }
@@ -425,7 +434,6 @@ placeautocomplete ul li {
     border-left: 0;
     padding: -10px;
 }
-
 #modalMap,
 #modal-map-container,
 #trip-map-container {
@@ -793,7 +801,9 @@ h5 {
 .autocomplete-suggestions {
     background-color: #fff !important;
 }
+
 /* Search communities */
+
 .findcommunities .buttons {
     padding-top: 10px;
     text-align: center;
@@ -803,4 +813,73 @@ h5 {
 }
 .label-multiline {
     white-space: normal;
+}
+
+/* Login */
+
+.login .login-title {
+    position: relative;
+    padding: 2em;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 0 30px 5px #222;
+    background-color: #3448A5;
+}
+.login .login-title .bgimg {
+    width: 50%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity: 0.1;
+}
+.login .login-buttons {
+    position: relative;
+    text-align: center;
+}
+.login .login-title .stuffcontainer,
+.login .login-buttons .stuffcontainer {
+    /*position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);*/
+}
+.login .login-buttons .stuffcontainer {
+    padding: 3em;
+}
+.login .login-title h1,
+.login .login-title h3 {
+    color: #fff;
+}
+.login .login-buttons h3 {
+    color: #666;
+}
+.login .login-button-google {
+    text-transform: uppercase;
+    border-color: #DB4437;
+    background-color: #DB4437;
+    color: #FFFFFF;
+}
+.login .login-button-facebook {
+    text-transform: uppercase;
+    border-color: #3a5795;
+    background-color: #3a5795;
+    color: #FFFFFF;
+}
+/* Credits */
+.credits {
+    text-align: center;
+}
+.credits .credits-title {
+    color: #3448A5;
+    font-weight: bold;
+}
+.credits h4 {
+    color: #3448A5;
+    font-size: 1em;
+}
+.credits a {
+    text-decoration: none;
+}
+.credits .credits-mail {
+    text-decoration: underline;
 }

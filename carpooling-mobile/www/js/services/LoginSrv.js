@@ -1,6 +1,6 @@
 angular.module('carpooling.services.login', [])
 
-.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, UserSrv, Config, CacheSrv) {
+.factory('LoginSrv', function ($rootScope, $q, $http, $window, StorageSrv, UserSrv, Config, CacheSrv, Utils) {
     var loginService = {};
 
     var authWindow = null;
@@ -12,7 +12,7 @@ angular.module('carpooling.services.login', [])
     loginService.login = function (provider) {
         var deferred = $q.defer();
 
-        if (provider != 'google' && provider != 'googlelocal' && provider != 'facebook') {
+        if (provider != 'google' && provider != 'googlelocal' && provider != 'facebook' && provider != 'facebooklocal') {
             provider = '';
         } else if (provider == 'googlelocal' && !$rootScope.login_googlelocal) {
             provider = 'google';
@@ -28,7 +28,7 @@ angular.module('carpooling.services.login', [])
                 // Build the OAuth consent page URL
                 var authUrl = Config.getServerURL() + '/userlogin' + (!!provider ? '/' + provider : '');
 
-                if (provider == 'googlelocal' && $rootScope.login_googlelocal && !!token) {
+                if (((provider == 'googlelocal' && $rootScope.login_googlelocal) || provider == 'facebooklocal') && !!token) {
                     authUrl += '?token=' + encodeURIComponent(token);
                 }
 
@@ -90,7 +90,6 @@ angular.module('carpooling.services.login', [])
                 function (obj) {
                     authapi.authorize(obj.oauthToken).then(
                         function (data) {
-                            //console.log('success: ' + data.userId);
                             StorageSrv.saveUserId(data.userId).then(function () {
                                 UserSrv.getUser(data.userId).then(function () {
                                     deferred.resolve(data);
@@ -113,10 +112,53 @@ angular.module('carpooling.services.login', [])
                     console.log('Login googlelocal error: ' + msg);
                 }
             );
+        } else if (provider == 'facebooklocal') {
+            /*
+            if (!!window.cordova && window.cordova.platformId == 'browser') {
+                facebookConnectPlugin.browserInit('182684742123091');
+                //facebookConnectPlugin.browserInit(appId, version);
+                // version is optional. It refers to the version of API you may want to use.
+            }*/
+
+            facebookConnectPlugin.login(['public_profile', 'email'],
+                function (userData) {
+                    Utils.loading();
+                    facebookConnectPlugin.getAccessToken(function (token) {
+                        authapi.authorize(token).then(
+                            function (data) {
+                                //console.log('success: ' + data.userId);
+                                StorageSrv.saveUserId(data.userId).then(function () {
+                                    UserSrv.getUser(data.userId).then(function () {
+                                        Utils.loaded();
+                                        deferred.resolve(data);
+                                    }, function (reason) {
+                                        StorageSrv.saveUserId(null).then(function () {
+                                            Utils.loaded();
+                                            deferred.reject(reason);
+                                        });
+                                    });
+                                });
+                            },
+                            function (reason) {
+                                //reset data
+                                StorageSrv.saveUserId(null).then(function () {
+                                    Utils.loaded();
+                                    deferred.reject(reason);
+                                });
+                            }
+                        );
+                    }, function (err) {
+                        // TODO handle error
+                        Utils.loaded();
+                    });
+                },
+                function (error) {
+                    // TODO handle error
+                }
+            );
         } else {
             authapi.authorize().then(
                 function (data) {
-                    //console.log('success: ' + data.userId);
                     StorageSrv.saveUserId(data.userId).then(function () {
                         UserSrv.getUser(data.userId).then(function () {
                             deferred.resolve(data);

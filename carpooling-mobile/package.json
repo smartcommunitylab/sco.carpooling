@@ -23,11 +23,7 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-x-toast",
     "ionic-plugin-keyboard",
-    "de.appplant.cordova.plugin.local-notification",
-    {
-      "locator": "https://github.com/smartcommunitylab/parse-push-plugin",
-      "id": "com.phonegap.parsepushplugin"
-    },
+    "https://github.com/smartcommunitylab/parse-push-plugin.git",
     {
       "locator": "https://github.com/kristianhristov/cordova-cookie-master.git",
       "id": "com.cordova.plugins.cookiemaster"
@@ -38,10 +34,18 @@
       },
       "locator": "https://github.com/smartcommunitylab/cordova-plugin-googleplus",
       "id": "cordova-plugin-googleplus"
+    },
+    "de.appplant.cordova.plugin.local-notification",
+    {
+      "variables": {
+        "APP_ID": "182684742123091",
+        "APP_NAME": "scdev"
+      },
+      "locator": "/home/oscar/Projects/cordova-plugin-facebook4",
+      "id": "cordova-plugin-facebook4"
     }
   ],
   "cordovaPlatforms": [
-    "ios",
     {
       "platform": "android",
       "version": "4.1.1",

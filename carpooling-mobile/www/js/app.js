@@ -316,6 +316,12 @@ angular.module('carpooling', [
             );
         }
 
+        if (window.cordova && window.cordova.platformId == 'browser') {
+            facebookConnectPlugin.browserInit('182684742123091');
+            //facebookConnectPlugin.browserInit(appId, version);
+            // version is optional. It refers to the version of API you may want to use.
+        }
+
         if (LoginSrv.userIsLogged()) {
             $rootScope.pushRegistration(StorageSrv.getUserId());
         } else {
@@ -573,10 +579,12 @@ angular.module('carpooling', [
         menu_history: 'Storico viaggi',
         menu_notifications: 'Notifiche',
         menu_profile: 'Profilo',
+        menu_credits: 'Credits',
         menu_logout: 'Logout',
         modal_map: 'Scegli da mappa',
         modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
+        lbl_credits: 'Credits',
         lbl_login: 'Login',
         lbl_all: 'tutti',
         lbl_driver: 'guidatore',
@@ -744,7 +752,15 @@ angular.module('carpooling', [
         lbl_empty_offers_storico: 'Nessuno dei viaggi da te offerti è ancora stato effettuato.',
         lbl_empty_trips_storico: 'Conferma di aver partecipato ad un viaggio ed apparirà in questa pagina.',
         ph_community_suggestion_subject: 'Suggerimento nuova community',
-        ph_community_suggestion_body: 'Salve, vorrei suggerire la creazione di una nuova community.'
+        ph_community_suggestion_body: 'Salve, vorrei suggerire la creazione di una nuova community.',
+        text_login_title: 'iPosto',
+        text_login_subtitle: 'Aderisci ad una comunità per offrire e partecipare a viaggi condivisi',
+        text_login_use: 'Accedi con',
+        credits_title: 'iPosto',
+        credits_project: 'Un progetto di:',
+        credits_with: 'In collaborazione con:',
+        credits_info: 'Per informazioni:',
+        credits_licenses_button: 'Vedi licenze'
     });
 
     $translateProvider.preferredLanguage('it');

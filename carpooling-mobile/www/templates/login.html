@@ -1,7 +1,33 @@
-<ion-view title="{{'lbl_login' | translate}}">
-    <ion-content class="padding">
-        <button class="button button-block" ng-click="login('googlelocal')" ng-if="login_googlelocal"><i class="ion ion-social-googleplus"></i></button>
-        <button class="button button-block" ng-click="login('google')"><i class="ion ion-social-google"></i></button>
-        <button class="button button-block" ng-click="login('facebook')"><i class="ion ion-social-facebook"></i></button>
+<ion-view title="{{'lbl_login' | translate}}" class="login" hide-nav-bar="true">
+    <ion-content>
+        <div class="login-title">
+            <div class="stuffcontainer">
+                <!--<h1>{{'text_login_title' | translate}}</h1>-->
+                <img src="img/login_page_logo.png" />
+                <h3>{{'text_login_subtitle' | translate}}</h3>
+            </div>
+            <img class="bgimg" src="img/login_page_background.png" />
+        </div>
+        <div class="login-buttons">
+            <div class="stuffcontainer">
+                <h3>{{'text_login_use' | translate}}</h3>
+                <button class="button button-block login-button-google" ng-click="login('googlelocal')" ng-if="login_googlelocal">
+                    <!--<i class="ion ion-social-googleplus"></i>-->
+                    Google
+                </button>
+                <button class="button button-block login-button-google" ng-click="login('google')" ng-if="!login_googlelocal">
+                    <!--<i class="ion ion-social-google"></i>-->
+                    Google
+                </button>
+                <!--<button class="button button-block" ng-click="login('facebook')">
+                <i class="ion ion-social-facebook"></i>
+                Facebook
+    `       </button>-->
+                <button class="button button-block login-button-facebook" ng-click="login('facebooklocal')">
+                    <!--<i class="ion ion-social-facebook"></i>-->
+                    Facebook
+                </button>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
