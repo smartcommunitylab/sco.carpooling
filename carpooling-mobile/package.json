@@ -38,18 +38,15 @@
     "de.appplant.cordova.plugin.local-notification",
     {
       "variables": {
-        "APP_ID": "182684742123091",
-        "APP_NAME": "scdev"
+        "APP_ID": "1031028236933030",
+        "APP_NAME": "iPosto"
       },
-      "locator": "/home/oscar/Projects/cordova-plugin-facebook4",
+      "locator": "~/workspace/cordova-plugin-facebook4",
       "id": "cordova-plugin-facebook4"
     }
   ],
   "cordovaPlatforms": [
-    {
-      "platform": "android",
-      "version": "4.1.1",
-      "locator": "android@4.1.1"
-    }
+    "android",
+    "ios"
   ]
 }
