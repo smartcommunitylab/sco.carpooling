@@ -152,8 +152,11 @@ public class CommunityRepositoryImpl implements CommunityRepoCustom {
 					communities.add(comm);
 				}
 			}
+		} else if (lat == -1 && lon == -1 && communities.isEmpty()) {
+			// both parameters are null or empty.
+			communities.addAll(communityRepository.findAll());
 		}
-
+	
 		return communities;
 		
 	}
