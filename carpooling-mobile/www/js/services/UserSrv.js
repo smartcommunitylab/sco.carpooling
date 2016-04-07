@@ -297,33 +297,26 @@ angular.module('carpooling.services.user', [])
         var httpConfig = Config.getHTTPConfig();
         httpConfig.params = {};
 
-        if (location != null || searchText != null) {
-            if (location != null) {
-                if (/^([0-9]+.[0-9]+,[0-9]+.[0-9]+)$/.test(location)) {
-                    httpConfig.params['location'] = location;
-                } else {
-                    deferred.reject('Invalid "location" value or format');
-                    return deferred.promise;
-                }
+        if (!!location) {
+            if (/^([0-9]+.[0-9]+,[0-9]+.[0-9]+)$/.test(location)) {
+                httpConfig.params['location'] = location;
             } else {
-                httpConfig.params['location'] = '';
+                deferred.reject('Invalid "location" value or format');
+                return deferred.promise;
             }
-
-            if (searchText != null) {
-                if (searchText.length > 0) {
-                    httpConfig.params['searchText'] = searchText;
-                } else {
-                    deferred.reject('Invalid "searchText"');
-                    return deferred.promise;
-                }
-            } else {
-                httpConfig.params['searchText'] = '';
-            }
+        } else {
+            httpConfig.params['location'] = '';
         }
 
-        if (!httpConfig.params['location'] && !httpConfig.params['searchText']) {
-            deferred.reject('Invalid parameters');
-            return deferred.promise;
+        if (!!searchText) {
+            if (searchText.length > 0) {
+                httpConfig.params['searchText'] = searchText;
+            } else {
+                deferred.reject('Invalid "searchText"');
+                return deferred.promise;
+            }
+        } else {
+            httpConfig.params['searchText'] = '';
         }
 
         $http.get(Config.getServerURL() + '/api/search/community/', httpConfig)

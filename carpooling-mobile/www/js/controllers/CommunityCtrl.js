@@ -39,7 +39,7 @@ angular.module('carpooling.controllers.communities', [])
     $scope.communities = null;
 
     $scope.search = {
-        searchText: null,
+        searchText: '',
         location: {
             name: null,
             address: null,
@@ -210,7 +210,7 @@ angular.module('carpooling.controllers.communities', [])
 
     $scope.findCommunity = function () {
         Utils.loading();
-        var coords = (!!$scope.search.location && !!$scope.search.location.coordinates && !!$scope.search.location.coordinates.latlng) ? $scope.search.location.coordinates.latlng : null;
+        var coords = (!!$scope.search.location && !!$scope.search.location.coordinates && !!$scope.search.location.coordinates.latlng) ? $scope.search.location.coordinates.latlng : '';
         UserSrv.searchCommunities(coords, $scope.search.searchText).then(
             function (communities) {
                 $scope.communities = communities;
