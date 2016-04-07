@@ -14,8 +14,8 @@ angular.module('carpooling.services.login', [])
 
         if (provider != 'google' && provider != 'googlelocal' && provider != 'facebook' && provider != 'facebooklocal') {
             provider = '';
-        } else if (provider == 'googlelocal' && !$rootScope.login_googlelocal) {
-            provider = 'google';
+//        } else if (provider == 'googlelocal' && !$rootScope.login_googlelocal) {
+//            provider = 'google';
         }
 
         // log into the system and set userId
@@ -28,7 +28,7 @@ angular.module('carpooling.services.login', [])
                 // Build the OAuth consent page URL
                 var authUrl = Config.getServerURL() + '/userlogin' + (!!provider ? '/' + provider : '');
 
-                if (((provider == 'googlelocal' && $rootScope.login_googlelocal) || provider == 'facebooklocal') && !!token) {
+                if ((provider == 'googlelocal' || provider == 'facebooklocal') && !!token) {
                     authUrl += '?token=' + encodeURIComponent(token);
                 }
 
@@ -82,13 +82,15 @@ angular.module('carpooling.services.login', [])
             }
         };
 
-        if (provider == 'googlelocal' && $rootScope.login_googlelocal) {
+        if (provider == 'googlelocal') {
             window.plugins.googleplus.login({
                     'scopes': 'profile email',
                     'offline': true
                 },
                 function (obj) {
-                    authapi.authorize(obj.oauthToken).then(
+                    var token = obj.oauthToken;
+                    if (!token) token = obj.accessToken;
+                    authapi.authorize(token).then(
                         function (data) {
                             StorageSrv.saveUserId(data.userId).then(function () {
                                 UserSrv.getUser(data.userId).then(function () {

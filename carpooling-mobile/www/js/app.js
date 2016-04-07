@@ -319,18 +319,20 @@ angular.module('carpooling', [
             StatusBar.styleDefault();
         }
 
-        $rootScope.login_googlelocal = false;
+        $rootScope.login_googlelocal = 'google';
+        $rootScope.login_facebooklocal = ionic.Platform.isIOS() ? 'facebook' : 'facebooklocal';
+
         if (!!window.plugins && !!window.plugins.googleplus) {
             window.plugins.googleplus.isAvailable(
                 function (available) {
-                    $rootScope.login_googlelocal = available;
+                    if (available )$rootScope.login_googlelocal = 'googlelocal';
                     console.log('login_googlelocal available!');
                 }
             );
         }
 
         if (window.cordova && window.cordova.platformId == 'browser') {
-            facebookConnectPlugin.browserInit('182684742123091');
+            facebookConnectPlugin.browserInit('1031028236933030');
             //facebookConnectPlugin.browserInit(appId, version);
             // version is optional. It refers to the version of API you may want to use.
         }
