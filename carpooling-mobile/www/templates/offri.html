@@ -42,17 +42,19 @@
                 <a class="link-carpooling" ng-if="recurrency.isRecurrent" ng-click="showRecurrencyPopup()">{{recurrency.recurrencyDoWstring}}</a>
             </div>
 
-            <div class="item item-input">
-                <div class="input-label">
-                    Pubblica viaggio in
-                    <strong>
+            <div ng-if="!!communities && communities.length > 0">
+                <div class="item item-input">
+                    <div class="input-label">
+                        Pubblica viaggio in
+                        <strong>
                         <span ng-if="travel.communityIds.length == 0">{{'lbl_communities_all' | translate}}</span>
                         <span ng-if="travel.communityIds.length > 0" class="label-multiline">{{getCommunitiesString(travel.communityIds)}}</span>
                     </strong>
+                    </div>
                 </div>
+                <!--<button class="button-clear icon-left" ng-class="{'ion-plus' : travel.communityIds.length == 0, 'ion-edit' : travel.communityIds.length > 0}" ng-click="selectCommunitiesPopup()"> {{(travel.communityIds.length == 0 ? 'add' : 'edit') | translate}}</button>-->
+                <button class="button-carpooling-inverse button-clear icon-left ion-plus" ng-click="selectCommunitiesPopup()"> {{'add' | translate}}</button>
             </div>
-            <!--<button class="button-clear icon-left" ng-class="{'ion-plus' : travel.communityIds.length == 0, 'ion-edit' : travel.communityIds.length > 0}" ng-click="selectCommunitiesPopup()"> {{(travel.communityIds.length == 0 ? 'add' : 'edit') | translate}}</button>-->
-            <button class="button-carpooling-inverse button-clear icon-left ion-plus" ng-click="selectCommunitiesPopup()"> {{'add' | translate}}</button>
         </div>
 
         <div class="row">

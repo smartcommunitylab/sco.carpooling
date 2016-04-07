@@ -6,7 +6,7 @@
         <a class="button button-block button-carpooling button-carpooling-head" href="mailto:iposto@smartcommunitylab.it?subject={{'ph_community_suggestion_subject' | translate}}&body={{'ph_community_suggestion_body' | translate}}">
             {{'lbl_suggestcommunity' | translate | uppercase}}
         </a>
-        <div class="padding" ng-if="communities == null || communities.length == 0">
+        <div class="padding" ng-if="!!communities && communities.length == 0">
             <h4>{{'lbl_no_results' | translate}}</h4>
         </div>
         <div class="card card-community" ng-repeat="comm in communities" ng-click="selectCommunity($index)">

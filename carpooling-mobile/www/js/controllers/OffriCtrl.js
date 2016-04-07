@@ -431,10 +431,6 @@ angular.module('carpooling.controllers.offri', [])
     });
 
     $scope.selectCommunitiesPopup = function () {
-        if ($scope.communities.length == 0) {
-            return;
-        }
-
         var communitiesPopup = $ionicPopup.show({
             templateUrl: 'templates/popup_communities.html',
             title: $filter('translate')('lbl_communities'),

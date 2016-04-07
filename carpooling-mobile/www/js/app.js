@@ -293,6 +293,19 @@ angular.module('carpooling', [
         });
     };
 
+    $rootScope.logout = function () {
+        LoginSrv.logout().then(
+            function (data) {
+                //ionic.Platform.exitApp();
+                window.location.reload(true);
+                Utils.loading();
+            },
+            function (error) {
+                Utils.toast();
+            }
+        );
+    };
+
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)

@@ -33,6 +33,10 @@ angular.module('carpooling.controllers.user', [])
             };
         }
 
+        if (!$scope.user.dpName) {
+            $scope.user.dpName = $scope.user.name + ' ' + $scope.user.surname;
+        }
+
         $scope.edit = {
             hasAuto: hasAuto($scope.user.auto),
             postsAvailable: [1, 2, 3, 4, 5, 6, 7]

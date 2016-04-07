@@ -43,7 +43,8 @@
       },
       "locator": "/home/oscar/Projects/cordova-plugin-facebook4",
       "id": "cordova-plugin-facebook4"
-    }
+    },
+    "cordova-plugin-file-transfer"
   ],
   "cordovaPlatforms": [
     {

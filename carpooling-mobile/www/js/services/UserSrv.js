@@ -129,6 +129,9 @@ angular.module('carpooling.services.user', [])
         var deferred = $q.defer();
 
         // in telephone number accept only digits, +, -, /
+        if (!telephone) {
+            telephone = '';
+        }
         telephone = telephone.replace(/[^\d\+-\/]/g, '');
 
         var payload = {

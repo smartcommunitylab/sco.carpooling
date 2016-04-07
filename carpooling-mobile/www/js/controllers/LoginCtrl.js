@@ -36,17 +36,4 @@ angular.module('carpooling.controllers.login', [])
             }
         );
     };
-
-    $rootScope.logout = function () {
-        LoginSrv.logout().then(
-            function (data) {
-                //ionic.Platform.exitApp();
-                window.location.reload(true);
-                Utils.loading();
-            },
-            function (error) {
-                Utils.toast();
-            }
-        );
-    };
 });
