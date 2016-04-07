@@ -1045,10 +1045,10 @@ public class CarPoolingManager {
 			if (userInfo != null && userInfo.getAuto() != null) {
 				driver.setAuto(userInfo.getAuto());
 			}
-			if (userInfo.getDisplayName() != null && !userInfo.getDisplayName().isEmpty()) {
+			if (userInfo.getDisplayName() != null) {
 				driver.setDpName(userInfo.getDisplayName());
 			}
-			if (userInfo.getTelephone() != null && !userInfo.getTelephone().isEmpty()) {
+			if (userInfo.getTelephone() != null) {
 				driver.setTelephone(userInfo.getTelephone());
 			}
 			userRepository.save(driver);
