@@ -449,6 +449,7 @@ angular.module('carpooling.services.user', [])
     }
 
     userService.markNotification = function (id) {
+        $rootScope.decCounter();
         var deferred = $q.defer();
 
         if (!id) {
@@ -474,8 +475,29 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
     }
 
+    userService.readNotificationCount = function() {
+        var deferred = $q.defer();
+        $http.get(Config.getServerURL() + '/api/count/notification/', Config.getHTTPConfig())
+        .then(
+            function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data ? responseError.data.error : responseError);
+            }
+        );
+
+        return deferred.promise;
+    };
+
     userService.deleteNotification = function (id) {
         var deferred = $q.defer();
+        $rootScope.decCounter();
 
         if (!id) {
             deferred.reject('Invalid notification id');

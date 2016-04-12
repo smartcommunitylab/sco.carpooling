@@ -34,6 +34,20 @@ angular.module('carpooling', [
     var isIOS = ionic.Platform.isIOS();
     var isAndroid = ionic.Platform.isAndroid();
 
+    $rootScope.notificationCounter = 0;
+
+    $rootScope.updateCounter = function() {
+      $rootScope.notificationCounter++;
+    };
+    $rootScope.decCounter = function() {
+      if ($rootScope.notificationCounter > 0) $rootScope.notificationCounter--;
+    };
+    $rootScope.initCounter = function() {
+      UserSrv.readNotificationCount().then(function(data) {
+        $rootScope.notificationCounter = data;
+      });
+    };
+
     $rootScope.manageLocalNotification = function (local_notification) {
         var txt = local_notification.alert ?
             local_notification.alert : local_notification.aps && local_notification.aps.alert ? local_notification.aps.alert : null;
@@ -128,6 +142,7 @@ angular.module('carpooling', [
 
     $rootScope.pushRegistration = function (userId) {
         var channel = 'CarPooling_' + userId;
+        $rootScope.initCounter();
         try {
             if (window.ParsePushPlugin) {
                 if (isAndroid) {
@@ -147,6 +162,7 @@ angular.module('carpooling', [
                         }
                     });
                     window.ParsePushPlugin.on('receivePN', function (pn) {
+                        $rootScope.updateCounter();
                         var chat_parameters = $rootScope.isChat(window.location);
                         if (chat_parameters.length > 0) {
                             var travelId = chat_parameters[0];
@@ -186,13 +202,14 @@ angular.module('carpooling', [
                         ecb: "onNotification"
                     }, function () {
                         window.ParsePushPlugin.subscribe(channel, function () {
-                            //console.log("Succes in channel " + channel + " creation");
+                            console.log("Succes in channel " + channel + " creation");
                         });
                     }, function (e) {
                         console.log("Error in parse initialize");
                     });
 
                     onNotification = function (pn) {
+                        $rootScope.updateCounter();
                         var chat_parameters = $rootScope.isChat(window.location);
                         if (chat_parameters.length > 0) {
                             var travelId = chat_parameters[0];
@@ -225,52 +242,6 @@ angular.module('carpooling', [
                         }
                     }
                 }
-
-                /*if (window.ParsePushPlugin) {
-                    window.ParsePushPlugin.subscribe(channel, function () {
-                        //console.log("Succes in channel " + channel + " creation");
-                    });
-                    window.ParsePushPlugin.on('openPN', function (pn) {
-                        //alert("in open notific" + JSON.stringify(pn));
-                        if (pn.urlHash) {
-                            var s_path = pn.urlHash.replace(new RegExp("/", 'g'), ".");
-                            s_path = s_path.substring(2, s_path.length);
-                            //window.location.path = "/notifiche";
-                            //window.location.reload(true);
-                            $state.go(s_path);
-                        } else {
-                            // urlHash not present. I open the app in the last page/view
-                        }
-                    });
-                    window.ParsePushPlugin.on('receivePN', function (pn) {
-                        var chat_parameters = $rootScope.isChat(window.location);
-                        if (chat_parameters.length > 0) {
-                            var travelId = chat_parameters[0];
-                            var senderId = chat_parameters[1];
-                            if (pn.cp_senderId && pn.cp_travelId) {
-                                if (pn.cp_senderId == senderId && pn.cp_travelId == travelId) {
-                                    $state.go('app.chat', { //transitionTo
-                                        travelId: travelId,
-                                        personId: senderId
-                                    }, {
-                                        reload: true
-                                    });
-                                    $rootScope.updateMyNotification(travelId, senderId);
-                                } else {
-                                    $rootScope.manageLocalNotification(pn);
-                                }
-                            } else {
-                                $rootScope.manageLocalNotification(pn);
-                            }
-                        } else {
-                            $rootScope.manageLocalNotification(pn);
-                        }
-                    });*/
-                //
-                //you can also listen to your own custom subevents
-                //
-                //ParsePushPlugin.on('receivePN:chat', chatEventHandler);
-                //ParsePushPlugin.on('receivePN:serverMaintenance', serverMaintenanceHandler);*/
             }
         } catch (ex) {
             //console.log('Exception in parsepush registration ' + ex.message);
@@ -294,6 +265,11 @@ angular.module('carpooling', [
     };
 
     $rootScope.logout = function () {
+        if (window.ParsePushPlugin) {
+          window.ParsePushPlugin.unsubscribe('CarPooling_' + StorageSrv.getUserId(), function () {
+              console.log("Success in channel " + 'CarPooling_' + StorageSrv.getUserId() + " unsubscribe");
+          });
+        }
         LoginSrv.logout().then(
             function (data) {
                 //ionic.Platform.exitApp();
@@ -320,7 +296,7 @@ angular.module('carpooling', [
         }
 
         $rootScope.login_googlelocal = 'google';
-        $rootScope.login_facebooklocal = ionic.Platform.isIOS() ? 'facebook' : 'facebooklocal';
+        $rootScope.login_facebooklocal = !ionic.Platform.isWebView() || ionic.Platform.isIOS() ? 'facebook' : 'facebooklocal';
 
         if (!!window.plugins && !!window.plugins.googleplus) {
             window.plugins.googleplus.isAvailable(
@@ -342,26 +318,19 @@ angular.module('carpooling', [
         } else {
             $rootScope.login();
         }
-    });
 
-    /*
-    $rootScope.$on('$stateChangeStart',
-        function (event, toState, toParams, fromState, fromParams) {
-            if (!$rootScope.initialSetup && toState.name == 'app.home' && StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
-                $rootScope.initialSetup = true;
-                event.preventDefault();
-                return $state.go('app.profilo');
-            //} else if ($rootScope.initialSetup && toState.name == 'app.home') {
-            //    event.preventDefault();
-            }
+      if (cordova && cordova.getAppVersion) {
+          cordova.getAppVersion.getVersionNumber().then(function (version) {
+              $rootScope.version = version;
+          });
         }
-    );
-    */
+    });
 })
 
 .config(function ($httpProvider, $ionicConfigProvider) {
     // PROBLEM WITH SCROLL RESIZE ON OLD ANDROID DEVICES
-    $ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4);
+    $ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isIOS() || (ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4));
+    //$ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4);
     $httpProvider.defaults.withCredentials = true;
     $ionicConfigProvider.backButton.text('');
     $ionicConfigProvider.backButton.previousTitleText(false);

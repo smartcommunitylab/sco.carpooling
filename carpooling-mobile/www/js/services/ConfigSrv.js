@@ -1,6 +1,8 @@
 angular.module('carpooling.services.config', [])
 
-.factory('Config', function ($http, $q, $filter) {
+.factory('Config', function ($rootScope, $http, $q, $filter) {
+    $rootScope.version = '0.0.4';
+
     var SERVER_URL = 'https://dev.smartcommunitylab.it/carpooling';
     var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
     var APPID = 'QZByJ7flOj4rmtN3gpyBhMyw7jONUU3sgzJJT3pL';
@@ -35,7 +37,7 @@ angular.module('carpooling.services.config', [])
             return RECURRENCY;
         },
         getHTTPConfig: function () {
-            return HTTP_CONFIG;
+            return angular.copy(HTTP_CONFIG);
         },
         getLat: function () {
             return LAT;

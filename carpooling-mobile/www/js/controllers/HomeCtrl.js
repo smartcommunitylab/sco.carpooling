@@ -15,9 +15,10 @@ angular.module('carpooling.controllers.home', [])
     $scope.closeCredits = function () {
         $scope.modalCredits.hide();
     };
+
 })
 
-.controller('HomeCtrl', function ($scope, $state, $filter, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('HomeCtrl', function ($scope, $rootScope, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
 
     $scope.tab = 0;
 
@@ -245,6 +246,9 @@ angular.module('carpooling.controllers.home', [])
      * init
      */
     $scope.$on('$ionicView.enter', function () {
+        if (!window.ParsePushPlugin) {
+          $scope.interval = $interval($rootScope.initCounter, 10000);
+        }
         if ($scope.tab === 0) {
             if (CacheSrv.reloadPassengerTrips()) {
                 $scope.loadMorePassengerTrips(true);
@@ -275,4 +279,12 @@ angular.module('carpooling.controllers.home', [])
             }
         }
     });
+
+      /*
+     * exit
+     */
+    $scope.$on('$ionicView.leave', function () {
+       if ($scope.interval) $interval.cancel($scope.interval);
+    });
+
 });

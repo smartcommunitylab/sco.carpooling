@@ -155,8 +155,11 @@ angular.module('carpooling.controllers.communities', [])
                 var fillConfirmPopupOptions = function (name, coordinates) {
                     confirmPopupOptions.template = name;
                     confirmPopupOptions.buttons[1].onTap = function () {
+                        $scope.search.location.name = name;
                         $scope.search.location.address = name;
                         $scope.search.location.coordinates = coordinates;
+                        $scope.search.tempLocation = angular.copy($scope.search.location);
+
                         $scope.afterMapSelection = true;
                         $scope.hideModalMap();
                     };

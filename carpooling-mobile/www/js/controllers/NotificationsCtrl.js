@@ -190,7 +190,7 @@ angular.module('carpooling.controllers.notifications', [])
     };
 })
 
-.controller('ChatCtrl', function ($scope, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, $location, $anchorScroll, Utils, UserSrv, StorageSrv) {
+.controller('ChatCtrl', function ($scope, $rootScope, $interval, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, $location, $anchorScroll, Utils, UserSrv, StorageSrv) {
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     $scope.messages = [];
     $scope.id = StorageSrv.getUserId();
@@ -257,55 +257,6 @@ angular.module('carpooling.controllers.notifications', [])
         });
     };
 
-    //    $scope.messages = [
-    //        {
-    // id: '1',
-    // userId: 1,
-    // text: 'Ciao Mario',
-    // timestamp: '1447865802692',
-    // userId_target: 2
-    //        },
-    //        {
-    // id: '2',
-    // userId: 1,
-    // text: 'E\' possibile aggiungere una tappa intermedia a Mattarello nel tuo viaggio? Grazie',
-    // timestamp: '1447865802692',
-    // userId_target: 2
-    //        },
-    //        {
-    // id: '3',
-    // userId: 2,
-    // text: 'Ciao Stefano, certo nessun problema. Passo davanti alla Coop mi puoi aspettare li',
-    // timestamp: '1447918789919',
-    // userId_target: 1
-    //        },
-    //        {
-    // id: '4',
-    // userId: 1,
-    // text: 'Provo a scrivere ancora per vedere se poi mi mette la scrollbar quando la pagina dei messaggi inizia ad allungarsi',
-    // timestamp: '1447865802692',
-    // userId_target: 2
-    //        },
-    //        {
-    // id: '5',
-    // userId: 2,
-    // text: 'Ciao Stefano, nessun problema. Tu continua pure a scrivere che poi vediamo se scoppia tutto o se funziona...',
-    // timestamp: '1447918789919',
-    // userId_target: 1
-    //        },
-    //        {
-    // id: '6',
-    // userId: 1,
-    // text: 'Speriamo in bene, tu incrocia le dita e vediamo cosa succede.',
-    // timestamp: '1447918789919',
-    // userId_target: 1
-    //        }
-    //    ];
-
-    /*    $scope.loadAllMsg = function () {
-            viewScroll.scrollBottom();
-        };*/
-
     $scope.isMe = function (id) {
         return id == $scope.id;
     };
@@ -362,4 +313,25 @@ angular.module('carpooling.controllers.notifications', [])
         $scope.new_message = '';
     };
 
+    var updateChat = function() {
+      UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
+          $scope.messages = discussion.messages ? discussion.messages : [];
+          if ($scope.messages.length > 10) {
+              $scope.oldMsgPresent = true;
+          }
+      });
+
+    }
+
+    $scope.$on('$ionicView.enter', function () {
+        if (!window.ParsePushPlugin) {
+          $scope.interval = $interval(updateChat, 10000);
+        }
+    });
+      /*
+     * exit
+     */
+    $scope.$on('$ionicView.leave', function () {
+       if ($scope.interval) $interval.cancel($scope.interval);
+    });
 });
