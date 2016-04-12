@@ -1513,7 +1513,7 @@ public class CarPoolingManager {
 	 * @return
 	 */
 	public Long countNotifications(String userId) {
-		return notificationRepository.countByTargetUserId(userId);
+		return notificationRepository.countReadByTargetUserId(userId);
 	}
 
 }
