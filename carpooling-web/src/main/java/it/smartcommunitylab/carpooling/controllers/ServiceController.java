@@ -460,6 +460,13 @@ public class ServiceController {
 		return new Response<List<Notification>>(carPoolingManager.readNotificationsOfTravelId(travelId));
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/api/count/notification")
+	public @ResponseBody
+	Response<Long> countNotifications() throws CarPoolingCustomException {
+
+		return new Response<Long>(carPoolingManager.countNotifications(getUserId()));
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/api/mark/read/notification/{notificationId}")
 	public @ResponseBody
 	Response<String> markNotificaton(@PathVariable String notificationId) throws CarPoolingCustomException {

@@ -1508,4 +1508,12 @@ public class CarPoolingManager {
 
 	}
 
+	/**
+	 * @param userId
+	 * @return
+	 */
+	public Long countNotifications(String userId) {
+		return notificationRepository.countByTargetUserId(userId);
+	}
+
 }
