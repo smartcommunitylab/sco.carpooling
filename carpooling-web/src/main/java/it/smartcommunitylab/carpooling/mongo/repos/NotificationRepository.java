@@ -30,7 +30,7 @@ public interface NotificationRepository extends PagingAndSortingRepository<Notif
 	@Query("{'targetUserId':?0}")
 	Page<Notification> findByTargetUserId(String targetUserId, Pageable pageable);
 
-	@Query(value="{'targetUserId':?0, 'status': true}", count = true)
+	@Query(value="{'targetUserId':?0, 'status': false}", count = true)
 	Long countReadByTargetUserId(String targetUserId);
 	
 	@Query("{'targetUserId':?0, 'status': false}")
