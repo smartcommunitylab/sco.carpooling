@@ -171,14 +171,17 @@ public class User {
 	 * @return
 	 */
 	public String fullName() {
+		if (!StringUtils.isEmpty(dpName))
+			return dpName;
+		
 		String res = "";
-		if (!StringUtils.isEmpty(name))
-			res += name.trim();
-		if (!StringUtils.isEmpty(surname)) {
-			if (res.length() > 0)
-				res += " ";
-			res += surname.trim();
-		}
+//		if (!StringUtils.isEmpty(name))
+//			res += name.trim();
+//		if (!StringUtils.isEmpty(surname)) {
+//			if (res.length() > 0)
+//				res += " ";
+//			res += surname.trim();
+//		}
 		if (StringUtils.isEmpty(res))
 			return "Anonymous" + userId;
 		return res;

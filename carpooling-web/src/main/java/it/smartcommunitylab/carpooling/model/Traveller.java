@@ -30,8 +30,10 @@ public class Traveller {
 	private String name;
 	/** surname (reqd).**/
 	private String surname;
-	/** emial (reqd).**/
+	/** email (reqd).**/
 	private String email;
+	/** dpName (reqd).**/
+	private String dpName;
 
 	public Traveller() {
 	}
@@ -74,6 +76,16 @@ public class Traveller {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	
+	
+	public String getDpName() {
+		return dpName;
+	}
+
+	public void setDpName(String dpName) {
+		this.dpName = dpName;
 	}
 
 	@Override
