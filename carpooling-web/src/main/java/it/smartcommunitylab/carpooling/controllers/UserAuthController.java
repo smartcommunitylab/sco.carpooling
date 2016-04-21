@@ -126,7 +126,7 @@ public class UserAuthController {
 				user = dbUser;
 			}
 //			if (!userManager.exist(user)) {
-				user.setEmail(accountProfile.getAttributes().get("google").get("OIDC_CLAIM_email"));
+				user.setEmail(getEmail(accountProfile));
 				userManager.saveUser(user);
 //			}
 			
@@ -149,6 +149,21 @@ public class UserAuthController {
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	
+	private String getEmail(AccountProfile account) {
+		String email = null;
+		for (String aName : account.getAccountNames()) {
+			for (String key : account.getAccountAttributes(aName).keySet()) {
+				if (key.toLowerCase().contains("email")) {
+					email = account.getAccountAttributes(aName).get(key);
+					if (email != null) break;
+				}
+			}
+			if (email != null) break;
+		}
+		return email;
 	}
 
 	@RequestMapping("/userloginsuccess")
