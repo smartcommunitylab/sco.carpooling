@@ -115,9 +115,9 @@ angular.module('carpooling.controllers.cercaviaggi', [])
 
     angular.extend($scope, {
         center: {
-            lat: 46.067819,
-            lng: 11.121306,
-            zoom: 8
+            lat: Config.getLat(),
+            lng: Config.getLon(),
+            zoom: Config.getZoom()
         },
         defaults: {
             scrollWheelZoom: false
@@ -292,6 +292,12 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
         $scope.travelRequest['when'] = selectedDateTime.getTime();
 
+        if (selectedDateTime.getTime() < (new Date().getTime() - 5*60*1000)) {
+          Utils.toast(($filter('translate')('toast_time_invalid')));
+          return;
+        }
+
+
         Utils.loading();
         PassengerSrv.searchTrip($scope.travelRequest).then(
             function (searchResults) {
@@ -304,7 +310,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
             },
             function (error) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             }
         );
     };

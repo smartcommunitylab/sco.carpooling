@@ -10,10 +10,17 @@
                     <placeautocomplete ng-model="search.tempLocation.name" placeholder="{{'lbl_tripzone'| translate}}" attr-placeholder="{{'lbl_tripzone'| translate}}" click-activation="true" data="places.names" on-type="typing" on-select="setLocation"></placeautocomplete>
                     <button class="button button-icon icon ion-android-locate" ng-click="showModalMap()"></button>
                 </div>
-                <div class="buttons">
-                    <button class="button button-carpooling" ng-click="findCommunity()">
+                <div class="buttons row">
+                    <div class="col">
+                      <button class="button button-carpooling" ng-click="findCommunity()">
                         {{'lbl_cerca'| translate}}
-                    </button>
+                      </button>
+                    </div>
+                    <div class="col">
+                      <button class="button button-carpooling" ng-click="findAll()">
+                          {{'lbl_cerca_all'| translate}}
+                      </button>
+                    </div>
                 </div>
             </div>
         </form>

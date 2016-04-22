@@ -65,7 +65,7 @@ angular.module('carpooling.controllers.viaggio', [])
                 },
                 function (error) {
                     Utils.loaded();
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(error));
                 }
             );
             return;
@@ -106,7 +106,7 @@ angular.module('carpooling.controllers.viaggio', [])
                 function (error) {
                     Utils.loaded();
                     console.error(error);
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(error));
                 }
             );
         } else {
@@ -133,7 +133,7 @@ angular.module('carpooling.controllers.viaggio', [])
             },
             function (error) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             }
         );
     };
@@ -151,7 +151,7 @@ angular.module('carpooling.controllers.viaggio', [])
         };
 
         var rateUserParams = {
-            username: $scope.isMine ? booking.traveller.name + ' ' + booking.traveller.surname : $scope.driverInfo.name + ' ' + $scope.driverInfo.surname,
+            username: $scope.isMine ? booking.traveller.dpName : $scope.driverInfo.dpName,
             role: $scope.isMine ? $filter('translate')('lbl_passenger') : $filter('translate')('lbl_driver')
         };
 
@@ -175,7 +175,7 @@ angular.module('carpooling.controllers.viaggio', [])
                             };
 
                             var failure = function (error) {
-                                Utils.toast();
+                                Utils.toast(Utils.getErrorMsg(error));
                             };
 
                             if ($scope.isMine) {
@@ -210,7 +210,7 @@ angular.module('carpooling.controllers.viaggio', [])
 
         var error = function (error) {
             Utils.loaded();
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
             deferred.reject();
         };
 
@@ -265,7 +265,7 @@ angular.module('carpooling.controllers.viaggio', [])
 
             var showRejectSinglePopup = $ionicPopup.confirm({
                 title: $filter('translate')(showRejectSinglePopupTitleString, {
-                    username: booking.traveller.name + ' ' + booking.traveller.surname
+                    username: booking.traveller.dpName
                 }),
                 cancelText: $filter('translate')('cancel'),
                 okText: $filter('translate')('action_rejectbtn'),
@@ -308,14 +308,14 @@ angular.module('carpooling.controllers.viaggio', [])
 
         var error = function (error) {
             Utils.loaded();
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
             deferred.reject();
         };
         // confirmation popup for accept
         var isRecurrent = (booking.recurrent === undefined || booking.recurrent === true);
         $ionicPopup.confirm({
             title: $filter('translate')('popup_confirm_accept', {
-                username: booking.traveller.name + ' ' + booking.traveller.surname
+                username: booking.traveller.dpName
             }),
             cancelText: $filter('translate')('cancel'),
             okText: $filter('translate')('action_acceptbtn'),
@@ -352,7 +352,7 @@ angular.module('carpooling.controllers.viaggio', [])
 
     $scope.showActions = function (booking) {
         var hideActionSheet = $ionicActionSheet.show({
-            titleText: booking.traveller.name + ' ' + booking.traveller.surname,
+            titleText: booking.traveller.dpName,
             buttons: [
                 {
                     text: '<i class="icon ion-chatboxes"></i> ' + $filter('translate')('action_chat')
@@ -409,6 +409,7 @@ angular.module('carpooling.controllers.viaggio', [])
                 userId: me.userId,
                 name: me.name,
                 surname: me.surname,
+                dpName: me.dpName,
                 email: me.email
             }
         };
@@ -443,7 +444,7 @@ angular.module('carpooling.controllers.viaggio', [])
                                     },
                                     function (error) {
                                         Utils.loaded();
-                                        Utils.toast();
+                                        Utils.toast(Utils.getErrorMsg(error));
                                     }
                                 );
                             } else {
@@ -457,7 +458,7 @@ angular.module('carpooling.controllers.viaggio', [])
                                     },
                                     function (error) {
                                         Utils.loaded();
-                                        Utils.toast();
+                                        Utils.toast(Utils.getErrorMsg(error));
                                     }
                                 );
                             }
@@ -475,7 +476,7 @@ angular.module('carpooling.controllers.viaggio', [])
                 },
                 function (error) {
                     Utils.loaded();
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(error));
                 }
             );
         }
@@ -627,7 +628,7 @@ angular.module('carpooling.controllers.viaggio', [])
             function (error) {
                 Utils.loaded();
                 console.error(error);
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             }
         );
     };

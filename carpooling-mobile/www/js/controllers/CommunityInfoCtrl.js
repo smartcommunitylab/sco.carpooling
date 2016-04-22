@@ -65,7 +65,7 @@ angular.module('carpooling.controllers.communityinfo', [])
                     },
                     function (error) {
                         Utils.loaded();
-                        Utils.toast();
+                        Utils.toast(Utils.getErrorMsg(error));
                     }
                 );
                 $scope.communityStyle = {
@@ -74,7 +74,7 @@ angular.module('carpooling.controllers.communityinfo', [])
             },
             function (error) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             }
         );
     };
@@ -151,11 +151,11 @@ angular.module('carpooling.controllers.communityinfo', [])
                 },
                 function (reason) {
                     Utils.loaded();
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(reason));
                 }
             );
         } else {
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
         }
     };
 
@@ -169,7 +169,7 @@ angular.module('carpooling.controllers.communityinfo', [])
                 },
                 function (reason) {
                     Utils.loaded();
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(reason));
                 }
             );
         } else {

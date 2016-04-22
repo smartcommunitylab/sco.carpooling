@@ -30,7 +30,7 @@ angular.module('carpooling.controllers.login', [])
             },
             function (error) {
                 loginStarted = false;
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
                 StorageSrv.saveUser(null);
                 ionic.Platform.exitApp();
             }

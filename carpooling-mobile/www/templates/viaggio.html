@@ -11,7 +11,7 @@
                 <div class="col">
                     <div class="trip-driver">
                         <p><i class="icons ion-person"></i>
-                            <span>{{driverInfo.name + ' ' + driverInfo.surname}}</span></p>
+                            <span>{{driverInfo.dpName}}</span></p>
                         <button class="button button-clear button-calm custom-button-calm" ng-click="showUser()">
                             {{'lbl_show_profile' | translate}}
                         </button>
@@ -118,7 +118,7 @@
                 <a class="item item-button-right" ng-repeat="booking in selectedTrip.bookings" ng-if="booking.accepted === 0 || booking.accepted === 1">
                     <!--<i class="icon ion-person"></i>-->
                     <div>
-                        <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
+                        <p>{{booking.traveller.dpName}}</p>
                         <button class="button button-clear button-calm custom-button-calm" ng-click="showPassenger(booking)">
                             {{'lbl_show_profile' | translate}}
                         </button>
@@ -140,7 +140,7 @@
                 <a class="item item-button-right" ng-repeat="booking in pass_accepted" ng-if="booking.accepted === 1">
                     <!--<i class="icon ion-person"></i>-->
                     <div>
-                        <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
+                        <p>{{booking.traveller.dpName}}</p>
                         <button class="button button-clear button-calm custom-button-calm" ng-click="showPassenger(booking)">
                             {{'lbl_show_profile' | translate}}
                         </button>
@@ -161,7 +161,7 @@
                 <a class="item item-button-right" ng-repeat="booking in pass_not_accepted" ng-if="booking.accepted === 0">
                     <!--<i class="icon ion-person"></i>-->
                     <div>
-                        <p>{{booking.traveller.name}} {{booking.traveller.surname}}</p>
+                        <p>{{booking.traveller.dpName}}</p>
                         <button class="button button-clear button-calm custom-button-calm" ng-click="showPassenger(booking)">
                             {{'lbl_show_profile' | translate}}
                         </button>

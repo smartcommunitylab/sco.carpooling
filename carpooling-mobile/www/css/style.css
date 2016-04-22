@@ -523,6 +523,7 @@ placeautocomplete ul li {
 }
 .user-profile .user-options .item.item-input .input-label {
     color: #3448A5;
+    max-width: none;
 }
 .user-profile .user-options .phone {
     text-decoration: none;
@@ -818,6 +819,9 @@ h5 {
 .findcommunities .buttons {
     padding-top: 10px;
     text-align: center;
+}
+.findcommunities .buttons button {
+  min-width: 120px;
 }
 .actions {
     text-align: center;

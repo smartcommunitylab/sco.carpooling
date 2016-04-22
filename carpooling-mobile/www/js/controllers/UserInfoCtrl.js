@@ -141,7 +141,7 @@ angular.module('carpooling.controllers.user', [])
             },
             function (error) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             }
         );
     };

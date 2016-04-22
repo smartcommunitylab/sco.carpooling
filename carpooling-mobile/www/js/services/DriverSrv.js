@@ -54,7 +54,7 @@ angular.module('carpooling.services.driver', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data? responseError.data.error : responseError);
+                deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -79,7 +79,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -105,7 +105,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -118,7 +118,7 @@ angular.module('carpooling.services.driver', [])
 
         if (!tripId) {
             deferred.reject('Invalid tripId');
-        } else if (!booking || !booking.traveller || !booking.traveller.userId || !booking.traveller.name || !booking.traveller.surname) {
+        } else if (!booking || !booking.traveller || !booking.traveller.userId || !booking.traveller.dpName) {
             deferred.reject('Invalid traveller');
         } else {
             $http.post(Config.getServerURL() + '/api/driver/trips/' + tripId + '/accept', booking, Config.getHTTPConfig())
@@ -133,7 +133,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -146,7 +146,7 @@ angular.module('carpooling.services.driver', [])
 
         if (!recurrentId) {
             deferred.reject('Invalid recurrentId');
-        } else if (!recurrentBooking || !recurrentBooking.traveller || !recurrentBooking.traveller.userId || !recurrentBooking.traveller.name || !recurrentBooking.traveller.surname) {
+        } else if (!recurrentBooking || !recurrentBooking.traveller || !recurrentBooking.traveller.userId || !recurrentBooking.traveller.dpName) {
             deferred.reject('Invalid traveller');
         } else {
             $http.post(Config.getServerURL() + '/api/driver/recurrenttrips/' + recurrentId + '/accept', recurrentBooking, Config.getHTTPConfig())
@@ -161,7 +161,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -189,7 +189,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -215,7 +215,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -241,7 +241,7 @@ angular.module('carpooling.services.driver', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data? responseError.data.error : responseError);
+                    deferred.reject(responseError.data? responseError.data.errorMessage : responseError);
                 }
             );
         }

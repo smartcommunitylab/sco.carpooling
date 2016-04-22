@@ -7,7 +7,12 @@
             {{'lbl_suggestcommunity' | translate | uppercase}}
         </a>
         <div class="padding" ng-if="!!communities && communities.length == 0">
-            <h4>{{'lbl_no_results' | translate}}</h4>
+          <div class="row" style="margin-top: 30px;"><div class="col col-center text-center">{{'lbl_empty_comms1' | translate}}</div></div>
+          <div class="row" style="margin-top: 20px;">
+            <div class="col col-center text-center">
+              {{'lbl_empty_comms2' | translate}} <i style="font-size:20px; padding: 0 5px;" class="icon ion-android-search"></i> {{'lbl_empty_comms3' | translate}}
+            </div>
+          </div>
         </div>
         <div class="card card-community" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
             <div class="item" ng-style="{'background-color':'#{{comm.color}}'}">

@@ -138,6 +138,17 @@ angular.module('carpooling.services.utils', [])
         }
     };
 
+    var errors = {
+        'travel not found.': 'TRAVEL_NOT_FOUND',
+        'travel not found': 'TRAVEL_NOT_FOUND',
+        'booking not found': 'BOOKING_NOT_FOUND',
+        'travel not bookable.': 'NOT_BOOKABLE'
+    };
+    utilsService.getErrorMsg = function(serverError) {
+     if (errors[serverError]) return $filter('translate')(errors[serverError]);
+      return $filter('translate')('toast_error_generic');
+    }
+
     utilsService.getNumber = function (num) {
         if (!num || num === 0) {
             return [];

@@ -89,7 +89,7 @@ angular.module('carpooling.controllers.notifications', [])
             function () {},
             function (err) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(err));
             }
         );
     };
@@ -101,7 +101,7 @@ angular.module('carpooling.controllers.notifications', [])
             },
             function (err) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(err));
             }
         );
     };
@@ -223,7 +223,7 @@ angular.module('carpooling.controllers.notifications', [])
         }, function (err) {
             Utils.loaded();
             console.error(err);
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(err));
         });
     };
 
@@ -253,7 +253,7 @@ angular.module('carpooling.controllers.notifications', [])
             //viewScroll.scrollTo(0, y_pos.top, false);
         }, function (err) {
             Utils.loaded();
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(err));
         });
     };
 
@@ -304,7 +304,7 @@ angular.module('carpooling.controllers.notifications', [])
                 },
                 function (err) {
                     Utils.loaded();
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(err));
                 }
             );
         }

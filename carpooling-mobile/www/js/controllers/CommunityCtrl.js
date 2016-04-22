@@ -11,7 +11,7 @@ angular.module('carpooling.controllers.communities', [])
         },
         function (error) {
             Utils.loaded();
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
             $scope.communities = [];
         }
     );
@@ -215,6 +215,18 @@ angular.module('carpooling.controllers.communities', [])
         Utils.loading();
         var coords = (!!$scope.search.location && !!$scope.search.location.coordinates && !!$scope.search.location.coordinates.latlng) ? $scope.search.location.coordinates.latlng : '';
         UserSrv.searchCommunities(coords, $scope.search.searchText).then(
+            function (communities) {
+                $scope.communities = communities;
+                Utils.loaded();
+            },
+            function (reason) {
+                Utils.loaded();
+            }
+        );
+    };
+    $scope.findAll = function () {
+        Utils.loading();
+        UserSrv.searchCommunities('', '').then(
             function (communities) {
                 $scope.communities = communities;
                 Utils.loaded();

@@ -21,7 +21,6 @@
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "cordova-plugin-whitelist",
-    "cordova-plugin-x-toast",
     "ionic-plugin-keyboard",
     "https://github.com/smartcommunitylab/parse-push-plugin.git",
     {
@@ -35,7 +34,6 @@
       "locator": "https://github.com/smartcommunitylab/cordova-plugin-googleplus",
       "id": "cordova-plugin-googleplus"
     },
-    "de.appplant.cordova.plugin.local-notification",
     {
       "variables": {
         "APP_ID": "1031028236933030",
@@ -44,7 +42,10 @@
       "locator": "~/workspace/cordova-plugin-facebook4",
       "id": "cordova-plugin-facebook4"
     },
-    "cordova-plugin-file-transfer"
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-x-toast",
+    "cordova-plugin-app-event",
+    "de.appplant.cordova.plugin.local-notification"
   ],
   "cordovaPlatforms": [
     "android",

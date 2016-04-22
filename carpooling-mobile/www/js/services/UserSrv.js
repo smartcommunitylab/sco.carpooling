@@ -16,6 +16,10 @@ angular.module('carpooling.services.user', [])
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
+                    var user = response.data.data;
+                    if (!user.dpName && (user.name || user.surname)) {
+                      user.dpName = user.name+ ' '+ user.surname;
+                    }
                     if (StorageSrv.getUserId() === userId) {
                         // It's-a-me!
                         StorageSrv.saveUser(response.data.data).then(
@@ -48,7 +52,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -69,7 +73,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -94,7 +98,7 @@ angular.module('carpooling.services.user', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data ? responseError.data.error : responseError);
+                    deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -118,7 +122,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -152,7 +156,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -174,7 +178,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -196,7 +200,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -214,11 +218,18 @@ angular.module('carpooling.services.user', [])
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
-                    deferred.resolve(response.data.data);
+                  if (response.data.data && response.data.data.userObjs) {
+                      response.data.data.userObjs.forEach(function(user) {
+                        if (!user.dpName && (user.name || user.surname)) {
+                          user.dpName = user.name+ ' '+ user.surname;
+                        }
+                      });
+                  }
+                  deferred.resolve(response.data.data);
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -240,7 +251,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -262,7 +273,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -284,7 +295,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -331,7 +342,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -353,7 +364,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -380,7 +391,7 @@ angular.module('carpooling.services.user', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data ? responseError.data.error : responseError);
+                    deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -440,7 +451,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -467,7 +478,7 @@ angular.module('carpooling.services.user', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data ? responseError.data.error : responseError);
+                    deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
                 }
             );
         }
@@ -488,7 +499,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.error : responseError);
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
             }
         );
 
@@ -514,7 +525,7 @@ angular.module('carpooling.services.user', [])
                     }
                 },
                 function (responseError) {
-                    deferred.reject(responseError.data ? responseError.data.error : responseError);
+                    deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
                 }
             );
         }

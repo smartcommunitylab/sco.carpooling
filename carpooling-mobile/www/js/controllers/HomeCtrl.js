@@ -69,7 +69,7 @@ angular.module('carpooling.controllers.home', [])
         }
 
         if (error !== Config.LOGIN_EXPIRED) {
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
         }
 
         if ($scope.passengerTrips === null) {
@@ -136,9 +136,9 @@ angular.module('carpooling.controllers.home', [])
         PassengerSrv.confirmTrip($scope.nonConfirmedTrips[$index].id, confirm).then(function () {
             Utils.loaded();
             $scope.nonConfirmedTrips.splice($index, 1);
-        }, function () {
+        }, function (error) {
             Utils.loaded();
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
         });
     };
 
@@ -226,7 +226,7 @@ angular.module('carpooling.controllers.home', [])
                 }
 
                 if (error !== Config.LOGIN_EXPIRED) {
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(error));
                 }
 
                 if ($scope.driverTrips === null) {

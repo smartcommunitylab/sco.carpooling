@@ -277,7 +277,7 @@ angular.module('carpooling', [
                 Utils.loading();
             },
             function (error) {
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             }
         );
     };
@@ -319,7 +319,7 @@ angular.module('carpooling', [
             $rootScope.login();
         }
 
-      if (cordova && cordova.getAppVersion) {
+      if (window.cordova && cordova.getAppVersion) {
           cordova.getAppVersion.getVersionNumber().then(function (version) {
               $rootScope.version = version;
           });
@@ -611,13 +611,14 @@ angular.module('carpooling', [
         lbl_recurrency_none: 'Nessuna',
         lbl_offri: 'Pubblica',
         lbl_cerca: 'Cerca',
+        lbl_cerca_all: 'Vedi tutte',
         lbl_communities: 'Comunità',
-        lbl_communities_all: 'tutte le community',
-        lbl_mycommunity: 'Nelle mie community',
-        lbl_allcommunity: 'In tutte le community',
-        lbl_joincommunity: 'Entra nella community',
-        lbl_leavecommunity: 'Abbandona community',
-        lbl_suggestcommunity: 'Suggerisci community',
+        lbl_communities_all: 'tutte le comunità',
+        lbl_mycommunity: 'Nelle mie comunità',
+        lbl_allcommunity: 'In tutte le comunità',
+        lbl_joincommunity: 'Entra nella comunità',
+        lbl_leavecommunity: 'Abbandona comunità',
+        lbl_suggestcommunity: 'Suggerisci comunità',
         lbl_allsearchnotifications: 'Desidero ricevere tutte le notifiche per questa ricerca',
         lbl_start_time: 'Orario di partenza',
         lbl_user_anonymous: 'Anonimo',
@@ -735,8 +736,11 @@ angular.module('carpooling', [
         lbl_empty_notifiche: 'Nessuna notifica presente',
         lbl_empty_offers_storico: 'Nessuno dei viaggi da te offerti è ancora stato effettuato.',
         lbl_empty_trips_storico: 'Conferma di aver partecipato ad un viaggio ed apparirà in questa pagina.',
-        ph_community_suggestion_subject: 'Suggerimento nuova community',
-        ph_community_suggestion_body: 'Salve, vorrei suggerire la creazione di una nuova community.',
+        lbl_empty_comms1: 'Entra a far parte di una comunità',
+        lbl_empty_comms2: 'Tocca il pulsante ',
+        lbl_empty_comms3: ' per cercare la comunità che fa per te.',
+        ph_community_suggestion_subject: 'Suggerimento nuova comunità',
+        ph_community_suggestion_body: 'Salve, vorrei suggerire la creazione di una nuova comunità.',
         text_login_title: 'iPosto',
         text_login_subtitle: 'Aderisci ad una comunità per offrire e partecipare a viaggi condivisi',
         text_login_use: 'Accedi con',
@@ -744,7 +748,11 @@ angular.module('carpooling', [
         credits_project: 'Un progetto di:',
         credits_with: 'In collaborazione con:',
         credits_info: 'Per informazioni:',
-        credits_licenses_button: 'Vedi licenze'
+        credits_licenses_button: 'Vedi licenze',
+        toast_time_invalid: 'Seleziona un orario valido.',
+        TRAVEL_NOT_FOUND: 'Il viaggio non esiste',
+        BOOKING_NOT_FOUND: 'La prenotazione non esiste',
+        NOT_BOOKABLE: 'La prenotazione non è disponibile.'
     });
 
     $translateProvider.preferredLanguage('it');

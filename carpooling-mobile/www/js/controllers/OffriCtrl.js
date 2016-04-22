@@ -115,9 +115,9 @@ angular.module('carpooling.controllers.offri', [])
 
     angular.extend($scope, {
         center: {
-            lat: 46.067819,
-            lng: 11.121306,
-            zoom: 8
+            lat: Config.getLat(),
+            lng: Config.getLon(),
+            zoom: Config.getZoom()
         },
         defaults: {
             scrollWheelZoom: false
@@ -490,6 +490,11 @@ angular.module('carpooling.controllers.offri', [])
             selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
             $scope.travel['when'] = selectedDateTime.getTime();
 
+            if (selectedDateTime.getTime() < (new Date().getTime() - 5*60*1000)) {
+              Utils.toast(($filter('translate')('toast_time_invalid')));
+              return;
+            }
+
             if ($scope.recurrency.isRecurrent) {
                 $scope.travel['recurrency'] = {
                     time: selectedDateTime.getHours(),
@@ -508,7 +513,7 @@ angular.module('carpooling.controllers.offri', [])
 
             var creationError = function (error) {
                 Utils.loaded();
-                Utils.toast();
+                Utils.toast(Utils.getErrorMsg(error));
             };
 
             if (!!$scope.travel.recurrency) {

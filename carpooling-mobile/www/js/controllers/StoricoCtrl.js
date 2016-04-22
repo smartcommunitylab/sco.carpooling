@@ -43,7 +43,7 @@ angular.module('carpooling.controllers.storico', [])
         }
 
         if (error !== Config.LOGIN_EXPIRED) {
-            Utils.toast();
+            Utils.toast(Utils.getErrorMsg(error));
         }
 
         if ($scope.passengerTrips === null) {
@@ -149,7 +149,7 @@ angular.module('carpooling.controllers.storico', [])
                 }
 
                 if (error !== Config.LOGIN_EXPIRED) {
-                    Utils.toast();
+                    Utils.toast(Utils.getErrorMsg(error));
                 }
 
                 if ($scope.driverTrips === null) {
