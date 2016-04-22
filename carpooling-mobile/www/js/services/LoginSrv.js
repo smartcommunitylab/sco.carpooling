@@ -43,7 +43,7 @@ angular.module('carpooling.services.login', [])
                     var error = /userloginerror\?error=(.+)$/.exec(url);
                     if (w && (success || error)) {
                         //Always close the browser when match is found
-//                        w.close();
+                        w.close();
                         authWindow = null;
                     }
 
