@@ -41,8 +41,14 @@ angular.module('carpooling.controllers.offri', [])
     $scope.afterMapSelection = false;
 
     $scope.places = {
+      from : {
         'names': [],
         'coordinates': {}
+      },
+      to : {
+        'names': [],
+        'coordinates': {}
+      }
     };
 
     var typing = function (field, typedthings) {
@@ -69,8 +75,8 @@ angular.module('carpooling.controllers.offri', [])
         var newPlaces = PlanSrv.getTypedPlaces(typedthings);
         newPlaces.then(function (data) {
             //merge with favorites and check no double values
-            $scope.places.names = data;
-            $scope.places.coordinates = PlanSrv.getNames();
+            $scope.places[field].names = data;
+            $scope.places[field].coordinates = PlanSrv.getNames();
         });
     };
 
@@ -85,13 +91,13 @@ angular.module('carpooling.controllers.offri', [])
     var setLocation = function (field, name) {
         $scope.formTravel[field].name = name;
         $scope.formTravel[field].address = name;
-        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        var coordinates = $scope.places[field].coordinates[name].latlng.split(',');
         $scope.formTravel[field].latitude = parseFloat(coordinates[0]);
         $scope.formTravel[field].longitude = parseFloat(coordinates[1]);
 
         $scope.travel = angular.copy($scope.formTravel);
 
-        $scope.places = {
+        $scope.places[field] = {
             'names': [],
             'coordinates': {}
         };
@@ -175,7 +181,7 @@ angular.module('carpooling.controllers.offri', [])
 
                             $scope.equalFormAndTravelFields[selectedField] = Utils.fastCompareObjects($scope.formTravel[selectedField], $scope.travel[selectedField]);
                         }
-                        $scope.hideModalMap();
+                        $scope.hideModalMap(selectedField);
                     };
                 };
 
@@ -293,13 +299,13 @@ angular.module('carpooling.controllers.offri', [])
     /*
      * Recurrency popup stuff
      */
-    $scope.hideModalMap = function () {
+    $scope.hideModalMap = function (field) {
         $scope.modalMap.hide();
 
-        $scope.places = {
-            'names': [],
-            'coordinates': {}
-        };
+      $scope.places[field] = {
+          'names': [],
+          'coordinates': {}
+      };
     };
 
     $scope.getDoW = function () {

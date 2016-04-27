@@ -41,8 +41,14 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     $scope.afterMapSelection = false;
 
     $scope.places = {
+      from : {
         'names': [],
         'coordinates': {}
+      },
+      to : {
+        'names': [],
+        'coordinates': {}
+      }
     };
 
     var typing = function (field, typedthings) {
@@ -69,8 +75,8 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         var newPlaces = PlanSrv.getTypedPlaces(typedthings);
         newPlaces.then(function (data) {
             // merge with favorites and check no double values
-            $scope.places.names = data;
-            $scope.places.coordinates = PlanSrv.getNames();
+            $scope.places[field].names = data;
+            $scope.places[field].coordinates = PlanSrv.getNames();
         });
     };
 
@@ -85,13 +91,13 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     var setLocation = function (field, name) {
         $scope.formTravelRequest[field].name = name;
         $scope.formTravelRequest[field].address = name;
-        var coordinates = $scope.places.coordinates[name].latlng.split(',');
+        var coordinates = $scope.places[field].coordinates[name].latlng.split(',');
         $scope.formTravelRequest[field].latitude = parseFloat(coordinates[0]);
         $scope.formTravelRequest[field].longitude = parseFloat(coordinates[1]);
 
         $scope.travelRequest = angular.copy($scope.formTravelRequest);
 
-        $scope.places = {
+        $scope.places[field] = {
             'names': [],
             'coordinates': {}
         };

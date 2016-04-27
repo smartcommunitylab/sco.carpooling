@@ -25,7 +25,7 @@
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
 -->
-                    <div class="list" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length > 0">
+                    <div class="list" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">
                         <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips">
                             <div class="item">
                                 <div class="trip-data" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
@@ -65,7 +65,7 @@
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
 -->
-                    <div class="list" ng-if="!!passengerTrips && passengerTrips.length > 0">
+                    <div class="list" ng-if="passengerTrips != null && passengerTrips.length > 0">
                         <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index, passengerTrips)">
                             <div class="item">
                                 <div class="trip-data">

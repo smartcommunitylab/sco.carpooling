@@ -4,13 +4,13 @@
             <div class="list">
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelRequestFields['from']}">
-                    <placeautocomplete ng-model="formTravelRequest['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.names" on-type="typingFrom" on-select="setLocationFrom"></placeautocomplete>
+                    <placeautocomplete ng-model="formTravelRequest['from'].name" placeholder="{{'lbl_from' | translate}}" attr-placeholder="{{'lbl_from' | translate}}" click-activation="true" data="places.from.names" on-type="typingFrom" on-select="setLocationFrom"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('from')"></a>
                 </div>
                 <!--AUTOCOMPLETE-->
                 <div class="item item-input item-autocomplete" ng-class="{'item-autocomplete-ok': equalFormAndTravelRequestFields['to']}">
-                    <placeautocomplete ng-model="formTravelRequest['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.names" on-type="typingTo" on-select="setLocationTo"></placeautocomplete>
+                    <placeautocomplete ng-model="formTravelRequest['to'].name" placeholder="{{'lbl_to' | translate}}" attr-placeholder="{{'lbl_to' | translate}}" click-activation="true" data="places.to.names" on-type="typingTo" on-select="setLocationTo"></placeautocomplete>
                     <!----------------->
                     <a class="button button-icon icon ion-map padding-left" ng-click="showModalMap('to')"></a>
                 </div>
