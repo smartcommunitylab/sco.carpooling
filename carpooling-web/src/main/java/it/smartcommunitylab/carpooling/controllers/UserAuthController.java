@@ -18,6 +18,7 @@ package it.smartcommunitylab.carpooling.controllers;
 
 import it.smartcommunitylab.carpooling.managers.UserManager;
 import it.smartcommunitylab.carpooling.model.Community;
+import it.smartcommunitylab.carpooling.model.RegUser;
 import it.smartcommunitylab.carpooling.model.User;
 import it.smartcommunitylab.carpooling.mongo.repos.CommunityRepository;
 import it.smartcommunitylab.carpooling.security.CarPoolingUserDetails;
@@ -30,6 +31,17 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,14 +52,19 @@ import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.aac.AACService;
 import eu.trentorise.smartcampus.aac.model.TokenData;
 import eu.trentorise.smartcampus.network.JsonUtils;
+import eu.trentorise.smartcampus.network.RemoteException;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.AccountProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -95,6 +112,40 @@ public class UserAuthController {
 		}
 		response.sendRedirect(url);
 	}
+	@RequestMapping("/userlogininternal")
+	public @ResponseBody BasicProfile loginInternal(@RequestParam String email, @RequestParam String password, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String url = String.format("%s/oauth/token?client_id=%s&client_secret=%s&grant_type=password&username=%s&password=%s", 
+				env.getProperty("ext.aacURL"), 
+				env.getProperty("ext.clientId"), 
+				env.getProperty("ext.clientSecret"),
+				email,
+				password);
+
+		try {
+			HttpResponse postResult = postJSON(url, "");
+			int status = postResult.getStatusLine().getStatusCode();
+			if (status == 200) {
+				String str = EntityUtils.toString(postResult.getEntity(),"UTF-8");
+				TokenData data = TokenData.valueOf(str);
+				return processTokenData(request, response, data);
+			}
+			response.setStatus(status);
+		} catch (Exception e) {
+			response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	@RequestMapping(value="/register", method=RequestMethod.POST)
+	public void register(@RequestBody RegUser user, HttpServletResponse response) {
+		String url = String.format("%s/internal/register/rest?client_id=%s&client_secret=%s", env.getProperty("ext.aacURL"), env.getProperty("ext.clientId"), env.getProperty("ext.clientSecret"));
+		try {
+			int result = postJSON(url, new ObjectMapper().writeValueAsString(user)).getStatusLine().getStatusCode();
+			response.setStatus(result);
+		} catch (Exception e) {
+			response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * This is a callback for the external AAC OAuth2.0 authentication.
@@ -111,35 +162,7 @@ public class UserAuthController {
 		try {
 			TokenData tokenData = service.exchngeCodeForToken(request.getParameter("code"),
 					env.getProperty("ext.redirect"));
-			BasicProfile basicProfile = profileService.getBasicProfile(tokenData.getAccess_token());
-			AccountProfile accountProfile = profileService.getAccountProfile(tokenData.getAccess_token());
-			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-					basicProfile.getUserId(), basicProfile.getUserId(), CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
-			token.setDetails(new WebAuthenticationDetails(request));
-			
-			Authentication authenticatedUser = authenticationManager.authenticate(token);
-			SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-
-			User user = User.fromUserProfile(basicProfile);
-			User dbUser = userManager.findUser(user.getUserId());
-			if (dbUser != null) {
-				user = dbUser;
-			}
-//			if (!userManager.exist(user)) {
-				user.setEmail(getEmail(accountProfile));
-				userManager.saveUser(user);
-//			}
-			
-			/** add user to community after checking it against list of emails. **/
-			for (Community community : communityRepository.findAll()) {
-				if (!community.getUsers().contains(user.getUserId())
-						&& communityEmailSetup.getEmailAccounts(community.getId()).contains(user.getEmail())) {
-					community.getUsers().add(user.getUserId());
-					communityRepository.save(community);
-				}
-			}
-
-			rememberMeServices.loginSuccess(request, response, authenticatedUser);
+			BasicProfile basicProfile = processTokenData(request, response, tokenData);
 			response.sendRedirect("userloginsuccess?profile="
 					+ URLEncoder.encode(JsonUtils.toJSON(basicProfile), "UTF-8"));
 		} catch (Exception e) {
@@ -149,6 +172,41 @@ public class UserAuthController {
 				e1.printStackTrace();
 			}
 		}
+	}
+
+	private BasicProfile processTokenData(HttpServletRequest request,
+			HttpServletResponse response, TokenData tokenData)
+			throws ProfileServiceException {
+		BasicProfile basicProfile = profileService.getBasicProfile(tokenData.getAccess_token());
+		AccountProfile accountProfile = profileService.getAccountProfile(tokenData.getAccess_token());
+		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+				basicProfile.getUserId(), basicProfile.getUserId(), CarPoolingUserDetails.CARPOOLER_AUTHORITIES);
+		token.setDetails(new WebAuthenticationDetails(request));
+		
+		Authentication authenticatedUser = authenticationManager.authenticate(token);
+		SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+
+		User user = User.fromUserProfile(basicProfile);
+		User dbUser = userManager.findUser(user.getUserId());
+		if (dbUser != null) {
+			user = dbUser;
+		}
+//			if (!userManager.exist(user)) {
+			user.setEmail(getEmail(accountProfile));
+			userManager.saveUser(user);
+//			}
+		
+		/** add user to community after checking it against list of emails. **/
+		for (Community community : communityRepository.findAll()) {
+			if (!community.getUsers().contains(user.getUserId())
+					&& communityEmailSetup.getEmailAccounts(community.getId()).contains(user.getEmail())) {
+				community.getUsers().add(user.getUserId());
+				communityRepository.save(community);
+			}
+		}
+
+		rememberMeServices.loginSuccess(request, response, authenticatedUser);
+		return basicProfile;
 	}
 	
 	
@@ -174,5 +232,28 @@ public class UserAuthController {
 	@RequestMapping("/userloginerror")
 	public String error(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		return "userloginerror";
+	}
+	
+	public static HttpResponse postJSON(String url, String body) throws Exception {
+
+		final HttpResponse resp;
+		final HttpPost post = new HttpPost(url);
+
+		post.setHeader("Accept", "application/json");
+		post.setHeader("Content-Type", "application/json");
+
+		StringEntity input = new StringEntity(body, "UTF-8");
+		input.setContentType("application/json");
+		post.setEntity(input);
+
+		HttpClient httpClient = new DefaultHttpClient();
+		final HttpParams params = httpClient.getParams();
+		HttpConnectionParams.setConnectionTimeout(params, 30000);
+		HttpConnectionParams.setSoTimeout(params, 30000);
+		ConnManagerParams.setTimeout(params, 30000);
+
+		
+		resp = httpClient.execute(post);
+		return resp;
 	}
 }
