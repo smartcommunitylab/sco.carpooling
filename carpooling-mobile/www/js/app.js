@@ -538,16 +538,6 @@ angular.module('carpooling', [
             }
         }
     })
-    .state('app.signin', {
-        url: '/signin',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/signin.html',
-                controller: 'SigninCtrl'
-            }
-        }
-    })
-
     ;
 
     // if none of the above states are matched, use this as the fallback
@@ -772,7 +762,7 @@ angular.module('carpooling', [
         ph_community_suggestion_body: 'Salve, vorrei suggerire la creazione di una nuova comunità.',
         text_login_title: 'iPosto',
         text_login_subtitle: 'Aderisci ad una comunità per offrire e partecipare a viaggi condivisi',
-        text_login_use: 'Accedi con',
+        text_login_use: 'oppure accedi con',
         credits_title: 'iPosto',
         credits_project: 'Un progetto di:',
         credits_with: 'In collaborazione con:',
@@ -783,12 +773,13 @@ angular.module('carpooling', [
         BOOKING_NOT_FOUND: 'La prenotazione non esiste',
         NOT_BOOKABLE: 'La prenotazione non è disponibile.',
         login_signin: 'Entra',
-        login_signup: 'oppure REGISTRATI',
+        login_signup: 'REGISTRATI',
         error_popup_title: 'Errore',
         error_generic: 'La registrazione non è andata a buon fine. Riprova più tardi.',
         error_email_inuse: 'L\'indirizzo email è già in uso.',
         signup_signup: 'Registrati',
-        signup_title: 'Registra con',
+        signup_title: 'Registrati con',
+        signup_subtitle: 'Registrati a Smart Community per accedere ad iPosto e a tutte le altre App',
         signup_name: 'Nome',
         signup_surname: 'Cognome',
         signup_email: 'Email',
@@ -799,7 +790,7 @@ angular.module('carpooling', [
         signup_success_text: 'Completa la registrazione cliccando sul link che trovi nella email che ti abbiamo inviato.',
         signup_resend: 'Re-inviare l\'email di conferma',
         signin_pwd_reset: 'Password dimenticata?',
-        signin_title: 'Inserisci le tue credenziali',
+        signin_title: 'Accedi con le tue credenziali',
         error_signin: 'Username/password non validi'
     });
 

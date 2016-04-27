@@ -1,7 +1,11 @@
 angular.module('carpooling.controllers.login', [])
 
-.controller('LoginCtrl', function ($scope, $rootScope, $state, $ionicHistory, Utils, LoginSrv, UserSrv, StorageSrv) {
+.controller('LoginCtrl', function ($scope, $rootScope, $state, $filter, $ionicPopup, $ionicHistory, Utils, Config, LoginSrv, UserSrv, StorageSrv) {
     var loginStarted = false;
+    $scope.user = {
+      email: '',
+      password: ''
+    };
 
     $scope.login = function (provider) {
         if (loginStarted) {
@@ -43,6 +47,40 @@ angular.module('carpooling.controllers.login', [])
   $scope.goRegister = function() {
     $state.go('app.signup');
   }
+
+  $scope.passwordRecover = function () {
+    window.open(Config.getAACURL()+'/internal/reset?lang=en', '_system', 'location=no,toolbar=no')
+  }
+  $scope.signin = function () {
+      Utils.loading();
+      LoginSrv.signin($scope.user).then(
+          function (data) {
+              UserSrv.getUser(data.userId).then(function () {
+                  $rootScope.pushRegistration(data.userId);
+                  $ionicHistory.nextViewOptions({
+                      historyRoot: true,
+                      disableBack: true
+                  });
+
+                  if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
+                      $rootScope.initialSetup = true;
+                      $state.go('app.profilo');
+                  } else {
+                      $rootScope.initialSetup = false;
+                      $state.go('app.home');
+                  }
+              });
+          },
+          function (error) {
+            StorageSrv.saveUser(null);
+            $ionicPopup.alert({
+              title: $filter('translate')('error_popup_title'),
+              template: $filter('translate')('error_signin')
+            });
+
+          }
+      ).finally(Utils.loaded);
+  };
 })
 
 .controller('RegisterCtrl', function ($scope, $rootScope, $state, $filter, $ionicHistory, $ionicPopup, Utils, LoginSrv, UserSrv, Config, StorageSrv, $translate) {
@@ -64,8 +102,12 @@ angular.module('carpooling.controllers.login', [])
       return null;
     };
 
+    $scope.toLogin = function() {
+      window.location.reload(true);
+    }
+
     $scope.resend = function () {
-      window.open(Config.getAACURL()+'/internal/resend', '_blank', 'location=no,toolbar=no')
+      window.open(Config.getAACURL()+'/internal/resend?lang=en', '_system', 'location=no,toolbar=no')
     }
 
 
@@ -93,47 +135,6 @@ angular.module('carpooling.controllers.login', [])
                 title: $filter('translate')('error_popup_title'),
                 template: $filter('translate')(errorMsg)
               });
-            }
-        ).finally(Utils.loaded);
-    };
-})
-
-.controller('SigninCtrl', function ($scope, $rootScope, $state, $filter, $ionicHistory, $ionicPopup, Utils, Config, LoginSrv, UserSrv, StorageSrv, $translate) {
-    $scope.user = {
-      email: '',
-      password: ''
-    };
-
-    $scope.passwordRecover = function () {
-      window.open(Config.getAACURL()+'/internal/reset', '_blank', 'location=no,toolbar=no')
-    }
-    $scope.signin = function () {
-        Utils.loading();
-        LoginSrv.signin($scope.user).then(
-            function (data) {
-                UserSrv.getUser(data.userId).then(function () {
-                    $rootScope.pushRegistration(data.userId);
-                    $ionicHistory.nextViewOptions({
-                        historyRoot: true,
-                        disableBack: true
-                    });
-
-                    if (StorageSrv.getUserId() != null && !StorageSrv.isProfileComplete()) {
-                        $rootScope.initialSetup = true;
-                        $state.go('app.profilo');
-                    } else {
-                        $rootScope.initialSetup = false;
-                        $state.go('app.home');
-                    }
-                });
-            },
-            function (error) {
-              StorageSrv.saveUser(null);
-              $ionicPopup.alert({
-                title: $filter('translate')('error_popup_title'),
-                template: $filter('translate')('error_signin')
-              });
-
             }
         ).finally(Utils.loaded);
     };

@@ -4,33 +4,44 @@
             <div class="stuffcontainer">
                 <!--<h1>{{'text_login_title' | translate}}</h1>-->
                 <img src="img/login_page_logo.png" width="70%"/>
-                <h3>{{'text_login_subtitle' | translate}}</h3>
+                <h4 style="color:#fff;">{{'text_login_subtitle' | translate}}</h4>
             </div>
             <img class="bgimg" src="img/login_page_background.png" />
         </div>
         <div class="login-buttons">
             <div class="stuffcontainer">
-                <h3>{{'text_login_use' | translate}}</h3>
+              <h4>{{'signin_title' | translate}}</h4>
+              <label class="item item-input">
+                <input type="email" placeholder="{{'signup_email'|translate}}" ng-model="user.email">
+              </label>
+              <label class="item item-input">
+                <input type="password" placeholder="{{'signup_pwd'|translate}}" ng-model="user.password">
+              </label>
+              <a class="text-left login-link" ng-click="passwordRecover()">
+                  {{'signin_pwd_reset' | translate}}
+              </a>
+              <button class="button button-block login-button-internal" ng-click="signin()">
+                  {{'login_signin' | translate}}
+              </button>
+                <a class=" login-link" ng-click="goRegister()">
+                    {{'login_signup' | translate}}
+                </a>
+                <br/>
+                <span>{{'text_login_use' | translate}}</span>
+              <div class="row">
+                <div class="col">
                 <button class="button button-block login-button-google" ng-click="login(login_googlelocal)">
                     <!--<i class="ion ion-social-google"></i>-->
                     Google
                 </button>
-                <!--<button class="button button-block" ng-click="login('facebook')">
-                <i class="ion ion-social-facebook"></i>
-                Facebook
-    `       </button>-->
+                </div>
+                <div class="col">
                 <button class="button button-block login-button-facebook" ng-click="login(login_facebooklocal)">
                     <!--<i class="ion ion-social-facebook"></i>-->
                     Facebook
                 </button>
-                <button class="button button-block login-button-internal" ng-click="loginInternal()">
-                    <!--<i class="ion ion-social-facebook"></i>-->
-                    {{'login_signin' | translate}}
-                </button>
-                <button class="button button-block login-button-signup" ng-click="goRegister()">
-                    <!--<i class="ion ion-social-facebook"></i>-->
-                    {{'login_signup' | translate}}
-                </button>
+                </div>
+              </div>
           </div>
         </div>
     </ion-content>

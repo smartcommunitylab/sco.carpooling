@@ -834,7 +834,7 @@ h5 {
 
 .login .login-title {
     position: relative;
-    padding: 2em;
+    padding: 1em 2em;
     text-align: center;
     color: #fff;
     box-shadow: 0 0 30px 5px #222;
@@ -859,13 +859,13 @@ h5 {
     transform: translate(-50%, -50%);*/
 }
 .login .login-buttons .stuffcontainer {
-    padding: 2em 3em;
+    padding: 2em;
 }
 .login .login-title h1,
 .login .login-title h3 {
     color: #fff;
 }
-.login .login-buttons h3 {
+.login .login-buttons h3, .login .login-buttons h4 {
     color: #666;
 }
 .login .login-button-google {
@@ -891,6 +891,13 @@ h5 {
     background-color: #fff;
     color: #3448A5;
 }
+
+.login .login-link {
+  display: block;
+  color: #3448A5;
+  padding: 0 1em;
+}
+
 /* Credits */
 .credits {
     text-align: center;
@@ -930,5 +937,12 @@ h5 {
 .login-buttons .item {
   border: none;
   border-bottom: 1px solid #ddd;
-  margin: 0;
+  margin: 0 1em;
+}
+
+.login-buttons .row, .login-buttons .col {
+  padding: 0;
+}
+.login-buttons .col:first-child {
+  padding-right: 5px;
 }
