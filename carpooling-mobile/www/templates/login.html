@@ -3,7 +3,7 @@
         <div class="login-title">
             <div class="stuffcontainer">
                 <!--<h1>{{'text_login_title' | translate}}</h1>-->
-                <img src="img/login_page_logo.png" />
+                <img src="img/login_page_logo.png" width="70%"/>
                 <h3>{{'text_login_subtitle' | translate}}</h3>
             </div>
             <img class="bgimg" src="img/login_page_background.png" />
@@ -23,7 +23,15 @@
                     <!--<i class="ion ion-social-facebook"></i>-->
                     Facebook
                 </button>
-            </div>
+                <button class="button button-block login-button-internal" ng-click="loginInternal()">
+                    <!--<i class="ion ion-social-facebook"></i>-->
+                    {{'login_signin' | translate}}
+                </button>
+                <button class="button button-block login-button-signup" ng-click="goRegister()">
+                    <!--<i class="ion ion-social-facebook"></i>-->
+                    {{'login_signup' | translate}}
+                </button>
+          </div>
         </div>
     </ion-content>
 </ion-view>

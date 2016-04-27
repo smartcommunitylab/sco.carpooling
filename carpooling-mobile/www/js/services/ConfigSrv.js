@@ -3,6 +3,7 @@ angular.module('carpooling.services.config', [])
 .factory('Config', function ($rootScope, $http, $q, $filter) {
     $rootScope.version = '1.0.0';
 
+    var AAC_URL = 'https://tn.smartcommunitylab.it/aac';
     var SERVER_URL = 'https://tn.smartcommunitylab.it/carpooling';
     var GEOCODER_URL = 'https://os.smartcommunitylab.it/core.geocoder/spring';
     var APPID = 'QZByJ7flOj4rmtN3gpyBhMyw7jONUU3sgzJJT3pL';
@@ -27,6 +28,9 @@ angular.module('carpooling.services.config', [])
     var LOGIN_EXPIRED = 'LOGIN_EXPIRED';
 
     return {
+        getAACURL: function () {
+            return AAC_URL;
+        },
         getServerURL: function () {
             return SERVER_URL;
         },

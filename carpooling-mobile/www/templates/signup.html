@@ -1,0 +1,36 @@
+<ion-view title="{{'lbl_login' | translate}}" class="login" hide-nav-bar="true">
+    <ion-content>
+        <div class="login-title">
+            <div class="stuffcontainer">
+                <!--<h1>{{'text_login_title' | translate}}</h1>-->
+                <img src="img/login_page_logo.png" width="70%"/>
+            </div>
+        </div>
+        <div class="login-buttons">
+            <div class="stuffcontainer">
+                <h3>{{'signup_title' | translate}}</h3>
+                <br/>
+              <label class="item item-input">
+                <input type="text" placeholder="{{'signup_name'|translate}}" ng-model="user.name">
+              </label>
+              <label class="item item-input">
+                <input type="text" placeholder="{{'signup_surname'|translate}}" ng-model="user.surname">
+              </label>
+              <label class="item item-input">
+                <input type="email" placeholder="{{'signup_email'|translate}}" ng-model="user.email">
+              </label>
+              <label class="item item-input">
+                <input type="password" placeholder="{{'signup_pwd'|translate}}" ng-model="user.password">
+              </label>
+              <button class="button button-block login-button-internal" ng-click="register()">
+                    <!--<i class="ion ion-social-facebook"></i>-->
+                    {{'signup_signup' | translate}}
+              </button>
+              <button class="button button-block login-button-signup" ui-sref="app.login">
+                  <!--<i class="ion ion-social-facebook"></i>-->
+                  {{'cancel' | translate}}
+              </button>
+          </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -519,7 +519,36 @@ angular.module('carpooling', [
                 controller: 'ChatCtrl'
             }
         }
-    });
+    })
+    .state('app.signup', {
+        url: '/signup',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/signup.html',
+                controller: 'RegisterCtrl'
+            }
+        }
+    })
+    .state('app.signupsuccess', {
+        url: '/signupsuccess',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/signupsuccess.html',
+                controller: 'RegisterCtrl'
+            }
+        }
+    })
+    .state('app.signin', {
+        url: '/signin',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/signin.html',
+                controller: 'SigninCtrl'
+            }
+        }
+    })
+
+    ;
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
@@ -752,7 +781,26 @@ angular.module('carpooling', [
         toast_time_invalid: 'Seleziona un orario valido.',
         TRAVEL_NOT_FOUND: 'Il viaggio non esiste',
         BOOKING_NOT_FOUND: 'La prenotazione non esiste',
-        NOT_BOOKABLE: 'La prenotazione non è disponibile.'
+        NOT_BOOKABLE: 'La prenotazione non è disponibile.',
+        login_signin: 'Entra',
+        login_signup: 'oppure REGISTRATI',
+        error_popup_title: 'Errore',
+        error_generic: 'La registrazione non è andata a buon fine. Riprova più tardi.',
+        error_email_inuse: 'L\'indirizzo email è già in uso.',
+        signup_signup: 'Registrati',
+        signup_title: 'Registra con',
+        signup_name: 'Nome',
+        signup_surname: 'Cognome',
+        signup_email: 'Email',
+        signup_pwd: 'Password',
+        error_required_fields: 'Tutti i campi sono obbligatori',
+        error_password_short: 'La lunghezza della password deve essere di almeno 6 caratteri',
+        signup_success_title: 'Registrazione completata!',
+        signup_success_text: 'Completa la registrazione cliccando sul link che trovi nella email che ti abbiamo inviato.',
+        signup_resend: 'Re-inviare l\'email di conferma',
+        signin_pwd_reset: 'Password dimenticata?',
+        signin_title: 'Inserisci le tue credenziali',
+        error_signin: 'Username/password non validi'
     });
 
     $translateProvider.preferredLanguage('it');

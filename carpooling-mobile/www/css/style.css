@@ -859,7 +859,7 @@ h5 {
     transform: translate(-50%, -50%);*/
 }
 .login .login-buttons .stuffcontainer {
-    padding: 3em;
+    padding: 2em 3em;
 }
 .login .login-title h1,
 .login .login-title h3 {
@@ -879,6 +879,17 @@ h5 {
     border-color: #3a5795;
     background-color: #3a5795;
     color: #FFFFFF;
+}
+.login .login-button-internal {
+    text-transform: uppercase;
+    border-color: #4EB0E6;
+    background-color: #4EB0E6;
+    color: #FFFFFF;
+}
+.login .login-button-signup {
+    border-color: #fff;
+    background-color: #fff;
+    color: #3448A5;
 }
 /* Credits */
 .credits {
@@ -914,4 +925,10 @@ h5 {
     top: -32px !important;
     padding: 2px 12px 2px 3px;
 */
+}
+
+.login-buttons .item {
+  border: none;
+  border-bottom: 1px solid #ddd;
+  margin: 0;
 }

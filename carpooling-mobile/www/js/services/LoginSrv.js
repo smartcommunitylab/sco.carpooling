@@ -223,5 +223,56 @@ angular.module('carpooling.services.login', [])
         return deferred.promise;
     };
 
+    loginService.signin = function(user) {
+        var deferred = $q.defer();
+        $http.get(Config.getServerURL() + '/userlogininternal?email='+user.email+'&password='+user.password, {
+          headers: {
+            'Accept': 'application/json',
+          }
+        })
+        .then(
+          function (res) {
+            var data = res.data;
+            StorageSrv.saveUserId(data.userId).then(function () {
+                UserSrv.getUser(data.userId).then(function () {
+                    deferred.resolve(data);
+                }, function (reason) {
+                    StorageSrv.saveUserId(null).then(function () {
+                        deferred.reject(reason);
+                    });
+                });
+            });
+          },
+          function (reason) {
+            StorageSrv.saveUserId(null).then(function () {
+                deferred.reject(reason);
+            });
+          }
+        );
+
+        return deferred.promise;
+    }
+
+    loginService.register = function (user) {
+        var deferred = $q.defer();
+        $http.post(Config.getServerURL() + '/register', user, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(
+          function (response) {
+            deferred.resolve();
+          },
+          function (responseError) {
+            deferred.reject(responseError.status);
+          }
+        );
+
+        return deferred.promise;
+
+    };
+
     return loginService;
 });
