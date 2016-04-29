@@ -1,9 +1,31 @@
 userCommunities:
-- id: cPCommunity1
-  name: carpooling community 1
-  color: FF0000
-  zone: {name: Trento,address: Trento,latitude: 46.0805591,longitude: 11.0503154,range: 5,coordinates: [46.0805591,11.0503154]}
-- id: cPCommunity2
-  name: carpooling community 2
-  color: 0000FF
+- id: luxottica
+  name: Luxottica
+  color: 00bcd4
   zone: {name: Rovereto,address: Rovereto,latitude: 45.8832637,longitude: 11.0014506,range: 5,coordinates: [45.8832637,11.0014506]}
+- id: TrentoRovereto
+  name: Trento - Rovereto
+  color: 3f51b5
+  zone: {name: Rovereto,address: Rovereto,latitude: 46.068194,longitude: 11.121288,range: 5,coordinates: [46.068194,11.121288]}
+- id: AltoGardaRovereto
+  name: Alto Garda - Rovereto
+  color: 607d8b
+  zone: {name: Rovereto,address: Rovereto,latitude: 45.958010,longitude: 10.910737,range: 5,coordinates: [45.958010,10.910737]}  
+- id: VeronaRovereto
+  name: Verona - Rovereto
+  color: ffc107
+  zone: {name: Rovereto,address: Rovereto,latitude: 45.433698,longitude: 10.988753,range: 5,coordinates: [45.433698,10.988753]}
+- id: ZIRovereto
+  name: Zona Industriale Rovereto
+  color: ff5722
+  zone: {name: Rovereto,address: Rovereto,latitude: 45.863298,longitude: 11.019814,range: 5,coordinates: [45.863298,11.019814]}
+- id: RoveretoCentro
+  name: Rovereto Centro
+  color: 00bcd4
+  zone: {name: Rovereto,address: Rovereto,latitude: 45.890817,longitude: 11.039723,range: 5,coordinates: [45.890817,11.039723]}
+- id: ValliLeno
+  name: Valli del Leno
+  color: 8bc34a
+  zone: {name: Rovereto,address: Rovereto,latitude: 45.841272,longitude: 11.063219,range: 5,coordinates: [45.841272,11.063219]}
+      
+  
