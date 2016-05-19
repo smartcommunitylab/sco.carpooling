@@ -17,7 +17,6 @@
   "cordovaPlugins": [
     "cordova-plugin-console",
     "cordova-plugin-device",
-    "cordova-plugin-inappbrowser",
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
     "cordova-plugin-whitelist",
@@ -45,7 +44,8 @@
     "cordova-plugin-file-transfer",
     "cordova-plugin-x-toast",
     "cordova-plugin-app-event",
-    "de.appplant.cordova.plugin.local-notification"
+    "de.appplant.cordova.plugin.local-notification",
+    "cordova-plugin-inappbrowser"
   ],
   "cordovaPlatforms": [
     "android",
