@@ -1,7 +1,7 @@
 angular.module('carpooling.services.config', [])
 
 .factory('Config', function ($rootScope, $http, $q, $filter) {
-    $rootScope.version = '1.0.0';
+    $rootScope.version = '1.0.2';
 
     var AAC_URL = 'https://tn.smartcommunitylab.it/aac';
     var SERVER_URL = 'https://tn.smartcommunitylab.it/carpooling';
