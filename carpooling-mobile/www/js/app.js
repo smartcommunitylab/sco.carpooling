@@ -19,6 +19,7 @@ angular.module('carpooling', [
     'carpooling.directives',
     'carpooling.controllers.home',
     'carpooling.controllers.login',
+    'carpooling.controllers.mytrips',
     'carpooling.controllers.storico',
     'carpooling.controllers.offri',
     'carpooling.controllers.cercaviaggi',
@@ -365,6 +366,16 @@ angular.module('carpooling', [
         }
     })
 
+    .state('app.mytrips', {
+        url: '/mytrips',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/mytrips.html',
+                controller: 'MyTripsCtrl'
+            }
+        }
+    })
+
     .state('app.storico', {
         url: '/storico',
         views: {
@@ -576,6 +587,7 @@ angular.module('carpooling', [
         action_reject: 'Rifiuta richiesta',
         action_confirm: 'Conferma',
         menu_home: 'Home',
+        menu_mytrips: 'Miei viaggi',
         menu_community: 'Comunità',
         menu_chat: 'Chat',
         menu_history: 'Storico viaggi',
@@ -673,6 +685,9 @@ angular.module('carpooling', [
         lbl_yes: 'Sì',
         lbl_no: 'No',
         lbl_today: 'Oggi',
+        tab_home_mytrips: "Miei viaggi",
+        tab_home_alltrips: "Tutti i viaggi",
+        tab_home_messages: "Messaggi",
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         tab_participated: 'Partecipati',

@@ -1,24 +1,6 @@
-angular.module('carpooling.controllers.home', [])
+angular.module('carpooling.controllers.mytrips', [])
 
-.controller('AppCtrl', function ($scope, $state, $ionicModal) {
-    $ionicModal.fromTemplateUrl('templates/modal_credits.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function (modal) {
-        $scope.modalCredits = modal;
-    });
-
-    $scope.openCredits = function () {
-        $scope.modalCredits.show();
-    };
-
-    $scope.closeCredits = function () {
-        $scope.modalCredits.hide();
-    };
-
-})
-
-.controller('HomeCtrl', function ($scope, $rootScope, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('MyTripsCtrl', function ($scope, $rootScope, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
 
     $scope.tab = 0;
 
@@ -247,7 +229,7 @@ angular.module('carpooling.controllers.home', [])
      */
     $scope.$on('$ionicView.enter', function () {
         if (!window.ParsePushPlugin) {
-            $scope.interval = $interval($rootScope.initCounter, 10000);
+          $scope.interval = $interval($rootScope.initCounter, 10000);
         }
         if ($scope.tab === 0) {
             if (CacheSrv.reloadPassengerTrips()) {
@@ -280,10 +262,11 @@ angular.module('carpooling.controllers.home', [])
         }
     });
 
-    /*
+      /*
      * exit
      */
     $scope.$on('$ionicView.leave', function () {
-        if ($scope.interval) $interval.cancel($scope.interval);
+       if ($scope.interval) $interval.cancel($scope.interval);
     });
+
 });

@@ -78,6 +78,9 @@
 .carpooling-theme .tabs-top.tabs-striped .rabs .tab-item.activated {
     border-width: 0px 0px 3px 0px !important;
 }
+.carpooling-theme .tabs-top.tabs-icon-top .tab-title {
+    font-size: xx-small;
+}
 
 /* Form components */
 
