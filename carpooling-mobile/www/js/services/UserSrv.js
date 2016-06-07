@@ -12,7 +12,7 @@ angular.module('carpooling.services.user', [])
 
         .then(
             function (response) {
-                if (response[0] == '<') {
+                if (response.data[0] == '<') {
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
