@@ -1225,14 +1225,14 @@ h5 {
 }
 
 .element-check {
-    height: 100%;
-    width: 100%;
+    height: 120px !important;
+    width: 100% !important;
 }
 
 .element-check .checkbox {
     position: absolute;
     top: 40% !important;
-    /* right: 11px !important; */
+    right: 11px !important;
     left: 12%;
     z-index: 3;
     margin-top: -20%;
