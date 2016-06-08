@@ -1,9 +1,9 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils, $ionicModal) {
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils, $ionicModal, $q) {
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
     $scope.tab = 0;
-
+    $scope.selectedCommunities = [];
     $ionicModal.fromTemplateUrl('templates/modal_communities.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -17,7 +17,30 @@ angular.module('carpooling.controllers.user', [])
 
     $scope.closeCommunities = function () {
         $scope.modalCommunities.hide();
+        localStorage.chooseCommunity = true;
         $state.go('app.home');
+    };
+
+    $scope.updateCommunities = function () {
+        var deferred = $q.defer();
+        var calls = [];
+        for (i in $scope.selectedCommunities) {
+            UserSrv.joinCommunity($scope.communities[i].id).then(
+                function (communities) {
+                    Utils.loaded();
+                },
+                function (error) {
+                    Utils.loaded();
+                    Utils.toast(Utils.getErrorMsg(error));
+                    $scope.communities = [];
+                }
+            );
+        }
+        $q.all(calls).then(function (values) {
+            deferred.resolve(values);
+            localStorage.chooseCommunity = true;
+            $scope.closeCommunities();
+        })
     };
 
     $scope.selectTab = function (idx) {
@@ -124,8 +147,7 @@ angular.module('carpooling.controllers.user', [])
             };
         }
         // MODALE //
-        if ($rootScope.initialSetup || !localStorage.chooseCommunity) {
-            localStorage.chooseCommunity = true;
+        if ($rootScope.initialSetup && localStorage.chooseCommunity != "true") {
             UserSrv.searchCommunities().then(
                 function (communities) {
                     Utils.loaded();
@@ -147,14 +169,18 @@ angular.module('carpooling.controllers.user', [])
                     UserSrv.getUser($scope.user.userId).then(
                         function () {
                             Utils.loaded();
-                            $scope.openCommunities();
+                            if ($rootScope.initialSetup && localStorage.chooseCommunity != "true") {
+                                $scope.openCommunities();
+                            }
                             StorageSrv.setProfileComplete();
                             $rootScope.initialSetup = false;
                             $ionicHistory.nextViewOptions({
                                 historyRoot: true,
                                 disableBack: true
                             });
-                            /*$state.go('app.home');*/
+                            if (!$rootScope.initialSetup && localStorage.chooseCommunity == "true") {
+                                $state.go('app.home');
+                            }
                         }
                     );
                 } else {
