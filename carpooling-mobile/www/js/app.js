@@ -598,6 +598,8 @@ angular.module('carpooling', [
         modal_map: 'Scegli da mappa',
         modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
+        lbl_offered: 'Offerti',
+        lbl_partecipated: 'Partecipati',
         lbl_credits: 'Credits',
         lbl_login: 'Login',
         lbl_all: 'tutti',
