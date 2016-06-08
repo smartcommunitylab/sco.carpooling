@@ -963,3 +963,85 @@ h5 {
 .login-buttons .col:first-child {
     padding-right: 5px;
 }
+
+/* MODAL COMMUNITIES STYLE */
+
+.comm-title {
+    color: darkblue;
+    font-size: 24px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.bar-footer-confirm {
+    background-color: white !important;
+    position: fixed;
+    bottom: 0;
+    border-top-width: 0px;
+    border-bottom-width: 0;
+    background-position: top;
+    height: 60px;
+}
+.bar-white .button {
+    color: cyan !important;
+    text-transform: uppercase !important;
+}
+.pull-right {
+    position: absolute;
+    right: 10px;
+}
+.p-20 {
+    padding: 20px;
+}
+.button.refused,
+.button.confirm {
+    padding-left: 0px !important;
+    padding-top: 10px !important;
+}
+.button.refused {
+    color: grey !important;
+    padding-right: 20px !important;
+    font-weight: 600 !important;
+}
+.button.confirm {
+    color: #00bcd4 !important;
+    padding-right: 20px !important;
+    font-weight: 600 !important;
+}
+.card.card-community:last-child {
+    margin-bottom: 85px !important;
+}
+.card.card-community .row,
+.card.card-community .row .col {
+    padding: 0px !important;
+}
+.card.card-community .row .col.col-75 {
+    border: 1px solid rgba(224, 224, 224, 0.8);
+}
+.element-check {
+    height: 120px !important;
+    width: 100% !important;
+}
+.element-check .checkbox {
+    position: absolute;
+    top: 40% !important;
+    right: 11px !important;
+    left: 12%;
+    z-index: 3;
+    margin-top: -20%;
+}
+.element-check .checkbox .checkbox-icon {
+    width: 50px;
+    height: 50px;
+}
+.element-check .checkbox .checkbox-icon::before {
+    border-radius: 100px !important;
+}
+.element-check .checkbox .checkbox-icon::after {
+    border-width: 2px;
+    top: 28%;
+    left: 35%;
+    width: 16px;
+}
+
+/* END MODAL COMMUNITIES STYLE */
