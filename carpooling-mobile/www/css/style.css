@@ -234,19 +234,15 @@ placeautocomplete ul {
     z-index: 100;
 }
 placeautocomplete ul li {
-/*
+    /*
     padding-top: 0.3em;
     padding-bottom: 0.3em;
 */
-  padding: 8px;
+    padding: 8px;
 }
-
 .placeautocomplete ul li .highlight {
-  font-weight: bold;
+    font-weight: bold;
 }
-
-
-
 .card.card-trip,
 .card.card-community,
 .card.card-notif {
@@ -650,17 +646,24 @@ table.chart .labels {}
 .rating-avg-star span {
     white-space: nowrap;
 }
+
 /* HOME */
-.carpooling-theme .home .my-panel {
-    /*height: 50%;
-    overflow: hidden;*/
-}
+
 .carpooling-theme .home .my-panel h5 {
     text-align: center;
     color: #fff;
     background-color: #03A9F4;
     margin: 0;
     padding: 4px;
+}
+.carpooling-theme .home .my-panel .seeall {
+    text-align: right;
+}
+.carpooling-theme .home .my-panel .seeall a {
+    font-style: italic;
+    text-decoration: none;
+    color: #3f51b5;
+    font-weight: bold;
 }
 
 /* VIAGGIO */
@@ -836,7 +839,7 @@ h5 {
     text-align: center;
 }
 .findcommunities .buttons button {
-  min-width: 120px;
+    min-width: 120px;
 }
 .actions {
     text-align: center;
@@ -880,7 +883,8 @@ h5 {
 .login .login-title h3 {
     color: #fff;
 }
-.login .login-buttons h3, .login .login-buttons h4 {
+.login .login-buttons h3,
+.login .login-buttons h4 {
     color: #666;
 }
 .login .login-button-google {
@@ -906,14 +910,14 @@ h5 {
     background-color: #fff;
     color: #3448A5;
 }
-
 .login .login-link {
-  display: block;
-  color: #3448A5;
-  padding: 0 1em;
+    display: block;
+    color: #3448A5;
+    padding: 0 1em;
 }
 
 /* Credits */
+
 .credits {
     text-align: center;
 }
@@ -931,7 +935,6 @@ h5 {
 .credits .credits-mail {
     text-decoration: underline;
 }
-
 .header-badge {
     top: -37px !important;
     /*    left: 10px !important;*/
@@ -939,7 +942,7 @@ h5 {
     margin-left: -5px!important;
     display: table!important;
     margin-right: 10px!important;
-/*    margin-top: -10px;*/
+    /*    margin-top: -10px;*/
     padding: 3px 3px 3px 3px;
     width: 22px;
     display: block!inspect;
@@ -948,16 +951,15 @@ h5 {
     padding: 2px 12px 2px 3px;
 */
 }
-
 .login-buttons .item {
-  border: none;
-  border-bottom: 1px solid #ddd;
-  margin: 0 1em;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    margin: 0 1em;
 }
-
-.login-buttons .row, .login-buttons .col {
-  padding: 0;
+.login-buttons .row,
+.login-buttons .col {
+    padding: 0;
 }
 .login-buttons .col:first-child {
-  padding-right: 5px;
+    padding-right: 5px;
 }

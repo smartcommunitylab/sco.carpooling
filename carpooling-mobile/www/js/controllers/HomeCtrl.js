@@ -25,7 +25,7 @@ angular.module('carpooling.controllers.home', [])
         //if (idx == $scope.tab) return;
         if (idx !== $scope.tab) {
             $scope.tab = idx;
-            $ionicTabsDelegate.select(idx);
+            $ionicTabsDelegate.$getByHandle('tabs-home').select(idx);
         }
     }
 
