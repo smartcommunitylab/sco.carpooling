@@ -1,8 +1,24 @@
 angular.module('carpooling.controllers.user', [])
 
-.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils) {
+.controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils, $ionicModal) {
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
     $scope.tab = 0;
+
+    $ionicModal.fromTemplateUrl('templates/modal_communities.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modalCommunities = modal;
+    });
+
+    $scope.openCommunities = function () {
+        $scope.modalCommunities.show();
+    };
+
+    $scope.closeCommunities = function () {
+        $scope.modalCommunities.hide();
+        $state.go('app.home');
+    };
 
     $scope.selectTab = function (idx) {
         //if (idx == $scope.tab) return;
@@ -107,7 +123,23 @@ angular.module('carpooling.controllers.user', [])
                 posts: -1
             };
         }
-
+        // MODALE //
+        if ($rootScope.initialSetup || !localStorage.chooseCommunity) {
+            localStorage.chooseCommunity = true;
+            UserSrv.searchCommunities().then(
+                function (communities) {
+                    Utils.loaded();
+                    console.log(communities);
+                    $scope.communities = communities;
+                },
+                function (error) {
+                    Utils.loaded();
+                    Utils.toast(Utils.getErrorMsg(error));
+                    $scope.communities = [];
+                }
+            );
+        }
+        ///////////
         //UserSrv.saveAuto(auto).then(
         UserSrv.updateUserInfo($scope.user.dpName, $scope.user.telephone, auto).then(
             function (data) {
@@ -115,13 +147,14 @@ angular.module('carpooling.controllers.user', [])
                     UserSrv.getUser($scope.user.userId).then(
                         function () {
                             Utils.loaded();
+                            $scope.openCommunities();
                             StorageSrv.setProfileComplete();
                             $rootScope.initialSetup = false;
                             $ionicHistory.nextViewOptions({
                                 historyRoot: true,
                                 disableBack: true
                             });
-                            $state.go('app.home');
+                            /*$state.go('app.home');*/
                         }
                     );
                 } else {

@@ -1,0 +1,30 @@
+<ion-modal-view class="communities">
+    <ion-content class="padding credits">
+        <h3>Selezionare le comunità di cui fai parte:</h3>
+        <div class="card card-community" ng-repeat="comm in communities" ng-click="selectCommunity($index)">
+            <div class="item" ng-style="{'background-color':'#{{comm.color}}'}">
+                <h2 class="name">{{comm.name}}</h2>
+            </div>
+            <div class="item">
+                <ul>
+                    <!--TODO: change fake data (Rovereto, Trento) count with the real data-->
+                    <li>
+                        <span class="lbl">{{'lbl_tripzone'| translate}}:</span> {{comm.zone.name}}
+                    </li>
+                    <li class="community-numbers">
+                        <div class="row">
+                            <div class="col">
+                                <span id="custom-icons"><i class="icons ion-person-stalker"></i> {{comm.users.length}} </span>
+                            </div>
+                            <div class="col">
+                                <span id="custom-icons"><i class="icons ion-model-s"></i> {{comm.cars}} </span>
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <button ng-click="closeCommunities()">ANNULLA</button>
+    </ion-content>
+</ion-modal-view>
