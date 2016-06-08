@@ -169,7 +169,7 @@ angular.module('carpooling.controllers.user', [])
                     UserSrv.getUser($scope.user.userId).then(
                         function () {
                             Utils.loaded();
-                            if ($rootScope.initialSetup && localStorage.chooseCommunity != "true") {
+                            if ($rootScope.initialSetup && localStorage.chooseCommunity != "true" && localStorage.communities == "[]") {
                                 $scope.openCommunities();
                             }
                             StorageSrv.setProfileComplete();
@@ -178,7 +178,7 @@ angular.module('carpooling.controllers.user', [])
                                 historyRoot: true,
                                 disableBack: true
                             });
-                            if (!$rootScope.initialSetup && localStorage.chooseCommunity == "true") {
+                            if ((!$rootScope.initialSetup && localStorage.chooseCommunity == "true") || localStorage.communities != "[]") {
                                 $state.go('app.home');
                             }
                         }
