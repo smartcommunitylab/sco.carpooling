@@ -1232,10 +1232,10 @@ h5 {
 .element-check .checkbox {
     position: absolute;
     top: 40% !important;
-    right: 11px !important;
-    left: 18px !important;
+    /* right: 11px !important; */
+    left: 12%;
     z-index: 3;
-    margin-top: -15px !important;
+    margin-top: -20%;
 }
 
 .element-check .checkbox .checkbox-icon {
