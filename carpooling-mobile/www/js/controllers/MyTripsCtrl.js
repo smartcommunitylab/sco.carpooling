@@ -1,14 +1,13 @@
 angular.module('carpooling.controllers.mytrips', [])
 
-.controller('MyTripsCtrl', function ($scope, $rootScope, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
-
+.controller('MyTripsCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
         //if (idx == $scope.tab) return;
         if (idx !== $scope.tab) {
             $scope.tab = idx;
-            $ionicTabsDelegate.select(idx);
+            $ionicTabsDelegate.$getByHandle('tabs-mytrips').select(idx);
         }
     }
 
@@ -236,9 +235,14 @@ angular.module('carpooling.controllers.mytrips', [])
      * init
      */
     $scope.$on('$ionicView.enter', function () {
+        if (!!$stateParams && $stateParams['type'] == 'driver') {
+            $scope.selectTab(1);
+        }
+
         if (!window.ParsePushPlugin) {
             $scope.interval = $interval($rootScope.initCounter, 10000);
         }
+
         if ($scope.tab === 0) {
             if (CacheSrv.reloadPassengerTrips()) {
                 $scope.loadMorePassengerTrips(true);

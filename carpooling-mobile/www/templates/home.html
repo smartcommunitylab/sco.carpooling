@@ -4,15 +4,17 @@
         <a ng-if="tab < 2" ng-href="{{tab == 0 ? '#/app/offri' : '#/app/cerca'}}" ng-class="{'ion-android-add': (tab == 0), 'ion-android-search': (tab == 1)}" class="button button-icon padding-left"></a>
     </ion-nav-buttons>
 
-    <ion-tabs class="tabs-top tabs-icon-top">
+    <ion-tabs class="tabs-top tabs-icon-top" delegate-handle="tabs-home">
         <ion-tab icon="ion-android-car" title="{{'tab_home_mytrips' | translate}}" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content>
                     <div class="my-panel my-driver" ng-style="myPanelsStyle">
                         <h5>{{'lbl_offered'| translate}}</h5>
-                        <div class="padding" ng-if="driverTrips != null && driverTrips.length == 0" style="color: gray">
+
+                        <div class="padding" ng-if="driverTrips != null && driverTrips.length == 0">
                             <!-- TODO empty list -->
                         </div>
+
                         <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
                             <div class="card card-trip" ng-repeat="trip in driverTrips | limitTo: maxItemsPerList" ng-click="selectOfferedTrip($index)">
                                 <div class="item">
@@ -41,20 +43,19 @@
                                     <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                                 </div>
                             </div>
+                            <div class="seeall padding-right">
+                                <a href="#/app/mytrips/">{{'lbl_see_all' | translate}}</a>
+                            </div>
                         </div>
                     </div>
 
                     <div class="my-panel my-passenger" ng-style="myPanelsStyle">
                         <h5>{{'lbl_partecipated' | translate}}</h5>
-                        <div class="padding" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0" style="color: gray">
+
+                        <div class="padding" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0">
                             <!-- TODO empty list -->
                         </div>
 
-                        <!--
-                        <div class="padding" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length == 0">
-                            <h4>{{'lbl_no_results' | translate}}</h4>
-                        </div>
-                        -->
                         <div class="list" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">
                             <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips | limitTo: maxItemsPerList">
                                 <div class="item">
@@ -86,6 +87,9 @@
                                         <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="seeall padding-right">
+                                <a href="#/app/mytrips/driver">{{'lbl_see_all' | translate}}</a>
                             </div>
                         </div>
 

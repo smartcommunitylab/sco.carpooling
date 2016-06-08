@@ -367,7 +367,10 @@ angular.module('carpooling', [
     })
 
     .state('app.mytrips', {
-        url: '/mytrips',
+        url: '/mytrips/{type}',
+        params: {
+            'type': 'passenger'
+        },
         views: {
             'menuContent': {
                 templateUrl: 'templates/mytrips.html',
@@ -600,6 +603,7 @@ angular.module('carpooling', [
         msg_talk: 'dice',
         lbl_offered: 'Offerti',
         lbl_partecipated: 'Partecipati',
+        lbl_see_all: 'vedi tutti',
         lbl_credits: 'Credits',
         lbl_login: 'Login',
         lbl_all: 'tutti',
