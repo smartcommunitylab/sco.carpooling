@@ -15,9 +15,9 @@ angular.module('carpooling.controllers.mytrips', [])
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.passengerTrips = null;
-    $scope.nonConfirmedTrips = null;
-    $scope.driverTrips = null;
+    $scope.nonConfirmedTrips = CacheSrv.getNonConfirmedTrips();
+    $scope.passengerTrips = CacheSrv.getPassengerTrips();
+    $scope.driverTrips = CacheSrv.getDriverTrips();
 
     /*
      * Partecipo
@@ -56,6 +56,7 @@ angular.module('carpooling.controllers.mytrips', [])
 
         if ($scope.passengerTrips === null) {
             $scope.passengerTrips = [];
+            CacheSrv.setPassengerTrips($scope.passengerTrips);
         }
     };
 
@@ -66,16 +67,18 @@ angular.module('carpooling.controllers.mytrips', [])
 
         if (reset) {
             $scope.passengerTrips = null;
+            CacheSrv.setPassengerTrips($scope.passengerTrips);
             passengerTripsStart = 0;
             passengerTripsCount = 20; // default
             $scope.passengerTripsCanHaveMore = false;
         }
 
         // read trips to confirm
-        // TODO use CacheSrv for these trips too?
+        // FUTURE use CacheSrv for these trips too?
         PassengerSrv.getPassengerTrips(0, 100, false, true).then(
             function (toConfirm) {
                 $scope.nonConfirmedTrips = toConfirm;
+                CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
                 if (passengerTripsStart === 0) {
                     Utils.loaded();
                 } else {
@@ -101,6 +104,7 @@ angular.module('carpooling.controllers.mytrips', [])
                 }
 
                 $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
+                CacheSrv.setPassengerTrips($scope.passengerTrips);
 
                 if (trips.length === passengerTripsCount) {
                     $scope.passengerTripsCanHaveMore = true;
@@ -118,6 +122,7 @@ angular.module('carpooling.controllers.mytrips', [])
         PassengerSrv.confirmTrip($scope.nonConfirmedTrips[$index].id, confirm).then(function () {
             Utils.loaded();
             $scope.nonConfirmedTrips.splice($index, 1);
+            CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
         }, function (error) {
             Utils.loaded();
             Utils.toast(Utils.getErrorMsg(error));
@@ -172,6 +177,7 @@ angular.module('carpooling.controllers.mytrips', [])
 
         if (reset) {
             $scope.driverTrips = null;
+            CacheSrv.setDriverTrips($scope.driverTrips);
             driverTripsStart = 0;
             driverTripsCount = 20;
             $scope.driverTripsCanHaveMore = false;
@@ -192,6 +198,7 @@ angular.module('carpooling.controllers.mytrips', [])
                 }
 
                 $scope.driverTrips = !!$scope.driverTrips ? $scope.driverTrips.concat(trips) : trips;
+                CacheSrv.setDriverTrips($scope.driverTrips);
 
                 if (trips.length === driverTripsCount) {
                     $scope.driverTripsCanHaveMore = true;
@@ -211,8 +218,9 @@ angular.module('carpooling.controllers.mytrips', [])
                     Utils.toast(Utils.getErrorMsg(error));
                 }
 
-                if ($scope.driverTrips === null) {
+                if (CacheSrv.driverTrips === null) {
                     $scope.driverTrips = [];
+                    CacheSrv.setDriverTrips($scope.driverTrips);
                 }
             }
         );
@@ -229,7 +237,7 @@ angular.module('carpooling.controllers.mytrips', [])
      */
     $scope.$on('$ionicView.enter', function () {
         if (!window.ParsePushPlugin) {
-          $scope.interval = $interval($rootScope.initCounter, 10000);
+            $scope.interval = $interval($rootScope.initCounter, 10000);
         }
         if ($scope.tab === 0) {
             if (CacheSrv.reloadPassengerTrips()) {
@@ -247,7 +255,8 @@ angular.module('carpooling.controllers.mytrips', [])
                             if ($scope.driverTrips[i].id === updatedTrip.id) {
                                 $scope.driverTrips[i] = updatedTrip;
                                 enrichTrip($scope.driverTrips[i]);
-                                i = $scope.driverTrips.length;
+                                CacheSrv.setDriverTrips($scope.driverTrips);
+                                i = CacheSrv.driverTrips.length;
                             }
                         }
                         Utils.loaded();
@@ -262,11 +271,11 @@ angular.module('carpooling.controllers.mytrips', [])
         }
     });
 
-      /*
+    /*
      * exit
      */
     $scope.$on('$ionicView.leave', function () {
-       if ($scope.interval) $interval.cancel($scope.interval);
+        if ($scope.interval) $interval.cancel($scope.interval);
     });
 
 });

@@ -54,7 +54,7 @@
 /* Tabs */
 
 .carpooling-theme .tabs {
-    background-color: #3448A5;
+    background: #3448A5;
 }
 .carpooling-theme .tabs .tab-item {
     max-width: none;
@@ -75,7 +75,7 @@
 }
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.tab-item-active,
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.active,
-.carpooling-theme .tabs-top.tabs-striped .rabs .tab-item.activated {
+.carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.activated {
     border-width: 0px 0px 3px 0px !important;
 }
 .carpooling-theme .tabs-top.tabs-icon-top .tab-title {
@@ -576,7 +576,7 @@ placeautocomplete ul li {
     border-color: #3448A5 !important;
 }
 
-/* Stats*/
+/* Stats */
 
 table.chart {
     width: 100%;
@@ -649,6 +649,18 @@ table.chart .labels {}
 }
 .rating-avg-star span {
     white-space: nowrap;
+}
+/* HOME */
+.carpooling-theme .home .my-panel {
+    /*height: 50%;
+    overflow: hidden;*/
+}
+.carpooling-theme .home .my-panel h5 {
+    text-align: center;
+    color: #fff;
+    background-color: #03A9F4;
+    margin: 0;
+    padding: 4px;
 }
 
 /* VIAGGIO */

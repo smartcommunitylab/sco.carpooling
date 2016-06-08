@@ -18,8 +18,7 @@ angular.module('carpooling.controllers.home', [])
 
 })
 
-.controller('HomeCtrl', function ($scope, $rootScope, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
-
+.controller('HomeCtrl', function ($scope, $rootScope, $window, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
@@ -33,9 +32,19 @@ angular.module('carpooling.controllers.home', [])
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.passengerTrips = null;
-    $scope.nonConfirmedTrips = null;
-    $scope.driverTrips = null;
+    $scope.maxItemsPerList = 2;
+
+    $scope.nonConfirmedTrips = CacheSrv.getNonConfirmedTrips();
+    $scope.passengerTrips = CacheSrv.getPassengerTrips();
+    $scope.driverTrips = CacheSrv.getDriverTrips();
+
+    $scope.resizeMyPanels = function () {
+        var height = ($window.innerHeight - (44 + 49)) / 2; // navbar, tab bar
+        $scope.myPanelsStyle = {
+            height: height + 'px'
+        };
+    };
+    //$scope.resizeMyPanels();
 
     /*
      * Partecipo
@@ -74,6 +83,7 @@ angular.module('carpooling.controllers.home', [])
 
         if ($scope.passengerTrips === null) {
             $scope.passengerTrips = [];
+            CacheSrv.setPassengerTrips($scope.passengerTrips);
         }
     };
 
@@ -90,10 +100,11 @@ angular.module('carpooling.controllers.home', [])
         }
 
         // read trips to confirm
-        // TODO use CacheSrv for these trips too?
+        // FUTURE use CacheSrv for these trips too?
         PassengerSrv.getPassengerTrips(0, 100, false, true).then(
             function (toConfirm) {
                 $scope.nonConfirmedTrips = toConfirm;
+                CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
                 if (passengerTripsStart === 0) {
                     Utils.loaded();
                 } else {
@@ -119,6 +130,7 @@ angular.module('carpooling.controllers.home', [])
                 }
 
                 $scope.passengerTrips = !!$scope.passengerTrips ? $scope.passengerTrips.concat(trips) : trips;
+                CacheSrv.setPassengerTrips($scope.passengerTrips);
 
                 if (trips.length === passengerTripsCount) {
                     $scope.passengerTripsCanHaveMore = true;
@@ -136,6 +148,7 @@ angular.module('carpooling.controllers.home', [])
         PassengerSrv.confirmTrip($scope.nonConfirmedTrips[$index].id, confirm).then(function () {
             Utils.loaded();
             $scope.nonConfirmedTrips.splice($index, 1);
+            CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
         }, function (error) {
             Utils.loaded();
             Utils.toast(Utils.getErrorMsg(error));
@@ -190,6 +203,7 @@ angular.module('carpooling.controllers.home', [])
 
         if (reset) {
             $scope.driverTrips = null;
+            CacheSrv.setDriverTrips($scope.driverTrips);
             driverTripsStart = 0;
             driverTripsCount = 20;
             $scope.driverTripsCanHaveMore = false;
@@ -210,6 +224,7 @@ angular.module('carpooling.controllers.home', [])
                 }
 
                 $scope.driverTrips = !!$scope.driverTrips ? $scope.driverTrips.concat(trips) : trips;
+                CacheSrv.setDriverTrips($scope.driverTrips);
 
                 if (trips.length === driverTripsCount) {
                     $scope.driverTripsCanHaveMore = true;
@@ -231,6 +246,7 @@ angular.module('carpooling.controllers.home', [])
 
                 if ($scope.driverTrips === null) {
                     $scope.driverTrips = [];
+                    CacheSrv.setDriverTrips($scope.driverTrips);
                 }
             }
         );
@@ -253,7 +269,7 @@ angular.module('carpooling.controllers.home', [])
             if (CacheSrv.reloadPassengerTrips()) {
                 $scope.loadMorePassengerTrips(true);
             }
-        } else if ($scope.tab === 1) {
+
             if (CacheSrv.reloadDriverTrips()) {
                 $scope.loadMoreDriverTrips(true);
             } else if (!!CacheSrv.reloadDriverTrip()) {
@@ -265,6 +281,7 @@ angular.module('carpooling.controllers.home', [])
                             if ($scope.driverTrips[i].id === updatedTrip.id) {
                                 $scope.driverTrips[i] = updatedTrip;
                                 enrichTrip($scope.driverTrips[i]);
+                                CacheSrv.setDriverTrips($scope.driverTrips);
                                 i = $scope.driverTrips.length;
                             }
                         }
@@ -277,6 +294,8 @@ angular.module('carpooling.controllers.home', [])
                     }
                 );
             }
+        } else if ($scope.tab === 1) {
+            // TODO
         }
     });
 
