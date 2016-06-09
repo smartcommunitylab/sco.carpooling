@@ -258,6 +258,153 @@ angular.module('carpooling.controllers.home', [])
     };
 
     /*
+     * 2ND TAB
+     */
+    $scope.filter = {
+        filterOpen: false,
+        toggleFilter: function () {
+            this.filterOpen = !this.filterOpen;
+        },
+        filterBy: function (community) {
+            this.selectedCommunity = community;
+            // TODO filter
+            this.toggleFilter();
+        },
+        selectedCommunity: null
+    };
+
+    $scope.communities = null;
+    $scope.myCommunities = null;
+    $scope.communityTrips = null;
+
+    $scope.lbl_day = $filter('translate')('lbl_todaytrips');
+    var start = new Date();
+    var end = new Date();
+    $scope.selectDate = Date.now();
+
+    /* Check if the selected date is Today */
+    var compareDate = function () {
+        if ($scope.selectDate >= start && $scope.selectDate <= end) {
+            $scope.lbl_day = $filter('translate')('lbl_todaytrips');
+        } else {
+            $scope.lbl_day = $filter('date')($scope.selectDate, 'EEE dd/MM/yyyy');
+        }
+    };
+
+    $scope.allTripsInit = function () {
+        Utils.loading();
+
+        UserSrv.getCommunitiesDetails().then(
+            function (communities) {
+                Utils.loaded();
+                $scope.communities = communities;
+
+                var myComs = [];
+                for (var i = 0; i < $scope.communities.length; i++) {
+                    var com = $scope.communities[i];
+                    if ($scope.amIaMember(com)) {
+                        myComs.push(com);
+                        $scope.communities.splice(i, 1);
+                        i--;
+                    }
+                }
+                $scope.myCommunities = myComs;
+            },
+            function (error) {
+                Utils.loaded();
+                Utils.toast(Utils.getErrorMsg(error));
+                $scope.communities = [];
+            }
+        );
+
+        if (!$scope.selectedCommunity || !$scope.selectedCommunity.id) {
+            Utils.loaded();
+            return;
+        }
+
+        UserSrv.getCommunityDetails($scope.selectedCommunity.id).then(
+            function (community) {
+                $scope.selectedCommunity = community;
+                $scope.iAmMember = $scope.amIaMember($scope.selectedCommunity);
+
+                UserSrv.getCommunityTravels($scope.selectedCommunity.id, $scope.selectDate).then(
+                    function (todayCommunityTrips) {
+                        $scope.communityTrips = todayCommunityTrips;
+                        $scope.communityTrips.forEach(function (trip) {
+                            trip.bookingCounters = Utils.getBookingCounters(trip);
+                        });
+                        Utils.loaded();
+                    },
+                    function (error) {
+                        Utils.loaded();
+                        Utils.toast(Utils.getErrorMsg(error));
+                    }
+                );
+                $scope.communityStyle = {
+                    'border-color': '#' + $scope.selectedCommunity.color + ' #' + $scope.selectedCommunity.color + ' transparent transparent'
+                }
+            },
+            function (error) {
+                Utils.loaded();
+                Utils.toast(Utils.getErrorMsg(error));
+            }
+        );
+    };
+
+    $scope.changeDay = function (num) {
+        if (num === 0) {
+            $scope.selectDate -= 24 * 60 * 60 * 1000;
+        } else {
+            $scope.selectDate += 24 * 60 * 60 * 1000;
+        }
+        compareDate();
+        $scope.updateCommunityTrips();
+    };
+
+    $scope.hideYesterday = function () {
+        if ($scope.selectDate <= Date.now()) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.amIaMember = function (com) {
+        var member = false;
+        for (var i = 0; i < com.userObjs.length; i++) {
+            var user = com.userObjs[i];
+            if (user.userId === StorageSrv.getUser().userId) {
+                // it's-a-me!
+                member = true;
+                i = com.userObjs.length;
+            }
+        };
+        return member;
+    };
+
+    $scope.updateCommunityTrips = function () {
+        UserSrv.getCommunityTravels($scope.filter.selectedCommunity.id, $scope.selectDate).then(
+            function (todayCommunityTrips) {
+                $scope.communityTrips = todayCommunityTrips;
+                $scope.communityTrips.forEach(function (trip) {
+                    trip.bookingCounters = Utils.getBookingCounters(trip);
+                });
+                Utils.loaded();
+            },
+            function (error) {
+                Utils.loaded();
+                Utils.toast(Utils.getErrorMsg(error));
+            }
+        );
+    };
+
+    $scope.$watch('filter.selectedCommunity', function (newValue, oldValue) {
+        if (!!$scope.filter.selectedCommunity) {
+            $scope.updateCommunityTrips();
+        }
+    });
+
+    /*
      * init
      */
     $scope.$on('$ionicView.enter', function () {
@@ -294,7 +441,7 @@ angular.module('carpooling.controllers.home', [])
                 );
             }
         } else if ($scope.tab === 1) {
-            // TODO
+            $scope.allTripsInit();
         }
     });
 
@@ -302,6 +449,8 @@ angular.module('carpooling.controllers.home', [])
      * exit
      */
     $scope.$on('$ionicView.leave', function () {
-        if ($scope.interval) $interval.cancel($scope.interval);
+        if ($scope.interval) {
+            $interval.cancel($scope.interval)
+        };
     });
 });

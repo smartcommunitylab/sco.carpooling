@@ -607,6 +607,8 @@ angular.module('carpooling', [
         lbl_partecipated: 'Partecipati',
         lbl_partecipated_none: 'Cerca il viaggio che fa per te e chiedi un passaggio!',
         lbl_partecipated_btn: 'Cerca un viaggio',
+        lbl_alltrips_mycommunities: "Le tue comunità",
+        lbl_alltrips_allcommunities: "Tutte le comunità",
         lbl_see_all: 'vedi tutti',
         lbl_credits: 'Credits',
         lbl_login: 'Login',
