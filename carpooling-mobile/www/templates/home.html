@@ -8,11 +8,12 @@
         <ion-tab icon="ion-android-car" title="{{'tab_home_mytrips' | translate}}" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content>
-                    <div class="my-panel my-driver" ng-style="myPanelsStyle">
+                    <div class="my-panel my-driver">
                         <h5>{{'lbl_offered'| translate}}</h5>
 
-                        <div class="padding" ng-if="driverTrips != null && driverTrips.length == 0">
-                            <!-- TODO empty list -->
+                        <div class="padding empty" ng-if="driverTrips != null && driverTrips.length == 0">
+                            <h6>{{'lbl_offered_none' | translate}}</h6>
+                            <a href="#/app/offri" class="button button-carpooling">{{'lbl_offered_btn' | translate}}</a>
                         </div>
 
                         <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
@@ -49,11 +50,12 @@
                         </div>
                     </div>
 
-                    <div class="my-panel my-passenger" ng-style="myPanelsStyle">
+                    <div class="my-panel my-passenger">
                         <h5>{{'lbl_partecipated' | translate}}</h5>
 
-                        <div class="padding" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0">
-                            <!-- TODO empty list -->
+                        <div class="padding empty" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0">
+                            <h6>{{'lbl_partecipated_none' | translate}}</h6>
+                            <a href="#/app/cerca" class="button button-carpooling">{{'lbl_partecipated_btn' | translate}}</a>
                         </div>
 
                         <div class="list" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">

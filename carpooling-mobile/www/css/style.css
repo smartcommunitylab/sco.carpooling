@@ -649,12 +649,29 @@ table.chart .labels {}
 
 /* HOME */
 
+.carpooling-theme .home .my-panel {
+    text-align: center;
+}
 .carpooling-theme .home .my-panel h5 {
     text-align: center;
     color: #fff;
     background-color: #03A9F4;
     margin: 0;
     padding: 4px;
+}
+.carpooling-theme .home .my-panel .empty {
+    padding: 3em;
+}
+.carpooling-theme .home .my-panel .empty h6 {
+    font-size: larger;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 1em;
+    color: #444444;
+}
+.carpooling-theme .home .my-panel .empty .button {
+    text-transform: uppercase;
+    font-size: small;
 }
 .carpooling-theme .home .my-panel .seeall {
     text-align: right;
