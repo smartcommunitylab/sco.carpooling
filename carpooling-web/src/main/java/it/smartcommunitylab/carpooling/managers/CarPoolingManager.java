@@ -18,7 +18,6 @@ package it.smartcommunitylab.carpooling.managers;
 
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
 import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
-import it.smartcommunitylab.carpooling.model.Auto;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
@@ -1457,9 +1456,21 @@ public class CarPoolingManager {
 	}
 
 	public List<Community> searchCommunity(String location, String searchText) {
+		List<Community> list = communityRepository.searchCommunity(location, searchText);
+		for (Community community : list) {
+			int nrOfCars = 0;
+			for (String id : community.getUsers()) {
+				User user = userRepository.findOne(id);
+				if (user != null) {
+					if (user.getAuto() != null) {
+						nrOfCars = nrOfCars + 1;
+					}
+				}
 
-		return communityRepository.searchCommunity(location, searchText);
-
+			}
+			community.setCars(nrOfCars);
+		}
+		return list;
 	}
 
 	public Map<String, String> joinCommunity(String userId, String communityId) {

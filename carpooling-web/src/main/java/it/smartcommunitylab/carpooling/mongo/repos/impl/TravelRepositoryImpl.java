@@ -50,9 +50,9 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		
 		List<Travel> travelsForPassenger = new ArrayList<Travel>();
 
-		Criteria timeC = new Criteria().where("when").gte(from).lte(to);
+		Criteria timeC = new Criteria("when").gte(from).lte(to);
 
-		Criteria communityC = new Criteria().where("communityIds").in(communityId);
+		Criteria communityC = new Criteria("communityIds").in(communityId);
 
 		Criteria elemCriteria = Criteria.where("traveller.userId").is(userId);
 		if (boarded != null) {
@@ -124,10 +124,10 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	public List<Travel> findTravelByDriverId(String userId, int pageNum, int pageSize, Long from, Long to, int order) {
 		List<Travel> travelsForDriver = new ArrayList<Travel>();
 
-		Criteria timeC = new Criteria().where("when").gte(from).lte(to);
+		Criteria timeC = new Criteria("when").gte(from).lte(to);
 
 		// check if bookings within travel has travellers with userId
-		Criteria criteria = new Criteria().where("userId").is(userId);
+		Criteria criteria = new Criteria("userId").is(userId);
 
 		Query query = new Query();
 		query.addCriteria(criteria);
@@ -165,7 +165,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	public List<Travel> getAllMatchedCommunityTravels(List<String> userCommunityIds) {
 		List<Travel> matchedTravels = new ArrayList<Travel>();
 		// criteria.
-		Criteria criteria = new Criteria().where("communityIds").in(userCommunityIds);
+		Criteria criteria = new Criteria("communityIds").in(userCommunityIds);
 		// query.
 		Query query = new Query();
 		query.addCriteria(criteria);
@@ -189,8 +189,8 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Sphere sphereTo = new Sphere(circleTo);
 
 		// criterias.
-		Criteria criteriaF = new Criteria().where("from.coordinates").within(sphereFrom);
-		Criteria criteriaT = new Criteria().where("to.coordinates").within(sphereTo);
+		Criteria criteriaF = new Criteria("from.coordinates").within(sphereFrom);
+		Criteria criteriaT = new Criteria("to.coordinates").within(sphereTo);
 
 		// query.
 		Query query = new Query();
@@ -219,19 +219,19 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		int recurrTimePlusOneHour = CarPoolingUtils.getHour(timePlusOneHour);
 		int recurrTimeMinusOneHour = CarPoolingUtils.getHour(timeMinusOneHour);
 
-		Criteria nonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
+		Criteria nonRecurr = new Criteria("when").gte(timeMinusOneHour.getTime())
 				.lte(timePlusOneHour.getTime());
 
 		/** recurrent travels. **/
-		Criteria criteriaReccurGeneral = new Criteria().where("when").is(0).and("recurrency").exists(true)
+		Criteria criteriaReccurGeneral = new Criteria("when").is(0).and("recurrency").exists(true)
 				.and("active").is(true).and("recurrency.time").gte(recurrTimeMinusOneHour).lte(recurrTimePlusOneHour);
-		Criteria criteriaReccurDOW = new Criteria().where("recurrency.days").in(reqDOW);
-		Criteria criteriaRecurrDOM = new Criteria().where("recurrency.dates").in(reqDOM);
+		Criteria criteriaReccurDOW = new Criteria("recurrency.days").in(reqDOW);
+		Criteria criteriaRecurrDOM = new Criteria("recurrency.dates").in(reqDOM);
 
 		Criteria recurrDOW = new Criteria().andOperator(criteriaReccurGeneral, criteriaReccurDOW);
 		Criteria recurrDOM = new Criteria().andOperator(criteriaReccurGeneral, criteriaRecurrDOM);
 
-		Criteria criteria = new Criteria().where("active").is(true).orOperator(nonRecurr, recurrDOW, recurrDOM);
+		Criteria criteria = new Criteria("active").is(true).orOperator(nonRecurr, recurrDOW, recurrDOM);
 
 		/**
 		Query:
@@ -293,12 +293,12 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 
 		List<Travel> travels = new ArrayList<Travel>();
 
-		Criteria commonCriteria = new Criteria().where("active").is(true);
+		Criteria commonCriteria = new Criteria("active").is(true);
 		
 		/** community. **/
 		Criteria communityCriteria = null;
 		if (travelRequest.getCommunityIds() != null && !travelRequest.getCommunityIds().isEmpty()) {
-			communityCriteria = new Criteria().where("communityIds").in(travelRequest.getCommunityIds());
+			communityCriteria = new Criteria("communityIds").in(travelRequest.getCommunityIds());
 		}
 		/** zone. **/
 		Point pFrom = new Point(travelRequest.getFrom().getLatitude(), travelRequest.getFrom().getLongitude());
@@ -307,7 +307,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Point pTo = new Point(travelRequest.getTo().getLatitude(), travelRequest.getTo().getLongitude());
 		Circle circleTo = new Circle(pTo, travelRequest.getTo().getRange() / 6371);
 		Sphere sphereTo = new Sphere(circleTo);
-		Criteria zoneCriteria = new Criteria().where("from.coordinates").within(sphereFrom).and("to.coordinates")
+		Criteria zoneCriteria = new Criteria("from.coordinates").within(sphereFrom).and("to.coordinates")
 				.within(sphereTo);
 		/** recurrent/non trip times. **/
 		Date reqDate = new Date(travelRequest.getWhen());
@@ -316,7 +316,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Date timeMinusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, -1);
 
 		// normal.
-		Criteria nonRecurr = new Criteria().where("when").gte(timeMinusOneHour.getTime())
+		Criteria nonRecurr = new Criteria("when").gte(timeMinusOneHour.getTime())
 				.lte(timePlusOneHour.getTime());
 		Query query = new Query();
 		query.addCriteria(commonCriteria);
@@ -368,12 +368,12 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		
 		List<Travel> travels = new ArrayList<Travel>();
 
-		Criteria commonCriteria = new Criteria().where("active").is(true);
+		Criteria commonCriteria = new Criteria("active").is(true);
 	
 		/** community. **/
 		Criteria communityCriteria = null;
 		if (travelRequest.getCommunityIds() != null && !travelRequest.getCommunityIds().isEmpty()) {
-			communityCriteria = new Criteria().where("communityIds").in(travelRequest.getCommunityIds());
+			communityCriteria = new Criteria("communityIds").in(travelRequest.getCommunityIds());
 		}
 		
 		/** time. **/
@@ -381,7 +381,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		// match +-1hr.
 		Date timePlusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, 1);
 		Date timeMinusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, -1);
-		Criteria timeCriteria = new Criteria().where("when").gte(timeMinusOneHour.getTime())
+		Criteria timeCriteria = new Criteria("when").gte(timeMinusOneHour.getTime())
 				.lte(timePlusOneHour.getTime());
 		
 		Query query = new Query();
@@ -475,21 +475,21 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		// eliminate time in past.
 		List<Travel> travels = new ArrayList<Travel>();
 
-		Criteria commonCriteria = new Criteria().where("active").is(true);
-		/** community. **/
-		Criteria communityCriteria = new Criteria().where("communityIds").in(communityId);
+		Criteria commonCriteria = new Criteria("active").is(true);
 		/** recurrent/non trip times. **/
 		Date reqDate = new Date(timeInMillies);
 		// from the start of day until end of day.
 		Date timestartOfDay = CarPoolingUtils.getStartOfDay(reqDate);
 		Date timeEndOfDay = CarPoolingUtils.getEndOfDay(reqDate);
 		// normal.
-		Criteria timeCriteria = new Criteria().where("when").gte(timestartOfDay.getTime())
+		Criteria timeCriteria = new Criteria("when").gte(timestartOfDay.getTime())
 				.lte(timeEndOfDay.getTime());
 
 		Query query = new Query();
 		query.addCriteria(commonCriteria);
-		query.addCriteria(communityCriteria);
+		if (communityId != null) {
+			query.addCriteria(new Criteria("communityIds").in(communityId));
+		}
 		query.addCriteria(timeCriteria);
 		// order them by ascending.
 		query.with(new Sort(Sort.Direction.ASC, "when"));
@@ -521,7 +521,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	public int countTravelByPassengerId(String userId) {
 
 		// check if bookings within travel has travellers with userId
-		Criteria criteria = new Criteria().where("bookings").elemMatch(
+		Criteria criteria = new Criteria("bookings").elemMatch(
 				Criteria.where("traveller.userId").is(userId).and("boarded").is(1));
 
 		Query query = new Query();
@@ -547,7 +547,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	public int countTravelByDriverId(String userId) {
 
 		// check if there exist bookings with boardings
-		Criteria criteria = new Criteria().where("userId").is(userId).and("bookings").elemMatch(
+		Criteria criteria = new Criteria("userId").is(userId).and("bookings").elemMatch(
 				Criteria.where("boarded").is(1));
 
 		Query query = new Query();
@@ -573,7 +573,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	public List<Travel> searchCompletedTravels(Long timeInMillies) {
 		List<Travel> completedTravels = new ArrayList<Travel>();
 
-		Criteria criteria = new Criteria().where("when").lte(timeInMillies);
+		Criteria criteria = new Criteria("when").lte(timeInMillies);
 
 		Query query = new Query();
 		query.addCriteria(criteria);
@@ -591,7 +591,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 		Date timePlusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, 1);
 		Date timeMinusOneHour = CarPoolingUtils.getTimeByOffset(reqDate, -1);
 		
-		Criteria criteria = new Criteria().where("recurrentId").is(reccurentTravelId).and("when")
+		Criteria criteria = new Criteria("recurrentId").is(reccurentTravelId).and("when")
 				.gte(timeMinusOneHour.getTime()).lte(timePlusOneHour.getTime());
 
 		Query query = new Query();
@@ -603,7 +603,7 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
 	@Override
 	public List<Travel> findFutureInstanceOfRecurrTravel(String reccurentId) {
 
-		Criteria criteria = new Criteria().where("recurrentId").is(reccurentId).and("when")
+		Criteria criteria = new Criteria("recurrentId").is(reccurentId).and("when")
 				.gte(System.currentTimeMillis());
 
 		Query query = new Query();
