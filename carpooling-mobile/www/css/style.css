@@ -54,7 +54,7 @@
 /* Tabs */
 
 .carpooling-theme .tabs {
-    background-color: #3448A5;
+    background: #3448A5;
 }
 .carpooling-theme .tabs .tab-item {
     max-width: none;
@@ -75,8 +75,11 @@
 }
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.tab-item-active,
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.active,
-.carpooling-theme .tabs-top.tabs-striped .rabs .tab-item.activated {
+.carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.activated {
     border-width: 0px 0px 3px 0px !important;
+}
+.carpooling-theme .tabs-top.tabs-icon-top .tab-title {
+    font-size: xx-small;
 }
 
 /* Form components */
@@ -231,19 +234,15 @@ placeautocomplete ul {
     z-index: 100;
 }
 placeautocomplete ul li {
-/*
+    /*
     padding-top: 0.3em;
     padding-bottom: 0.3em;
 */
-  padding: 8px;
+    padding: 8px;
 }
-
 .placeautocomplete ul li .highlight {
-  font-weight: bold;
+    font-weight: bold;
 }
-
-
-
 .card.card-trip,
 .card.card-community,
 .card.card-notif {
@@ -431,6 +430,37 @@ placeautocomplete ul li {
     font-size: small;
     color: #A0A0A0;
 }
+.item-accordion {
+    height: 44px;
+}
+.item-accordion .item-accordion-header,
+.item-accordion .item-accordion-content,
+.item-accordion .item-accordion-content p {
+    white-space: normal;
+}
+.item-accordion .item-accordion-header {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 44px;
+    line-height: 44px;
+}
+.item-accordion .item-accordion-header i {
+    transition: all 0.2s linear;
+}
+.item-accordion .item-accordion-header i.open {
+    transform: rotate(-180deg);
+}
+.item-accordion .item-accordion-header i::before {
+    font-size: 0.5em;
+}
+.item-accordion .item-accordion-content {
+    border-top: 0;
+    transition: all 0.2s linear;
+}
+.item-accordion .item-accordion-content.ng-hide {
+    line-height: 0px;
+    opacity: 0;
+}
 
 /* Other */
 
@@ -573,7 +603,7 @@ placeautocomplete ul li {
     border-color: #3448A5 !important;
 }
 
-/* Stats*/
+/* Stats */
 
 table.chart {
     width: 100%;
@@ -646,6 +676,90 @@ table.chart .labels {}
 }
 .rating-avg-star span {
     white-space: nowrap;
+}
+
+/* HOME */
+
+.carpooling-theme .home .my-panel {
+    text-align: center;
+}
+.carpooling-theme .home .my-panel h5 {
+    text-align: center;
+    color: #fff;
+    background-color: #03A9F4;
+    margin: 0;
+    padding: 4px;
+}
+.carpooling-theme .home .my-panel .empty {
+    padding: 3em;
+}
+.carpooling-theme .home .my-panel .empty h6 {
+    font-size: larger;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 1em;
+    color: #444444;
+}
+.carpooling-theme .home .my-panel .empty .button {
+    text-transform: uppercase;
+    font-size: small;
+}
+.carpooling-theme .home .my-panel .seeall {
+    text-align: right;
+}
+.carpooling-theme .home .my-panel .seeall a {
+    font-style: italic;
+    text-decoration: none;
+    color: #3f51b5;
+    font-weight: bold;
+}
+.carpooling-theme .home .alltrips .content {
+    position: relative;
+}
+.carpooling-theme .home .alltrips .content .filter {
+    z-index: 100;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    background: #03A9F4;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item {
+    background-color: #03A9F4;
+    border: none;
+    color: #fff;
+    padding: 8px;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item.reset {
+    color: #3f51b5;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-header {
+    padding: 0 8px;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-header,
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-content {
+    background: #03A9F4;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-content {
+    box-shadow: 0 5px 5px #A0A0A0;
+    padding: 0 8px;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .item-divider {
+    font-style: italic;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .list {
+    margin-bottom: 0;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .list-mycommunities .list {
+    border-bottom: 2px solid #fff;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .list-mycommunities .list .item {
+    font-weight: bold;
+}
+.carpooling-theme .home .alltrips .content .filter.item-accordion .list-mycommunities .list .item.item-divider {
+    font-weight: normal;
+}
+.carpooling-theme .home .alltrips .content .tripslist {
+    padding-top: 38px;
 }
 
 /* VIAGGIO */
@@ -821,7 +935,7 @@ h5 {
     text-align: center;
 }
 .findcommunities .buttons button {
-  min-width: 120px;
+    min-width: 120px;
 }
 .actions {
     text-align: center;
@@ -865,7 +979,8 @@ h5 {
 .login .login-title h3 {
     color: #fff;
 }
-.login .login-buttons h3, .login .login-buttons h4 {
+.login .login-buttons h3,
+.login .login-buttons h4 {
     color: #666;
 }
 .login .login-button-google {
@@ -891,14 +1006,14 @@ h5 {
     background-color: #fff;
     color: #3448A5;
 }
-
 .login .login-link {
-  display: block;
-  color: #3448A5;
-  padding: 0 1em;
+    display: block;
+    color: #3448A5;
+    padding: 0 1em;
 }
 
 /* Credits */
+
 .credits {
     text-align: center;
 }
@@ -916,7 +1031,6 @@ h5 {
 .credits .credits-mail {
     text-decoration: underline;
 }
-
 .header-badge {
     top: -37px !important;
     /*    left: 10px !important;*/
@@ -924,7 +1038,7 @@ h5 {
     margin-left: -5px!important;
     display: table!important;
     margin-right: 10px!important;
-/*    margin-top: -10px;*/
+    /*    margin-top: -10px;*/
     padding: 3px 3px 3px 3px;
     width: 22px;
     display: block!inspect;
@@ -933,16 +1047,97 @@ h5 {
     padding: 2px 12px 2px 3px;
 */
 }
-
 .login-buttons .item {
-  border: none;
-  border-bottom: 1px solid #ddd;
-  margin: 0 1em;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    margin: 0 1em;
 }
-
-.login-buttons .row, .login-buttons .col {
-  padding: 0;
+.login-buttons .row,
+.login-buttons .col {
+    padding: 0;
 }
 .login-buttons .col:first-child {
-  padding-right: 5px;
+    padding-right: 5px;
 }
+
+/* MODAL COMMUNITIES STYLE */
+
+.comm-title {
+    color: darkblue;
+    font-size: 24px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.bar-footer-confirm {
+    background-color: white !important;
+    position: fixed;
+    bottom: 0;
+    border-top-width: 0px;
+    border-bottom-width: 0;
+    background-position: top;
+    height: 60px;
+}
+.bar-white .button {
+    color: cyan !important;
+    text-transform: uppercase !important;
+}
+.pull-right {
+    position: absolute;
+    right: 10px;
+}
+.p-20 {
+    padding: 20px;
+}
+.button.refused,
+.button.confirm {
+    padding-left: 0px !important;
+    padding-top: 10px !important;
+}
+.button.refused {
+    color: grey !important;
+    padding-right: 20px !important;
+    font-weight: 600 !important;
+}
+.button.confirm {
+    color: #00bcd4 !important;
+    padding-right: 20px !important;
+    font-weight: 600 !important;
+}
+.card.card-community:last-child {
+    margin-bottom: 85px !important;
+}
+.card.card-community .row,
+.card.card-community .row .col {
+    padding: 0px !important;
+}
+.card.card-community .row .col.col-75 {
+    border: 1px solid rgba(224, 224, 224, 0.8);
+}
+.element-check {
+    height: 120px !important;
+    width: 100% !important;
+}
+.element-check .checkbox {
+    position: absolute;
+    top: 40% !important;
+    right: 11px !important;
+    left: 12%;
+    z-index: 3;
+    margin-top: -20%;
+}
+.element-check .checkbox .checkbox-icon {
+    width: 50px;
+    height: 50px;
+}
+.element-check .checkbox .checkbox-icon::before {
+    border-radius: 100px !important;
+}
+.element-check .checkbox .checkbox-icon::after {
+    border-width: 2px;
+    top: 28%;
+    left: 35%;
+    width: 16px;
+}
+
+/* END MODAL COMMUNITIES STYLE */

@@ -19,6 +19,7 @@ angular.module('carpooling', [
     'carpooling.directives',
     'carpooling.controllers.home',
     'carpooling.controllers.login',
+    'carpooling.controllers.mytrips',
     'carpooling.controllers.storico',
     'carpooling.controllers.offri',
     'carpooling.controllers.cercaviaggi',
@@ -36,16 +37,16 @@ angular.module('carpooling', [
 
     $rootScope.notificationCounter = 0;
 
-    $rootScope.updateCounter = function() {
-      $rootScope.notificationCounter++;
+    $rootScope.updateCounter = function () {
+        $rootScope.notificationCounter++;
     };
-    $rootScope.decCounter = function() {
-      if ($rootScope.notificationCounter > 0) $rootScope.notificationCounter--;
+    $rootScope.decCounter = function () {
+        if ($rootScope.notificationCounter > 0) $rootScope.notificationCounter--;
     };
-    $rootScope.initCounter = function() {
-      UserSrv.readNotificationCount().then(function(data) {
-        $rootScope.notificationCounter = data;
-      });
+    $rootScope.initCounter = function () {
+        UserSrv.readNotificationCount().then(function (data) {
+            $rootScope.notificationCounter = data;
+        });
     };
 
     $rootScope.manageLocalNotification = function (local_notification) {
@@ -266,9 +267,9 @@ angular.module('carpooling', [
 
     $rootScope.logout = function () {
         if (window.ParsePushPlugin) {
-          window.ParsePushPlugin.unsubscribe('CarPooling_' + StorageSrv.getUserId(), function () {
-              console.log("Success in channel " + 'CarPooling_' + StorageSrv.getUserId() + " unsubscribe");
-          });
+            window.ParsePushPlugin.unsubscribe('CarPooling_' + StorageSrv.getUserId(), function () {
+                console.log("Success in channel " + 'CarPooling_' + StorageSrv.getUserId() + " unsubscribe");
+            });
         }
         LoginSrv.logout().then(
             function (data) {
@@ -301,7 +302,7 @@ angular.module('carpooling', [
         if (!!window.plugins && !!window.plugins.googleplus) {
             window.plugins.googleplus.isAvailable(
                 function (available) {
-                    if (available )$rootScope.login_googlelocal = 'googlelocal';
+                    if (available) $rootScope.login_googlelocal = 'googlelocal';
                     console.log('login_googlelocal available!');
                 }
             );
@@ -319,10 +320,10 @@ angular.module('carpooling', [
             $rootScope.login();
         }
 
-      if (window.cordova && cordova.getAppVersion) {
-          cordova.getAppVersion.getVersionNumber().then(function (version) {
-              $rootScope.version = version;
-          });
+        if (window.cordova && cordova.getAppVersion) {
+            cordova.getAppVersion.getVersionNumber().then(function (version) {
+                $rootScope.version = version;
+            });
         }
     });
 })
@@ -331,7 +332,7 @@ angular.module('carpooling', [
     // PROBLEM WITH SCROLL RESIZE ON OLD ANDROID DEVICES
     $ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isIOS() || (ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4));
     //$ionicConfigProvider.scrolling.jsScrolling(ionic.Platform.isAndroid() && parseFloat(ionic.Platform.version()) < 4.4);
-//    $httpProvider.defaults.withCredentials = true;
+    $httpProvider.defaults.withCredentials = true;
     $ionicConfigProvider.backButton.text('');
     $ionicConfigProvider.backButton.previousTitleText(false);
 })
@@ -361,6 +362,19 @@ angular.module('carpooling', [
             'menuContent': {
                 templateUrl: 'templates/home.html',
                 controller: 'HomeCtrl'
+            }
+        }
+    })
+
+    .state('app.mytrips', {
+        url: '/mytrips/{type}',
+        params: {
+            'type': 'passenger'
+        },
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/mytrips.html',
+                controller: 'MyTripsCtrl'
             }
         }
     })
@@ -511,34 +525,33 @@ angular.module('carpooling', [
     })
 
     .state('app.chat', {
-        url: '/chat/:travelId/:personId',
-        cache: false,
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/chat.html',
-                controller: 'ChatCtrl'
+            url: '/chat/:travelId/:personId',
+            cache: false,
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/chat.html',
+                    controller: 'ChatCtrl'
+                }
             }
-        }
-    })
-    .state('app.signup', {
-        url: '/signup',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/signup.html',
-                controller: 'RegisterCtrl'
+        })
+        .state('app.signup', {
+            url: '/signup',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/signup.html',
+                    controller: 'RegisterCtrl'
+                }
             }
-        }
-    })
-    .state('app.signupsuccess', {
-        url: '/signupsuccess',
-        views: {
-            'menuContent': {
-                templateUrl: 'templates/signupsuccess.html',
-                controller: 'RegisterCtrl'
+        })
+        .state('app.signupsuccess', {
+            url: '/signupsuccess',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/signupsuccess.html',
+                    controller: 'RegisterCtrl'
+                }
             }
-        }
-    })
-    ;
+        });
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise(function ($injector) {
@@ -577,6 +590,7 @@ angular.module('carpooling', [
         action_reject: 'Rifiuta richiesta',
         action_confirm: 'Conferma',
         menu_home: 'Home',
+        menu_mytrips: 'Miei viaggi',
         menu_community: 'Comunità',
         menu_chat: 'Chat',
         menu_history: 'Storico viaggi',
@@ -587,6 +601,15 @@ angular.module('carpooling', [
         modal_map: 'Scegli da mappa',
         modal_map_confirm: 'Conferma selezione',
         msg_talk: 'dice',
+        lbl_offered: 'Offerti',
+        lbl_offered_none: 'Nessun viaggio offerto',
+        lbl_offered_btn: 'Offri un viaggio',
+        lbl_partecipated: 'Partecipati',
+        lbl_partecipated_none: 'Cerca il viaggio che fa per te e chiedi un passaggio!',
+        lbl_partecipated_btn: 'Cerca un viaggio',
+        lbl_alltrips_mycommunities: "Le tue comunità",
+        lbl_alltrips_allcommunities: "Tutte le comunità",
+        lbl_see_all: 'vedi tutti',
         lbl_credits: 'Credits',
         lbl_login: 'Login',
         lbl_all: 'tutti',
@@ -674,6 +697,9 @@ angular.module('carpooling', [
         lbl_yes: 'Sì',
         lbl_no: 'No',
         lbl_today: 'Oggi',
+        tab_home_mytrips: "Miei viaggi",
+        tab_home_alltrips: "Tutti i viaggi",
+        tab_home_messages: "Messaggi",
         tab_participate: 'Partecipo',
         tab_offer: 'Offro',
         tab_participated: 'Partecipati',

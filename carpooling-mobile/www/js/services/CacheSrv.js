@@ -3,6 +3,10 @@ angular.module('carpooling.services.cache', [])
 .factory('CacheSrv', function ($rootScope, $q) {
     var cacheService = {};
 
+    var nonConfirmedTrips = null;
+    var passengerTrips = null;
+    var driverTrips = null;
+
     var rPassengerTrips = true;
     var rDriverTrips = true;
     var rDriverTrip = null;
@@ -12,15 +16,31 @@ angular.module('carpooling.services.cache', [])
     var rStoricoDriverTrips = true;
     var rStoricoDriverTrip = null;
 
-    cacheService.reset = function() {
-      rPassengerTrips = true;
-      rDriverTrips = true;
-      rDriverTrip = null;
-      rCommunityTrips = true;
-      rCommunityTrip = null;
-      rStoricoPassengerTrips = true;
-      rStoricoDriverTrips = true;
-      rStoricoDriverTrip = null;
+    cacheService.reset = function () {
+        rPassengerTrips = true;
+        rDriverTrips = true;
+        rDriverTrip = null;
+        rCommunityTrips = true;
+        rCommunityTrip = null;
+        rStoricoPassengerTrips = true;
+        rStoricoDriverTrips = true;
+        rStoricoDriverTrip = null;
+    };
+
+    cacheService.getNonConfirmedTrips = function () {
+        return nonConfirmedTrips;
+    };
+
+    cacheService.setNonConfirmedTrips = function (list) {
+        nonConfirmedTrips = list;
+    };
+
+    cacheService.getPassengerTrips = function () {
+        return passengerTrips;
+    };
+
+    cacheService.setPassengerTrips = function (list) {
+        passengerTrips = list;
     };
 
     cacheService.setReloadPassengerTrips = function (reload) {
@@ -29,6 +49,14 @@ angular.module('carpooling.services.cache', [])
 
     cacheService.reloadPassengerTrips = function () {
         return rPassengerTrips;
+    };
+
+    cacheService.getDriverTrips = function () {
+        return driverTrips;
+    };
+
+    cacheService.setDriverTrips = function (list) {
+        driverTrips = list;
     };
 
     cacheService.setReloadDriverTrips = function (reload) {
@@ -86,5 +114,6 @@ angular.module('carpooling.services.cache', [])
     cacheService.reloadStoricoDriverTrip = function () {
         return rStoricoDriverTrip;
     };
+
     return cacheService;
 });

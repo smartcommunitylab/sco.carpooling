@@ -1,156 +1,218 @@
-<ion-view title="{{'app_name' | translate}}">
+<ion-view title="{{'app_name' | translate}}" class="home">
     <ion-nav-buttons side="right">
         <a href="#/app/notifiche" class="button button-icon ion-android-notifications"><span class="badge badge-assertive header-badge" ng-if="notificationCounter > 0">{{notificationCounter}}</span></a>
-        <a ng-href="{{tab == 0 ? '#/app/cerca' : '#/app/offri'}}" ng-class="tab == 0 ? 'ion-android-search' : 'ion-android-add' " class="button button-icon padding-left"></a>
+        <a ng-if="tab < 2" ng-href="{{tab == 0 ? '#/app/offri' : '#/app/cerca'}}" ng-class="{'ion-android-add': (tab == 0), 'ion-android-search': (tab == 1)}" class="button button-icon padding-left"></a>
     </ion-nav-buttons>
 
-    <ion-tabs class="tabs-top">
-        <ion-tab title="{{'tab_participate' | translate}}" ng-click="selectTab(0)">
+    <ion-tabs class="tabs-top tabs-icon-top" delegate-handle="tabs-home">
+        <ion-tab icon="ion-android-car" title="{{'tab_home_mytrips' | translate}}" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content>
-                    <div class="padding" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0" style="color: gray">
-                      <div class="row" style="margin-top: 30px;"><div class="col col-center text-center">{{'lbl_empty_trips1' | translate}}</div></div>
-                      <div class="row"><div class="col col-center text-center"><img src="img/no_viaggi_partecipati.png" width="130px"></div></div>
-                      <div class="row" style="margin-top: 20px;"><div class="col col-center text-center">{{'lbl_empty_trips2' | translate}}</div></div>
-                      <div class="row" style="margin-top: 20px;">
-                        <div class="col col-center text-center">
-                          {{'lbl_empty_trips3' | translate}} <i style="font-size:20px; padding: 0 5px;" class="icon ion-android-search"></i> {{'lbl_empty_trips4' | translate}}
-                        </div>
-                      </div>
-                    </div>
+                    <div class="my-panel my-driver">
+                        <h5>{{'lbl_offered'| translate}}</h5>
 
-                    <h5 class="text-center" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">{{'lbl_tripstoconfirm'| translate}}</h5>
-<!--
-                    <div class="padding" ng-if="!!nonConfirmedTrips && nonConfirmedTrips.length == 0">
-                        <h4>{{'lbl_no_results' | translate}}</h4>
-                    </div>
--->
-                    <div class="list" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">
-                        <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips">
-                            <div class="item">
-                                <div class="trip-data" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
-                                    <ul>
-                                        <li>
-                                            <i class="icon cp-recurring" ng-if="!!nctrip.recurrentId"></i>
-                                            <span>{{nctrip.when | date: travelDateFormat}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_from' | translate | uppercase}}: <span>{{nctrip.from.name}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_to' | translate | uppercase}}: <span>{{nctrip.to.name}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_start_time' | translate}}: <span>{{ nctrip.when | date: travelTimeFormat}}</span>
-                                        </li>
-                                        <li>
-                                            <span class="trip-data-rejected" ng-if="nctrip.bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
-                                            <span class="trip-data-requested" ng-if="nctrip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
-                                        </li>
-                                    </ul>
-                                    <!--<div class="trip-flag" ng-if="false"></div>-->
+                        <div class="padding empty" ng-if="driverTrips != null && driverTrips.length == 0">
+                            <h6>{{'lbl_offered_none' | translate}}</h6>
+                            <a href="#/app/offri" class="button button-carpooling">{{'lbl_offered_btn' | translate}}</a>
+                        </div>
+
+                        <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
+                            <div class="card card-trip" ng-repeat="trip in driverTrips | limitTo: maxItemsPerList" ng-click="selectOfferedTrip($index)">
+                                <div class="item">
+                                    <div class="trip-data">
+                                        <ul>
+                                            <li>
+                                                <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
+                                                <span>{{ trip.when | date: travelDateFormat }}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
+                                            </li>
+                                        </ul>
+                                        <!-- <div class="trip-flag" ng-if="false"></div> -->
+                                    </div>
+                                    <div class="trip-counter">
+                                        <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
+                                        <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
+                                    </div>
+                                    <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                                 </div>
-                                <div class="trip-flag" ng-if="!!nctrip.style" ng-style="nctrip.style"></div>
-                                <!-- CHECKMARK -->
-                                <div class="trip-confirmed" ng-click="confirmDialog($index)">
-                                    <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
-                                </div>
+                            </div>
+                            <div class="seeall padding-right">
+                                <a href="#/app/mytrips/">{{'lbl_see_all' | translate}}</a>
                             </div>
                         </div>
                     </div>
 
-                    <h5 class="text-center" ng-if="passengerTrips != null && passengerTrips.length > 0">{{'lbl_futuretrips'| translate}}</h5>
-<!--
-                    <div class="padding" ng-if="!!passengerTrips && passengerTrips.length == 0">
-                        <h4>{{'lbl_no_results' | translate}}</h4>
-                    </div>
--->
-                    <div class="list" ng-if="passengerTrips != null && passengerTrips.length > 0">
-                        <div class="card card-trip" ng-repeat="trip in passengerTrips" ng-click="selectParticipatedTrip($index, passengerTrips)">
-                            <div class="item">
-                                <div class="trip-data">
-                                    <ul>
-                                        <li>
-                                            <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
-                                            <span>{{trip.when | date: travelDateFormat}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
-                                        </li>
-                                        <li>
-                                            <span class="trip-data-rejected" ng-if="trip.bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
-                                            <span class="trip-data-requested" ng-if="trip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
-                                        </li>
-                                    </ul>
-                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
+                    <div class="my-panel my-passenger">
+                        <h5>{{'lbl_partecipated' | translate}}</h5>
+
+                        <div class="padding empty" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length == 0 && passengerTrips != null && passengerTrips.length == 0">
+                            <h6>{{'lbl_partecipated_none' | translate}}</h6>
+                            <a href="#/app/cerca" class="button button-carpooling">{{'lbl_partecipated_btn' | translate}}</a>
+                        </div>
+
+                        <div class="list" ng-if="nonConfirmedTrips != null && nonConfirmedTrips.length > 0">
+                            <div class="card card-trip" ng-repeat="nctrip in nonConfirmedTrips | limitTo: maxItemsPerList">
+                                <div class="item">
+                                    <div class="trip-data" ng-click="selectParticipatedTrip($index, nonConfirmedTrips)">
+                                        <ul>
+                                            <li>
+                                                <i class="icon cp-recurring" ng-if="!!nctrip.recurrentId"></i>
+                                                <span>{{nctrip.when | date: travelDateFormat}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_from' | translate | uppercase}}: <span>{{nctrip.from.name}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_to' | translate | uppercase}}: <span>{{nctrip.to.name}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_start_time' | translate}}: <span>{{ nctrip.when | date: travelTimeFormat}}</span>
+                                            </li>
+                                            <li>
+                                                <span class="trip-data-rejected" ng-if="nctrip.bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
+                                                <span class="trip-data-requested" ng-if="nctrip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
+                                            </li>
+                                        </ul>
+                                        <!--<div class="trip-flag" ng-if="false"></div>-->
+                                    </div>
+                                    <div class="trip-flag" ng-if="!!nctrip.style" ng-style="nctrip.style"></div>
+                                    <!-- CHECKMARK -->
+                                    <div class="trip-confirmed" ng-click="confirmDialog($index)">
+                                        <i class="icons ion-ios-checkmark-outline custom-checkmark"></i>
+                                    </div>
                                 </div>
-                                <div class="trip-counter">
-                                    <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
-                                    <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
+                            </div>
+                            <div class="seeall padding-right">
+                                <a href="#/app/mytrips/driver">{{'lbl_see_all' | translate}}</a>
+                            </div>
+                        </div>
+
+                        <div class="list" ng-if="passengerTrips != null && passengerTrips.length > 0 && nonConfirmedTrips.length < 2">
+                            <div class="card card-trip" ng-repeat="trip in passengerTrips | limitTo: (maxItemsPerList - nonConfirmedTrips.length)" ng-click="selectParticipatedTrip($index, passengerTrips)">
+                                <div class="item">
+                                    <div class="trip-data">
+                                        <ul>
+                                            <li>
+                                                <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
+                                                <span>{{trip.when | date: travelDateFormat}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
+                                            </li>
+                                            <li>
+                                                {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
+                                            </li>
+                                            <li>
+                                                <span class="trip-data-rejected" ng-if="trip.bookingState === -1">{{'lbl_trip_rejected' | translate}}</span>
+                                                <span class="trip-data-requested" ng-if="trip.bookingState === 0">{{'lbl_trip_requested' | translate}}</span>
+                                            </li>
+                                        </ul>
+                                        <!-- <div class="trip-flag" ng-if="false"></div> -->
+                                    </div>
+                                    <div class="trip-counter">
+                                        <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
+                                        <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
+                                    </div>
+                                    <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                                 </div>
-                                <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                             </div>
                         </div>
                     </div>
-                    <ion-infinite-scroll ng-if="passengerTripsCanHaveMore" on-infinite="loadMorePassengerTrips()" distance="5%">
-                    </ion-infinite-scroll>
                 </ion-content>
             </ion-view>
         </ion-tab>
 
-        <ion-tab title="{{'tab_offer' | translate}}" ng-click="selectTab(1)">
+        <ion-tab icon="ion-android-car" title="{{'tab_home_alltrips' | translate}}" ng-click="selectTab(1)">
             <ion-view>
-                <ion-content ng-init="loadMoreDriverTrips()">
-                    <div class="padding" ng-if="driverTrips != null && driverTrips.length == 0" style="color: gray">
-<!--                        <h4>{{'lbl_no_results' | translate}}</h4>-->
-                      <div class="row" style="margin-top: 30px;"><div class="col col-center text-center">{{'lbl_empty_offers1' | translate}}</div></div>
-                      <div class="row"><div class="col col-center text-center"><img src="img/no_viaggi_offerti.png" width="130px"></div></div>
-                      <div class="row" style="margin-top: 20px;"><div class="col col-center text-center">{{'lbl_empty_offers2' | translate}}</div></div>
-                      <div class="row" style="margin-top: 20px;">
-                        <div class="col col-center text-center">
-                          {{'lbl_empty_offers3' | translate}} <i style="font-size:20px; padding: 0 5px;" class="icon ion-android-add"></i> {{'lbl_empty_offers4' | translate}}
+                <ion-content class="alltrips" ng-init="allTripsInit()">
+                    <div class="content">
+                        <div class="filter item-accordion">
+                            <ion-item class="item-accordion-header item-icon-right" ng-click="filter.toggleFilter()">
+                                <div>{{!!filter.selectedCommunity ? filter.selectedCommunity.name : ('lbl_alltrips_allcommunities' | translate)}}</div>
+                                <i class="icon ion-arrow-down-b" ng-class="{'open': filter.filterOpen}"></i>
+                            </ion-item>
+                            <div class="item-accordion-content" ng-show="filter.filterOpen">
+                                <ion-list class="list-mycommunities" ng-if="!!myCommunities && myCommunities.length > 0">
+                                    <ion-item class="item-divider">{{'lbl_alltrips_mycommunities' | translate}}</ion-item>
+                                    <ion-item ng-repeat="community in myCommunities" ng-click="filter.filterBy(community)">
+                                        {{community.name}}
+                                    </ion-item>
+                                </ion-list>
+                                <ion-list>
+                                    <ion-item ng-repeat="community in communities" ng-click="filter.filterBy(community)">
+                                        {{community.name}}
+                                    </ion-item>
+                                    <ion-item class="reset" ng-click="filter.filterBy(null)">
+                                        {{'lbl_alltrips_allcommunities' | translate}}
+                                    </ion-item>
+                                </ion-list>
+                            </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="list" ng-if="!!driverTrips && driverTrips.length > 0">
-                        <div class="card card-trip" ng-repeat="trip in driverTrips" ng-click="selectOfferedTrip($index)">
-                            <div class="item">
-                                <div class="trip-data">
-                                    <ul>
-                                        <li>
-                                            <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
-                                            <span>{{ trip.when | date: travelDateFormat }}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
-                                        </li>
-                                        <li>
-                                            {{'lbl_start_time' | translate}}: <span>{{ trip.when | date: travelTimeFormat}}</span>
-                                        </li>
-                                    </ul>
-                                    <!-- <div class="trip-flag" ng-if="false"></div> -->
+                        <div class="tripslist">
+                            <div class="day-change">
+                                <button class="ion-arrow-left-b button-day b_left" ng-click="changeDay(0)" ng-disabled="hideYesterday()"></button>
+                                <h5 style="white-space: nowrap;">{{lbl_day}}</h5>
+                                <button class="ion-arrow-right-b button-day b_right" ng-click="changeDay(1)"></button>
+                            </div>
+                            <div ng-if="!!communityTrips && communityTrips.length == 0">
+                                <h4 class="padding">{{'lbl_no_results' | translate}}</h4>
+                            </div>
+                            <div class="list" ng-if="!!communityTrips && communityTrips.length > 0">
+                                <div class="card card-trip" ng-repeat="trip in communityTrips" ng-click="selectTrip($index)">
+                                    <div class="item">
+                                        <div class="trip-data">
+                                            <ul>
+                                                <li>
+                                                    <i class="icon cp-recurring" ng-if="!!trip.recurrentId"></i>
+                                                    <span>{{trip.when | date: travelDateFormat}}</span>
+                                                </li>
+                                                <li>
+                                                    {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
+                                                </li>
+                                                <li>
+                                                    {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
+                                                </li>
+                                                <li>
+                                                    {{'lbl_start_time' | translate}}: <span>{{trip.route.startime | date:travelTimeFormat}}</span>
+                                                </li>
+                                            </ul>
+                                            <!-- TODO define when the flag needs to be shown here -->
+                                            <div class="trip-flag" ng-if="false"></div>
+                                        </div>
+                                        <div class="trip-counter">
+                                            <p class="trip-counter-num">{{trip.bookingCounters.available}}</p>
+                                            <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
+                                        </div>
+                                        <!-- TODO define when the flag needs to be shown here -->
+                                        <div class="trip-flag" ng-if="!!communityStyle" ng-style="communityStyle"></div>
+                                    </div>
                                 </div>
-                                <div class="trip-counter">
-                                    <p class="trip-counter-num">{{trip.bookingCounters['available']}}</p>
-                                    <p class="trip-counter-text">{{'lbl_user_car_seats' | translate}}</p>
-                                </div>
-                                <div class="trip-flag" ng-if="!!trip.style" ng-style="trip.style"></div>
                             </div>
                         </div>
                     </div>
-                    <ion-infinite-scroll ng-if="driverTripsCanHaveMore" on-infinite="loadMoreDriverTrips()" distance="5%">
-                    </ion-infinite-scroll>
                 </ion-content>
             </ion-view>
         </ion-tab>
+
+        <!-- TODO Messages tab!!! -->
+        <!--
+        <ion-tab icon="ion-android-chat" title="{{'tab_home_messages' | translate}}" ng-click="selectTab(2)">
+            <ion-view>
+                <ion-content ng-init="">
+                </ion-content>
+            </ion-view>
+        </ion-tab>
+        -->
     </ion-tabs>
 </ion-view>

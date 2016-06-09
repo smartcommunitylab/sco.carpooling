@@ -1,44 +1,22 @@
-angular.module('carpooling.controllers.home', [])
+angular.module('carpooling.controllers.mytrips', [])
 
-.controller('AppCtrl', function ($scope, $state, $ionicModal) {
-    $ionicModal.fromTemplateUrl('templates/modal_credits.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function (modal) {
-        $scope.modalCredits = modal;
-    });
-
-    $scope.openCredits = function () {
-        $scope.modalCredits.show();
-    };
-
-    $scope.closeCredits = function () {
-        $scope.modalCredits.hide();
-    };
-
-})
-
-.controller('HomeCtrl', function ($scope, $rootScope, $window, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('MyTripsCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
         //if (idx == $scope.tab) return;
         if (idx !== $scope.tab) {
             $scope.tab = idx;
-            $ionicTabsDelegate.$getByHandle('tabs-home').select(idx);
+            $ionicTabsDelegate.$getByHandle('tabs-mytrips').select(idx);
         }
     }
 
     $scope.travelDateFormat = 'dd MMMM yyyy';
     $scope.travelTimeFormat = 'HH:mm';
 
-    $scope.maxItemsPerList = 2;
-
     $scope.nonConfirmedTrips = CacheSrv.getNonConfirmedTrips();
     $scope.passengerTrips = CacheSrv.getPassengerTrips();
     $scope.driverTrips = CacheSrv.getDriverTrips();
-
-    $scope.emptyPanelHeight = ($window.innerHeight - (44 + 49)) / 2; // navbar, tab bar
 
     /*
      * Partecipo
@@ -88,6 +66,7 @@ angular.module('carpooling.controllers.home', [])
 
         if (reset) {
             $scope.passengerTrips = null;
+            CacheSrv.setPassengerTrips($scope.passengerTrips);
             passengerTripsStart = 0;
             passengerTripsCount = 20; // default
             $scope.passengerTripsCanHaveMore = false;
@@ -97,7 +76,6 @@ angular.module('carpooling.controllers.home', [])
         // FUTURE use CacheSrv for these trips too?
         PassengerSrv.getPassengerTrips(0, 100, false, true).then(
             function (toConfirm) {
-                toConfirm = []; // FIXME test only
                 $scope.nonConfirmedTrips = toConfirm;
                 CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
                 if (passengerTripsStart === 0) {
@@ -112,8 +90,6 @@ angular.module('carpooling.controllers.home', [])
         // read future trips
         PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true).then(
             function (trips) {
-                trips = []; // FIXME test only
-
                 CacheSrv.setReloadPassengerTrips(false);
 
                 trips.forEach(function (trip) {
@@ -208,8 +184,6 @@ angular.module('carpooling.controllers.home', [])
 
         DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount, true).then(
             function (trips) {
-                trips = []; // FIXME test only
-
                 CacheSrv.setReloadDriverTrips(false);
 
                 trips.forEach(function (trip) {
@@ -243,7 +217,7 @@ angular.module('carpooling.controllers.home', [])
                     Utils.toast(Utils.getErrorMsg(error));
                 }
 
-                if ($scope.driverTrips === null) {
+                if (CacheSrv.driverTrips === null) {
                     $scope.driverTrips = [];
                     CacheSrv.setDriverTrips($scope.driverTrips);
                 }
@@ -258,164 +232,22 @@ angular.module('carpooling.controllers.home', [])
     };
 
     /*
-     * 2ND TAB
-     */
-    $scope.filter = {
-        filterOpen: false,
-        toggleFilter: function () {
-            this.filterOpen = !this.filterOpen;
-        },
-        filterBy: function (community) {
-            this.selectedCommunity = community;
-            // TODO filter
-            this.toggleFilter();
-        },
-        selectedCommunity: null
-    };
-
-    $scope.communities = null;
-    $scope.myCommunities = null;
-    $scope.communityTrips = null;
-
-    $scope.lbl_day = $filter('translate')('lbl_todaytrips');
-    var start = new Date();
-    var end = new Date();
-    $scope.selectDate = Date.now();
-
-    /* Check if the selected date is Today */
-    var compareDate = function () {
-        if ($scope.selectDate >= start && $scope.selectDate <= end) {
-            $scope.lbl_day = $filter('translate')('lbl_todaytrips');
-        } else {
-            $scope.lbl_day = $filter('date')($scope.selectDate, 'EEE dd/MM/yyyy');
-        }
-    };
-
-    $scope.allTripsInit = function () {
-        Utils.loading();
-
-        UserSrv.getCommunitiesDetails().then(
-            function (communities) {
-                Utils.loaded();
-                $scope.communities = communities;
-
-                var myComs = [];
-                for (var i = 0; i < $scope.communities.length; i++) {
-                    var com = $scope.communities[i];
-                    if ($scope.amIaMember(com)) {
-                        myComs.push(com);
-                        $scope.communities.splice(i, 1);
-                        i--;
-                    }
-                }
-                $scope.myCommunities = myComs;
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast(Utils.getErrorMsg(error));
-                $scope.communities = [];
-            }
-        );
-
-        if (!$scope.selectedCommunity || !$scope.selectedCommunity.id) {
-            Utils.loaded();
-            return;
-        }
-
-        UserSrv.getCommunityDetails($scope.selectedCommunity.id).then(
-            function (community) {
-                $scope.selectedCommunity = community;
-                $scope.iAmMember = $scope.amIaMember($scope.selectedCommunity);
-
-                UserSrv.getCommunityTravels($scope.selectedCommunity.id, $scope.selectDate).then(
-                    function (todayCommunityTrips) {
-                        $scope.communityTrips = todayCommunityTrips;
-                        $scope.communityTrips.forEach(function (trip) {
-                            trip.bookingCounters = Utils.getBookingCounters(trip);
-                        });
-                        Utils.loaded();
-                    },
-                    function (error) {
-                        Utils.loaded();
-                        Utils.toast(Utils.getErrorMsg(error));
-                    }
-                );
-                $scope.communityStyle = {
-                    'border-color': '#' + $scope.selectedCommunity.color + ' #' + $scope.selectedCommunity.color + ' transparent transparent'
-                }
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast(Utils.getErrorMsg(error));
-            }
-        );
-    };
-
-    $scope.changeDay = function (num) {
-        if (num === 0) {
-            $scope.selectDate -= 24 * 60 * 60 * 1000;
-        } else {
-            $scope.selectDate += 24 * 60 * 60 * 1000;
-        }
-        compareDate();
-        $scope.updateCommunityTrips();
-    };
-
-    $scope.hideYesterday = function () {
-        if ($scope.selectDate <= Date.now()) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-    $scope.amIaMember = function (com) {
-        var member = false;
-        for (var i = 0; i < com.userObjs.length; i++) {
-            var user = com.userObjs[i];
-            if (user.userId === StorageSrv.getUser().userId) {
-                // it's-a-me!
-                member = true;
-                i = com.userObjs.length;
-            }
-        };
-        return member;
-    };
-
-    $scope.updateCommunityTrips = function () {
-        UserSrv.getCommunityTravels($scope.filter.selectedCommunity.id, $scope.selectDate).then(
-            function (todayCommunityTrips) {
-                $scope.communityTrips = todayCommunityTrips;
-                $scope.communityTrips.forEach(function (trip) {
-                    trip.bookingCounters = Utils.getBookingCounters(trip);
-                });
-                Utils.loaded();
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast(Utils.getErrorMsg(error));
-            }
-        );
-    };
-
-    $scope.$watch('filter.selectedCommunity', function (newValue, oldValue) {
-        if (!!$scope.filter.selectedCommunity) {
-            $scope.updateCommunityTrips();
-        }
-    });
-
-    /*
      * init
      */
     $scope.$on('$ionicView.enter', function () {
+        if (!!$stateParams && $stateParams['type'] == 'driver') {
+            $scope.selectTab(1);
+        }
+
         if (!window.ParsePushPlugin) {
             $scope.interval = $interval($rootScope.initCounter, 10000);
         }
+
         if ($scope.tab === 0) {
             if (CacheSrv.reloadPassengerTrips()) {
                 $scope.loadMorePassengerTrips(true);
             }
-
+        } else if ($scope.tab === 1) {
             if (CacheSrv.reloadDriverTrips()) {
                 $scope.loadMoreDriverTrips(true);
             } else if (!!CacheSrv.reloadDriverTrip()) {
@@ -428,7 +260,7 @@ angular.module('carpooling.controllers.home', [])
                                 $scope.driverTrips[i] = updatedTrip;
                                 enrichTrip($scope.driverTrips[i]);
                                 CacheSrv.setDriverTrips($scope.driverTrips);
-                                i = $scope.driverTrips.length;
+                                i = CacheSrv.driverTrips.length;
                             }
                         }
                         Utils.loaded();
@@ -440,8 +272,6 @@ angular.module('carpooling.controllers.home', [])
                     }
                 );
             }
-        } else if ($scope.tab === 1) {
-            $scope.allTripsInit();
         }
     });
 
@@ -449,8 +279,7 @@ angular.module('carpooling.controllers.home', [])
      * exit
      */
     $scope.$on('$ionicView.leave', function () {
-        if ($scope.interval) {
-            $interval.cancel($scope.interval)
-        };
+        if ($scope.interval) $interval.cancel($scope.interval);
     });
+
 });
