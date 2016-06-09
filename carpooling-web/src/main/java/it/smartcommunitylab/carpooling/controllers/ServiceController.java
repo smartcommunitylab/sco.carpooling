@@ -18,7 +18,6 @@ package it.smartcommunitylab.carpooling.controllers;
 
 import it.smartcommunitylab.carpooling.exceptions.CarPoolingCustomException;
 import it.smartcommunitylab.carpooling.managers.CarPoolingManager;
-import it.smartcommunitylab.carpooling.model.Auto;
 import it.smartcommunitylab.carpooling.model.Booking;
 import it.smartcommunitylab.carpooling.model.Community;
 import it.smartcommunitylab.carpooling.model.Discussion;
@@ -196,6 +195,12 @@ public class ServiceController {
 			throws CarPoolingCustomException {
 		return new Response<List<Travel>>(carPoolingManager.searchCommunityTravels(communityId, time));
 	}
+	@RequestMapping(method = RequestMethod.GET, value = "/api/community/{time}/travel")
+	public @ResponseBody
+	Response<List<Travel>> searchAllCommunityTravels(@PathVariable Long time)
+			throws CarPoolingCustomException {
+		return new Response<List<Travel>>(carPoolingManager.searchCommunityTravels(null, time));
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/passenger/trips/{tripId}")
 	public @ResponseBody
@@ -327,7 +332,7 @@ public class ServiceController {
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities")
 	public @ResponseBody
 	Response<List<Community>> readCommunities() throws CarPoolingCustomException {
-		return new Response<List<Community>>(carPoolingManager.readCommunities(getUserId()));
+		return new Response<List<Community>>(carPoolingManager.readCommunitiesWithDetails(getUserId()));
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/api/read/communities/details")
@@ -558,6 +563,7 @@ public class ServiceController {
 		return response;
 	}
 
+	@SuppressWarnings("unchecked")
 	@ExceptionHandler(Exception.class)
 	public @ResponseBody
 	Response<Void> handleExceptions(Exception exception, HttpServletResponse response) {
