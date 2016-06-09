@@ -3,6 +3,7 @@ angular.module('carpooling.controllers.user', [])
 .controller('UserInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $filter, $ionicHistory, $ionicTabsDelegate, StorageSrv, DriverSrv, PassengerSrv, UserSrv, Utils, $ionicModal, $q) {
     $scope.editMode = false || $rootScope.initialSetup || !!$stateParams['editMode'];
     $scope.tab = 0;
+    $scope.canConfirm = false;
     $scope.selectedCommunities = [];
     $ionicModal.fromTemplateUrl('templates/modal_communities.html', {
         scope: $scope,
@@ -21,20 +22,31 @@ angular.module('carpooling.controllers.user', [])
         $state.go('app.home');
     };
 
+    $scope.choiceCommunities = function (){
+        for (i in $scope.selectedCommunities) {
+            if ($scope.selectedCommunities[i].checked == true) {
+                return $scope.canConfirm = true;
+            }
+        }
+        return $scope.canConfirm = false;
+    };
+
     $scope.updateCommunities = function () {
         var deferred = $q.defer();
         var calls = [];
         for (i in $scope.selectedCommunities) {
-            UserSrv.joinCommunity($scope.communities[i].id).then(
-                function (communities) {
-                    Utils.loaded();
-                },
-                function (error) {
-                    Utils.loaded();
-                    Utils.toast(Utils.getErrorMsg(error));
-                    $scope.communities = [];
-                }
-            );
+            if ($scope.selectedCommunities[i].checked == true) {
+                UserSrv.joinCommunity($scope.communities[i].id).then(
+                    function (communities) {
+                        Utils.loaded();
+                    },
+                    function (error) {
+                        Utils.loaded();
+                        Utils.toast(Utils.getErrorMsg(error));
+                        $scope.communities = [];
+                    }
+                );
+            }
         }
         $q.all(calls).then(function (values) {
             deferred.resolve(values);
