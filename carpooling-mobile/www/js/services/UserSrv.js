@@ -239,7 +239,7 @@ angular.module('carpooling.services.user', [])
     userService.getCommunityTravels = function (communityId, timeinmillis) {
         var deferred = $q.defer();
 
-        $http.get(Config.getServerURL() + '/api/community/' + communityId + '/' + timeinmillis + '/travel', Config.getHTTPConfig())
+        $http.get(Config.getServerURL() + '/api/community/' + (!!communityId ? (communityId + '/') : '') + timeinmillis + '/travel', Config.getHTTPConfig())
 
         .then(
             function (response) {

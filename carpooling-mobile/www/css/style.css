@@ -742,6 +742,7 @@ table.chart .labels {}
 .carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-content {
     box-shadow: 0 5px 5px #A0A0A0;
     padding: 0 8px;
+    text-align: center;
 }
 .carpooling-theme .home .alltrips .content .filter.item-accordion .item-divider {
     font-style: italic;
@@ -759,7 +760,22 @@ table.chart .labels {}
     font-weight: normal;
 }
 .carpooling-theme .home .alltrips .content .tripslist {
-    padding-top: 38px;
+    padding-top: 44px;
+}
+.carpooling-theme .home .alltrips .content .tripslist .buttons {
+    text-align: center;
+    width: 100%;
+}
+.carpooling-theme .home .alltrips .content .tripslist .button {
+    text-transform: uppercase;
+}
+.carpooling-theme .home .alltrips .content .tripslist .button:first-child {
+    float: left;
+    margin-left: 1em;
+}
+.carpooling-theme .home .alltrips .content .tripslist .button:last-child {
+    float: right;
+    margin-right: 1em;
 }
 
 /* VIAGGIO */
@@ -1141,3 +1157,7 @@ h5 {
 }
 
 /* END MODAL COMMUNITIES STYLE */
+
+.clear {
+    clear: both;
+}

@@ -97,7 +97,7 @@ angular.module('carpooling.controllers.home', [])
         // FUTURE use CacheSrv for these trips too?
         PassengerSrv.getPassengerTrips(0, 100, false, true).then(
             function (toConfirm) {
-                toConfirm = []; // FIXME test only
+                //toConfirm = []; // test only
                 $scope.nonConfirmedTrips = toConfirm;
                 CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
                 if (passengerTripsStart === 0) {
@@ -112,8 +112,7 @@ angular.module('carpooling.controllers.home', [])
         // read future trips
         PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true).then(
             function (trips) {
-                trips = []; // FIXME test only
-
+                //trips = []; // test only
                 CacheSrv.setReloadPassengerTrips(false);
 
                 trips.forEach(function (trip) {
@@ -208,8 +207,7 @@ angular.module('carpooling.controllers.home', [])
 
         DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount, true).then(
             function (trips) {
-                trips = []; // FIXME test only
-
+                //trips = []; // test only
                 CacheSrv.setReloadDriverTrips(false);
 
                 trips.forEach(function (trip) {
@@ -267,7 +265,7 @@ angular.module('carpooling.controllers.home', [])
         },
         filterBy: function (community) {
             this.selectedCommunity = community;
-            // TODO filter
+            // filtering done by watch!
             this.toggleFilter();
         },
         selectedCommunity: null
@@ -294,96 +292,57 @@ angular.module('carpooling.controllers.home', [])
     $scope.allTripsInit = function () {
         Utils.loading();
 
+        // My communities
         UserSrv.getCommunitiesDetails().then(
-            function (communities) {
+            function (myCommunities) {
                 Utils.loaded();
-                $scope.communities = communities;
+                $scope.myCommunities = myCommunities;
 
-                var myComs = [];
-                for (var i = 0; i < $scope.communities.length; i++) {
-                    var com = $scope.communities[i];
-                    if ($scope.amIaMember(com)) {
-                        myComs.push(com);
-                        $scope.communities.splice(i, 1);
-                        i--;
-                    }
-                }
-                $scope.myCommunities = myComs;
-            },
-            function (error) {
-                Utils.loaded();
-                Utils.toast(Utils.getErrorMsg(error));
-                $scope.communities = [];
-            }
-        );
-
-        if (!$scope.selectedCommunity || !$scope.selectedCommunity.id) {
-            Utils.loaded();
-            return;
-        }
-
-        UserSrv.getCommunityDetails($scope.selectedCommunity.id).then(
-            function (community) {
-                $scope.selectedCommunity = community;
-                $scope.iAmMember = $scope.amIaMember($scope.selectedCommunity);
-
-                UserSrv.getCommunityTravels($scope.selectedCommunity.id, $scope.selectDate).then(
-                    function (todayCommunityTrips) {
-                        $scope.communityTrips = todayCommunityTrips;
-                        $scope.communityTrips.forEach(function (trip) {
-                            trip.bookingCounters = Utils.getBookingCounters(trip);
-                        });
+                // All communities
+                UserSrv.searchCommunities('', '').then(
+                    function (communities) {
                         Utils.loaded();
+                        for (var i = 0; i < communities.length; i++) {
+                            var com = communities[i];
+                            angular.forEach($scope.myCommunities, function (mCom) {
+                                if (mCom.id === com.id) {
+                                    communities.splice(i, 1);
+                                    i--;
+                                }
+                            });
+                        }
+                        $scope.communities = communities;
                     },
-                    function (error) {
+                    function (reason) {
                         Utils.loaded();
-                        Utils.toast(Utils.getErrorMsg(error));
+                        Utils.toast(Utils.getErrorMsg(reason));
+                        $scope.communities = [];
                     }
                 );
-                $scope.communityStyle = {
-                    'border-color': '#' + $scope.selectedCommunity.color + ' #' + $scope.selectedCommunity.color + ' transparent transparent'
-                }
             },
-            function (error) {
+            function (reason) {
                 Utils.loaded();
-                Utils.toast(Utils.getErrorMsg(error));
+                Utils.toast(Utils.getErrorMsg(reason));
+                $scope.myCommunities = [];
             }
         );
     };
 
     $scope.changeDay = function (num) {
-        if (num === 0) {
-            $scope.selectDate -= 24 * 60 * 60 * 1000;
-        } else {
-            $scope.selectDate += 24 * 60 * 60 * 1000;
+        if (Math.abs(num) == 1) {
+            var day = 24 * 60 * 60 * 1000;
+            $scope.selectDate += num * day;
+            compareDate();
+            $scope.updateCommunityTrips($scope.filter.selectedCommunity);
         }
-        compareDate();
-        $scope.updateCommunityTrips();
     };
 
     $scope.hideYesterday = function () {
-        if ($scope.selectDate <= Date.now()) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($scope.selectDate <= Date.now());
     };
 
-    $scope.amIaMember = function (com) {
-        var member = false;
-        for (var i = 0; i < com.userObjs.length; i++) {
-            var user = com.userObjs[i];
-            if (user.userId === StorageSrv.getUser().userId) {
-                // it's-a-me!
-                member = true;
-                i = com.userObjs.length;
-            }
-        };
-        return member;
-    };
-
-    $scope.updateCommunityTrips = function () {
-        UserSrv.getCommunityTravels($scope.filter.selectedCommunity.id, $scope.selectDate).then(
+    $scope.updateCommunityTrips = function (cId) {
+        UserSrv.getCommunityTravels(cId, $scope.selectDate).then(
             function (todayCommunityTrips) {
                 $scope.communityTrips = todayCommunityTrips;
                 $scope.communityTrips.forEach(function (trip) {
@@ -398,10 +357,8 @@ angular.module('carpooling.controllers.home', [])
         );
     };
 
-    $scope.$watch('filter.selectedCommunity', function (newValue, oldValue) {
-        if (!!$scope.filter.selectedCommunity) {
-            $scope.updateCommunityTrips();
-        }
+    $scope.$watch('filter.selectedCommunity', function (newCom, oldCom) {
+        $scope.updateCommunityTrips(!!newCom ? newCom.id : null);
     });
 
     /*
