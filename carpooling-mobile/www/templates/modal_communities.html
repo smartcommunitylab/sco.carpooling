@@ -35,7 +35,7 @@
 
                     </div>
                     <div class="col">
-                        <ion-checkbox class="element-check" ng-model="selectedCommunities[$index].checked" ng-checked="selectedCommunities[$index].checked"></ion-checkbox>
+                        <ion-checkbox class="element-check" ng-model="selectedCommunities[$index].checked" ng-checked="selectedCommunities[$index].checked" ng-change="choiceCommunities()"></ion-checkbox>
                     </div>
                 </div>
 
@@ -47,7 +47,7 @@
     <div class="bar bar-footer-confirm bar-white">
         <div class="pull-right">
             <button class="button button-clear button-primary padding refused" ng-click="closeCommunities()">NO GRAZIE</button>
-            <button class="button button-clear button-primary padding confirm" ng-click="updateCommunities()">CONFERMA</button>
+            <button class="button button-clear button-primary padding confirm" ng-click="updateCommunities()" ng-disabled="!canConfirm">CONFERMA</button>
         </div>
     </div>
 </ion-modal-view>
