@@ -38,13 +38,7 @@ angular.module('carpooling.controllers.home', [])
     $scope.passengerTrips = CacheSrv.getPassengerTrips();
     $scope.driverTrips = CacheSrv.getDriverTrips();
 
-    $scope.resizeMyPanels = function () {
-        var height = ($window.innerHeight - (44 + 49)) / 2; // navbar, tab bar
-        $scope.myPanelsStyle = {
-            height: height + 'px'
-        };
-    };
-    //$scope.resizeMyPanels();
+    $scope.emptyPanelHeight = ($window.innerHeight - (44 + 49)) / 2; // navbar, tab bar
 
     /*
      * Partecipo
@@ -103,6 +97,7 @@ angular.module('carpooling.controllers.home', [])
         // FUTURE use CacheSrv for these trips too?
         PassengerSrv.getPassengerTrips(0, 100, false, true).then(
             function (toConfirm) {
+                toConfirm = []; // FIXME test only
                 $scope.nonConfirmedTrips = toConfirm;
                 CacheSrv.setNonConfirmedTrips($scope.nonConfirmedTrips);
                 if (passengerTripsStart === 0) {
@@ -117,6 +112,8 @@ angular.module('carpooling.controllers.home', [])
         // read future trips
         PassengerSrv.getPassengerTrips(passengerTripsStart, passengerTripsCount, true).then(
             function (trips) {
+                trips = []; // FIXME test only
+
                 CacheSrv.setReloadPassengerTrips(false);
 
                 trips.forEach(function (trip) {
@@ -211,6 +208,8 @@ angular.module('carpooling.controllers.home', [])
 
         DriverSrv.getDriverTrips(driverTripsStart, driverTripsCount, true).then(
             function (trips) {
+                trips = []; // FIXME test only
+
                 CacheSrv.setReloadDriverTrips(false);
 
                 trips.forEach(function (trip) {
