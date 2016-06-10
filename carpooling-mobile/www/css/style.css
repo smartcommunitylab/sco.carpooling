@@ -445,7 +445,7 @@ placeautocomplete ul li {
     line-height: 44px;
 }
 .item-accordion .item-accordion-header i {
-    transition: all 0.2s linear;
+    transition: all 0.3s ease-in;
 }
 .item-accordion .item-accordion-header i.open {
     transform: rotate(-180deg);
@@ -455,7 +455,7 @@ placeautocomplete ul li {
 }
 .item-accordion .item-accordion-content {
     border-top: 0;
-    transition: all 0.2s linear;
+    transition: all 0.3s ease-in;
 }
 .item-accordion .item-accordion-content.ng-hide {
     line-height: 0px;
@@ -686,7 +686,7 @@ table.chart .labels {}
 .carpooling-theme .home .my-panel h5 {
     text-align: center;
     color: #fff;
-    background-color: #03A9F4;
+    background-color: #4EB0E6;
     margin: 0;
     padding: 4px;
 }
@@ -717,14 +717,15 @@ table.chart .labels {}
     position: relative;
 }
 .carpooling-theme .home .alltrips .content .filter {
-    z-index: 100;
+    /*z-index: 100;*/
     width: 100%;
-    position: fixed;
-    top: 0;
-    background: #03A9F4;
+    /*position: fixed;*/
+    /*top: 0;*/
+    background: #4EB0E6;
+    height: auto;
 }
 .carpooling-theme .home .alltrips .content .filter.item-accordion .item {
-    background-color: #03A9F4;
+    background-color: #4EB0E6;
     border: none;
     color: #fff;
     padding: 8px;
@@ -737,7 +738,7 @@ table.chart .labels {}
 }
 .carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-header,
 .carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-content {
-    background: #03A9F4;
+    background: #4EB0E6;
 }
 .carpooling-theme .home .alltrips .content .filter.item-accordion .item-accordion-content {
     box-shadow: 0 5px 5px #A0A0A0;
@@ -760,7 +761,7 @@ table.chart .labels {}
     font-weight: normal;
 }
 .carpooling-theme .home .alltrips .content .tripslist {
-    padding-top: 44px;
+    padding-top: 10px;
 }
 .carpooling-theme .home .alltrips .content .tripslist .buttons {
     text-align: center;

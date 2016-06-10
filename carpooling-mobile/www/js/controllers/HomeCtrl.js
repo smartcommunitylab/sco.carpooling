@@ -18,7 +18,7 @@ angular.module('carpooling.controllers.home', [])
 
 })
 
-.controller('HomeCtrl', function ($scope, $rootScope, $window, $state, $filter, $interval, $ionicPopup, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
+.controller('HomeCtrl', function ($scope, $rootScope, $window, $state, $filter, $interval, $ionicPopup, $ionicScrollDelegate, Config, CacheSrv, StorageSrv, DriverSrv, Utils, UserSrv, PassengerSrv, $ionicTabsDelegate) {
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
@@ -262,6 +262,9 @@ angular.module('carpooling.controllers.home', [])
         filterOpen: false,
         toggleFilter: function () {
             this.filterOpen = !this.filterOpen;
+            if (this.filterOpen) {
+                $ionicScrollDelegate.resize();
+            }
         },
         filterBy: function (community) {
             this.selectedCommunity = community;
@@ -348,6 +351,7 @@ angular.module('carpooling.controllers.home', [])
                 $scope.communityTrips.forEach(function (trip) {
                     trip.bookingCounters = Utils.getBookingCounters(trip);
                 });
+                $ionicScrollDelegate.scrollTop(true);
                 Utils.loaded();
             },
             function (error) {
