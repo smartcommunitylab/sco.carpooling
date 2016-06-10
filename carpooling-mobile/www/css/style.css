@@ -273,6 +273,7 @@ placeautocomplete ul li {
     width: 75%;
     height: 100%;
     display: inline-block;
+  text-align: left;
 }
 .card.card-trip .trip-data ul li {
     overflow: hidden;
