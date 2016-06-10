@@ -41,14 +41,14 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     $scope.afterMapSelection = false;
 
     $scope.places = {
-      from : {
-        'names': [],
-        'coordinates': {}
-      },
-      to : {
-        'names': [],
-        'coordinates': {}
-      }
+        from: {
+            'names': [],
+            'coordinates': {}
+        },
+        to: {
+            'names': [],
+            'coordinates': {}
+        }
     };
 
     var typing = function (field, typedthings) {
@@ -237,7 +237,7 @@ angular.module('carpooling.controllers.cercaviaggi', [])
     var today = new Date();
     today.setHours(0, 0, 0, 0);
     var nextMonth = angular.copy(today);;
-    nextMonth.setHours(+(24*29));
+    nextMonth.setHours(+(24 * 29));
 
     $scope.datepickerObj = {
         titleLabel: $filter('translate')('popup_datepicker_title'),
@@ -298,9 +298,9 @@ angular.module('carpooling.controllers.cercaviaggi', [])
         selectedDateTime.setSeconds(selectedDateTime.getSeconds() + $scope.timepickerObj.inputEpochTime);
         $scope.travelRequest['when'] = selectedDateTime.getTime();
 
-        if (selectedDateTime.getTime() < (new Date().getTime() - 5*60*1000)) {
-          Utils.toast(($filter('translate')('toast_time_invalid')));
-          return;
+        if (selectedDateTime.getTime() < (new Date().getTime() - 5 * 60 * 1000)) {
+            Utils.toast(($filter('translate')('toast_time_invalid')));
+            return;
         }
 
 
@@ -320,6 +320,11 @@ angular.module('carpooling.controllers.cercaviaggi', [])
             }
         );
     };
+
+    $scope.$on('$ionicView.enter', function () {
+        //MapSrv.refresh('modalMap');
+        $scope.initMap();
+    });
 })
 
 .controller('RisultatiCercaViaggiCtrl', function ($scope, $state, $stateParams, Utils, PassengerSrv, $filter) {

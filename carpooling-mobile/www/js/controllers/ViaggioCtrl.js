@@ -644,5 +644,5 @@ angular.module('carpooling.controllers.viaggio', [])
         $state.go('app.comunitainfo', {
             'community': $scope.mainCommunity
         });
-    }
+    };
 });

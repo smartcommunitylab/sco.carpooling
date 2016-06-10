@@ -243,4 +243,9 @@ angular.module('carpooling.controllers.communities', [])
             'community': community
         });
     };
+
+    $scope.$on('$ionicView.enter', function () {
+        //MapSrv.refresh('modalMap');
+        $scope.initMap();
+    });
 });

@@ -533,7 +533,7 @@ angular.module('carpooling.controllers.offri', [])
     };
 
     $scope.$on('$ionicView.enter', function () {
-//        MapSrv.refresh('modalMap');
+        //MapSrv.refresh('modalMap');
         $scope.initMap();
     });
 });
