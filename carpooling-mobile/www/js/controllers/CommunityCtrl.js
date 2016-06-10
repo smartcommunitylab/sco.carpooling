@@ -1,20 +1,27 @@
 angular.module('carpooling.controllers.communities', [])
 
-.controller('CommunityCtrl', function ($scope, $rootScope, $state, StorageSrv, UserSrv, Utils) {
+.controller('CommunityCtrl', function ($scope, $rootScope, $state, CacheSrv, StorageSrv, UserSrv, Utils) {
     $scope.communities = null;
     Utils.loading();
 
-    UserSrv.getCommunitiesDetails().then(
-        function (communities) {
-            Utils.loaded();
-            $scope.communities = communities;
-        },
-        function (error) {
-            Utils.loaded();
-            Utils.toast(Utils.getErrorMsg(error));
-            $scope.communities = [];
-        }
-    );
+    if (CacheSrv.reloadMyCommunities()) {
+        UserSrv.getCommunitiesDetails().then(
+            function (communities) {
+                CacheSrv.setReloadMyCommunities(false);
+                Utils.loaded();
+                CacheSrv.setMyCommunities(communities);
+                $scope.communities = CacheSrv.getMyCommunities();
+            },
+            function (error) {
+                Utils.loaded();
+                Utils.toast(Utils.getErrorMsg(error));
+                $scope.communities = [];
+            }
+        );
+    } else {
+        $scope.communities = CacheSrv.getMyCommunities();
+        Utils.loaded();
+    }
 
     $scope.selectCommunity = function (index) {
         var community = $scope.communities[index];

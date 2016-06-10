@@ -256,7 +256,7 @@ angular.module('carpooling.controllers.home', [])
     };
 
     /*
-     * 2ND TAB
+     ***** 2ND TAB *****
      */
     $scope.filter = {
         filterOpen: false,
@@ -295,40 +295,53 @@ angular.module('carpooling.controllers.home', [])
     $scope.allTripsInit = function () {
         Utils.loading();
 
-        // My communities
-        UserSrv.getCommunitiesDetails().then(
-            function (myCommunities) {
-                Utils.loaded();
-                $scope.myCommunities = myCommunities;
-
-                // All communities
-                UserSrv.searchCommunities('', '').then(
-                    function (communities) {
-                        Utils.loaded();
-                        for (var i = 0; i < communities.length; i++) {
-                            var com = communities[i];
-                            angular.forEach($scope.myCommunities, function (mCom) {
-                                if (mCom.id === com.id) {
-                                    communities.splice(i, 1);
-                                    i--;
-                                }
-                            });
-                        }
-                        $scope.communities = communities;
-                    },
-                    function (reason) {
-                        Utils.loaded();
-                        Utils.toast(Utils.getErrorMsg(reason));
-                        $scope.communities = [];
+        var hideMineFromAllCommunities = function () {
+            // All communities
+            UserSrv.searchCommunities('', '').then(
+                function (communities) {
+                    Utils.loaded();
+                    for (var i = 0; i < communities.length; i++) {
+                        var com = communities[i];
+                        angular.forEach($scope.myCommunities, function (mCom) {
+                            if (mCom.id === com.id) {
+                                communities.splice(i, 1);
+                                i--;
+                            }
+                        });
                     }
-                );
-            },
-            function (reason) {
-                Utils.loaded();
-                Utils.toast(Utils.getErrorMsg(reason));
-                $scope.myCommunities = [];
-            }
-        );
+                    $scope.communities = communities;
+                },
+                function (reason) {
+                    Utils.loaded();
+                    Utils.toast(Utils.getErrorMsg(reason));
+                    $scope.communities = [];
+                }
+            );
+        };
+
+        // My communities
+        if (CacheSrv.reloadMyCommunities()) {
+            UserSrv.getCommunitiesDetails().then(
+                function (myCommunities) {
+                    Utils.loaded();
+                    CacheSrv.setReloadMyCommunities(false);
+                    CacheSrv.setMyCommunities(myCommunities);
+                    $scope.myCommunities = CacheSrv.getMyCommunities();
+                    // All communities
+                    hideMineFromAllCommunities();
+                },
+                function (reason) {
+                    Utils.loaded();
+                    Utils.toast(Utils.getErrorMsg(reason));
+                    $scope.myCommunities = [];
+                }
+            );
+        } else {
+            $scope.myCommunities = CacheSrv.getMyCommunities();
+            // All communities
+            hideMineFromAllCommunities();
+            Utils.loaded();
+        }
     };
 
     $scope.changeDay = function (num) {
@@ -411,9 +424,9 @@ angular.module('carpooling.controllers.home', [])
                 );
             }
         } else if ($scope.tab === 1) {
-            if (!$scope.communities || !$scope.myCommunities || !$scope.communityTrips) {
-                $scope.allTripsInit();
-            }
+            //if (!$scope.communities || !$scope.myCommunities || !$scope.communityTrips) {
+            $scope.allTripsInit();
+            //}
         }
     });
 

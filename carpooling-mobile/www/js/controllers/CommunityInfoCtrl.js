@@ -1,6 +1,6 @@
 angular.module('carpooling.controllers.communityinfo', [])
 
-.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicTabsDelegate, UserSrv, Utils, StorageSrv, $filter) {
+.controller('CommunityInfoCtrl', function ($scope, $rootScope, $state, $stateParams, $ionicTabsDelegate, CacheSrv, UserSrv, Utils, StorageSrv, $filter) {
     $scope.tab = 0;
 
     $scope.selectTab = function (idx) {
@@ -90,11 +90,7 @@ angular.module('carpooling.controllers.communityinfo', [])
     };
 
     $scope.hideYesterday = function () {
-        if ($scope.selectDate <= Date.now()) {
-            return true;
-        } else {
-            return false;
-        }
+        return $scope.selectDate <= Date.now();
     };
 
     init();
@@ -146,6 +142,7 @@ angular.module('carpooling.controllers.communityinfo', [])
             Utils.loading();
             UserSrv.joinCommunity($scope.community.id).then(
                 function () {
+                    CacheSrv.setReloadMyCommunities(true);
                     Utils.loaded();
                     init();
                 },
@@ -164,6 +161,7 @@ angular.module('carpooling.controllers.communityinfo', [])
             Utils.loading();
             UserSrv.leaveCommunity($scope.community.id).then(
                 function () {
+                    CacheSrv.setReloadMyCommunities(true);
                     Utils.loaded();
                     init();
                 },

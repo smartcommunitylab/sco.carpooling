@@ -7,6 +7,11 @@ angular.module('carpooling.services.cache', [])
     var passengerTrips = null;
     var driverTrips = null;
 
+    var myCommunities = null;
+    var allCommunities = null;
+
+    var rMyCommunities = true;
+    var rAllCommunities = true;
     var rPassengerTrips = true;
     var rDriverTrips = true;
     var rDriverTrip = null;
@@ -17,6 +22,8 @@ angular.module('carpooling.services.cache', [])
     var rStoricoDriverTrip = null;
 
     cacheService.reset = function () {
+        rMyCommunities = true;
+        rAllCommunities = true;
         rPassengerTrips = true;
         rDriverTrips = true;
         rDriverTrip = null;
@@ -59,6 +66,22 @@ angular.module('carpooling.services.cache', [])
         driverTrips = list;
     };
 
+    cacheService.setReloadMyCommunities = function (reload) {
+        rMyCommunities = reload;
+    };
+
+    cacheService.reloadMyCommunities = function () {
+        return rMyCommunities;
+    };
+
+    cacheService.setReloadAllCommunities = function (reload) {
+        rAllCommunities = reload;
+    };
+
+    cacheService.reloadAllCommunities = function () {
+        return rAllCommunities;
+    };
+
     cacheService.setReloadDriverTrips = function (reload) {
         rDriverTrips = reload;
     };
@@ -89,6 +112,22 @@ angular.module('carpooling.services.cache', [])
 
     cacheService.reloadCommunityTrip = function () {
         return rCommunityTrip;
+    };
+
+    cacheService.getMyCommunities = function () {
+        return myCommunities;
+    };
+
+    cacheService.setMyCommunities = function (myComs) {
+       myCommunities = myComs;
+    };
+
+    cacheService.getAllCommunities = function () {
+        return allCommunities;
+    };
+
+    cacheService.setAllCommunities = function (allComs) {
+       allCommunities = allComs;
     };
 
     cacheService.setReloadStoricoPassengerTrips = function (reload) {
