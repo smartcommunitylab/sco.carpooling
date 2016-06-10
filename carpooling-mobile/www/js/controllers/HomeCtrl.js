@@ -351,7 +351,10 @@ angular.module('carpooling.controllers.home', [])
                 $scope.communityTrips.forEach(function (trip) {
                     trip.bookingCounters = Utils.getBookingCounters(trip);
                 });
-                $ionicScrollDelegate.scrollTop(true);
+                setTimeout(function () {
+                    $ionicScrollDelegate.scrollTop(true);
+                }, 300);
+
                 Utils.loaded();
             },
             function (error) {
