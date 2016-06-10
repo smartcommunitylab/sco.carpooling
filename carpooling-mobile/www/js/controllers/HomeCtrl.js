@@ -336,7 +336,7 @@ angular.module('carpooling.controllers.home', [])
             var day = 24 * 60 * 60 * 1000;
             $scope.selectDate += num * day;
             compareDate();
-            $scope.updateCommunityTrips($scope.filter.selectedCommunity);
+            $scope.updateCommunityTrips(!!$scope.filter.selectedCommunity ? $scope.filter.selectedCommunity.id : null);
         }
     };
 
@@ -353,7 +353,7 @@ angular.module('carpooling.controllers.home', [])
                 });
                 setTimeout(function () {
                     $ionicScrollDelegate.scrollTop(true);
-                }, 300);
+                }, 200);
 
                 Utils.loaded();
             },
@@ -362,6 +362,12 @@ angular.module('carpooling.controllers.home', [])
                 Utils.toast(Utils.getErrorMsg(error));
             }
         );
+    };
+
+    $scope.selectTrip = function (index) {
+        $state.go('app.viaggio', {
+            'travelId': $scope.communityTrips[index].id
+        });
     };
 
     $scope.$watch('filter.selectedCommunity', function (newCom, oldCom) {
@@ -405,7 +411,9 @@ angular.module('carpooling.controllers.home', [])
                 );
             }
         } else if ($scope.tab === 1) {
-            $scope.allTripsInit();
+            if (!$scope.communities || !$scope.myCommunities || !$scope.communityTrips) {
+                $scope.allTripsInit();
+            }
         }
     });
 

@@ -445,7 +445,7 @@ placeautocomplete ul li {
     line-height: 44px;
 }
 .item-accordion .item-accordion-header i {
-    transition: all 0.3s ease-in;
+    transition: all 0.2s linear;
 }
 .item-accordion .item-accordion-header i.open {
     transform: rotate(-180deg);
@@ -455,7 +455,7 @@ placeautocomplete ul li {
 }
 .item-accordion .item-accordion-content {
     border-top: 0;
-    transition: all 0.3s ease-in;
+    transition: all 0.2s linear;
 }
 .item-accordion .item-accordion-content.ng-hide {
     line-height: 0px;
