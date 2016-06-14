@@ -34,7 +34,7 @@
                     <div class="item" ng-if="ms.type=='ParticipationRequest'">
                         <span>Passaggio richiesto</span>
                     </div>
-                    <div class="item" ng-if="ms.type=='ParticipationResponse'">
+                    <div class="item" ng-if="ms.type=='ParticipationResponse' && !ms.data.senderId">
                         <span ng-if="ms.data.status=='1'">Passaggio accettato</span>
                         <span ng-if="ms.data.status=='-1'">Passaggio rifiutato</span>
                     </div>

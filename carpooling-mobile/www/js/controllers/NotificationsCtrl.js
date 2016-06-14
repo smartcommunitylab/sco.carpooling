@@ -230,7 +230,8 @@ angular.module('carpooling.controllers.notifications', [])
         });*/
         Utils.loading();
         UserSrv.readNotificationsByTravelId($scope.travelId, $scope.personId).then(function (discussion) {
-            $scope.updatesMsg = discussion;
+            $scope.updatesMsg = discussion ? discussion : [];
+            viewScroll.scrollBottom();
             Utils.loaded();
         }, function (err) {
             Utils.loaded();
@@ -326,13 +327,15 @@ angular.module('carpooling.controllers.notifications', [])
     };
 
     var updateChat = function () {
-        UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
-            $scope.messages = discussion.messages ? discussion.messages : [];
-            if ($scope.messages.length > 10) {
-                $scope.oldMsgPresent = true;
-            }
+        UserSrv.readNotificationsByTravelId($scope.travelId, $scope.personId).then(function (discussion) {
+            $scope.updatesMsg = discussion ? discussion : [];
+            viewScroll.scrollBottom();
+            Utils.loaded();
+        }, function (err) {
+            Utils.loaded();
+            console.error(err);
+            Utils.toast(Utils.getErrorMsg(err));
         });
-
     }
 
     $scope.$on('$ionicView.enter', function () {

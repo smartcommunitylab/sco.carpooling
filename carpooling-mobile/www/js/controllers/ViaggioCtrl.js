@@ -493,10 +493,21 @@ angular.module('carpooling.controllers.viaggio', [])
     };
 
     $scope.chatWithDriver = function () {
-        $state.go('app.chat', {
-            travelId: $scope.travelId,
-            personId: $scope.selectedTrip.userId
-        });
+        UserSrv.getUser($scope.selectedTrip.userId).then(
+            function (userInfo) {
+                $state.go('app.chat', {
+                    travelId: $scope.travelId,
+                    personId: $scope.selectedTrip.userId,
+                    senderName: userInfo.dpName
+                });
+                Utils.loaded();
+            },
+            function (error) {
+                Utils.loaded();
+                console.error(error);
+                Utils.toast(Utils.getErrorMsg(error));
+            }
+        );
     };
 
     /* Cancel a trip from the DB */
