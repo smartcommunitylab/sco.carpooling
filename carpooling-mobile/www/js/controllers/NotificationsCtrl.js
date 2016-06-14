@@ -329,7 +329,6 @@ angular.module('carpooling.controllers.notifications', [])
     var updateChat = function () {
         UserSrv.readNotificationsByTravelId($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.updatesMsg = discussion ? discussion : [];
-            viewScroll.scrollBottom();
             Utils.loaded();
         }, function (err) {
             Utils.loaded();

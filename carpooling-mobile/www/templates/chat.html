@@ -24,8 +24,8 @@
                 </div>
             </div>-->
             <div ng-repeat="ms in updatesMsg" ng-last-repeat="updatesMsg">
-                <div id="{{ ms.timestamp }}" class="card card-chat" ng-class="{'card-chat-my': (isMe(ms.data.senderId) && !chatExtraLength(ms.data.message)), 'card-chat-my-extra': (isMe(ms.data.senderId) && chatExtraLength(ms.data.message))}">
-                    <div ng-if="!isMe(ms.data.senderId)" class="item item-divider">
+                <div id="{{ ms.timestamp }}" class="card card-chat" ng-class="{'card-chat-my': (!isMe(ms.targetUserId) && !chatExtraLength(ms.data.message)), 'card-chat-my-extra': (!isMe(ms.targetUserId) && chatExtraLength(ms.data.message))}">
+                    <div ng-if="isMe(ms.targetUserId)" class="item item-divider">
                         <span>{{ personName }} {{'msg_talk' | translate}}</span>
                     </div>
                     <div class="item">
