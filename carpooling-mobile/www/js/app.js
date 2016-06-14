@@ -532,7 +532,10 @@ angular.module('carpooling', [
                     templateUrl: 'templates/chat.html',
                     controller: 'ChatCtrl'
                 }
-            }
+            },
+            params: {
+                senderName: null
+            },
         })
         .state('app.signup', {
             url: '/signup',

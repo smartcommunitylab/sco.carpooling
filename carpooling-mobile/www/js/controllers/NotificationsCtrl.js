@@ -158,7 +158,8 @@ angular.module('carpooling.controllers.notifications', [])
                 //$scope.deleteANotification(notific.id);
                 $state.go('app.chat', {
                     travelId: notific.travelId,
-                    personId: notific.data.senderId
+                    personId: notific.data.senderId,
+                    senderName: notific.data.senderFullName
                 });
                 break;
             case 'TripAvailability':
@@ -193,6 +194,7 @@ angular.module('carpooling.controllers.notifications', [])
 .controller('ChatCtrl', function ($scope, $rootScope, $interval, $stateParams, $filter, $state, $timeout, $ionicScrollDelegate, $location, $anchorScroll, Utils, UserSrv, StorageSrv) {
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     $scope.messages = [];
+    $scope.updatesMsg = [];
     $scope.id = StorageSrv.getUserId();
     $scope.oldMsgPresent = false;
     $scope.dateDayMask = 'dd MMMM yyyy';
@@ -211,7 +213,8 @@ angular.module('carpooling.controllers.notifications', [])
     var init = function () {
         $scope.personId = $stateParams.personId;
         $scope.travelId = $stateParams.travelId;
-        Utils.loading();
+        $scope.personName = $stateParams.senderName;
+        /*Utils.loading();
         UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.messages = discussion.messages ? discussion.messages : [];
             if ($scope.messages.length > 10) {
@@ -219,6 +222,15 @@ angular.module('carpooling.controllers.notifications', [])
             }
             $scope.personName = discussion.personName;
             viewScroll.scrollBottom();
+            Utils.loaded();
+        }, function (err) {
+            Utils.loaded();
+            console.error(err);
+            Utils.toast(Utils.getErrorMsg(err));
+        });*/
+        Utils.loading();
+        UserSrv.readNotificationsByTravelId($scope.travelId, $scope.personId).then(function (discussion) {
+            $scope.updatesMsg = discussion;
             Utils.loaded();
         }, function (err) {
             Utils.loaded();
@@ -313,25 +325,25 @@ angular.module('carpooling.controllers.notifications', [])
         $scope.new_message = '';
     };
 
-    var updateChat = function() {
-      UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
-          $scope.messages = discussion.messages ? discussion.messages : [];
-          if ($scope.messages.length > 10) {
-              $scope.oldMsgPresent = true;
-          }
-      });
+    var updateChat = function () {
+        UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
+            $scope.messages = discussion.messages ? discussion.messages : [];
+            if ($scope.messages.length > 10) {
+                $scope.oldMsgPresent = true;
+            }
+        });
 
     }
 
     $scope.$on('$ionicView.enter', function () {
         if (!window.ParsePushPlugin) {
-          $scope.interval = $interval(updateChat, 10000);
+            $scope.interval = $interval(updateChat, 10000);
         }
     });
-      /*
+    /*
      * exit
      */
     $scope.$on('$ionicView.leave', function () {
-       if ($scope.interval) $interval.cancel($scope.interval);
+        if ($scope.interval) $interval.cancel($scope.interval);
     });
 });

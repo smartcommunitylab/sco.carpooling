@@ -18,7 +18,7 @@ angular.module('carpooling.services.user', [])
                 } else {
                     var user = response.data.data;
                     if (!user.dpName && (user.name || user.surname)) {
-                      user.dpName = user.name+ ' '+ user.surname;
+                        user.dpName = user.name + ' ' + user.surname;
                     }
                     if (StorageSrv.getUserId() === userId) {
                         // It's-a-me!
@@ -218,14 +218,14 @@ angular.module('carpooling.services.user', [])
                     deferred.reject(Config.LOGIN_EXPIRED);
                     $rootScope.login();
                 } else {
-                  if (response.data.data && response.data.data.userObjs) {
-                      response.data.data.userObjs.forEach(function(user) {
-                        if (!user.dpName && (user.name || user.surname)) {
-                          user.dpName = user.name+ ' '+ user.surname;
-                        }
-                      });
-                  }
-                  deferred.resolve(response.data.data);
+                    if (response.data.data && response.data.data.userObjs) {
+                        response.data.data.userObjs.forEach(function (user) {
+                            if (!user.dpName && (user.name || user.surname)) {
+                                user.dpName = user.name + ' ' + user.surname;
+                            }
+                        });
+                    }
+                    deferred.resolve(response.data.data);
                 }
             },
             function (responseError) {
@@ -459,6 +459,27 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
     }
 
+    userService.readNotificationsByTravelId = function (travelId, userId) {
+        var deferred = $q.defer();
+        var httpConfig = Config.getHTTPConfig();
+
+        $http.get(Config.getServerURL() + '/api/read/notification/' + travelId + '/' + userId, httpConfig)
+
+        .then(function (response) {
+                if (response.data[0] == '<') {
+                    deferred.reject(Config.LOGIN_EXPIRED);
+                    $rootScope.login();
+                } else {
+                    deferred.resolve(response.data.data);
+                }
+            },
+            function (responseError) {
+                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
+            }
+        );
+        return deferred.promise;
+    }
+
     userService.markNotification = function (id) {
         $rootScope.decCounter();
         var deferred = $q.defer();
@@ -486,22 +507,22 @@ angular.module('carpooling.services.user', [])
         return deferred.promise;
     }
 
-    userService.readNotificationCount = function() {
+    userService.readNotificationCount = function () {
         var deferred = $q.defer();
         $http.get(Config.getServerURL() + '/api/count/notification/', Config.getHTTPConfig())
-        .then(
-            function (response) {
-                if (response.data[0] == '<') {
-                    deferred.reject(Config.LOGIN_EXPIRED);
-                    $rootScope.login();
-                } else {
-                    deferred.resolve(response.data.data);
+            .then(
+                function (response) {
+                    if (response.data[0] == '<') {
+                        deferred.reject(Config.LOGIN_EXPIRED);
+                        $rootScope.login();
+                    } else {
+                        deferred.resolve(response.data.data);
+                    }
+                },
+                function (responseError) {
+                    deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
                 }
-            },
-            function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
-            }
-        );
+            );
 
         return deferred.promise;
     };
