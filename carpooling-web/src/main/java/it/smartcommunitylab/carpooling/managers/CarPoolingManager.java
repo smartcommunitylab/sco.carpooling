@@ -45,6 +45,7 @@ import it.smartcommunitylab.carpooling.utils.CarPoolingUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -1173,13 +1174,24 @@ public class CarPoolingManager {
 	 * 
 	 * @param userId
 	 * @param travelId
+	 * @param userId 
+	 * @param string 
 	 * @return
 	 */
-	public List<Notification> readNotificationsOfTravelId(String travelId) {
+	public List<Notification> readNotificationsOfTravelId(String travelId, String userId, String personId) {
 
 		List<Notification> notifications = notificationRepository.findByTravelId(travelId);
-
-		return notifications;
+		List<Notification> result = new LinkedList<Notification>();
+		for (Notification n : notifications) {
+			if (CarPoolingUtils.NOTIFICATION_AVALIABILITY.equals(n.getType()) && n.getTargetUserId().equals(userId) ||
+				CarPoolingUtils.NOTIFICATION_BOOKING.equals(n.getType()) && (n.getTargetUserId().equals(userId) || n.getTargetUserId().equals(personId)) ||
+				CarPoolingUtils.NOTIFICATION_CHAT.equals(n.getType()) && (n.getTargetUserId().equals(userId) || n.getTargetUserId().equals(personId)) ||
+				CarPoolingUtils.NOTIFICATION_CONFIRM.equals(n.getType()) && (n.getTargetUserId().equals(userId) || n.getTargetUserId().equals(personId))) 
+			{
+				result.add(n);
+			}
+		}
+		return result;
 	}
 
 	/**
