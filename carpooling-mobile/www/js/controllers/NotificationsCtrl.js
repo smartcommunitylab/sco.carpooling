@@ -106,50 +106,6 @@ angular.module('carpooling.controllers.notifications', [])
         );
     };
 
-    //    var notifications = [
-    //        {
-    //            id: '1',
-    //            type: 'Chat',
-    //            data: {
-    //              senderId: '5',
-    //              senderFullName: 'Mario Rossi',
-    //              message: 'New test message'
-    //            },
-    //            travelId: '5669a7fce4b0c10934dc5389',
-    //            timestamp: '1447865802692'
-    //        },
-    //        {
-    //            id: '2',
-    //            type: 'ParticipationRequest',
-    ////            short_text: 'Giulia Bianchi chiede di partecipare al tuo viaggio Trento - Rovereto',
-    //            data: {
-    //              senderId: '54',
-    //              senderFullName: 'Mario Rossi'
-    //            },
-    //            travelId: '5669a7fce4b0c10934dc5389',
-    //            timestamp: '1447865802692'
-    //        },
-    //        {
-    //            id: '3',
-    //            type: 'TripAvailability',
-    ////            short_text: 'Trovato un viaggio Trento - Pergine',
-    //            data: {
-    //            },
-    //            travelId: '5669a7fce4b0c10934dc5389',
-    //            timestamp: '1447918789919'
-    //        },
-    //        {
-    //            id: '4',
-    //            type: 'ParticipationResponse',
-    ////            short_text: 'Viaggio confermato',
-    //            data: {
-    //              status: 'false'
-    //            },
-    //            travelId: '5669a7fce4b0c10934dc5389',
-    //            timestamp: '1447918789919'
-    //        }
-    //    ];
-
     $scope.showNotification = function (notific) {
         $scope.markANotification(notific.id);
         switch (notific.type) {
@@ -195,6 +151,8 @@ angular.module('carpooling.controllers.notifications', [])
     var viewScroll = $ionicScrollDelegate.$getByHandle('userMessageScroll');
     $scope.messages = [];
     $scope.updatesMsg = [];
+    $scope.updatesMsgView = [];
+    $scope.countMsg = 10;
     $scope.id = StorageSrv.getUserId();
     $scope.oldMsgPresent = false;
     $scope.dateDayMask = 'dd MMMM yyyy';
@@ -211,6 +169,7 @@ angular.module('carpooling.controllers.notifications', [])
     };
 
     var init = function () {
+        $scope.countMsg = 10;
         $scope.personId = $stateParams.personId;
         $scope.travelId = $stateParams.travelId;
         $scope.personName = $stateParams.senderName;
@@ -231,6 +190,16 @@ angular.module('carpooling.controllers.notifications', [])
         Utils.loading();
         UserSrv.readNotificationsByTravelId($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.updatesMsg = discussion ? discussion : [];
+            $scope.updatesMsgView = [];
+            if ($scope.updatesMsg.length > 10) {
+                $scope.oldMsgPresent = true;
+                var last = $scope.updatesMsg.length - 1;
+                for (var i = $scope.updatesMsg.length - $scope.countMsg; i <= last; i++) {
+                    $scope.updatesMsgView.push($scope.updatesMsg[i]);
+                }
+            } else {
+                $scope.updatesMsgView = angular.copy($scope.updatesMsg);
+            }
             viewScroll.scrollBottom();
             Utils.loaded();
         }, function (err) {
@@ -242,7 +211,7 @@ angular.module('carpooling.controllers.notifications', [])
 
     init();
 
-    $scope.loadOldChat = function () {
+    /*$scope.loadOldChat = function () {
         Utils.loading();
         var old_msg = [];
         UserSrv.getDiscussion($scope.travelId, $scope.personId).then(function (discussion) {
@@ -261,13 +230,25 @@ angular.module('carpooling.controllers.notifications', [])
                 $anchorScroll();
             }, 500);
             Utils.loaded();
-            //var y_pos = viewScroll.getScrollPosition();
-            //alert('position ' + JSON.stringify(y_pos));
-            //viewScroll.scrollTo(0, y_pos.top, false);
         }, function (err) {
             Utils.loaded();
             Utils.toast(Utils.getErrorMsg(err));
         });
+    };*/
+
+    $scope.loadOldChat = function () {
+        var msgLeft = $scope.updatesMsg.length - $scope.updatesMsgView.length;
+        if (msgLeft > 10) {
+            $scope.countMsg += 10;
+        } else {
+            $scope.countMsg += msgLeft;
+            $scope.oldMsgPresent = false;
+        }
+        $scope.updatesMsgView = [];
+        var last = $scope.updatesMsg.length - 1;
+        for (var i = $scope.updatesMsg.length - $scope.countMsg; i <= last; i++) {
+            $scope.updatesMsgView.push($scope.updatesMsg[i]);
+        }
     };
 
     $scope.isMe = function (id) {
