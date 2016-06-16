@@ -24,13 +24,21 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.lbl_day = $filter('translate')('lbl_todaytrips');
     var start = new Date();
     var end = new Date();
+    var startTomorrow = new Date();
+    var endTomorrow = new Date();
 
     /* Get the start and the end of the current day in milliseconds */
     var toTimestamp = function () {
         start.setHours(0, 0, 0, 0);
         end.setHours(23, 59, 59, 999);
+        startTomorrow = angular.copy(start);
+        endTomorrow = angular.copy(end);
+        startTomorrow.setDate(startTomorrow.getDate() + 1);
+        endTomorrow.setDate(endTomorrow.getDate() + 1);
         start = start.getTime();
         end = end.getTime();
+        startTomorrow = startTomorrow.getTime();
+        endTomorrow = endTomorrow.getTime();
     }
 
     toTimestamp();
@@ -39,7 +47,9 @@ angular.module('carpooling.controllers.communityinfo', [])
     var compareDate = function () {
         if ($scope.selectDate >= start && $scope.selectDate <= end) {
             $scope.lbl_day = $filter('translate')('lbl_todaytrips');
-        } else {
+        } else if($scope.selectDate >= startTomorrow && $scope.selectDate <= endTomorrow){
+            $scope.lbl_day = $filter('translate')('lbl_tomorrowtrips');
+        }else{
             $scope.lbl_day = $filter('date')($scope.selectDate, 'EEE dd/MM/yyyy');
         }
     };
