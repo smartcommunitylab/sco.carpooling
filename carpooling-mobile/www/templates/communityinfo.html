@@ -84,11 +84,12 @@
             <ion-view class="info">
                 <ion-content class="has-header padding">
                     <div>
-                        <h5>{{'lbl_generalinformations'| translate}}</h5>
+                        <!--<h5>{{'lbl_generalinformations'| translate}}</h5>-->
                         <p class="padding-top">
-                            <span>{{'lbl_tripzone'| translate}}:</span>
+                            <h5>{{'lbl_tripzone'| translate}}</h5>
+                            <span class="padding-left padding-right" id="auto"><i class="icons ion-map"></i></span>
                             <!-- old zone string -->
-                            <span ng-if="!community.zone.name && !community.zone.address">{{community.zone}}</span>
+                            <span ng-if="!community.zone.name && !community.zone.address" id="auto">{{community.zone}}</span>
                             <!-- name and address -->
                             <span ng-if="!!community.zone.name && !!community.zone.address && !(community.zone.name == community.zone.zone)">{{community.zone.name}} ({{community.zone.address}})</span>
                             <!-- only name -->
@@ -100,11 +101,12 @@
                     <div class="padding-top padding-bottom">
                         <h5>{{'lbl_numberauto'| translate}}</h5>
                         <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
+                        <span ng-if="iAmMember">{{'lbl_your_car_too' | translate}}{{(hasAuto ? 'lbl_enter_in_profile' : 'lbl_addauto') | translate}}</span>
                     </div>
                     <div class="actions">
-                        <button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">
+                        <!--<button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">
                             {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
-                        </button>
+                        </button>-->
                         <a class="padding-top" href="" ng-if="iAmMember" ng-click="leaveCommunity()">{{'lbl_leavecommunity'| translate}}</a>
                     </div>
                 </ion-content>

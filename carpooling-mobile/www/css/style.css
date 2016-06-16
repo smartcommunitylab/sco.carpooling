@@ -180,9 +180,9 @@
 .carpooling-theme .info h5 {
     color: #3448A5;
 }
-.carpooling-theme .info span:first-child {
+/*.carpooling-theme .info span:first-child {
     color: gray;
-}
+}*/
 .carpooling-theme .info #auto {
     color: #3448A5;
     font-size: 2em;
@@ -956,7 +956,7 @@ h5 {
     min-width: 120px;
 }
 .actions {
-    text-align: center;
+    text-align: left;
 }
 .label-multiline {
     white-space: normal;
