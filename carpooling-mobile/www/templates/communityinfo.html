@@ -101,7 +101,8 @@
                     <div class="padding-top padding-bottom">
                         <h5>{{'lbl_numberauto'| translate}}</h5>
                         <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
-                        <div ng-if="iAmMember" class="iAmMemberlabel">{{'lbl_your_car_too' | translate}}<a href="#/app/profilo">{{(hasAuto ? 'lbl_enter_in_profile' : 'lbl_addauto') | translate}}</a>{{'lbl_enter_in_profile2' | translate}}</div>
+                        <div ng-if="iAmMember && !!hasAuto" class="iAmMemberlabel">{{'lbl_your_car_too' | translate}}<a href="#/app/profilo">{{ 'lbl_enter_in_profile' | translate}}</a>{{'lbl_enter_in_profile2' | translate}}</div>
+                        <div ng-if="iAmMember && !hasAuto" class="iAmMemberlabel">{{'lbl_add_your_auto' | translate}}<a href="#/app/profilo">{{ 'lbl_enter_in_profile1' | translate}}</a></div>
                     </div>
                     <div class="actions padding-top-20">
                         <!--<button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">

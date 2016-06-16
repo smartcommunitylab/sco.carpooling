@@ -20,7 +20,7 @@ angular.module('carpooling.controllers.communityinfo', [])
     $scope.community = {};
     $scope.travelTimeFormat = 'HH:mm';
     $scope.selectDate = Date.now();
-    $scope.hasAuto = !!StorageSrv.getUser().auto;
+    $scope.hasAuto = StorageSrv.getUser().auto.posts == -1 ? false : true;
     $scope.lbl_day = $filter('translate')('lbl_todaytrips');
     var start = new Date();
     var end = new Date();
@@ -47,9 +47,9 @@ angular.module('carpooling.controllers.communityinfo', [])
     var compareDate = function () {
         if ($scope.selectDate >= start && $scope.selectDate <= end) {
             $scope.lbl_day = $filter('translate')('lbl_todaytrips');
-        } else if($scope.selectDate >= startTomorrow && $scope.selectDate <= endTomorrow){
+        } else if ($scope.selectDate >= startTomorrow && $scope.selectDate <= endTomorrow) {
             $scope.lbl_day = $filter('translate')('lbl_tomorrowtrips');
-        }else{
+        } else {
             $scope.lbl_day = $filter('date')($scope.selectDate, 'EEE dd/MM/yyyy');
         }
     };
