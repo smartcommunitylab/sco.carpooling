@@ -474,7 +474,7 @@ angular.module('carpooling.services.user', [])
                 }
             },
             function (responseError) {
-                deferred.reject(responseError.data ? responseError.data.errorMessage : responseError);
+                deferred.reject(responseError);
             }
         );
         return deferred.promise;

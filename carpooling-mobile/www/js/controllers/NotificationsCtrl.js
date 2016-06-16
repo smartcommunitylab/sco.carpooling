@@ -204,8 +204,12 @@ angular.module('carpooling.controllers.notifications', [])
             Utils.loaded();
         }, function (err) {
             Utils.loaded();
-            console.error(err);
-            Utils.toast(Utils.getErrorMsg(err));
+            console.error(err.data.errorMessage);
+            if (err.status = 404) {
+                Utils.toast('Il viaggio è stato cancellato');
+            } else {
+                Utils.toast(Utils.getErrorMsg(err.data));
+            }
         });
     };
 
@@ -311,10 +315,6 @@ angular.module('carpooling.controllers.notifications', [])
         UserSrv.readNotificationsByTravelId($scope.travelId, $scope.personId).then(function (discussion) {
             $scope.updatesMsg = discussion ? discussion : [];
             Utils.loaded();
-        }, function (err) {
-            Utils.loaded();
-            console.error(err);
-            Utils.toast(Utils.getErrorMsg(err));
         });
     }
 
