@@ -76,7 +76,7 @@
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.tab-item-active,
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.active,
 .carpooling-theme .tabs-top.tabs-striped .tabs .tab-item.activated {
-    border-width: 0px 0px 3px 0px !important;
+    border-width: 0px 0px 5px 0px !important;
 }
 .carpooling-theme .tabs-top.tabs-icon-top .tab-title {
     font-size: xx-small;

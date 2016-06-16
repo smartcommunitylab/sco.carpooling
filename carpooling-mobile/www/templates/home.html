@@ -4,8 +4,8 @@
         <a ng-if="tab < 2" ng-href="{{tab == 0 ? '#/app/offri' : '#/app/cerca'}}" ng-class="{'ion-android-add': (tab == 0), 'ion-android-search': (tab == 1)}" class="button button-icon padding-left"></a>
     </ion-nav-buttons>
 
-    <ion-tabs class="tabs-top tabs-icon-top" delegate-handle="tabs-home">
-        <ion-tab icon="ion-android-car" title="{{'tab_home_mytrips' | translate}}" ng-click="selectTab(0)">
+    <ion-tabs class="tabs-top" delegate-handle="tabs-home">
+        <ion-tab title="{{'tab_home_mytrips' | translate}}" ng-click="selectTab(0)">
             <ion-view>
                 <ion-content>
                     <div class="my-panel my-driver">
@@ -26,7 +26,7 @@
                                                 <span>{{ trip.when | date: travelDateFormat }}</span>
                                             </li>
                                             <li>
-                                                {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
+                                                {{'lbl_from' | translate}}: <span>{{trip.from.name}}</span>
                                             </li>
                                             <li>
                                                 {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
@@ -68,7 +68,7 @@
                                                 <span>{{nctrip.when | date: travelDateFormat}}</span>
                                             </li>
                                             <li>
-                                                {{'lbl_from' | translate | uppercase}}: <span>{{nctrip.from.name}}</span>
+                                                {{'lbl_from' | translate}}: <span>{{nctrip.from.name}}</span>
                                             </li>
                                             <li>
                                                 {{'lbl_to' | translate | uppercase}}: <span>{{nctrip.to.name}}</span>
@@ -105,7 +105,7 @@
                                                 <span>{{trip.when | date: travelDateFormat}}</span>
                                             </li>
                                             <li>
-                                                {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
+                                                {{'lbl_from' | translate}}: <span>{{trip.from.name}}</span>
                                             </li>
                                             <li>
                                                 {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
@@ -133,7 +133,7 @@
             </ion-view>
         </ion-tab>
 
-        <ion-tab icon="ion-android-car" title="{{'tab_home_alltrips' | translate}}" ng-click="selectTab(1)">
+        <ion-tab title="{{'tab_home_alltrips' | translate}}" ng-click="selectTab(1)">
             <ion-view>
                 <ion-content class="alltrips" ng-init="allTripsInit()">
                     <div class="content">
@@ -178,7 +178,7 @@
                                                     <span>{{trip.when | date: travelDateFormat}}</span>
                                                 </li>
                                                 <li>
-                                                    {{'lbl_from' | translate | uppercase}}: <span>{{trip.from.name}}</span>
+                                                    {{'lbl_from' | translate}}: <span>{{trip.from.name}}</span>
                                                 </li>
                                                 <li>
                                                     {{'lbl_to' | translate | uppercase}}: <span>{{trip.to.name}}</span>
