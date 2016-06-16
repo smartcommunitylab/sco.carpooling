@@ -101,13 +101,14 @@
                     <div class="padding-top padding-bottom">
                         <h5>{{'lbl_numberauto'| translate}}</h5>
                         <span class="padding-left" id="auto"><i class="icons ion-model-s"></i> {{community.cars}} </span>
-                        <span ng-if="iAmMember">{{'lbl_your_car_too' | translate}}{{(hasAuto ? 'lbl_enter_in_profile' : 'lbl_addauto') | translate}}</span>
+
+                        <div ng-if="iAmMember" class="iAmMemberlabel">{{'lbl_your_car_too' | translate}}<a href="#/app/profilo">{{(hasAuto ? 'lbl_enter_in_profile' : 'lbl_addauto') | translate}}</a>{{'lbl_enter_in_profile2' | translate}}</div>
                     </div>
-                    <div class="actions">
+                    <div class="actions padding-top-20">
                         <!--<button class="button button-block button-carpooling" ng-if="iAmMember" ng-click="changeAutoState()">
                             {{(hasAuto ? 'lbl_editauto' : 'lbl_addauto') | translate}}
                         </button>-->
-                        <a class="padding-top" href="" ng-if="iAmMember" ng-click="leaveCommunity()">{{'lbl_leavecommunity'| translate}}</a>
+                        <a class="padding-top leavecommunity" href="" ng-if="iAmMember" ng-click="leaveCommunity()">{{'lbl_leavecommunity'| translate}}</a>
                     </div>
                 </ion-content>
             </ion-view>

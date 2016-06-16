@@ -1166,3 +1166,13 @@ h5 {
 .clear {
     clear: both;
 }
+
+div.iAmMemberlabel {
+    float: right;
+    width: 300px;
+    margin-top: 8px;
+}
+
+.padding-top-20{
+  padding-top: 20px;
+}
