@@ -693,6 +693,7 @@ angular.module('carpooling', [
         lbl_requests: 'Richeste di partecipazione',
         lbl_todaytrips: 'Viaggi di oggi',
         lbl_components: 'Componenti',
+        lbl_members: 'Membri',
         lbl_number_pass_avg: 'Viaggi partecipati',
         lbl_number_driver_avg: 'Viaggi offerti ',
         lbl_rating_pass_avg: 'Voto medio viaggi partecipati',

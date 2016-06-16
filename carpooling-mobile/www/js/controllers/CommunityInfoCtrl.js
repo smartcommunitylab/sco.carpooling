@@ -137,6 +137,10 @@ angular.module('carpooling.controllers.communityinfo', [])
         return member;
     };
 
+    $scope.isMe = function (id) {
+        return id == localStorage['userId'];
+    };
+
     $scope.joinCommunity = function () {
         if (!!$scope.community.id) {
             Utils.loading();

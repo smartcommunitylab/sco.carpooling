@@ -59,12 +59,12 @@
         <ion-tab icon="ion-android-people" ng-click="selectTab(1)">
             <ion-view>
                 <ion-content class="has-header padding components">
-                    <h5>{{'lbl_components'| translate | uppercase}}</h5>
+                    <h5>{{'lbl_members'| translate | uppercase}}</h5>
                     <div ng-if="community.users.lenght == 0">
                         <h4>{{'lbl_no_results' | translate}}</h4>
                     </div>
                     <div class="card card-trip" ng-repeat="user in community.userObjs">
-                        <div class="item row" ng-click="showUser($index)">
+                        <div class="item row" ng-click="showUser($index)" ng-class="{'myprofile': isMe(user.userId)}">
                             <ul class="padding-bottom">
                                 <li class="padding">
                                     <span class="padding-left">

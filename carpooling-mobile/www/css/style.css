@@ -243,6 +243,9 @@ placeautocomplete ul li {
 .placeautocomplete ul li .highlight {
     font-weight: bold;
 }
+.card-trip .myprofile{
+    background-color: #4EB0E6 !important;
+}
 .card.card-trip,
 .card.card-community,
 .card.card-notif {

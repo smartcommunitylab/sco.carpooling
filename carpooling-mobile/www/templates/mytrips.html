@@ -1,6 +1,6 @@
-<ion-view title="{{'app_name' | translate}}">
+<ion-view title="{{'tab_home_mytrips' | translate}}">
     <ion-nav-buttons side="right">
-        <a href="#/app/notifiche" class="button button-icon ion-android-notifications"><span class="badge badge-assertive header-badge" ng-if="notificationCounter > 0">{{notificationCounter}}</span></a>
+        <!--<a href="#/app/notifiche" class="button button-icon ion-android-notifications"><span class="badge badge-assertive header-badge" ng-if="notificationCounter > 0">{{notificationCounter}}</span></a>-->
         <a ng-href="{{tab == 0 ? '#/app/cerca' : '#/app/offri'}}" ng-class="tab == 0 ? 'ion-android-search' : 'ion-android-add' " class="button button-icon padding-left"></a>
     </ion-nav-buttons>
 
