@@ -187,7 +187,10 @@
     color: #000000;
     font-size: 2em;
 }
-
+.carnum{
+    padding-left: 3px;
+    font-size: 0.7em;
+}
 /* Custom */
 
 .popup-offri-dow {
